@@ -29,7 +29,6 @@ public class PreparedDish {
         @JoinColumn(name = "EMP_ID")
         private Employee chef;
 
-        // Consider ManyToMany
         @ManyToOne
         @JoinColumn(name = "ORD_ID")
         private Order order;

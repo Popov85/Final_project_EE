@@ -46,7 +46,6 @@ public class Position {
                 Position position = (Position) o;
 
                 return name.equals(position.name);
-
         }
 
         @Override

@@ -28,4 +28,18 @@ public class EmployeeService {
         public Employee getEmployeeById(int employeeId) {
                 return employeeDAO.getById(employeeId);
         }
+
+        @Transactional
+        public void deleteById(int employeeId) {
+                employeeDAO.delete(getEmployeeById(employeeId));
+        }
+
+        @Transactional
+        public void update(Employee employee) {
+                employeeDAO.update(employee);
+        }
+
+        public void save(Employee employee) {
+                employeeDAO.insert(employee);
+        }
 }

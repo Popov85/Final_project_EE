@@ -32,13 +32,6 @@ public class Dish {
         @Column(name = "WEIGHT")
         private double weight;
 
-        /*@ManyToMany
-        @JoinTable(name = "dish_ingredient",
-                joinColumns = @JoinColumn(name = "dish_id"),
-                inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
-        private List<DishIngredient> ingredients;*/
-
-
         @ElementCollection(fetch = FetchType.EAGER)
         @CollectionTable(name = "dish_ingredient",
                 joinColumns = @JoinColumn(name = "D_ID"))

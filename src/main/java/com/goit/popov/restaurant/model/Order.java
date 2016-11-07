@@ -36,12 +36,6 @@ public class Order {
         @JoinColumn(name = "EMP_ID")
         private Waiter waiter;
 
-        /*@ManyToMany
-        @JoinTable(name = "dish_order",
-                joinColumns = @JoinColumn(name = "ORD_ID"),
-                inverseJoinColumns = @JoinColumn(name = "D_ID"))
-        private List<OrderDish> dishes;*/
-
         @ElementCollection(fetch = FetchType.EAGER)
         @CollectionTable(name = "order_dish",
                 joinColumns = @JoinColumn(name = "ORD_ID"))
