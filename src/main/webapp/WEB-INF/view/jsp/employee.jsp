@@ -16,7 +16,7 @@
 </head>
 <body>
 <div class="container">
-        <form action="/employee" method="post" name="newUser"
+        <form action="/employee" method="get" name="newUser"
               style="max-width: 320px; margin: 0 auto; font-size: larger;">
                 <h3 class="form-signin-heading" align="center">Employee:</h3>
                 <div class="form-group">
@@ -52,7 +52,12 @@
                         </select>
                 </div>
 
-                <script>document.getElementById("position").value = '${employee.position}';</script>
+                <label for="dtype">Position</label>
+                <input type="text" id = "dtype" readonly="readonly" title="type" size="10"
+                       value="<c:out value=""/>">
+
+                <script>document.getElementById("position").value = '${employee.position.id}';</script>
+                <script>document.getElementById("dtype").value = '${employee.position.name}';</script>
 
                 <div class="form-group">
                         <label for="salary">Salary</label>

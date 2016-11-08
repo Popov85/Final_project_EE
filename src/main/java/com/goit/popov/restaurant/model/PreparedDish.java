@@ -1,6 +1,7 @@
 package com.goit.popov.restaurant.model;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -18,6 +19,7 @@ public class PreparedDish {
         @Column(name = "PD_ID")
         private int id;
 
+        @DateTimeFormat(pattern="MM/dd/yyyy")
         @Column(name = "WHEN_PREPARED")
         private Date whenPrepared;
 

@@ -13,6 +13,7 @@ import java.util.List;
 @Entity
 @Table(name = "menu")
 public class Menu {
+
         @Id
         @GeneratedValue(generator = "increment")
         @GenericGenerator(name = "increment", strategy = "increment")
@@ -22,7 +23,7 @@ public class Menu {
         @Column(name = "MENU_NAME")
         private String name;
 
-        @ManyToMany
+        @ManyToMany(fetch = FetchType.EAGER)
         @JoinTable(name = "menu_dish",
                 joinColumns = @JoinColumn(name = "M_ID"),
                 inverseJoinColumns = @JoinColumn(name = "D_ID")

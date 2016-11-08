@@ -18,6 +18,7 @@
                 <th>Position</th>
                 <th>Salary</th>
                 <th>Edit</th>
+                <th>EditNew</th>
                 <th>Delete</th>
         </tr>
         </thead>
@@ -30,7 +31,8 @@
                 <td><c:out value="${employee.phone}"/></td>
                 <td><c:out value="${employee.position.name}"/></td>
                 <td><c:out value="${employee.salary}"/></td>
-                <td><a href="/employee?employee=${employee.id}">Open</a></td>
+                <td><a href="/employee?employee=${employee.id}">Edit</a></td>
+                <td><a href="/editsave/${employee.id}">Edit</a></td>
                 <td><a href="deleteemp/${employee.id}">Delete</a></td>
         </tr>
         </c:forEach>

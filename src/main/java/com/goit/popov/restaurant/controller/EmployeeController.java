@@ -4,6 +4,7 @@ import com.goit.popov.restaurant.model.Employee;
 import com.goit.popov.restaurant.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -54,6 +55,12 @@ public class EmployeeController {
         public ModelAndView editsave(@ModelAttribute("emp") Employee employee){
                 employeeService.update(employee);
                 return new ModelAndView("redirect:/employees");
+        }
+
+        @RequestMapping(value = "/editsave/{id}",method = RequestMethod.GET)
+        public String editPerson(@PathVariable("id") int id, Model model){
+                model.addAttribute("employee", employeeService.getEmployeeById(id));
+                return "employee";
         }
 
         // Delete
