@@ -19,23 +19,34 @@ public class Ingredient {
         @Column(name = "ING_ID")
         private int id;
 
-        @Column(name="ING_NAME")
+        @Column(name = "ING_NAME")
         private String name;
+
+        @Column(name = "UNIT")
+        private String unit;
 
         public int getId() {
                 return id;
-        }
-
-        public String getName() {
-                return name;
         }
 
         public void setId(int id) {
                 this.id = id;
         }
 
+        public String getName() {
+                return name;
+        }
+
         public void setName(String name) {
                 this.name = name;
+        }
+
+        public String getUnit() {
+                return unit;
+        }
+
+        public void setUnit(String unit) {
+                this.unit = unit;
         }
 
         @Override
@@ -45,15 +56,15 @@ public class Ingredient {
 
                 Ingredient that = (Ingredient) o;
 
-                if (id != that.id) return false;
-                return name.equals(that.name);
+                if (!name.equals(that.name)) return false;
+                return unit.equals(that.unit);
 
         }
 
         @Override
         public int hashCode() {
-                int result = id;
-                result = 31 * result + name.hashCode();
+                int result = name.hashCode();
+                result = 31 * result + unit.hashCode();
                 return result;
         }
 
@@ -62,6 +73,8 @@ public class Ingredient {
                 return "Ingredient{" +
                         "id=" + id +
                         ", name='" + name + '\'' +
+                        ", unit='" + unit + '\'' +
                         '}';
         }
 }
+

@@ -32,7 +32,7 @@
                 <td><c:out value="${employee.position.name}"/></td>
                 <td><c:out value="${employee.salary}"/></td>
                 <td><a href="/employee?employee=${employee.id}">Edit</a></td>
-                <td><a href="/editsave/${employee.id}">Edit</a></td>
+                <td><a href="/edit/${employee.id}">Edit</a></td>
                 <td><a href="deleteemp/${employee.id}">Delete</a></td>
         </tr>
         </c:forEach>

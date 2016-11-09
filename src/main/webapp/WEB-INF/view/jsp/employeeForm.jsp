@@ -8,7 +8,7 @@
 </head>
 <body>
 <h1>Edit Employee</h1>
-<form:form method="POST" action="/editsave">
+<form:form method="GET" action="/editsave">
     <table >
         <tr>
             <td></td>

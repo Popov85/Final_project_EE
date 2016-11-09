@@ -9,5 +9,8 @@
     <bean id="menuDAO" class="com.goit.popov.restaurant.dao.impl.MenuDAOImplJPA"/>
     <bean id="menuService" class="com.goit.popov.restaurant.service.MenuService"/>
 
+    <bean id="ingredientDAO" class="com.goit.popov.restaurant.dao.impl.IngredientDAOImplJPA"/>
+    <bean id="ingredientService" class="com.goit.popov.restaurant.service.IngredientService"/>
+
 
 </beans>

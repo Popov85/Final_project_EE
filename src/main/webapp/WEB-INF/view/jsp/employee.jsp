@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Andrey
-  Date: 11/6/2016
-  Time: 8:07 PM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
@@ -16,7 +9,7 @@
 </head>
 <body>
 <div class="container">
-        <form action="/employee" method="get" name="newUser"
+        <form action="/update" method="post" name="newUser"
               style="max-width: 320px; margin: 0 auto; font-size: larger;">
                 <h3 class="form-signin-heading" align="center">Employee:</h3>
                 <div class="form-group">
