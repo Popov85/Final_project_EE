@@ -4,13 +4,13 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <html>
 <head>
-    <title>Employee</title>
+    <title>Ingredient</title>
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css">
 </head>
 <body>
 <div class="container">
-    <form:form action="save" method="post" modelAttribute="waiter" style="max-width: 320px; margin: 0 auto; font-size: larger;">
-        <h3 class="form-signin-heading" align="center">Waiter:</h3>
+    <form:form action="${pageContext.request.contextPath}/update_ingredient/${ingredient.id}" method="post" commandName="ingredient" style="max-width: 320px; margin: 0 auto; font-size: larger;">
+        <h3 class="form-signin-heading" align="center">Ingredient:</h3>
         <div class="form-group">
             <form:input path="id" readonly="true" title="id" size="10"/>
         </div>
@@ -18,25 +18,10 @@
             <label for="name">Name</label>
             <form:input path="name" title="name" cssClass="form-control"/>
         </div>
-        <div class="form-group">
-            <label for="dob">DOB</label>
-            <form:input path="dob" title="dob" cssClass="form-control"/>
-        </div>
 
         <div class="form-group">
-            <label for="phone">Phone:</label>
-            <form:input path="phone" title="phone" cssClass="form-control"/>
-        </div>
-
-        <div class="form-group">
-            <label for="position">Position</label>
-            <br>
-            <form:select path="position" items="${positionsList}" />
-        </div>
-
-        <div class="form-group">
-            <label for="salary">Salary</label>
-            <form:input path="salary" title="salary" cssClass="form-control"/>
+            <label for="unit">Unit</label>
+            <form:input path="unit" title="unit" cssClass="form-control"/>
         </div>
 
         <div class="form-group">
@@ -57,4 +42,5 @@
 </div>
 </body>
 </html>
+
 

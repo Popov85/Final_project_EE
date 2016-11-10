@@ -1,8 +1,10 @@
 package com.goit.popov.restaurant.controller;
 
 import com.goit.popov.restaurant.model.Employee;
+import com.goit.popov.restaurant.model.Position;
 import com.goit.popov.restaurant.model.Waiter;
 import com.goit.popov.restaurant.service.EmployeeService;
+import com.goit.popov.restaurant.service.PositionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -13,6 +15,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,7 +24,14 @@ import java.util.Map;
  */
 @Controller
 public class EmployeeController {
+
         private EmployeeService employeeService;
+        private PositionService positionService;
+
+        @Autowired
+        public void setPositionService(PositionService positionService) {
+                this.positionService = positionService;
+        }
 
         @Autowired
         public void setEmployeeService(EmployeeService employeeService) {
@@ -39,6 +50,18 @@ public class EmployeeController {
                 System.out.println("My employee is: "+waiter);
                 employeeService.save(waiter);
                 return new ModelAndView("redirect:/employees");
+        }
+
+        @ModelAttribute("positionsList")
+        public Map<Integer, String> populatePositions()
+        {
+                List<Position> positions = positionService.getAll();
+                Map<Integer, String> positionsList = new HashMap<>();
+                positionsList.put(-1, "Select Position");
+                for (Position position : positions) {
+                       positionsList.put(position.getId(), position.getName());
+                }
+                return positionsList;
         }
 
 
