@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <html>
 <head>
@@ -27,7 +28,7 @@
         <tr>
                 <td><c:out value="${employee.id}"/></td>
                 <td><c:out value="${employee.name}"/></td>
-                <td><c:out value="${employee.dob}"/></td>
+                <td><fmt:formatDate pattern='MM/dd/yyyy' value='${employee.dob}'/></td>
                 <td><c:out value="${employee.phone}"/></td>
                 <td><c:out value="${employee.position.name}"/></td>
                 <td><c:out value="${employee.salary}"/></td>

@@ -5,9 +5,7 @@ import com.goit.popov.restaurant.model.Ingredient;
 import com.goit.popov.restaurant.service.IngredientService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -29,7 +27,7 @@ public class IngredientController {
 
         // Show form
         @RequestMapping("/new_ingredient")
-        public ModelAndView showForm(){
+        public ModelAndView showIngredientForm(){
                 logger.info("show ingredient form");
                 return new ModelAndView("ingredient","ingredient",new Ingredient());
         }
@@ -43,7 +41,7 @@ public class IngredientController {
 
         // Create
         @RequestMapping(value="/save_ingredient",method = RequestMethod.POST)
-        public ModelAndView save(@ModelAttribute("ingredient") Ingredient ingredient){
+        public ModelAndView saveIngredient(@ModelAttribute("ingredient") Ingredient ingredient){
                 logger.info(ingredient.toString());
                 ingredientService.save(ingredient);
                 return new ModelAndView("redirect:/ingredients");

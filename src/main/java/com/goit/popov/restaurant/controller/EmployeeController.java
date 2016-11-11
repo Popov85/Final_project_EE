@@ -1,14 +1,18 @@
 package com.goit.popov.restaurant.controller;
 
+import ch.qos.logback.classic.Logger;
 import com.goit.popov.restaurant.model.Employee;
 import com.goit.popov.restaurant.model.Position;
 import com.goit.popov.restaurant.model.Waiter;
 import com.goit.popov.restaurant.service.EmployeeService;
 import com.goit.popov.restaurant.service.PositionService;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -28,6 +32,8 @@ public class EmployeeController {
         private EmployeeService employeeService;
         private PositionService positionService;
 
+        static Logger logger = (Logger) LoggerFactory.getLogger(EmployeeController.class);
+
         @Autowired
         public void setPositionService(PositionService positionService) {
                 this.positionService = positionService;
@@ -39,22 +45,23 @@ public class EmployeeController {
         }
 
         @RequestMapping("/new_waiter")
-        public ModelAndView showform(){
-                System.out.println("show form");
+        public ModelAndView showWaiterForm(){
+                logger.info("Show Waiter Form...");
                 return new ModelAndView("new_waiter","waiter",new Waiter());
         }
 
         // Create
-        @RequestMapping(value="/save",method = RequestMethod.POST)
-        public ModelAndView save(@ModelAttribute("waiter") Employee waiter){
-                System.out.println("My employee is: "+waiter);
+        @RequestMapping(value="/save_waiter",method = RequestMethod.POST)
+        public ModelAndView saveWaiter(@ModelAttribute("waiter") @Validated Waiter waiter, BindingResult result, Model model){
+                logger.info(waiter.toString());
+                logger.info(result.toString());
+                logger.info(model.toString());
                 employeeService.save(waiter);
                 return new ModelAndView("redirect:/employees");
         }
 
         @ModelAttribute("positionsList")
-        public Map<Integer, String> populatePositions()
-        {
+        public Map<Integer, String> populatePositions() {
                 List<Position> positions = positionService.getAll();
                 Map<Integer, String> positionsList = new HashMap<>();
                 positionsList.put(-1, "Select Position");

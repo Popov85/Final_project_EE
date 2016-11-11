@@ -20,13 +20,13 @@
     </thead>
     <tbody>
     <c:forEach items="${ingredients}" var="ingredient">
-        <tr>
-            <td><c:out value="${ingredient.id}"/></td>
-            <td><c:out value="${ingredient.name}"/></td>
-            <td><c:out value="${ingredient.unit}"/></td>
-            <td><a href="/update_ingredient/${ingredient.id}">Edit</a></td>
-            <td><a href="delete_ingredient/${ingredient.id}">Delete</a></td>
-        </tr>
+    <tr>
+        <td><c:out value="${ingredient.id}"/></td>
+        <td><c:out value="${ingredient.name}"/></td>
+        <td><c:out value="${ingredient.unit}"/></td>
+        <td><a href="/update_ingredient/${ingredient.id}">Edit</a></td>
+        <td><a href="delete_ingredient/${ingredient.id}">Delete</a></td>
+    </tr>
     </c:forEach>
     </tbody>
 </table>

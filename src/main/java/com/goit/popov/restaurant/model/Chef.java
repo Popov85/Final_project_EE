@@ -12,4 +12,16 @@ public class Chef extends Employee {
 
         @OneToMany(mappedBy="chef")
         List<PreparedDish> preparedDishes;
+
+        @Override
+        public String toString() {
+                return "Chef{" +
+                        "id='" + id + '\'' +
+                        "name='" + name + '\'' +
+                        ", dob=" + dob +
+                        ", phone='" + phone + '\'' +
+                        ", position=" + position +
+                        ", salary=" + salary +
+                        '}';
+        }
 }

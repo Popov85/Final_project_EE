@@ -1,8 +1,10 @@
 package com.goit.popov.restaurant.dao.impl;
 
 import com.goit.popov.restaurant.dao.entity.PositionDAO;
+import com.goit.popov.restaurant.model.Employee;
 import com.goit.popov.restaurant.model.Position;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -46,5 +48,14 @@ public class PositionDAOImplJPA implements PositionDAO {
         @Override
         public void delete(Position position) {
                 sessionFactory.getCurrentSession().delete(position);
+        }
+
+        @Override
+        @Transactional
+        public Position getPositionByName(String name) {
+                Query query = sessionFactory.getCurrentSession().createQuery("select p from Position p " +
+                        "where p.name like :name");
+                query.setParameter("name", name);
+                return (Position) query.uniqueResult();
         }
 }

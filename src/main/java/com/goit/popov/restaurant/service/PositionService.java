@@ -10,6 +10,7 @@ import java.util.List;
  * Created by Andrey on 10.11.2016.
  */
 public class PositionService {
+
         private PositionDAO positionDAO;
 
         public void setPositionDAO(PositionDAO positionDAO) {
@@ -19,5 +20,15 @@ public class PositionService {
         @Transactional
         public List<Position> getAll() {
              return positionDAO.getAll();
+        }
+
+        @Transactional
+        public Position getById(int id) {
+                return positionDAO.getById(id);
+        }
+
+        @Transactional
+        public Position getPositionByName(String name) {
+                return positionDAO.getPositionByName(name);
         }
 }
