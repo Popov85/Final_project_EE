@@ -1,9 +1,7 @@
 package com.goit.popov.restaurant.controller;
 
 import ch.qos.logback.classic.Logger;
-import com.goit.popov.restaurant.model.Employee;
-import com.goit.popov.restaurant.model.Position;
-import com.goit.popov.restaurant.model.Waiter;
+import com.goit.popov.restaurant.model.*;
 import com.goit.popov.restaurant.service.EmployeeService;
 import com.goit.popov.restaurant.service.PositionService;
 import org.slf4j.LoggerFactory;
@@ -11,12 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -44,19 +41,25 @@ public class EmployeeController {
                 this.employeeService = employeeService;
         }
 
-        @RequestMapping("/new_waiter")
-        public ModelAndView showWaiterForm(){
-                logger.info("Show Waiter Form...");
-                return new ModelAndView("new_waiter","waiter",new Waiter());
+        @RequestMapping("/new_employee")
+        public ModelAndView showEmployeeForm(){
+                logger.info("Show Employee Form...");
+                return new ModelAndView("new_waiter","employee",new Employee());
         }
 
+
         // Create
-        @RequestMapping(value="/save_waiter",method = RequestMethod.POST)
-        public ModelAndView saveWaiter(@ModelAttribute("waiter") @Validated Waiter waiter, BindingResult result, Model model){
-                logger.info(waiter.toString());
-                logger.info(result.toString());
-                logger.info(model.toString());
-                employeeService.save(waiter);
+        @RequestMapping(value="/save_employee",method = RequestMethod.POST)
+        public ModelAndView saveWaiter2(@RequestParam("id") int id, @RequestParam("position") int position,
+                                        @RequestParam("name") String name, @RequestParam("phone") String phone,
+                                        @RequestParam("dob") Date dob, @RequestParam("salary") BigDecimal salary){
+                if (id==0) {
+                        logger.info("New employee coming ------------------------------------------: ");
+                } else {
+                        logger.info("Edit existing employee ------------------------------------------: "+id);
+                }
+
+                //employeeService
                 return new ModelAndView("redirect:/employees");
         }
 
@@ -70,6 +73,7 @@ public class EmployeeController {
                 }
                 return positionsList;
         }
+
 
 
 

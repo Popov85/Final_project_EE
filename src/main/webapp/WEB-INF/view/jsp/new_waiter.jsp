@@ -9,7 +9,7 @@
 </head>
 <body>
 <div class="container">
-    <form:form action="save_waiter" method="post" modelAttribute="waiter" style="max-width: 320px; margin: 0 auto; font-size: larger;">
+    <form:form action="save_employee" method="post" modelAttribute="employee" style="max-width: 320px; margin: 0 auto; font-size: larger;">
         <h3 class="form-signin-heading" align="center">Waiter:</h3>
         <div class="form-group">
             <form:input path="id" readonly="true" title="id" size="10"/>
@@ -33,7 +33,6 @@
             <label for="position">Position</label>
             <br>
             <form:select path="position" items="${positionsList}" />
-
         </div>
 
         <div class="form-group">

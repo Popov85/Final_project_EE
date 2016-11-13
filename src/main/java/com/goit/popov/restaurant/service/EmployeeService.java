@@ -8,12 +8,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * Created by Andrey on 11/6/2016.
+ * Created by Andrey on 11/13/2016.
  */
-public class EmployeeService {
+public class EmployeeService<T extends Employee> {
 
         @Autowired
-        private EmployeeDAO employeeDAO;
+        protected EmployeeDAO employeeDAO;
 
         public void setEmployeeDAO(EmployeeDAO employeeDAO) {
                 this.employeeDAO = employeeDAO;
@@ -34,13 +34,31 @@ public class EmployeeService {
                 employeeDAO.delete(getEmployeeById(employeeId));
         }
 
-        @Transactional
-        public void update(Employee employee) {
-                employeeDAO.update(employee);
+        public EmployeeService create(String position) {
+                EmployeeService employee;
+                switch (position) {
+                        case "1":
+                                employee = new ManagerService();
+                                break;
+                        case "2":
+                                employee = new ChefService();
+                                break;
+                        case "3":
+                                employee = new WaiterService();
+                                break;
+                        default:
+                                throw new RuntimeException();
+                }
+                return employee;
         }
 
         @Transactional
         public void save(Employee employee) {
-                employeeDAO.insert(employee);
+              employeeDAO.insert(employee);
+        }
+
+        @Transactional
+        public void update(Employee employee) {
+                employeeDAO.update(employee);
         }
 }
