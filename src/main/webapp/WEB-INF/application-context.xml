@@ -15,5 +15,8 @@
     <bean id="ingredientDAO" class="com.goit.popov.restaurant.dao.impl.IngredientDAOImplJPA"/>
     <bean id="ingredientService" class="com.goit.popov.restaurant.service.IngredientService"/>
 
+    <bean id = "Waiter" class = "com.goit.popov.restaurant.service.WaiterService"/>
+    <bean id = "Chef" class = "com.goit.popov.restaurant.service.ChefService"/>
+    <bean id = "Manager" class = "com.goit.popov.restaurant.service.ManagerService"/>
 
 </beans>

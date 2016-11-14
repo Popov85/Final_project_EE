@@ -32,7 +32,7 @@
         <div class="form-group">
             <label for="position">Position</label>
             <br>
-            <form:select path="position" items="${positionsList}" />
+            <form:select path="position" items="${positions}" />
         </div>
 
         <div class="form-group">

@@ -9,7 +9,7 @@
 </head>
 <body>
 <div class="container">
-        <form action="/update" method="post" name="newUser"
+        <form action="/update_employee" method="post" modelAttribute = "employee"
               style="max-width: 320px; margin: 0 auto; font-size: larger;">
                 <h3 class="form-signin-heading" align="center">Employee:</h3>
                 <div class="form-group">
@@ -38,19 +38,13 @@
 
                 <div class="form-group">
                         <label for="position">Position</label>
-                        <select id="position" name="position" class="form-control">
-                                <option value="1">Manager</option>
-                                <option value="2">Chef</option>
-                                <option value="3">Waiter</option>
+                        <br>
+                        <select id="position">
+                                <option>${employee.position.name}</option>
                         </select>
                 </div>
 
-                <label for="dtype">Position</label>
-                <input type="text" id = "dtype" readonly="readonly" title="type" size="10"
-                       value="<c:out value=""/>">
-
-                <script>document.getElementById("position").value = '${employee.position.id}';</script>
-                <script>document.getElementById("dtype").value = '${employee.position.name}';</script>
+                <!--<script>document.getElementById("position").value = '${employee.position.name}';</script>-->
 
                 <div class="form-group">
                         <label for="salary">Salary</label>

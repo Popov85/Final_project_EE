@@ -18,14 +18,4 @@
         <property name="suffix" value = ".jsp"/>
     </bean>
 
-    <bean id = "positionFormatter" class = "com.goit.popov.restaurant.controller.PositionFormatter"/>
-
-    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
-        <property name="formatters">
-            <set>
-                <ref bean="positionFormatter"/>
-            </set>
-        </property>
-    </bean>
-
 </beans>

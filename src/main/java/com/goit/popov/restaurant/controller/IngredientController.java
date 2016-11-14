@@ -29,7 +29,7 @@ public class IngredientController {
         @RequestMapping("/new_ingredient")
         public ModelAndView showIngredientForm(){
                 logger.info("show ingredient form");
-                return new ModelAndView("ingredient","ingredient",new Ingredient());
+                return new ModelAndView("new_ingredient","ingredient",new Ingredient());
         }
 
         // Get All
