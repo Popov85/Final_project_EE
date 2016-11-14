@@ -18,12 +18,12 @@ public class EmployeeService<T extends Employee> {
         @Autowired
         private PositionService positionService;
 
+        @Autowired
+        protected EmployeeDAO employeeDAO;
+
         public void setPositionService(PositionService positionService) {
                 this.positionService = positionService;
         }
-
-        @Autowired
-        protected EmployeeDAO employeeDAO;
 
         public void setEmployeeDAO(EmployeeDAO employeeDAO) {
                 this.employeeDAO = employeeDAO;

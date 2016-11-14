@@ -35,7 +35,7 @@ public class EmployeeDAOImplJPA implements EmployeeDAO {
         @Transactional
         @Override
         public List<Employee> getAll() {
-                return sessionFactory.getCurrentSession().createQuery("select e from Employee e").list();
+                return sessionFactory.getCurrentSession().createQuery("select e from Employee e order by e.id").list();
         }
 
         @Transactional

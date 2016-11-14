@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <html>
 <head>
         <title>Employee</title>
@@ -39,12 +40,10 @@
                 <div class="form-group">
                         <label for="position">Position</label>
                         <br>
-                        <select id="position">
-                                <option>${employee.position.name}</option>
-                        </select>
+                        <form:select id="position" name ="position" path="position" items="${positions}" />
                 </div>
 
-                <!--<script>document.getElementById("position").value = '${employee.position.name}';</script>-->
+                <script>document.getElementById("position").value = '${employee.position.name}';</script>
 
                 <div class="form-group">
                         <label for="salary">Salary</label>

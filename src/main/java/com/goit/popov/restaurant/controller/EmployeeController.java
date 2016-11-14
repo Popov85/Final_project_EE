@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -26,13 +27,13 @@ import java.util.Map;
 @Controller
 public class EmployeeController {
 
+        static Logger logger = (Logger) LoggerFactory.getLogger(EmployeeController.class);
+
         private EmployeeService employeeService;
         private PositionService positionService;
 
         @Autowired
         private ApplicationContext applicationContext;
-
-        static Logger logger = (Logger) LoggerFactory.getLogger(EmployeeController.class);
 
         @Autowired
         public void setPositionService(PositionService positionService) {
@@ -74,7 +75,6 @@ public class EmployeeController {
         // New form
         @RequestMapping("/new_employee")
         public ModelAndView showEmployeeForm(){
-                logger.info("Show Employee Form...");
                 return new ModelAndView("new_employee","employee",new Employee());
         }
 
@@ -90,40 +90,27 @@ public class EmployeeController {
         }
 
         // Read (update form)
-        /*@RequestMapping(value = "/edit/{id}",method = RequestMethod.GET)
-        public String edit(@PathVariable("id") int id, Model model){
-                //populatePositions();
-                model.addAttribute("positions", positionService.getAll());
-                model.addAttribute("employee", employeeService.getEmployeeById(id));
-                return "update_employee";
-        }*/
-
         @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
-        public ModelAndView showEmployeeEditForm(@PathVariable("id") int id){
-                logger.info("Show Employee Edit Form...");
-                ModelAndView modelAndView = new ModelAndView("update_employee","employee",employeeService.getEmployeeById(id));
-                return modelAndView;
+        public String showEmployeeEditForm(@PathVariable("id") int id, ModelMap map){
+                Employee employee = employeeService.getEmployeeById(id);
+                map.addAttribute("employee", employee);
+                map.addAttribute("positions", populatePositions());
+                map.addAttribute("position", employee.getPosition().getName());
+                return "update_employee";
         }
 
         // Update
-        /*@RequestMapping(value="/update_employee",method = RequestMethod.POST)
-        public ModelAndView editSave(@ModelAttribute("employee") Employee employee){
-                employeeService.update(employee);
-                return new ModelAndView("redirect:/employees");
-        }*/
-
         @RequestMapping(value="/update_employee",method = RequestMethod.POST)
-        public ModelAndView updateEmployee(@RequestParam("id") int id, @RequestParam("position") String position,
+        public ModelAndView updateEmployee(@RequestParam("id") int id, @ModelAttribute("position") String position,
                                          @RequestParam("name") String name, @RequestParam("phone") String phone,
                                          @RequestParam("dob") Date dob, @RequestParam("salary") BigDecimal salary){
-                // Bean name is: Waiter - > WaiterService (save ())
                 EmployeeService employee = (EmployeeService) applicationContext.getBean(position);
                 employee.update(id, name, dob, phone, salary, position);
                 return new ModelAndView("redirect:/employees");
         }
 
         // Delete
-        @RequestMapping(value="/deleteemp/{id}",method = RequestMethod.GET)
+        @RequestMapping(value="/delete_employee/{id}",method = RequestMethod.GET)
         public ModelAndView delete(@PathVariable int id){
                 employeeService.deleteById(id);
                 return new ModelAndView("redirect:/employees");
