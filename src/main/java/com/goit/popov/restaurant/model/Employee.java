@@ -1,8 +1,12 @@
 package com.goit.popov.restaurant.model;
-
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -22,19 +26,27 @@ public class Employee {
         @Column(name = "EMP_ID")
         protected int id;
 
+        @NotEmpty(message = "Please, provide name for an employee")
+        @Size(min=5, max=50)
         @Column(name = "EMP_NAME")
         protected String name;
 
+        //@NotEmpty(message = "Date of birth mustn't be empty")
+        //@DateTimeFormat(pattern="MM/dd/YYYY")
         @Column(name = "DOB")
         protected Date dob;
 
+        @NotEmpty(message = "Phone field mustn't be empty")
         @Column(name = "PHONE")
         protected String phone;
 
+        @NotNull(message = "Please, appoint a position for an employee")
         @ManyToOne
         @JoinColumn(name = "POS_ID")
         protected Position position;
 
+        @NotNull
+        @Min(value = 1000, message = "Minimal salary is $1000")
         @Column(name = "SALARY")
         protected BigDecimal salary;
 

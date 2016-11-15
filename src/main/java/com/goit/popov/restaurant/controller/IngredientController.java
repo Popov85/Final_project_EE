@@ -6,9 +6,11 @@ import com.goit.popov.restaurant.service.IngredientService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.util.Map;
 
 /**
@@ -41,10 +43,17 @@ public class IngredientController {
 
         // Create
         @RequestMapping(value="/save_ingredient",method = RequestMethod.POST)
-        public ModelAndView saveIngredient(@ModelAttribute("ingredient") Ingredient ingredient){
+        public String saveIngredient(@Valid @ModelAttribute("ingredient") Ingredient ingredient, BindingResult result){
+                if (result.hasErrors()) {
+                        logger.info("Ingredient form has errors");
+                        logger.info("Name error is: "+result.getFieldError("name"));
+                        logger.info("Unit error is: "+result.getFieldError("unit"));
+                } else {
+                        logger.info("Ingredient form has no errors");
+                }
                 logger.info(ingredient.toString());
-                ingredientService.save(ingredient);
-                return new ModelAndView("redirect:/ingredients");
+                //ingredientService.save(ingredient);
+                return "redirect:/ingredients";
         }
 
 

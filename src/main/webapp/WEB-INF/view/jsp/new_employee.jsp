@@ -10,34 +10,39 @@
 <body>
 <div class="container">
     <form:form action="save_employee" method="post" modelAttribute="employee" style="max-width: 320px; margin: 0 auto; font-size: larger;">
-        <h3 class="form-signin-heading" align="center">Waiter:</h3>
+        <h3 class="form-signin-heading" align="center">Employee:</h3>
         <div class="form-group">
-            <form:input path="id" readonly="true" title="id" size="10"/>
+            <form:hidden path="id" title="id" size="10"/>
         </div>
         <div class="form-group">
             <label for="name">Name</label>
             <form:input path="name" title="name" cssClass="form-control"/>
+            <font color="red"><form:errors path="name" /></font>
         </div>
 
         <div class="form-group">
             <label for="dob">DOB</label>
             <form:input path="dob" title="dob" cssClass="form-control"/>
+            <font color="red"><form:errors path="dob" /></font>
         </div>
 
         <div class="form-group">
             <label for="phone">Phone:</label>
             <form:input path="phone" title="phone" cssClass="form-control"/>
+            <font color="red"><form:errors path="phone" /></font>
         </div>
 
         <div class="form-group">
             <label for="position">Position</label>
             <br>
             <form:select path="position" items="${positions}" />
+            <font color="red"><form:errors path="position" /></font>
         </div>
 
         <div class="form-group">
             <label for="salary">Salary</label>
             <form:input path="salary" title="salary" cssClass="form-control"/>
+            <font color="red"><form:errors path="salary" /></font>
         </div>
 
         <div class="form-group">
@@ -50,7 +55,7 @@
                     <a class="hyperlink" href="/employees">See all</a>
                 </div>
                 <div class="col-md-6" align="right">
-                    <a class="hyperlink" href="/index.jsp">Home</a>
+                    <a class="hyperlink" href="/">Home</a>
                 </div>
             </div>
         </div>

@@ -1,6 +1,7 @@
 package com.goit.popov.restaurant.model;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 
@@ -19,9 +20,11 @@ public class Ingredient {
         @Column(name = "ING_ID")
         private int id;
 
+        @NotEmpty(message = "Ingredient must have a name")
         @Column(name = "ING_NAME")
         private String name;
 
+        @NotEmpty(message = "Unit mustn't be empty")
         @Column(name = "UNIT")
         private String unit;
 

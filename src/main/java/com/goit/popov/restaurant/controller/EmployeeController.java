@@ -9,11 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -50,7 +53,7 @@ public class EmployeeController {
         public Map<String, String> populatePositions() {
                 List<Position> positions = positionService.getAll();
                 Map<String, String> positionsList = new HashMap<>();
-                positionsList.put("-1", "Select Position");
+                positionsList.put(null, "Select Position");
                 for (Position position : positions) {
                         positionsList.put(position.getName(), position.getName());
                 }
@@ -79,18 +82,42 @@ public class EmployeeController {
         }
 
         // Create
-        @RequestMapping(value="/save_employee",method = RequestMethod.POST)
-        public ModelAndView saveEmployee(@RequestParam("position") String position,
-                                        @RequestParam("name") String name, @RequestParam("phone") String phone,
-                                        @RequestParam("dob") Date dob, @RequestParam("salary") BigDecimal salary){
+        /*@RequestMapping(value="/save_employee",method = RequestMethod.POST)
+        public String saveEmployee(@RequestParam("position") String position,
+                                         @RequestParam("name") String name, @RequestParam("phone") String phone,
+                                         @RequestParam("dob") Date dob, @RequestParam("salary") BigDecimal salary){
+
+
                 // Bean name is: Waiter - > WaiterService (save ())
                 EmployeeService employee = (EmployeeService) applicationContext.getBean(position);
                 employee.save(name, dob, phone, salary, position);
-                return new ModelAndView("redirect:/employees");
+                return "redirect:/employees";
+        }*/
+
+        // Create
+        @RequestMapping(value="/save_employee",method = RequestMethod.POST)
+        public String saveEmployee(@Valid @ModelAttribute("employee") Employee employee, BindingResult result, @RequestParam("position") String position){
+                if (result.hasErrors()) {
+                        logger.info("has errors");
+                        logger.info("Name error is: "+result.getFieldError("name"));
+                        logger.info("Date error is: "+result.getFieldError("dob"));
+                        logger.info("Phone error is: "+result.getFieldError("phone"));
+                        logger.info("Salary error is: "+result.getFieldError("salary"));
+                        logger.info("Position error is: "+result.getFieldError("position"));
+                        logger.info("Name is: "+employee.getName());
+                        logger.info("Position is: "+position);
+                } else {
+                        logger.info("no errors on position, but there may be other errors");
+                }
+
+                // Bean name is: Waiter - > WaiterService (save ())
+                //EmployeeService employee = (EmployeeService) applicationContext.getBean(position);
+                //employee.save(name, dob, phone, salary, position);
+                return "redirect:/employees";
         }
 
         // Read (update form)
-        @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+        @RequestMapping(value = "/edit_employee/{id}", method = RequestMethod.GET)
         public String showEmployeeEditForm(@PathVariable("id") int id, ModelMap map){
                 Employee employee = employeeService.getEmployeeById(id);
                 map.addAttribute("employee", employee);

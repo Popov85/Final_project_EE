@@ -5,10 +5,12 @@
 
 <html>
 <head>
-        <title>Title</title>
+        <title>Employees</title>
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css">
 </head>
 <body>
+<h3 class="form-signin-heading" align="center">Employees:</h3>
+<details title="All existing employees:">
 <table class="table table-bordered" align="center">
         <thead>
         <tr>
@@ -31,11 +33,12 @@
                 <td><c:out value="${employee.phone}"/></td>
                 <td><c:out value="${employee.position.name}"/></td>
                 <td><c:out value="${employee.salary}"/></td>
-                <td><a href="/edit/${employee.id}">Edit</a></td>
+                <td><a href="/edit_employee/${employee.id}">Edit</a></td>
                 <td><a href="delete_employee/${employee.id}">Delete</a></td>
         </tr>
         </c:forEach>
         </tbody>
 </table>
+</details>
 </body>
 </html>
