@@ -9,8 +9,9 @@
 </head>
 <body>
 <div class="container">
+    <h3 class="form-signin-heading" align="center">Employee:</h3>
     <form:form action="save_employee" method="post" modelAttribute="employee" style="max-width: 320px; margin: 0 auto; font-size: larger;">
-        <h3 class="form-signin-heading" align="center">Employee:</h3>
+
         <div class="form-group">
             <form:hidden path="id" title="id" size="10"/>
         </div>

@@ -18,5 +18,14 @@
         <property name="suffix" value = ".jsp"/>
     </bean>
 
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <bean class="com.goit.popov.restaurant.controller.converters.PositionConverter"/>
+            </set>
+        </property>
+    </bean>
+
+    <mvc:annotation-driven conversion-service="conversionService"/>
 
 </beans>

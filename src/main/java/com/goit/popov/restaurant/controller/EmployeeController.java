@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -53,7 +51,7 @@ public class EmployeeController {
         public Map<String, String> populatePositions() {
                 List<Position> positions = positionService.getAll();
                 Map<String, String> positionsList = new HashMap<>();
-                positionsList.put(null, "Select Position");
+                positionsList.put("Unknown", "Select Position");
                 for (Position position : positions) {
                         positionsList.put(position.getName(), position.getName());
                 }
@@ -82,37 +80,15 @@ public class EmployeeController {
         }
 
         // Create
-        /*@RequestMapping(value="/save_employee",method = RequestMethod.POST)
-        public String saveEmployee(@RequestParam("position") String position,
-                                         @RequestParam("name") String name, @RequestParam("phone") String phone,
-                                         @RequestParam("dob") Date dob, @RequestParam("salary") BigDecimal salary){
-
-
-                // Bean name is: Waiter - > WaiterService (save ())
-                EmployeeService employee = (EmployeeService) applicationContext.getBean(position);
-                employee.save(name, dob, phone, salary, position);
-                return "redirect:/employees";
-        }*/
-
-        // Create
         @RequestMapping(value="/save_employee",method = RequestMethod.POST)
-        public String saveEmployee(@Valid @ModelAttribute("employee") Employee employee, BindingResult result, @RequestParam("position") String position){
+        public String saveEmployee(@Valid @ModelAttribute("employee") Employee employee, BindingResult result,
+                                   @RequestParam("position") String position){
                 if (result.hasErrors()) {
-                        logger.info("has errors");
-                        logger.info("Name error is: "+result.getFieldError("name"));
-                        logger.info("Date error is: "+result.getFieldError("dob"));
-                        logger.info("Phone error is: "+result.getFieldError("phone"));
-                        logger.info("Salary error is: "+result.getFieldError("salary"));
-                        logger.info("Position error is: "+result.getFieldError("position"));
-                        logger.info("Name is: "+employee.getName());
-                        logger.info("Position is: "+position);
-                } else {
-                        logger.info("no errors on position, but there may be other errors");
+                        return "new_employee";
                 }
-
                 // Bean name is: Waiter - > WaiterService (save ())
-                //EmployeeService employee = (EmployeeService) applicationContext.getBean(position);
-                //employee.save(name, dob, phone, salary, position);
+                EmployeeService employeeService = (EmployeeService) applicationContext.getBean(position);
+                employeeService.save(employee);
                 return "redirect:/employees";
         }
 
@@ -127,13 +103,16 @@ public class EmployeeController {
         }
 
         // Update
-        @RequestMapping(value="/update_employee",method = RequestMethod.POST)
-        public ModelAndView updateEmployee(@RequestParam("id") int id, @ModelAttribute("position") String position,
-                                         @RequestParam("name") String name, @RequestParam("phone") String phone,
-                                         @RequestParam("dob") Date dob, @RequestParam("salary") BigDecimal salary){
-                EmployeeService employee = (EmployeeService) applicationContext.getBean(position);
-                employee.update(id, name, dob, phone, salary, position);
-                return new ModelAndView("redirect:/employees");
+        @RequestMapping(value="/update_employee", method = RequestMethod.POST)
+        public String updateEmployee(@Valid @ModelAttribute("employee") Employee employee, BindingResult result,
+                                           @RequestParam("position") String position){
+                if (result.hasErrors()) {
+                        logger.info("# of errors is: "+result.getFieldErrorCount());
+                        return "update_employee";
+                }
+                EmployeeService employeeService = (EmployeeService) applicationContext.getBean(position);
+                employeeService.update(employee);
+                return "redirect:/employees";
         }
 
         // Delete

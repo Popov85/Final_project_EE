@@ -10,63 +10,59 @@
 </head>
 <body>
 <div class="container">
-        <form action="/update_employee" method="post" modelAttribute = "employee"
-              style="max-width: 320px; margin: 0 auto; font-size: larger;">
-                <h3 class="form-signin-heading" align="center">Employee:</h3>
-                <div class="form-group">
-                        <input type="text" readonly="readonly" name="id" title="ID" size="10"
-                               value="<c:out value="${employee.id}"/>">
-                </div>
-                <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" id="name" class="form-control" placeholder=""
-                               name="name" value="<c:out value="${employee.name}"/>"
-                               required autofocus style="z-index: 2;">
-                </div>
-                <div class="form-group">
-                        <label for="dob">DOB</label>
-                        <input type="text" id="dob" class="form-control" placeholder=""
-                               name="dob" value="<fmt:formatDate pattern="MM/dd/yyyy" value="${employee.dob}"/>"
-                               required autofocus style="z-index: 2;">
-                </div>
+<h3 class="form-signin-heading" align="center">Employee:</h3>
+<form:form action="${pageContext.request.contextPath}/update_employee" method="post" modelAttribute="employee" style="max-width: 320px; margin: 0 auto; font-size: larger;">
 
-                <div class="form-group">
-                        <label for="phone">Phone:</label>
-                        <input type="text" id="phone" class="form-control" placeholder=""
-                               name="phone" value="<c:out value="${employee.phone}"/>"
-                               required autofocus style="z-index: 2;">
-                </div>
+        <div class="form-group">
+                <form:hidden path="id" value="${employee.id}" title="id" size="10"/>
+        </div>
+        <div class="form-group">
+                <label for="name">Name</label>
+                <form:input path="name" value="${employee.name}" title="name" cssClass="form-control"/>
+                <font color="red"><form:errors path="name"/></font>
+        </div>
 
-                <div class="form-group">
-                        <label for="position">Position</label>
+        <div class="form-group">
+                <label for="dob">DOB</label>
+                <fmt:formatDate value="${employee.dob}" var="dateString" pattern="MM/dd/yyyy" />
+                <form:input path="dob" value="${dateString}" title="MM/dd/yyyy" cssClass="form-control"/>
+                <font color="red"><form:errors path="dob"/></font>
+        </div>
+
+        <div class="form-group">
+                <label for="phone">Phone:</label>
+                <form:input path="phone" value="${employee.phone}" title="phone" cssClass="form-control"/>
+                <font color="red"><form:errors path="phone"/></font>
+        </div>
+
+        <div class="form-group">
+                <label for="position">Position</label>
                         <br>
-                        <form:select id="position" name ="position" path="position" items="${positions}" />
-                </div>
+                <form:select path="position" value="${employee.position}" items="${positions}" />
+                <font color="red"><form:errors path="position"/></font>
+        </div>
 
-                <script>document.getElementById("position").value = '${employee.position.name}';</script>
+        <div class="form-group">
+                <label for="salary">Salary</label>
+                <form:input path="salary" value="${employee.salary}" title="salary" cssClass="form-control"/>
+                <font color="red"><form:errors path="salary"/></font>
+        </div>
 
-                <div class="form-group">
-                        <label for="salary">Salary</label>
-                        <input type="text" id="salary" class="form-control" placeholder=""
-                               name="salary" value="<c:out value="${employee.salary}"/>"
-                               required autofocus style="z-index: 2;">
-                </div>
+        <div class="form-group">
+                <button class="btn btn-primary btn-block" type="submit">Save</button>
+        </div>
 
-                <div class="form-group">
-                        <button class="btn btn-primary btn-block" type="submit">Save</button>
-                </div>
-
-                <div class="form-group">
-                        <div class="row">
-                                <div class="col-md-6">
-                                        <a class="hyperlink" href="/employees">See all</a>
-                                </div>
-                                <div class="col-md-6" align="right">
-                                        <a class="hyperlink" href="/index.jsp">Home</a>
-                                </div>
+        <div class="form-group">
+                <div class="row">
+                        <div class="col-md-6">
+                                <a class="hyperlink" href="/employees">See all</a>
+                        </div>
+                        <div class="col-md-6" align="right">
+                                <a class="hyperlink" href="/">Home</a>
                         </div>
                 </div>
-        </form>
+        </div>
+</form:form>
 </div>
 </body>
 </html>
