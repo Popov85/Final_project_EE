@@ -31,8 +31,7 @@ public class Employee {
         @Column(name = "EMP_NAME")
         protected String name;
 
-        //@NotEmpty(message = "Date of birth mustn't be empty")
-        //@DateTimeFormat(pattern="MM/dd/YYYY")
+        @DateTimeFormat(pattern = "MM/dd/yyyy")
         @Column(name = "DOB")
         protected Date dob;
 

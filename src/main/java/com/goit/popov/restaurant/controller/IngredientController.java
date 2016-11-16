@@ -45,17 +45,12 @@ public class IngredientController {
         @RequestMapping(value="/save_ingredient",method = RequestMethod.POST)
         public String saveIngredient(@Valid @ModelAttribute("ingredient") Ingredient ingredient, BindingResult result){
                 if (result.hasErrors()) {
-                        logger.info("Ingredient form has errors");
-                        logger.info("Name error is: "+result.getFieldError("name"));
-                        logger.info("Unit error is: "+result.getFieldError("unit"));
+                        return "new_ingredient";
                 } else {
-                        logger.info("Ingredient form has no errors");
+                        ingredientService.save(ingredient);
+                        return "redirect:/ingredients";
                 }
-                logger.info(ingredient.toString());
-                //ingredientService.save(ingredient);
-                return "redirect:/ingredients";
         }
-
 
         /* It displays object data into form for the given id. The @PathVariable puts URL data into variable.*/
         @RequestMapping(value="/update_ingredient/{id}", method = RequestMethod.GET)
