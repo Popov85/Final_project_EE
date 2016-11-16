@@ -1,4 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <html>
 <head>
         <title>Home</title>
@@ -41,7 +44,7 @@
                 <td bgcolor="#aaa" width="100%">
                         <details title="All existing employees:">
                                 <label for="menu">Our menus:</label>
-                                <table id="menu" class="table table-bordered" align="center">
+                                <table id="menu" align="center" width="100%" border="0">
                                         <thead>
                                         <tr>
                                                 <th>Id</th>
@@ -59,13 +62,13 @@
                                                         <td><c:out value="${menu.id}"/></td>
                                                         <td><c:out value="${menu.name}"/></td>
                                                         <c:forEach items="${menu.dishes}" var="dish">
-                                                                <tr>
                                                                         <td><c:out value="${dish.name}"/></td>
-                                                                        <td><c:out value="${dish.catrgory}"/></td>
+                                                                        <td><c:out value="${dish.category}"/></td>
                                                                         <td><c:out value="${dish.price}"/></td>
-                                                                        <td><c:out value="${dish.weightt}"/></td>
+                                                                        <td><c:out value="${dish.weight}"/></td>
                                                                         <td><a href="/like_dish/${dish.id}">Like</a></td>
                                                                 </tr>
+                                                                <tr><td></td><td></td>
                                                         </c:forEach>
                                                 </tr>
                                         </c:forEach>

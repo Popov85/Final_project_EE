@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,10 +36,17 @@ public class IngredientController {
         }
 
         // Get All
-        @RequestMapping(value = "/ingredients", method = RequestMethod.GET)
+        /*@RequestMapping(value = "/ingredients", method = RequestMethod.GET)
         public String ingredients(Map<String, Object> model) {
                 model.put("ingredients", ingredientService.getAll());
                 return "ingredients";
+        }*/
+
+        // Get All
+        @RequestMapping(value = "/ingredients", method = RequestMethod.GET)
+        @ModelAttribute("ingredients")
+        public List<Ingredient> ingredients() {
+                return ingredientService.getAll();
         }
 
         // Create

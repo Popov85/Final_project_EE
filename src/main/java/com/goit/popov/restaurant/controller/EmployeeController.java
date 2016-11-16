@@ -28,7 +28,7 @@ import java.util.Map;
 @Controller
 public class EmployeeController {
 
-        static Logger logger = (Logger) LoggerFactory.getLogger(EmployeeController.class);
+        private static final Logger logger = (Logger) LoggerFactory.getLogger(EmployeeController.class);
 
         private EmployeeService employeeService;
         private PositionService positionService;
