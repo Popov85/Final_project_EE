@@ -67,8 +67,7 @@
                                                                         <td><c:out value="${dish.price}"/></td>
                                                                         <td><c:out value="${dish.weight}"/></td>
                                                                         <td><a href="/like_dish/${dish.id}">Like</a></td>
-                                                                </tr>
-                                                                <tr><td></td><td></td>
+                                                                </tr><tr><td></td><td></td>
                                                         </c:forEach>
                                                 </tr>
                                         </c:forEach>

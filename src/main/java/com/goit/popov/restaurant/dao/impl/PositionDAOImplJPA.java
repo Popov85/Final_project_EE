@@ -1,10 +1,10 @@
 package com.goit.popov.restaurant.dao.impl;
 
 import com.goit.popov.restaurant.dao.entity.PositionDAO;
-import com.goit.popov.restaurant.model.Employee;
 import com.goit.popov.restaurant.model.Position;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -14,6 +14,7 @@ import java.util.List;
  */
 public class PositionDAOImplJPA implements PositionDAO {
 
+        @Autowired
         private SessionFactory sessionFactory;
 
         public void setSessionFactory(SessionFactory sessionFactory) {

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd"
+       default-autowire="byName">
+
+    <context:annotation-config/>
+    <tx:annotation-driven transaction-manager="txManager" proxy-target-class="true"/>
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:jdbc.properties"/>
+    </bean>
+
+    <bean id = "dataSource" class = "org.apache.commons.dbcp.BasicDataSource" autowire="byName">
+        <property name="driverClassName" value="${jdbc.driver.class}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.user}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <bean id = "sessionFactory" class = "org.springframework.orm.hibernate5.LocalSessionFactoryBean" autowire="byName">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan" value ="com.goit.popov.restaurant.model"/>
+        <property name="hibernateProperties">
+            <value>
+                hibernate.dialect = org.hibernate.dialect.PostgreSQL9Dialect
+            </value>
+        </property>
+    </bean>
+
+    <bean id ="txManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager" autowire="byName">
+        <property name="sessionFactory" ref = "sessionFactory"/>
+    </bean>
+
+
+    <bean id = "helper" class="com.goit.popov.restaurant.dao.Helper" autowire="byName"/>
+
+    <bean id="expectedPosition" class="com.goit.popov.restaurant.model.Position" autowire="byName">
+        <property name="id" value="1000000"/>
+        <property name="name" value="TestCleaner"/>
+    </bean>
+
+    <!--<bean id="expectedEmployee" class="com.goit.popov.restaurant.model.Employee" autowire="byName">
+        <property name="name" value="Mr. Test"/>
+        <property name="dob" value="1999-10-10"/>
+        <property name="phone" value="+380630000000"/>
+        <property name="position" ref="expectedPosition"/>
+        <property name="salary" value = "12000"/>
+    </bean>-->
+
+    <bean id="positionDAO" class="com.goit.popov.restaurant.dao.impl.PositionDAOImplJPA" autowire="byName"/>
+    <bean id="employeeDAO" class="com.goit.popov.restaurant.dao.impl.EmployeeDAOImplJPA" autowire="byName"/>
+
+
+
+</beans>
