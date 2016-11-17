@@ -1,19 +1,14 @@
 package com.goit.popov.restaurant.dao;
 
 import com.goit.popov.restaurant.dao.entity.EmployeeDAO;
-import com.goit.popov.restaurant.dao.impl.EmployeeDAOImplJPA;
 import com.goit.popov.restaurant.model.Employee;
 import com.goit.popov.restaurant.model.Position;
-import org.hibernate.SessionFactory;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.List;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -21,16 +16,7 @@ import static org.junit.Assert.assertNull;
 /**
  * Created by Andrey on 10/17/2016.
  */
-public class EmployeeDAOTest {
-
-        private ApplicationContext context;
-
-        private static final String EMP_NAME = "Mr. Test";
-        private static final String EMP_DOB = "1999-10-10";
-        private static final int EMP_POS = 1;
-        private static final String EMP_POS_NAME = "Manager";
-        private static final BigDecimal EMP_SAL = new BigDecimal(12000);
-        private static final String EMP_PHONE = "+380630000000";
+public class EmployeeDAOTest extends AbstractDAOTest {
 
         private static final String EMP_NAME_UPD = "Mr. Test";
         private static final String EMP_DOB_UPD = "1999-11-11";
@@ -39,29 +25,49 @@ public class EmployeeDAOTest {
         private static final String EMP_UPD_PHONE = "+380630101010";
         private static final BigDecimal EMP_UPD_SAL = new BigDecimal(13000);
 
-
+        @Autowired
         private Employee expectedEmployee;
+
+        @Autowired
+        private Position expectedPosition;
+
+        @Autowired
+        private EmployeeDAO employeeDAO;
+
+        @Autowired
+        private Helper helper;
+
+        public void setExpectedPosition(Position expectedPosition) {
+                this.expectedPosition = expectedPosition;
+        }
+
+        public void setExpectedEmployee(Employee expectedEmployee) {
+                this.expectedEmployee = expectedEmployee;
+        }
+
+        public void setEmployeeDAO(EmployeeDAO employeeDAO) {
+                this.employeeDAO = employeeDAO;
+        }
+
+        public void setHelper(Helper helper) {
+                this.helper = helper;
+        }
 
         private Employee actualEmployee;
 
         private int generatedId;
 
-        private EmployeeDAO employeeDAO;
-
-        private SessionFactory sessionFactory;
-
-        private Helper helper;
-
         @Before
         public void setUp() throws Exception {
-                context = new ClassPathXmlApplicationContext("test-context.xml");
-                employeeDAO = (EmployeeDAOImplJPA) context.getBean("employeeDAO");
-                sessionFactory = (SessionFactory) context.getBean("sessionFactory");
-                helper = (Helper) context.getBean("helper");
-                expectedEmployee = createEmployee();
+                createDependencies();
         }
 
-        @Test
+        @After
+        public void tearDown() throws Exception {
+                deleteDependencies();
+        }
+
+        @Override
         public void test() {
                 // Create
                 insert();
@@ -77,41 +83,32 @@ public class EmployeeDAOTest {
                 delete();
         }
 
-        private void readName() {
-                expectedEmployee = employeeDAO.getByName(EMP_NAME);
-                assertEquals(actualEmployee, expectedEmployee);
+        private void createDependencies() {
+                helper.insertPosition(expectedPosition);
         }
 
-        private Employee createEmployee() {
-                Employee employee = new Employee();
-                employee.setName(EMP_NAME);
-                try {
-                        employee.setDob(Helper.format.parse(EMP_DOB));
-                } catch (ParseException e) {
-                        e.printStackTrace();
-                }
-                Position position = new Position();
-                position.setId(EMP_POS);
-                position.setName(EMP_POS_NAME);
-                employee.setPosition(position);
-                employee.setPhone(EMP_PHONE);
-                employee.setSalary(EMP_SAL);
-                return employee;
+        private void deleteDependencies() {
+                helper.deletePosition(expectedPosition);
         }
 
-        private void insert() {
+        public void insert() {
                 generatedId = employeeDAO.insert(expectedEmployee);
                 assertNotNull(generatedId);
                 actualEmployee = helper.getByIdEmployee(generatedId);
                 assertEquals(expectedEmployee, actualEmployee);
         }
 
-        private void read() {
+        public void read() {
                 expectedEmployee = employeeDAO.getById(generatedId);
                 assertEquals(actualEmployee, expectedEmployee);
         }
 
-        private void update() {
+        public void readName() {
+                expectedEmployee = employeeDAO.getByName(expectedEmployee.getName());
+                assertEquals(actualEmployee, expectedEmployee);
+        }
+
+        public void update() {
                 expectedEmployee.setName(EMP_NAME_UPD);
                 try {
                         expectedEmployee.setDob(Helper.format.parse(EMP_DOB_UPD));
@@ -130,12 +127,12 @@ public class EmployeeDAOTest {
                 assertEquals(expectedEmployee, updatedEmployee);
         }
 
-        private void readAll() {
+        public void readAll() {
                 List<Employee> positionList = employeeDAO.getAll();
                 assertNotNull(positionList.size());
         }
 
-        private void delete() {
+        public void delete() {
                 employeeDAO.delete(this.actualEmployee);
                 Position actualPosition = helper.getByIdPosition(generatedId);
                 assertNull(actualPosition);

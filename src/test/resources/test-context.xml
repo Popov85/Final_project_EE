@@ -39,21 +39,28 @@
         <property name="sessionFactory" ref = "sessionFactory"/>
     </bean>
 
+    <bean id="dateFormat" class="java.text.SimpleDateFormat">
+        <constructor-arg value="yyyy-MM-dd" />
+    </bean>
 
     <bean id = "helper" class="com.goit.popov.restaurant.dao.Helper" autowire="byName"/>
 
     <bean id="expectedPosition" class="com.goit.popov.restaurant.model.Position" autowire="byName">
         <property name="id" value="1000000"/>
-        <property name="name" value="TestCleaner"/>
+        <property name="name" value="TestPosition"/>
     </bean>
 
-    <!--<bean id="expectedEmployee" class="com.goit.popov.restaurant.model.Employee" autowire="byName">
-        <property name="name" value="Mr. Test"/>
-        <property name="dob" value="1999-10-10"/>
+    <bean id="expectedEmployee" class="com.goit.popov.restaurant.model.Employee" autowire="byName">
+        <property name="name" value="TestName"/>
+        <property name="dob">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="2010-01-31" />
+            </bean>
+        </property>
         <property name="phone" value="+380630000000"/>
         <property name="position" ref="expectedPosition"/>
         <property name="salary" value = "12000"/>
-    </bean>-->
+    </bean>
 
     <bean id="positionDAO" class="com.goit.popov.restaurant.dao.impl.PositionDAOImplJPA" autowire="byName"/>
     <bean id="employeeDAO" class="com.goit.popov.restaurant.dao.impl.EmployeeDAOImplJPA" autowire="byName"/>

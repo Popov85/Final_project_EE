@@ -32,4 +32,13 @@ public class Helper {
         public Employee getByIdEmployee(int id) {
                 return sessionFactory.getCurrentSession().get(Employee.class, id);
         }
+
+        @Transactional
+        public void insertPosition(Position position) {
+                sessionFactory.getCurrentSession().save(position);
+        }
+        @Transactional
+        public void deletePosition(Position position) {
+                sessionFactory.getCurrentSession().remove(position);
+        }
 }
