@@ -20,8 +20,6 @@ public class EmployeeDAOTest extends AbstractDAOTest {
 
         private static final String EMP_NAME_UPD = "Mr. Test";
         private static final String EMP_DOB_UPD = "1999-11-11";
-        private static final int EMP_POS_UPD = 2;
-        private static final String EMP_POS_NAME_UPD = "Chef";
         private static final String EMP_UPD_PHONE = "+380630101010";
         private static final BigDecimal EMP_UPD_SAL = new BigDecimal(13000);
 
@@ -90,14 +88,14 @@ public class EmployeeDAOTest extends AbstractDAOTest {
         private void deleteDependencies() {
                 helper.deletePosition(expectedPosition);
         }
-
+        @Override
         public void insert() {
                 generatedId = employeeDAO.insert(expectedEmployee);
                 assertNotNull(generatedId);
                 actualEmployee = helper.getByIdEmployee(generatedId);
                 assertEquals(expectedEmployee, actualEmployee);
         }
-
+        @Override
         public void read() {
                 expectedEmployee = employeeDAO.getById(generatedId);
                 assertEquals(actualEmployee, expectedEmployee);
@@ -107,7 +105,7 @@ public class EmployeeDAOTest extends AbstractDAOTest {
                 expectedEmployee = employeeDAO.getByName(expectedEmployee.getName());
                 assertEquals(actualEmployee, expectedEmployee);
         }
-
+        @Override
         public void update() {
                 expectedEmployee.setName(EMP_NAME_UPD);
                 try {
@@ -115,23 +113,18 @@ public class EmployeeDAOTest extends AbstractDAOTest {
                 } catch (ParseException e) {
                         e.printStackTrace();
                 }
-                Position position = new Position();
-                position.setId(EMP_POS_UPD);
-                position.setName(EMP_POS_NAME_UPD);
-                expectedEmployee.setPosition(position);
                 expectedEmployee.setPhone(EMP_UPD_PHONE);
                 expectedEmployee.setSalary(EMP_UPD_SAL);
-
                 employeeDAO.update(expectedEmployee);
                 Employee updatedEmployee = helper.getByIdEmployee(generatedId);
                 assertEquals(expectedEmployee, updatedEmployee);
         }
-
+        @Override
         public void readAll() {
                 List<Employee> positionList = employeeDAO.getAll();
                 assertNotNull(positionList.size());
         }
-
+        @Override
         public void delete() {
                 employeeDAO.delete(this.actualEmployee);
                 Position actualPosition = helper.getByIdPosition(generatedId);

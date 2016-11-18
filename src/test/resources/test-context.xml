@@ -43,6 +43,10 @@
         <constructor-arg value="yyyy-MM-dd" />
     </bean>
 
+    <bean id="timeFormat" class="java.text.SimpleDateFormat">
+        <constructor-arg value="yyyy-MM-dd hh:mm:ss" />
+    </bean>
+
     <bean id = "helper" class="com.goit.popov.restaurant.dao.Helper" autowire="byName"/>
 
     <bean id="expectedPosition" class="com.goit.popov.restaurant.model.Position" autowire="byName">
@@ -54,13 +58,147 @@
         <property name="name" value="TestName"/>
         <property name="dob">
             <bean factory-bean="dateFormat" factory-method="parse">
-                <constructor-arg value="2010-01-31" />
+                <constructor-arg value="2010-01-01" />
             </bean>
         </property>
         <property name="phone" value="+380630000000"/>
         <property name="position" ref="expectedPosition"/>
-        <property name="salary" value = "12000"/>
+        <property name="salary" value = "1000"/>
     </bean>
+
+    <bean id="expectedWaiter" class="com.goit.popov.restaurant.model.Waiter" autowire="byName">
+        <property name="name" value="TestWaiter"/>
+        <property name="dob">
+            <bean factory-bean="dateFormat" factory-method="parse">
+                <constructor-arg value="2010-01-02" />
+            </bean>
+        </property>
+        <property name="phone" value="+380630000000"/>
+        <property name="position" ref="expectedPosition"/>
+        <property name="salary" value = "8000"/>
+        <property name="orders">
+            <list>
+                <value>1</value>
+                <ref bean="expectedOrder1"/>
+                <value>2</value>
+                <ref bean="expectedOrder2"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="expectedIngredient1" class = "com.goit.popov.restaurant.model.Ingredient">
+        <property name="id" value="1000000"/>
+        <property name="name" value="TestIngredient1"/>
+        <property name="unit" value="TestUnit1"/>
+    </bean>
+
+    <bean id="expectedIngredient2" class = "com.goit.popov.restaurant.model.Ingredient">
+        <property name="id" value="1000001"/>
+        <property name="name" value="TestIngredient2"/>
+        <property name="unit" value="TestUnit2"/>
+    </bean>
+
+    <bean id="expectedIngredient3" class = "com.goit.popov.restaurant.model.Ingredient">
+        <property name="id" value="1000003"/>
+        <property name="name" value="TestIngredient3"/>
+        <property name="unit" value="TestUnit3"/>
+    </bean>
+
+    <bean id="expectedIngredient4" class = "com.goit.popov.restaurant.model.Ingredient">
+        <property name="id" value="1000004"/>
+        <property name="name" value="TestIngredient4"/>
+        <property name="unit" value="TestUnit4"/>
+    </bean>
+
+    <bean id="expectedDish1" class = "com.goit.popov.restaurant.model.Dish">
+        <property name="id" value="1000000"/>
+        <property name="name" value="TestDish1"/>
+        <property name="category" value="TestCategory1"/>
+        <property name="weight" value="0.330"/>
+        <property name="price" value="23.50"/>
+        <property name="ingredients">
+                <map>
+                    <entry key-ref="expectedIngredient1" value="0.030" />
+                    <entry key-ref="expectedIngredient2" value="0.012" />
+                </map>
+        </property>
+    </bean>
+
+    <bean id="expectedDish2" class = "com.goit.popov.restaurant.model.Dish">
+        <property name="id" value="1000002"/>
+        <property name="name" value="TestDish2"/>
+        <property name="category" value="TestCategory2"/>
+        <property name="weight" value="0.330"/>
+        <property name="price" value="23.50"/>
+        <property name="ingredients">
+            <map>
+                <entry key-ref="expectedIngredient3" value="0.044" />
+                <entry key-ref="expectedIngredient4" value="0.009" />
+            </map>
+        </property>
+    </bean>
+
+    <bean id="expectedDish3" class = "com.goit.popov.restaurant.model.Dish">
+        <property name="id" value="1000003"/>
+        <property name="name" value="TestDish3"/>
+        <property name="category" value="TestCategory3"/>
+        <property name="weight" value="0.200"/>
+        <property name="price" value="10.80"/>
+        <property name="ingredients">
+            <map>
+                <entry key-ref="expectedIngredient1" value="0.360" />
+                <entry key-ref="expectedIngredient3" value="0.024" />
+                <entry key-ref="expectedIngredient4" value="0.005" />
+            </map>
+        </property>
+    </bean>
+    
+    <bean id ="expectedOrder1" class="com.goit.popov.restaurant.model.Order">
+        <property name="id" value="1000000"/>
+        <property name="opened" value="false"/>
+        <property name="table" value="10"/>
+        <property name="openedTimeStamp">
+            <bean factory-bean="timeFormat" factory-method="parse">
+                <constructor-arg value="2010-01-03 10:10:10" />
+            </bean>
+        </property>
+        <property name="closedTimeStamp">
+            <bean factory-bean="timeFormat" factory-method="parse">
+                <constructor-arg value="2010-01-31 11:43:56" />
+            </bean>
+        </property>
+        <property name="waiter" ref="expectedWaiter"/>
+        <property name="dishes">
+            <map>
+                <entry key-ref="expectedDish1" value="1"/>
+                <entry key-ref="expectedDish2" value="2"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id ="expectedOrder2" class="com.goit.popov.restaurant.model.Order">
+        <property name="id" value="1000002"/>
+        <property name="opened" value="true"/>
+        <property name="table" value="11"/>
+        <property name="openedTimeStamp">
+            <bean factory-bean="timeFormat" factory-method="parse">
+                <constructor-arg value="2011-01-04 11:11:11" />
+            </bean>
+        </property>
+        <property name="closedTimeStamp">
+            <bean factory-bean="timeFormat" factory-method="parse">
+                <constructor-arg value="2011-01-04 12:33:27" />
+            </bean>
+        </property>
+        <property name="waiter" ref="expectedWaiter"/>
+        <property name="dishes">
+            <map>
+                <entry key-ref="expectedDish1" value="2"/>
+                <entry key-ref="expectedDish3" value="1"/>
+            </map>
+        </property>
+    </bean>
+
 
     <bean id="positionDAO" class="com.goit.popov.restaurant.dao.impl.PositionDAOImplJPA" autowire="byName"/>
     <bean id="employeeDAO" class="com.goit.popov.restaurant.dao.impl.EmployeeDAOImplJPA" autowire="byName"/>

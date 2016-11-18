@@ -40,30 +40,31 @@ public class PositionDAOTest extends AbstractDAOTest {
 
         private int generatedId;
 
+        @Override
         public void insert() {
                 generatedId = positionDAO.insert(expectedPosition);
                 assertNotNull(generatedId);
                 actualPosition = helper.getByIdPosition(generatedId);
                 assertEquals(expectedPosition, actualPosition);
         }
-
+        @Override
         public void read() {
                 expectedPosition = positionDAO.getById(generatedId);
                 assertEquals(actualPosition, expectedPosition);
         }
-
+        @Override
         public void update() {
                 expectedPosition.setName(POSITION_UPD);
                 positionDAO.update(expectedPosition);
                 Position updatedPosition = helper.getByIdPosition(generatedId);
                 assertEquals(expectedPosition, updatedPosition);
         }
-
+        @Override
         public void readAll() {
                 List<Position> positionList = positionDAO.getAll();
                 assertNotNull(positionList.size());
         }
-
+        @Override
         public void delete() {
                 positionDAO.delete(this.actualPosition);
                 Position actualPosition = helper.getByIdPosition(generatedId);
