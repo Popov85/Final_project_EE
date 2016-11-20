@@ -1,8 +1,10 @@
 package com.goit.popov.restaurant.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -11,9 +13,8 @@ import java.util.List;
 @Entity
 public class Waiter extends Employee {
 
-        @OneToMany(fetch = FetchType.EAGER, mappedBy = "waiter")
-        List<Order> orders;
-
+        @OneToMany(fetch = FetchType.EAGER, mappedBy = "waiter", cascade = CascadeType.REMOVE)
+        private List<Order> orders;
 
         public List<Order> getOrders() {
                 return orders;
@@ -27,12 +28,12 @@ public class Waiter extends Employee {
         public String toString() {
                 return "Waiter{" +
                         "id='" + id + '\'' +
-                        "name='" + name + '\'' +
+                        ", name='" + name + '\'' +
                         ", dob=" + dob +
                         ", phone='" + phone + '\'' +
                         ", position=" + position +
                         ", salary=" + salary +
-                        ", orders=" + orders +
+                        //", orders=" + orders +
                         '}';
         }
 }

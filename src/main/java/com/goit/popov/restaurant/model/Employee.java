@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -48,7 +49,6 @@ public class Employee {
         @Min(value = 1000, message = "Minimal salary is $1000")
         @Column(name = "SALARY")
         protected BigDecimal salary;
-
 
         public int getId() {
                 return id;

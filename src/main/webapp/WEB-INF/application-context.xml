@@ -7,6 +7,9 @@
 
     <bean id = "employeeService" class="com.goit.popov.restaurant.service.EmployeeService"/>
     <bean id="employeeDAO" class="com.goit.popov.restaurant.dao.impl.EmployeeDAOImplJPA"/>
+    <bean id="waiterDAO" class="com.goit.popov.restaurant.dao.impl.WaiterDAOImplJPA"/>
+    <bean id="chefDAO" class="com.goit.popov.restaurant.dao.impl.ChefDAOImplJPA"/>
+    <bean id="managerDAO" class="com.goit.popov.restaurant.dao.impl.ManagerDAOImpl"/>
     <bean id = "positionService" class="com.goit.popov.restaurant.service.PositionService"/>
     <bean id="positionDAO" class="com.goit.popov.restaurant.dao.impl.PositionDAOImplJPA"/>
 

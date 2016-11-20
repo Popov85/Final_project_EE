@@ -1,7 +1,6 @@
 package com.goit.popov.restaurant.dao;
 
-import com.goit.popov.restaurant.model.Employee;
-import com.goit.popov.restaurant.model.Position;
+import com.goit.popov.restaurant.model.*;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,11 +33,67 @@ public class Helper {
         }
 
         @Transactional
+        public Waiter getByIdWaiter(int id) {
+                return sessionFactory.getCurrentSession().get(Waiter.class, id);
+        }
+
+        @Transactional
+        public Dish getByIdDish(int id) {
+                return sessionFactory.getCurrentSession().get(Dish.class, id);
+        }
+        @Transactional
+        public Order getByIdOrder(int id) {
+                return sessionFactory.getCurrentSession().get(Order.class, id);
+        }
+
+        @Transactional
         public void insertPosition(Position position) {
                 sessionFactory.getCurrentSession().save(position);
         }
+
         @Transactional
         public void deletePosition(Position position) {
                 sessionFactory.getCurrentSession().remove(position);
+        }
+
+        @Transactional
+        public void insertIngredient(Ingredient ingredient) {
+                sessionFactory.getCurrentSession().save(ingredient);
+        }
+
+        @Transactional
+        public void deleteIngredient(Ingredient ingredient) {
+                sessionFactory.getCurrentSession().remove(ingredient);
+        }
+
+        @Transactional
+        public void insertDish(Dish dish) {
+                sessionFactory.getCurrentSession().save(dish);
+        }
+
+        @Transactional
+        public void deleteDish(Dish dish) {
+                sessionFactory.getCurrentSession().remove(dish);
+        }
+
+        @Transactional
+        public void insertWaiter(Waiter waiter) {
+                sessionFactory.getCurrentSession().save(waiter);
+        }
+
+        @Transactional
+        public void deleteWaiter(Waiter waiter) {
+                sessionFactory.getCurrentSession().remove(waiter);
+        }
+
+
+        @Transactional
+        public void insertOrder(Order order) {
+                sessionFactory.getCurrentSession().save(order);
+        }
+
+        @Transactional
+        public void deleteOrder(Order order) {
+                sessionFactory.getCurrentSession().remove(order);
         }
 }

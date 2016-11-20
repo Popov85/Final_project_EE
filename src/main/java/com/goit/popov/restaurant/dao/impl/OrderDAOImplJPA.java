@@ -39,7 +39,7 @@ public class OrderDAOImplJPA implements OrderDAO {
         @Transactional
         @Override
         public int insert(Order order) {
-                updateStock(order);
+                //updateStock(order);
                 return (int) sessionFactory.getCurrentSession().save(order);
         }
 

@@ -34,7 +34,7 @@ public class WaiterDAOImplJPA implements WaiterDAO {
         @Transactional
         @Override
         public List<Waiter> getAll() {
-                return sessionFactory.getCurrentSession().createQuery("select e from Waiter e").list();
+                return sessionFactory.getCurrentSession().createQuery("select w from Waiter w").list();
         }
 
         @Transactional

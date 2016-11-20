@@ -24,16 +24,13 @@ public class EmployeeDAOTest extends AbstractDAOTest {
         private static final BigDecimal EMP_UPD_SAL = new BigDecimal(13000);
 
         @Autowired
-        private Employee expectedEmployee;
-
-        @Autowired
-        private Position expectedPosition;
-
+        private Helper helper;
         @Autowired
         private EmployeeDAO employeeDAO;
-
         @Autowired
-        private Helper helper;
+        private Employee expectedEmployee;
+        @Autowired
+        private Position expectedPosition;
 
         public void setExpectedPosition(Position expectedPosition) {
                 this.expectedPosition = expectedPosition;
@@ -121,13 +118,13 @@ public class EmployeeDAOTest extends AbstractDAOTest {
         }
         @Override
         public void readAll() {
-                List<Employee> positionList = employeeDAO.getAll();
-                assertNotNull(positionList.size());
+                List<Employee> employeeList = employeeDAO.getAll();
+                assertNotNull(employeeList.size());
         }
         @Override
         public void delete() {
                 employeeDAO.delete(this.actualEmployee);
-                Position actualPosition = helper.getByIdPosition(generatedId);
-                assertNull(actualPosition);
+                Employee actualEmployee = helper.getByIdEmployee(generatedId);
+                assertNull(actualEmployee);
         }
 }

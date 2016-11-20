@@ -135,6 +135,7 @@ public class Order {
                         ", openedTimeStamp=" + openedTimeStamp +
                         ", closedTimeStamp=" + closedTimeStamp +
                         ", table=" + table +
+                        ", dishes=" + dishes +
                         '}';
         }
 }
