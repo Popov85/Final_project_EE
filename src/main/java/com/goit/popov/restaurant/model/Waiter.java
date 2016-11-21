@@ -1,9 +1,6 @@
 package com.goit.popov.restaurant.model;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
@@ -11,6 +8,7 @@ import java.util.List;
  * Created by Andrey on 11/4/2016.
  */
 @Entity
+//@DiscriminatorValue("3")
 public class Waiter extends Employee {
 
         @OneToMany(fetch = FetchType.EAGER, mappedBy = "waiter", cascade = CascadeType.REMOVE)

@@ -51,6 +51,8 @@ public class EmployeeDAOImplJPA implements EmployeeDAO {
         @Override
         public void delete(Employee employee) {
                 sessionFactory.getCurrentSession().delete(employee);
+                sessionFactory.getCurrentSession().flush();
+                System.out.println("Flush is done...");
         }
 
         @Transactional(propagation = Propagation.REQUIRED)

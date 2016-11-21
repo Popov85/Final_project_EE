@@ -8,13 +8,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -94,24 +97,38 @@ public class EmployeeController {
 
         // Read (update form)
         @RequestMapping(value = "/edit_employee/{id}", method = RequestMethod.GET)
-        public String showEmployeeEditForm(@PathVariable("id") int id, ModelMap map){
+        public String showEmployeeEditForm(@PathVariable("id") int id, ModelMap map, HttpSession session){
                 Employee employee = employeeService.getEmployeeById(id);
                 map.addAttribute("employee", employee);
                 map.addAttribute("positions", populatePositions());
                 map.addAttribute("position", employee.getPosition().getName());
+                session.setAttribute("position",employee.getPosition().getName());
                 return "update_employee";
         }
 
         // Update
         @RequestMapping(value="/update_employee", method = RequestMethod.POST)
         public String updateEmployee(@Valid @ModelAttribute("employee") Employee employee, BindingResult result,
-                                           @RequestParam("position") String position){
+                                           @RequestParam("position") String newPosition, HttpSession session){
                 if (result.hasErrors()) {
                         logger.info("# of errors is: "+result.getFieldErrorCount());
                         return "update_employee";
                 }
-                EmployeeService employeeService = (EmployeeService) applicationContext.getBean(position);
-                employeeService.update(employee);
+                String previousPosition = (String) session.getAttribute("position");
+                EmployeeService employeeService = (EmployeeService) applicationContext.getBean(newPosition);
+                if (!previousPosition.equals(newPosition)) {
+                        logger.info("Position changed! Previous was: "+previousPosition+
+                                " new position is: "+newPosition);
+                        try {
+                                employeeService.update(employee, true);
+                        } catch (Exception e) {
+                                logger.info("Error updating employee"+e.getMessage());
+                                return "update_employee";
+                        }
+                } else {
+                        employeeService.update(employee);
+                        logger.info("Successfully updated employee");
+                }
                 return "redirect:/employees";
         }
 

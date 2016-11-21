@@ -34,15 +34,23 @@ public class WaiterService extends EmployeeService<Waiter> {
         public void update(Employee employee) {
                 Waiter waiter = transform(employee);
                 waiterDAO.update(waiter);
-                logger.info("Updated waiter: "+waiter);
-                /*if (!employee.getPosition().getName().equals("Waiter")) {
-                        employeeDAO.delete(employee);
+                logger.info("Updated waiter: "+employee);
+        }
+
+        @Transactional
+        public void update(Employee employee, boolean rewrite) throws Exception {
+                Waiter waiter = transform(employee);
+                if (rewrite) {
+                        try {
+                                employeeDAO.delete(employee);
+                                logger.info("Deleted employee: "+employee);
+                                Thread.sleep(5000);
+                        } catch (Exception e) {
+                                throw new Exception("Cannot change the position, employee has references!");
+                        }
                         waiterDAO.insert(waiter);
                         logger.info("Re-inserted waiter: "+waiter);
-                } else {
-                        waiterDAO.update(waiter);
-                        logger.info("Updated waiter: "+waiter);
-                }*/
+                }
         }
 
         private Waiter transform(Employee employee) {

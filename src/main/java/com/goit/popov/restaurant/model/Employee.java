@@ -19,6 +19,7 @@ import java.util.Date;
 @Entity
 @Table(name = "employee")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+//@DiscriminatorColumn(name="POS_ID", discriminatorType=DiscriminatorType.INTEGER)
 public class Employee {
 
         @Id

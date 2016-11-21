@@ -2,10 +2,8 @@ package com.goit.popov.restaurant.service;
 
 import ch.qos.logback.classic.Logger;
 import com.goit.popov.restaurant.dao.entity.ChefDAO;
-import com.goit.popov.restaurant.dao.entity.WaiterDAO;
 import com.goit.popov.restaurant.model.Chef;
 import com.goit.popov.restaurant.model.Employee;
-import com.goit.popov.restaurant.model.Waiter;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
