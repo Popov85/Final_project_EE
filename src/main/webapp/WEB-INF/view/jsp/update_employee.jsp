@@ -40,6 +40,7 @@
                         <br>
                 <form:select path="position" value="${employee.position}" items="${positions}" />
                 <font color="red"><form:errors path="position"/></font>
+                <font color="red"><c:out value="${integrityViolationError}"/></font>
         </div>
 
         <div class="form-group">

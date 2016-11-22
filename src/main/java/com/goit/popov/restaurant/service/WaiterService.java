@@ -1,55 +1,47 @@
 package com.goit.popov.restaurant.service;
 
 import ch.qos.logback.classic.Logger;
-import com.goit.popov.restaurant.dao.entity.WaiterDAO;
 import com.goit.popov.restaurant.model.Employee;
 import com.goit.popov.restaurant.model.Waiter;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 
 /**
  * Created by Andrey on 11/13/2016.
  */
-public class WaiterService extends EmployeeService<Waiter> {
+public class WaiterService extends EmployeeService {
 
         private static final Logger logger = (Logger) LoggerFactory.getLogger(WaiterService.class);
-
-        @Autowired
-        protected WaiterDAO waiterDAO;
-
-        public void setWaiterDAO(WaiterDAO waiterDAO) {
-                this.waiterDAO = waiterDAO;
-        }
-
+        @Override
         @Transactional
         public void save(Employee employee) {
                 Waiter waiter = transform(employee);
-                waiterDAO.insert(waiter);
+                employeeDAO.insert(waiter);
                 logger.info("Saved waiter: "+waiter);
         }
-
+        @Override
         @Transactional
         public void update(Employee employee) {
                 Waiter waiter = transform(employee);
-                waiterDAO.update(waiter);
+                employeeDAO.update(waiter);
                 logger.info("Updated waiter: "+employee);
         }
 
+        @Override
         @Transactional
         public void update(Employee employee, boolean rewrite) throws Exception {
                 Waiter waiter = transform(employee);
                 if (rewrite) {
                         try {
                                 employeeDAO.delete(employee);
-                                logger.info("Deleted employee: "+employee);
-                                Thread.sleep(5000);
                         } catch (Exception e) {
-                                throw new Exception("Cannot change the position, employee has references!");
+                                throw new RuntimeException("Cannot change the position to waiter, employee has references!");
                         }
-                        waiterDAO.insert(waiter);
+                        employeeDAO.insert(waiter);
                         logger.info("Re-inserted waiter: "+waiter);
+                } else {
+                        update(waiter);
                 }
         }
 
@@ -63,5 +55,4 @@ public class WaiterService extends EmployeeService<Waiter> {
                 waiter.setSalary(employee.getSalary());
                 return waiter;
         }
-
 }

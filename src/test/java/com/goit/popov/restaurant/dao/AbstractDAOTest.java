@@ -13,11 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration(locations={"/test-context.xml"})
 public abstract class AbstractDAOTest {
 
-        @Transactional
+        //@Transactional
         @Test
         public void test() {
                 // Create
-                insert();
+                 insert();
                 // Read by id
                 read();
                 // Read all

@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Created by Andrey on 11/13/2016.
  */
-public class ManagerService extends EmployeeService<Manager> {
+public class ManagerService extends EmployeeService {
 
         private static final Logger logger = (Logger) LoggerFactory.getLogger(ManagerService.class);
 
@@ -21,19 +21,35 @@ public class ManagerService extends EmployeeService<Manager> {
         public void setManagerDAO(ManagerDAO managerDAO) {
                 this.managerDAO = managerDAO;
         }
-
+        @Override
         @Transactional
         public void save(Employee employee) {
                 Manager manager = transform(employee);
                 employeeDAO.insert(manager);
                 logger.info("Saved manager: "+manager);
         }
-
+        @Override
         @Transactional
         public void update(Employee employee) {
                 Manager manager =transform(employee);
                 employeeDAO.update(manager);
                 logger.info("Updated manager: "+manager);
+        }
+        @Override
+        @Transactional
+        public void update(Employee employee, boolean rewrite) throws Exception {
+                Manager manager = transform(employee);
+                if (rewrite) {
+                        try {
+                                employeeDAO.delete(employee);
+                        } catch (Exception e) {
+                                throw new RuntimeException("Cannot change the position to manager, employee has references!");
+                        }
+                        employeeDAO.insert(manager);
+                        logger.info("Re-inserted chef: "+manager);
+                } else {
+                        update(manager);
+                }
         }
 
         private Manager transform(Employee employee) {

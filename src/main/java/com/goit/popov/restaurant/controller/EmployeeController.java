@@ -8,13 +8,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.context.ApplicationContext;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
@@ -109,7 +108,7 @@ public class EmployeeController {
         // Update
         @RequestMapping(value="/update_employee", method = RequestMethod.POST)
         public String updateEmployee(@Valid @ModelAttribute("employee") Employee employee, BindingResult result,
-                                           @RequestParam("position") String newPosition, HttpSession session){
+                                           @RequestParam("position") String newPosition, HttpSession session, Model model){
                 if (result.hasErrors()) {
                         logger.info("# of errors is: "+result.getFieldErrorCount());
                         return "update_employee";
@@ -122,6 +121,7 @@ public class EmployeeController {
                         try {
                                 employeeService.update(employee, true);
                         } catch (Exception e) {
+                                model.addAttribute("integrityViolationError",e.getMessage());
                                 logger.info("Error updating employee"+e.getMessage());
                                 return "update_employee";
                         }

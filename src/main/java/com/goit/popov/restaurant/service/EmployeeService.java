@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by Andrey on 11/13/2016.
  */
-public class EmployeeService<T extends Employee> {
+public class EmployeeService {
 
         private static final Logger logger = (Logger) LoggerFactory.getLogger(EmployeeService.class);
 
@@ -41,6 +41,7 @@ public class EmployeeService<T extends Employee> {
         @Transactional
         public void save(Employee employee) {
                 employeeDAO.insert(employee);
+                logger.info("Saved employee: "+employee);
         }
 
         @Transactional
@@ -62,27 +63,29 @@ public class EmployeeService<T extends Employee> {
                         try {
                                 employeeDAO.delete(employee);
                         } catch (Exception e) {
-                                throw new Exception("Cannot change the position, employee has references!");
+                                throw new RuntimeException("Cannot change the position, employee has references!");
                         }
                         employeeDAO.insert(emp);
                         logger.info("Re-inserted employee: "+emp);
+                } else {
+                        update(employee);
                 }
         }
 
         /**
          * Transforms object from any type extending Employee to Employee
          * E.g. Waiter - > Cleaner (Employee type) OR Guard (Employee type)
-         * @param employee
+         * @param oldEmployee
          * @return
          */
-        private Employee transform(Employee employee) {
-                Employee emp = new Employee();
-                emp.setId(employee.getId());
-                emp.setName(employee.getName());
-                emp.setDob(employee.getDob());
-                emp.setPhone(employee.getPhone());
-                emp.setPosition(employee.getPosition());
-                emp.setSalary(employee.getSalary());
-                return emp;
+        private Employee transform(Employee oldEmployee) {
+                Employee newEmployee = new Employee();
+                newEmployee.setId(oldEmployee.getId());
+                newEmployee.setName(oldEmployee.getName());
+                newEmployee.setDob(oldEmployee.getDob());
+                newEmployee.setPhone(oldEmployee.getPhone());
+                newEmployee.setPosition(oldEmployee.getPosition());
+                newEmployee.setSalary(oldEmployee.getSalary());
+                return newEmployee;
         }
 }

@@ -59,7 +59,7 @@ public class DishDAOTest extends AbstractDAOTest {
 
         @Before
         public void setUp() throws Exception {
-                //displayInjections();
+                displayInjections();
                 createDependencies();
         }
 
