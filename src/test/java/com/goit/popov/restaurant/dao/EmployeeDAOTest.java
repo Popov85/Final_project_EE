@@ -6,6 +6,8 @@ import com.goit.popov.restaurant.model.Position;
 import org.junit.After;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.List;
@@ -16,6 +18,7 @@ import static org.junit.Assert.assertNull;
 /**
  * Created by Andrey on 10/17/2016.
  */
+@Transactional
 public class EmployeeDAOTest extends AbstractDAOTest {
 
         private static final String EMP_NAME_UPD = "Mr. Test";

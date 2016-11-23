@@ -1,8 +1,11 @@
 package com.goit.popov.restaurant.dao;
 
+import org.springframework.transaction.annotation.Transactional;
+
 /**
  * Created by Andrey on 18.11.2016.
  */
+@Transactional
 public class IngredientDAOTest extends AbstractDAOTest {
 
         @Override

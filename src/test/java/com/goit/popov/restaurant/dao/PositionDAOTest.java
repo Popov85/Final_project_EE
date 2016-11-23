@@ -3,6 +3,8 @@ package com.goit.popov.restaurant.dao;
 import com.goit.popov.restaurant.dao.entity.PositionDAO;
 import com.goit.popov.restaurant.model.Position;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -11,6 +13,7 @@ import static org.junit.Assert.assertNull;
 /**
  * Created by Andrey on 27.10.2016.
  */
+@Transactional
 public class PositionDAOTest extends AbstractDAOTest {
 
         private static final String POSITION_UPD = "Janitor";

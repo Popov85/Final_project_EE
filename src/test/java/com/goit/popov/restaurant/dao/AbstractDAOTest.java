@@ -9,11 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Created by Andrey on 11/17/2016.
  */
+@Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"/test-context.xml"})
 public abstract class AbstractDAOTest {
 
-        //@Transactional
         @Test
         public void test() {
                 // Create

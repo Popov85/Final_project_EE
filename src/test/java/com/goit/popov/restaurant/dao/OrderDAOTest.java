@@ -7,6 +7,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.text.ParseException;
 import java.util.List;
 
@@ -17,6 +19,7 @@ import static org.junit.Assert.assertNull;
 /**
  * Created by Andrey on 18.11.2016.
  */
+@Transactional
 public class OrderDAOTest extends AbstractDAOTest {
 
         private static final Logger logger = (Logger) LoggerFactory.getLogger(OrderDAOTest.class);
