@@ -56,58 +56,16 @@ public class OrderDAOTest extends AbstractDAOTest {
 
         private int generatedId;
 
-        public void setHelper(Helper helper) {
-                this.helper = helper;
-        }
-
-        public void setOrderDAO(OrderDAO orderDAO) {
-                orderDAO = orderDAO;
-        }
-
-        public Order getExpectedOrder1() {
-                return expectedOrder1;
-        }
-
-        public void setExpectedDish1(Dish expectedDish1) {
-                this.expectedDish1 = expectedDish1;
-        }
-
-        public void setExpectedDish2(Dish expectedDish2) {
-                this.expectedDish2 = expectedDish2;
-        }
-
-        public void setExpectedIngredient1(Ingredient expectedIngredient1) {
-                this.expectedIngredient1 = expectedIngredient1;
-        }
-
-        public void setExpectedIngredient2(Ingredient expectedIngredient2) {
-                this.expectedIngredient2 = expectedIngredient2;
-        }
-
-        public void setExpectedIngredient3(Ingredient expectedIngredient3) {
-                this.expectedIngredient3 = expectedIngredient3;
-        }
-
-        public void setExpectedIngredient4(Ingredient expectedIngredient4) {
-                this.expectedIngredient4 = expectedIngredient4;
-        }
-
-        public void setExpectedWaiter(Waiter expectedWaiter) {
-                this.expectedWaiter1 = expectedWaiter;
-        }
-
-        public void setExpectedPosition(Position expectedPosition) {
-                this.expectedPosition = expectedPosition;
-        }
-
         @Before
         public void setUp() throws Exception {
                 createDependencies();
+                logger.info("References inserted: OK");
         }
 
         @After
         public void tearDown() throws Exception {
                 deleteDependencies();
+                logger.info("References deleted: OK");
         }
 
         private void createDependencies() {
@@ -119,7 +77,6 @@ public class OrderDAOTest extends AbstractDAOTest {
                 helper.insertDish(expectedDish2);
                 helper.insertPosition(expectedPosition);
                 helper.insertWaiter(expectedWaiter1);
-                logger.info("References inserted: OK");
         }
 
         private void deleteDependencies() {
@@ -131,7 +88,6 @@ public class OrderDAOTest extends AbstractDAOTest {
                 helper.deleteIngredient(expectedIngredient4);
                 helper.deleteWaiter(expectedWaiter1);
                 helper.deletePosition(expectedPosition);
-                logger.info("References deleted: OK");
         }
 
         @Override
