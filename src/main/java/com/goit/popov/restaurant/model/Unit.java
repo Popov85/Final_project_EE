@@ -1,34 +1,29 @@
 package com.goit.popov.restaurant.model;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
- * Ingredient class
- * @Author: Andrey P.
- * @version 1.0
+ * Created by Andrey on 24.11.2016.
  */
 @Entity
-@Table(name = "ingredient")
-public class Ingredient {
-
+@Table(name = "unit")
+public class Unit {
         @Id
         @GeneratedValue(generator = "increment")
         @GenericGenerator(name = "increment", strategy = "increment")
-        @Column(name = "ING_ID")
-        private int id;
+        @Column(name = "U_ID")
+        protected int id;
 
-        @NotEmpty(message = "Ingredient must have a name")
-        @Column(name = "ING_NAME")
-        private String name;
-
-        @NotNull(message = "Unit mustn't be empty")
-        @ManyToOne(fetch = FetchType.EAGER)
-        @JoinColumn(name = "UNIT_ID")
-        private Unit unit;
+        //@NotEmpty(message = "Please, provide name for a unit")
+        //@Size(min=1, max=15)
+        //@Length(min = 1, max = 15)
+        @Column(name = "U_NAME")
+        protected String name;
 
         public int getId() {
                 return id;
@@ -46,40 +41,24 @@ public class Ingredient {
                 this.name = name;
         }
 
-        public Unit getUnit() {
-                return unit;
-        }
-
-        public void setUnit(Unit unit) {
-                this.unit = unit;
-        }
-
         @Override
         public boolean equals(Object o) {
                 if (this == o) return true;
                 if (o == null || getClass() != o.getClass()) return false;
-
-                Ingredient that = (Ingredient) o;
-
-                if (!name.equals(that.name)) return false;
-                return unit.equals(that.unit);
-
+                Unit unit = (Unit) o;
+                return name.equals(unit.name);
         }
 
         @Override
         public int hashCode() {
-                int result = name.hashCode();
-                result = 31 * result + unit.hashCode();
-                return result;
+                return name.hashCode();
         }
 
         @Override
         public String toString() {
-                return "Ingredient{" +
+                return "Unit{" +
                         "id=" + id +
                         ", name='" + name + '\'' +
-                        ", unit='" + unit + '\'' +
                         '}';
         }
 }
-

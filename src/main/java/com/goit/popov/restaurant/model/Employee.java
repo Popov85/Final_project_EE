@@ -28,6 +28,16 @@ public class Employee {
         @Column(name = "EMP_ID")
         protected int id;
 
+        @NotEmpty(message = "Login is a required field")
+        @Size(min=4, max=25, message = "Login has from 4 to 25 characters")
+        @Column(name = "EMP_LOGIN")
+        protected String login;
+
+        @NotEmpty(message = "Password is a required field")
+        @Size(min=8, max=16, message = "Password must have from 8 to 16 characters")
+        @Column(name = "EMP_PASSWORD")
+        protected String password;
+
         @NotEmpty(message = "Please, provide name for an employee")
         @Size(min=5, max=50)
         @Column(name = "EMP_NAME")
@@ -51,8 +61,19 @@ public class Employee {
         @Column(name = "SALARY")
         protected BigDecimal salary;
 
+        @Column(name = "PHOTO")
+        protected byte[] photo;
+
         public int getId() {
                 return id;
+        }
+
+        public String getLogin() {
+                return login;
+        }
+
+        public String getPassword() {
+                return password;
         }
 
         public String getName() {
@@ -75,12 +96,24 @@ public class Employee {
                 return salary;
         }
 
+        public byte[] getPhoto() {
+                return photo;
+        }
+
         public void setId(int id) {
                 this.id = id;
         }
 
         public void setName(String name) {
                 this.name = name;
+        }
+
+        public void setLogin(String login) {
+                this.login = login;
+        }
+
+        public void setPassword(String password) {
+                this.password = password;
         }
 
         public void setDob(Date dob) {
@@ -99,36 +132,43 @@ public class Employee {
                 this.salary = salary;
         }
 
+        public void setPhoto(byte[] photo) {
+                this.photo = photo;
+        }
+
         @Override
         public boolean equals(Object o) {
                 if (this == o) return true;
                 if (o == null || getClass() != o.getClass()) return false;
-
                 Employee employee = (Employee) o;
-
-                if (name != null ? !name.equals(employee.name) : employee.name != null) return false;
-                if (dob != null ? !dob.equals(employee.dob) : employee.dob != null) return false;
-                if (phone != null ? !phone.equals(employee.phone) : employee.phone != null) return false;
-                if (position != null ? !position.equals(employee.position) : employee.position != null) return false;
-                return salary != null ? salary.equals(employee.salary) : employee.salary == null;
-
+                if (!login.equals(employee.login)) return false;
+                if (!password.equals(employee.password)) return false;
+                if (!name.equals(employee.name)) return false;
+                if (!dob.equals(employee.dob)) return false;
+                if (!phone.equals(employee.phone)) return false;
+                if (!position.equals(employee.position)) return false;
+                return salary.equals(employee.salary);
         }
 
         @Override
         public int hashCode() {
-                int result = name != null ? name.hashCode() : 0;
-                result = 31 * result + (dob != null ? dob.hashCode() : 0);
-                result = 31 * result + (phone != null ? phone.hashCode() : 0);
-                result = 31 * result + (position != null ? position.hashCode() : 0);
-                result = 31 * result + (salary != null ? salary.hashCode() : 0);
+                int result = login.hashCode();
+                result = 31 * result + password.hashCode();
+                result = 31 * result + name.hashCode();
+                result = 31 * result + dob.hashCode();
+                result = 31 * result + phone.hashCode();
+                result = 31 * result + position.hashCode();
+                result = 31 * result + salary.hashCode();
                 return result;
         }
 
         @Override
         public String toString() {
                 return "Employee{" +
-                        "id='" + id + '\'' +
-                        "name='" + name + '\'' +
+                        "id=" + id +
+                        ", login='" + login + '\'' +
+                        ", password='" + password + '\'' +
+                        ", name='" + name + '\'' +
                         ", dob=" + dob +
                         ", phone='" + phone + '\'' +
                         ", position=" + position +

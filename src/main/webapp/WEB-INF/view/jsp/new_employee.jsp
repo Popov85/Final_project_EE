@@ -15,6 +15,19 @@
         <div class="form-group">
             <form:hidden path="id" title="id" size="10"/>
         </div>
+
+        <div class="form-group">
+            <label for="login">Login</label>
+            <form:input path="login" title="login" cssClass="form-control"/>
+            <font color="red"><form:errors path="login" /></font>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <form:password path="password" title="login" cssClass="form-control"/>
+            <font color="red"><form:errors path="password" /></font>
+        </div>
+
         <div class="form-group">
             <label for="name">Name</label>
             <form:input path="name" title="name" cssClass="form-control"/>
@@ -28,7 +41,7 @@
         </div>
 
         <div class="form-group">
-            <label for="phone">Phone:</label>
+            <label for="phone">Phone</label>
             <form:input path="phone" title="phone" cssClass="form-control"/>
             <font color="red"><form:errors path="phone" /></font>
         </div>

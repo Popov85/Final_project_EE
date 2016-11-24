@@ -8,7 +8,7 @@
        http://www.springframework.org/schema/tx
        http://www.springframework.org/schema/tx/spring-tx.xsd
        http://www.springframework.org/schema/context
-       http://www.springframeworkgit.org/schema/context/spring-context.xsd"
+       http://www.springframework.org/schema/context/spring-context.xsd"
        default-autowire="byName">
 
     <context:annotation-config/>
@@ -35,7 +35,7 @@
         </property>
     </bean>
 
-    <bean id ="txManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager" autowire="byName">
+    <bean id ="txManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
         <property name="sessionFactory" ref = "sessionFactory"/>
     </bean>
 
@@ -47,13 +47,15 @@
         <constructor-arg value="yyyy-MM-dd HH:mm:ss" />
     </bean>
 
-    <bean id = "helper" class="com.goit.popov.restaurant.dao.Helper" autowire="byName"/>
+    <bean id = "helper" class="com.goit.popov.restaurant.dao.Helper"/>
 
-    <bean id="expectedPosition" class="com.goit.popov.restaurant.model.Position" autowire="byName">
+    <bean id="expectedPosition" class="com.goit.popov.restaurant.model.Position">
         <property name="name" value="TestPosition"/>
     </bean>
 
-    <bean id="expectedEmployee" class="com.goit.popov.restaurant.model.Employee" autowire="byName">
+    <bean id="expectedEmployee" class="com.goit.popov.restaurant.model.Employee">
+        <property name="login" value="TestLogin"/>
+        <property name="password" value="TestPassword"/>
         <property name="name" value="TestName"/>
         <property name="dob">
             <bean factory-bean="dateFormat" factory-method="parse">
@@ -65,7 +67,9 @@
         <property name="salary" value = "1000"/>
     </bean>
 
-    <bean id="expectedWaiter" class="com.goit.popov.restaurant.model.Waiter" autowire="byName">
+    <bean id="expectedWaiter" class="com.goit.popov.restaurant.model.Waiter">
+        <property name="login" value="TestLogin"/>
+        <property name="password" value="TestPassword"/>
         <property name="name" value="TestWaiter"/>
         <property name="dob">
             <bean factory-bean="dateFormat" factory-method="parse">
@@ -83,7 +87,9 @@
         </property>
     </bean>
 
-    <bean id="expectedWaiter1" class="com.goit.popov.restaurant.model.Waiter" autowire="byName">
+    <bean id="expectedWaiter1" class="com.goit.popov.restaurant.model.Waiter">
+        <property name="login" value="TestLogin"/>
+        <property name="password" value="TestPassword"/>
         <property name="name" value="TestWaiter"/>
         <property name="dob">
             <bean factory-bean="dateFormat" factory-method="parse">
@@ -95,24 +101,32 @@
         <property name="salary" value = "9000"/>
     </bean>
 
+    <bean id = "expectedUnit" class = "com.goit.popov.restaurant.model.Unit">
+        <property name="name" value="L"/>
+    </bean>
+
+    <bean id = "expectedUnit2" class = "com.goit.popov.restaurant.model.Unit">
+        <property name="name" value="Kg"/>
+    </bean>
+
     <bean id="expectedIngredient1" class = "com.goit.popov.restaurant.model.Ingredient">
         <property name="name" value="TestIngredient1"/>
-        <property name="unit" value="TestUnit1"/>
+        <property name="unit" ref = "expectedUnit"/>
     </bean>
 
     <bean id="expectedIngredient2" class = "com.goit.popov.restaurant.model.Ingredient">
         <property name="name" value="TestIngredient2"/>
-        <property name="unit" value="TestUnit2"/>
+        <property name="unit" ref = "expectedUnit"/>
     </bean>
 
     <bean id="expectedIngredient3" class = "com.goit.popov.restaurant.model.Ingredient">
         <property name="name" value="TestIngredient3"/>
-        <property name="unit" value="TestUnit3"/>
+        <property name="unit" ref = "expectedUnit2"/>
     </bean>
 
     <bean id="expectedIngredient4" class = "com.goit.popov.restaurant.model.Ingredient">
         <property name="name" value="TestIngredient4"/>
-        <property name="unit" value="TestUnit4"/>
+        <property name="unit" ref = "expectedUnit2"/>
     </bean>
 
     <bean id="bigDecimalValue1" class="java.math.BigDecimal">

@@ -122,7 +122,6 @@ public class Order {
                 result = 31 * result + openedTimeStamp.hashCode();
                 result = 31 * result + (closedTimeStamp != null ? closedTimeStamp.hashCode() : 0);
                 result = 31 * result + table;
-                result = 31 * result + waiter.hashCode();
                 result = 31 * result + dishes.hashCode();
                 return result;
         }

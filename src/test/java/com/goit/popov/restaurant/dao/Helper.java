@@ -96,4 +96,14 @@ public class Helper {
         public void deleteOrder(Order order) {
                 sessionFactory.getCurrentSession().remove(order);
         }
+
+        @Transactional
+        public void insertUnit(Unit unit) {
+                sessionFactory.getCurrentSession().save(unit);
+        }
+
+        @Transactional
+        public void deleteUnit(Unit unit) {
+                sessionFactory.getCurrentSession().remove(unit);
+        }
 }

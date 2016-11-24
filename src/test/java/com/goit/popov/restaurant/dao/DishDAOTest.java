@@ -4,6 +4,7 @@ import ch.qos.logback.classic.Logger;
 import com.goit.popov.restaurant.dao.entity.DishDAO;
 import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Ingredient;
+import com.goit.popov.restaurant.model.Unit;
 import org.junit.After;
 import org.junit.Before;
 import org.slf4j.LoggerFactory;
@@ -39,6 +40,8 @@ public class DishDAOTest extends AbstractDAOTest {
         private Ingredient expectedIngredient1;
         @Autowired
         private Ingredient expectedIngredient2;
+        @Autowired
+        private Unit expectedUnit;
 
         private Dish actualDish;
 
@@ -57,6 +60,7 @@ public class DishDAOTest extends AbstractDAOTest {
         }
 
         private void createDependencies() {
+                helper.insertUnit(expectedUnit);
                 helper.insertIngredient(expectedIngredient1);
                 helper.insertIngredient(expectedIngredient2);
         }
@@ -64,6 +68,7 @@ public class DishDAOTest extends AbstractDAOTest {
         private void deleteDependencies() {
                 helper.deleteIngredient(expectedIngredient1);
                 helper.deleteIngredient(expectedIngredient2);
+                helper.deleteUnit(expectedUnit);
         }
 
         @Override
