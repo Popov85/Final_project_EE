@@ -115,34 +115,9 @@
         <property name="unit" value="TestUnit4"/>
     </bean>
 
-    <bean id="doubleValue1" class="java.lang.Double">
-        <constructor-arg index="0" value="0.33"/>
-    </bean>
-
-    <bean id="doubleValueIng1" class="java.lang.Double">
-        <constructor-arg index="0" value="0.03"/>
-    </bean>
-
-    <bean id="doubleValueIng2" class="java.lang.Double">
-        <constructor-arg index="0" value="0.012"/>
-    </bean>
-
     <bean id="bigDecimalValue1" class="java.math.BigDecimal">
         <constructor-arg index="0" value="23.5"/>
     </bean>
-
-    <!--<bean id="expectedDish1" class = "com.goit.popov.restaurant.model.Dish">
-        <property name="name" value="TestDish1"/>
-        <property name="category" value="TestCategory1"/>
-        <property name="weight" ref="doubleValue1"/>
-        <property name="price" ref="bigDecimalValue1"/>
-        <property name="ingredients">
-                <map>
-                    <entry key-ref="expectedIngredient1" value-ref="doubleValueIng1"/>
-                    <entry key-ref="expectedIngredient2" value-ref="doubleValueIng2"/>
-                </map>
-        </property>
-    </bean>-->
 
    <bean id="expectedDish1" class = "com.goit.popov.restaurant.model.Dish">
         <property name="name" value="TestDish1"/>
@@ -239,8 +214,8 @@
         </property>
     </bean>
 
-    <bean id="positionDAO" class="com.goit.popov.restaurant.dao.impl.PositionDAOImplJPA" autowire="byName"/>
-    <bean id="employeeDAO" class="com.goit.popov.restaurant.dao.impl.EmployeeDAOImplJPA" autowire="byName"/>
+    <bean id="positionDAO" class="com.goit.popov.restaurant.dao.impl.PositionDAOImplJPA"/>
+    <bean id="employeeDAO" class="com.goit.popov.restaurant.dao.impl.EmployeeDAOImplJPA"/>
     <bean id="waiterDAO" class="com.goit.popov.restaurant.dao.impl.WaiterDAOImplJPA"/>
     <bean id="dishDAO" class = "com.goit.popov.restaurant.dao.impl.DishDAOImplJPA"/>
     <bean id="ingredientDAO" class="com.goit.popov.restaurant.dao.impl.IngredientDAOImplJPA"/>

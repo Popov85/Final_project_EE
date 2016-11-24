@@ -48,38 +48,6 @@ public class WaiterDAOTest extends AbstractDAOTest {
         @Autowired
         private Ingredient expectedIngredient2;
 
-        public void setExpectedDish1(Dish expectedDish1) {
-                this.expectedDish1 = expectedDish1;
-        }
-
-        public void setExpectedIngredient1(Ingredient expectedIngredient1) {
-                this.expectedIngredient1 = expectedIngredient1;
-        }
-
-        public void setExpectedIngredient2(Ingredient expectedIngredient2) {
-                this.expectedIngredient2 = expectedIngredient2;
-        }
-
-        public void setHelper(Helper helper) {
-                this.helper = helper;
-        }
-
-        public void setWaiterDAO(WaiterDAO waiterDAO) {
-                this.waiterDAO = waiterDAO;
-        }
-
-        public void setExpectedWaiter(Waiter expectedWaiter) {
-                this.expectedWaiter1 = expectedWaiter;
-        }
-
-        public void setExpectedPosition(Position expectedPosition) {
-                this.expectedPosition = expectedPosition;
-        }
-
-        public void setExpectedOrder3(Order expectedOrder3) {
-                this.expectedOrder3 = expectedOrder3;
-        }
-
         private Waiter actualWaiter;
 
         private int generatedId;
@@ -87,21 +55,13 @@ public class WaiterDAOTest extends AbstractDAOTest {
         @Before
         public void setUp() throws Exception {
                 createDependencies();
-                displayDependencies();
+                logger.info("References inserted: OK");
         }
 
         @After
         public void tearDown() throws Exception {
                 deleteDependencies();
-                displayDependencies();
-        }
-
-        private void displayDependencies() {
-                System.out.println("Position! "+expectedPosition);
-                System.out.println("Waiter1! "+expectedWaiter1);
-                System.out.println("Ingredients! "+expectedIngredient1+" / "+expectedIngredient2);
-                System.out.println("Dish1! "+expectedDish1);
-                System.out.println("Order3! "+expectedOrder3);
+                logger.info("References deleted: OK");
         }
 
         private void createDependencies() {
@@ -111,14 +71,12 @@ public class WaiterDAOTest extends AbstractDAOTest {
                 helper.insertIngredient(expectedIngredient2);
                 helper.insertDish(expectedDish1);
                 helper.insertOrder(expectedOrder3);
-                logger.info("References inserted: OK");
         }
 
         private void deleteDependencies() {
                 helper.deleteDish(expectedDish1);
                 helper.deleteIngredient(expectedIngredient1);
                 helper.deleteIngredient(expectedIngredient2);
-                logger.info("References deleted: OK");
         }
 
         @Override

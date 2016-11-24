@@ -1,10 +1,12 @@
 package com.goit.popov.restaurant.dao;
 
+import ch.qos.logback.classic.Logger;
 import com.goit.popov.restaurant.dao.entity.DishDAO;
 import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Ingredient;
 import org.junit.After;
 import org.junit.Before;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,8 @@ import static org.junit.Assert.assertNull;
  */
 @Transactional
 public class DishDAOTest extends AbstractDAOTest {
+
+        private static final Logger logger = (Logger) LoggerFactory.getLogger(DishDAOTest.class);
 
         private static final String DISH_NAME_UPD = "UpdatedName";
         private static final String DISH_CAT_UPD = "UpdatedCategory";
@@ -40,49 +44,21 @@ public class DishDAOTest extends AbstractDAOTest {
 
         private int generatedId;
 
-        public void setHelper(Helper helper) {
-                this.helper = helper;
-        }
-
-        public void setIngredientDAO(DishDAO ingredientDAO) {
-                this.dishDAO = ingredientDAO;
-        }
-
-        public void setExpectedDish1(Dish expectedDish1) {
-                this.expectedDish1 = expectedDish1;
-        }
-
-        public void setExpectedIngredient1(Ingredient expectedIngredient1) {
-                this.expectedIngredient1 = expectedIngredient1;
-        }
-
-        public void setExpectedIngredient2(Ingredient expectedIngredient2) {
-                this.expectedIngredient2 = expectedIngredient2;
-        }
-
         @Before
         public void setUp() throws Exception {
-                displayInjections();
                 createDependencies();
-        }
-
-        private void displayInjections() {
-                System.out.println("helper = "+helper);
-                System.out.println("dishDAO = "+dishDAO);
-                System.out.println("expectedDish1 = "+expectedDish1);
-                System.out.println("expectedDish1.ingredients = "+expectedDish1.getIngredients());
-                System.out.println("expectedIngredient1 = "+expectedIngredient1);
-                System.out.println("expectedIngredient2 = "+expectedIngredient2);
-        }
-
-        private void createDependencies() {
-                helper.insertIngredient(expectedIngredient1);
-                helper.insertIngredient(expectedIngredient2);
+                logger.info("References inserted: OK");
         }
 
         @After
         public void tearDown() throws Exception {
                 deleteDependencies();
+                logger.info("References deleted: OK");
+        }
+
+        private void createDependencies() {
+                helper.insertIngredient(expectedIngredient1);
+                helper.insertIngredient(expectedIngredient2);
         }
 
         private void deleteDependencies() {
@@ -95,26 +71,22 @@ public class DishDAOTest extends AbstractDAOTest {
                 generatedId = dishDAO.insert(expectedDish1);
                 assertNotNull(generatedId);
                 actualDish = helper.getByIdDish(generatedId);
-                //System.out.println("actualDish: "+actualDish+" /ingredients are: "+actualDish.getIngredients());
                 assertEquals(expectedDish1, actualDish);
-                System.out.println("Insert----------------------");
-                displayInjections();
+                logger.info("Insert: OK");
         }
 
         @Override
         protected void read() {
                 Dish expectedDish = dishDAO.getById(generatedId);
                 assertEquals(actualDish, expectedDish);
-                System.out.println("Read----------------------");
-                displayInjections();
+                logger.info("Read: OK");
         }
 
         @Override
         protected void readAll() {
                 List<Dish> dishList = dishDAO.getAll();
                 assertNotNull(dishList.size());
-                System.out.println("ReadAll----------------------");
-                displayInjections();
+                logger.info("ReadAll: OK");
         }
 
         @Override
@@ -126,9 +98,7 @@ public class DishDAOTest extends AbstractDAOTest {
                 dishDAO.update(expectedDish1);
                 Dish updatedDish = helper.getByIdDish(generatedId);
                 assertEquals(expectedDish1, updatedDish);
-                System.out.println("Update----------------------");
-                displayInjections();
-                System.out.println("UpdatedDish"+updatedDish);
+                logger.info("Update: OK");
         }
 
         @Override
@@ -136,7 +106,6 @@ public class DishDAOTest extends AbstractDAOTest {
                 dishDAO.delete(actualDish);
                 Dish actualDish = helper.getByIdDish(generatedId);
                 assertNull(actualDish);
-                System.out.println("Delete----------------------");
-                displayInjections();
+                logger.info("Delete: OK");
         }
 }
