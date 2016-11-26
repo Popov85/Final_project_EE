@@ -102,11 +102,11 @@
     </bean>
 
     <bean id = "expectedUnit" class = "com.goit.popov.restaurant.model.Unit">
-        <property name="name" value="L"/>
+        <property name="name" value="TestLitre"/>
     </bean>
 
     <bean id = "expectedUnit2" class = "com.goit.popov.restaurant.model.Unit">
-        <property name="name" value="Kg"/>
+        <property name="name" value="TestKg"/>
     </bean>
 
     <bean id="expectedIngredient1" class = "com.goit.popov.restaurant.model.Ingredient">

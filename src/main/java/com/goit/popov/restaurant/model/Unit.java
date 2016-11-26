@@ -19,9 +19,9 @@ public class Unit {
         @Column(name = "U_ID")
         protected int id;
 
-        //@NotEmpty(message = "Please, provide name for a unit")
+        @NotEmpty(message = "Please, provide name for a unit")
         //@Size(min=1, max=15)
-        //@Length(min = 1, max = 15)
+        @Length(min = 1, max = 15)
         @Column(name = "U_NAME")
         protected String name;
 

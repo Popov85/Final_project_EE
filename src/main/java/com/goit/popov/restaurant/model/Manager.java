@@ -9,4 +9,16 @@ import javax.persistence.Entity;
 @Entity
 //@DiscriminatorValue("1")
 public class Manager extends Employee {
+
+        @Override
+        public String toString() {
+                return "Manager{" +
+                        "id='" + id + '\'' +
+                        "name='" + name + '\'' +
+                        ", dob=" + dob +
+                        ", phone='" + phone + '\'' +
+                        ", position=" + position +
+                        ", salary=" + salary +
+                        '}';
+        }
 }

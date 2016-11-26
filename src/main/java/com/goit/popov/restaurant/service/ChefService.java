@@ -46,11 +46,14 @@ public class ChefService extends EmployeeService {
         private Chef transform(Employee employee) {
                 Chef chef = new Chef();
                 chef.setId(employee.getId());
+                chef.setLogin(employee.getLogin());
+                chef.setPassword(employee.getPassword());
                 chef.setName(employee.getName());
                 chef.setDob(employee.getDob());
                 chef.setPhone(employee.getPhone());
                 chef.setPosition(employee.getPosition());
                 chef.setSalary(employee.getSalary());
+                chef.setPhoto(employee.getPhoto());
                 return chef;
         }
 }

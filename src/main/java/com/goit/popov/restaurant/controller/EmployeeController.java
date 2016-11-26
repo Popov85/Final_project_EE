@@ -12,8 +12,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.ByteArrayMultipartFileEditor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
@@ -66,6 +69,7 @@ public class EmployeeController {
                 SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
                 sdf.setLenient(true);
                 binder.registerCustomEditor(Date.class, new CustomDateEditor(sdf, true));
+                binder.registerCustomEditor(byte[].class, new ByteArrayMultipartFileEditor());
         }
 
         // Read All
@@ -84,7 +88,8 @@ public class EmployeeController {
         // Create
         @RequestMapping(value="/save_employee",method = RequestMethod.POST)
         public String saveEmployee(@Valid @ModelAttribute("employee") Employee employee, BindingResult result,
-                                   @RequestParam("position") String position){
+                                   @RequestParam("position") String position, @RequestParam("photo") MultipartFile photo){
+                logger.info("File name is: "+photo.getOriginalFilename());
                 if (result.hasErrors()) {
                         return "new_employee";
                 }
@@ -121,6 +126,7 @@ public class EmployeeController {
                         try {
                                 employeeService.update(employee, true);
                         } catch (Exception e) {
+                                //result.addError(new ObjectError("integrityViolationError", "Only SVG allowed!"));
                                 model.addAttribute("integrityViolationError",e.getMessage());
                                 logger.info("Error updating employee"+e.getMessage());
                                 return "update_employee";
