@@ -85,7 +85,9 @@ public class EmployeeController {
         @RequestMapping(value="/save_employee",method = RequestMethod.POST)
         public String saveEmployee(@Valid @ModelAttribute("employee") Employee employee, BindingResult result,
                                    @RequestParam("position") String position){
+                logger.info("Employee: "+employee);
                 if (result.hasErrors()) {
+                        logger.info("# of errors is: "+result.getFieldErrorCount());
                         return "new_employee";
                 }
                 // Bean name is: Waiter - > WaiterService (save ())
