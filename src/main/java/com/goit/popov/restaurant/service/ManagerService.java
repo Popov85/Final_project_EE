@@ -55,11 +55,14 @@ public class ManagerService extends EmployeeService {
         private Manager transform(Employee employee) {
                 Manager manager = new Manager();
                 manager.setId(employee.getId());
+                manager.setLogin(employee.getLogin());
+                manager.setPassword(employee.getPassword());
                 manager.setName(employee.getName());
                 manager.setDob(employee.getDob());
                 manager.setPhone(employee.getPhone());
                 manager.setPosition(employee.getPosition());
                 manager.setSalary(employee.getSalary());
+                manager.setPhoto(employee.getPhoto());
                 return manager;
         }
 

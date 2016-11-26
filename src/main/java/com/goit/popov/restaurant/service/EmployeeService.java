@@ -6,12 +6,15 @@ import com.goit.popov.restaurant.model.Employee;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.*;
 import java.util.List;
 
 /**
  * Created by Andrey on 11/13/2016.
  */
+@Transactional
 public class EmployeeService {
 
         private static final Logger logger = (Logger) LoggerFactory.getLogger(EmployeeService.class);
@@ -23,28 +26,23 @@ public class EmployeeService {
                 this.employeeDAO = employeeDAO;
         }
 
-        @Transactional
         public List<Employee> getEmployees() {
                 return employeeDAO.getAll();
         }
 
-        @Transactional
         public Employee getEmployeeById(int employeeId) {
                 return employeeDAO.getById(employeeId);
         }
 
-        @Transactional
         public void deleteById(int employeeId) {
                 employeeDAO.delete(getEmployeeById(employeeId));
         }
 
-        @Transactional
         public void save(Employee employee) {
                 employeeDAO.insert(employee);
                 logger.info("Saved employee: "+employee);
         }
 
-        @Transactional
         public void update(Employee employee) {
                 Employee emp = transform(employee);
                 employeeDAO.update(employee);
@@ -56,7 +54,6 @@ public class EmployeeService {
          * @param employee
          * @param rewrite
          */
-        @Transactional
         public void update(Employee employee, boolean rewrite) throws Exception {
                 Employee emp = transform(employee);
                 if (rewrite) {
@@ -81,11 +78,14 @@ public class EmployeeService {
         private Employee transform(Employee oldEmployee) {
                 Employee newEmployee = new Employee();
                 newEmployee.setId(oldEmployee.getId());
+                newEmployee.setLogin(oldEmployee.getLogin());
+                newEmployee.setPassword(oldEmployee.getPassword());
                 newEmployee.setName(oldEmployee.getName());
                 newEmployee.setDob(oldEmployee.getDob());
                 newEmployee.setPhone(oldEmployee.getPhone());
                 newEmployee.setPosition(oldEmployee.getPosition());
                 newEmployee.setSalary(oldEmployee.getSalary());
+                newEmployee.setPhoto(oldEmployee.getPhoto());
                 return newEmployee;
         }
 }

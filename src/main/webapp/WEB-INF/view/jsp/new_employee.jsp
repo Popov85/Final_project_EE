@@ -5,13 +5,13 @@
 <html>
 <head>
     <title>New Waiter</title>
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css">
+     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css">
 </head>
 <body>
 <div class="container">
     <h3 class="form-signin-heading" align="center">Employee:</h3>
-    <form:form action="save_employee" method="post" modelAttribute="employee" style="max-width: 320px; margin: 0 auto; font-size: larger;">
-
+    <form:form action="save_employee" method="post" modelAttribute="employee" enctype="multipart/form-data"
+               style="max-width: 320px; margin: 0 auto; font-size: larger;">
         <div class="form-group">
             <form:hidden path="id" title="id" size="10"/>
         </div>
@@ -45,6 +45,17 @@
             <form:input path="phone" title="phone" cssClass="form-control"/>
             <font color="red"><form:errors path="phone" /></font>
         </div>
+
+
+
+        <!-- |||||||||||||||||||||||||||| -->
+        <div class="form-group">
+            <label>Photo</label>
+            <input type="file" method="POST" accept=".jpg" name="photo" title="Select a photo"/>
+            <font color="red"><form:errors path="photo"/></font>
+        </div>
+
+
 
         <div class="form-group">
             <label for="position">Position</label>

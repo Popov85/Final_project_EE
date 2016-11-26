@@ -5,23 +5,32 @@ import com.goit.popov.restaurant.model.Employee;
 import com.goit.popov.restaurant.model.Waiter;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 
 /**
  * Created by Andrey on 11/13/2016.
  */
+@Transactional
 public class WaiterService extends EmployeeService {
 
         private static final Logger logger = (Logger) LoggerFactory.getLogger(WaiterService.class);
+
         @Override
-        @Transactional
         public void save(Employee employee) {
                 Waiter waiter = transform(employee);
                 employeeDAO.insert(waiter);
                 logger.info("Saved waiter: "+waiter);
         }
+
+        /*public void save(Employee employee, MultipartFile photo) throws IOException {
+                employee.setPhoto(photo.getBytes());
+                save(employee);
+        }*/
+
         @Override
-        @Transactional
         public void update(Employee employee) {
                 Waiter waiter = transform(employee);
                 employeeDAO.update(waiter);
@@ -29,7 +38,6 @@ public class WaiterService extends EmployeeService {
         }
 
         @Override
-        @Transactional
         public void update(Employee employee, boolean rewrite) throws Exception {
                 Waiter waiter = transform(employee);
                 if (rewrite) {
@@ -48,11 +56,14 @@ public class WaiterService extends EmployeeService {
         private Waiter transform(Employee employee) {
                 Waiter waiter = new Waiter();
                 waiter.setId(employee.getId());
+                waiter.setLogin(employee.getLogin());
+                waiter.setPassword(employee.getPassword());
                 waiter.setName(employee.getName());
                 waiter.setDob(employee.getDob());
                 waiter.setPhone(employee.getPhone());
                 waiter.setPosition(employee.getPosition());
                 waiter.setSalary(employee.getSalary());
+                waiter.setPhoto(employee.getPhoto());
                 return waiter;
         }
 }

@@ -2,6 +2,7 @@ package com.goit.popov.restaurant.model;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -9,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -140,14 +142,18 @@ public class Employee {
         public boolean equals(Object o) {
                 if (this == o) return true;
                 if (o == null || getClass() != o.getClass()) return false;
+
                 Employee employee = (Employee) o;
+
                 if (!login.equals(employee.login)) return false;
                 if (!password.equals(employee.password)) return false;
                 if (!name.equals(employee.name)) return false;
                 if (!dob.equals(employee.dob)) return false;
                 if (!phone.equals(employee.phone)) return false;
                 if (!position.equals(employee.position)) return false;
-                return salary.equals(employee.salary);
+                if (!salary.equals(employee.salary)) return false;
+                return Arrays.equals(photo, employee.photo);
+
         }
 
         @Override

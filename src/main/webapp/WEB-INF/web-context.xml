@@ -28,4 +28,8 @@
 
     <mvc:annotation-driven conversion-service="conversionService"/>
 
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    </bean>
+
 </beans>
