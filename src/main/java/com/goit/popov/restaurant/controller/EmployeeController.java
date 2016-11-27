@@ -108,19 +108,22 @@ public class EmployeeController {
                 map.addAttribute("positions", populatePositions());
                 map.addAttribute("position", employee.getPosition().getName());
                 session.setAttribute("position",employee.getPosition().getName());
+                session.setAttribute("file",employee.getPhoto());
                 return "update_employee";
         }
 
         // Update
         @RequestMapping(value="/update_employee", method = RequestMethod.POST)
         public String updateEmployee(@Valid @ModelAttribute("employee") Employee employee, BindingResult result,
-                                           @RequestParam("position") String newPosition, HttpSession session, Model model){
+                                     @RequestParam("position") String newPosition, HttpSession session, Model model,
+                                     @RequestParam("photo") MultipartFile photo){
                 if (result.hasErrors()) {
                         logger.info("# of errors is: "+result.getFieldErrorCount());
                         return "update_employee";
                 }
                 String previousPosition = (String) session.getAttribute("position");
                 EmployeeService employeeService = (EmployeeService) applicationContext.getBean(newPosition);
+                if (photo.isEmpty()) employee.setPhoto((byte[]) session.getAttribute("file"));
                 if (!previousPosition.equals(newPosition)) {
                         logger.info("Position changed! Previous was: "+previousPosition+
                                 " new position is: "+newPosition);

@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <html>
 <head>
         <title>Employee</title>
@@ -10,11 +11,32 @@
 </head>
 <body>
 <div class="container">
-<h3 class="form-signin-heading" align="center">Employee:</h3>
-<form:form action="${pageContext.request.contextPath}/update_employee" method="post" modelAttribute="employee" style="max-width: 320px; margin: 0 auto; font-size: larger;">
+<h3 class="form-signin-heading" align="center">Employee</h3>
+<form:form action="${pageContext.request.contextPath}/update_employee"
+           method="post" modelAttribute="employee" enctype="multipart/form-data"
+           style="max-width: 320px; margin: 0 auto; font-size: larger;">
 
         <div class="form-group">
                 <form:hidden path="id" value="${employee.id}" title="id" size="10"/>
+        </div>
+
+        <div class="form-group" align="center">
+                <c:set var="photo" scope="session" value="${employee.photo}"/>
+                <c:choose>
+                        <c:when test="${fn:length(photo)==0}">
+                                <img src="<c:url value='/img/noimage.jpg'/>" alt="NO image" height="150" width="150"/>
+                        </c:when>
+                        <c:otherwise>
+                                <img src="/img/photo?id=${employee.id}"
+                                     alt="photo" height="150" width="150"/></td>
+                        </c:otherwise>
+                </c:choose>
+        </div>
+
+        <div class="form-group">
+                <label>Photo</label>
+                <input type="file" method="POST" name="photo" title="Photo" value="${employee.photo}"/>
+                <font color="red"><form:errors path="photo"/></font>
         </div>
 
         <div class="form-group">

@@ -46,16 +46,11 @@
             <font color="red"><form:errors path="phone" /></font>
         </div>
 
-
-
-        <!-- |||||||||||||||||||||||||||| -->
         <div class="form-group">
             <label>Photo</label>
             <input type="file" method="POST" accept=".jpg" name="photo" title="Select a photo"/>
             <font color="red"><form:errors path="photo"/></font>
         </div>
-
-
 
         <div class="form-group">
             <label for="position">Position</label>

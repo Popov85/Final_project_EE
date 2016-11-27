@@ -25,11 +25,6 @@ public class WaiterService extends EmployeeService {
                 logger.info("Saved waiter: "+waiter);
         }
 
-        /*public void save(Employee employee, MultipartFile photo) throws IOException {
-                employee.setPhoto(photo.getBytes());
-                save(employee);
-        }*/
-
         @Override
         public void update(Employee employee) {
                 Waiter waiter = transform(employee);

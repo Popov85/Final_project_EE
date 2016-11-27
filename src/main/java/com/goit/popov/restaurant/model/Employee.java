@@ -58,7 +58,7 @@ public class Employee {
         @JoinColumn(name = "POS_ID")
         protected Position position;
 
-        @NotNull
+        @NotNull(message = "Please, provide salary")
         @Min(value = 1000, message = "Minimal salary is $1000")
         @Column(name = "SALARY")
         protected BigDecimal salary;
