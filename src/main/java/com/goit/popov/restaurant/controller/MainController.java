@@ -34,7 +34,7 @@ public class MainController {
         public String index(Map<String, List<Menu>> model) {
                 model.put("menus", menuService.getAll());
                 logger.info("all menus are: "+menuService.getAll().size());
-                return "index";
+                return "jsp/index";
         }
 
 }

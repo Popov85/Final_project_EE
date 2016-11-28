@@ -42,7 +42,7 @@
         </tr>
         <tr valign="top">
                 <td bgcolor="#aaa" width="100%">
-                        <details title="All existing employees:">
+                        <details title="All existing dishes:">
                                 <label for="menu">Our menus:</label>
                                 <table id="menu" align="center" width="100%" border="0">
                                         <thead>

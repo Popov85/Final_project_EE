@@ -9,32 +9,30 @@ import java.util.List;
 /**
  * Created by Andrey on 09.11.2016.
  */
+@Transactional
 public class IngredientService {
         IngredientDAO ingredientDAO;
 
         public void setIngredientDAO(IngredientDAO ingredientDAO) {
                 this.ingredientDAO = ingredientDAO;
         }
-        @Transactional
+
         public void save(Ingredient ingredient) {
                 ingredientDAO.insert(ingredient);
         }
 
-        @Transactional
         public void deleteById(int id) {
                 ingredientDAO.delete(getIngredientById(id));
         }
 
-        @Transactional
         public Ingredient getIngredientById(int id) {
                return ingredientDAO.getById(id);
         }
 
-        @Transactional
         public List<Ingredient> getAll() {
                 return ingredientDAO.getAll();
         }
-        @Transactional
+
         public void update(Ingredient ingredient) {
                 ingredientDAO.update(ingredient);
         }

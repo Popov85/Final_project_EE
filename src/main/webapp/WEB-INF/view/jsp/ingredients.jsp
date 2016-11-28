@@ -23,7 +23,7 @@
     <tr>
         <td><c:out value="${ingredient.id}"/></td>
         <td><c:out value="${ingredient.name}"/></td>
-        <td><c:out value="${ingredient.unit}"/></td>
+        <td><c:out value="${ingredient.unit.name}"/></td>
         <td><a href="/update_ingredient/${ingredient.id}">Edit</a></td>
         <td><a href="delete_ingredient/${ingredient.id}">Delete</a></td>
     </tr>

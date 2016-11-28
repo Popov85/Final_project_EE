@@ -1,6 +1,7 @@
 package com.goit.popov.restaurant.model;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 
@@ -19,6 +20,7 @@ public class Position {
         @Column(name = "POS_ID")
         private int id;
 
+        @NotEmpty(message = "Position cannot be empty!")
         @Column(name = "POS_NAME")
         private String name;
 
@@ -50,7 +52,10 @@ public class Position {
 
         @Override
         public int hashCode() {
-                return name.hashCode();
+                System.out.println("I'm trying to use hashcode");
+                System.out.println("Position object is"+this.toString());
+                //return name.hashCode();
+                return 1;
         }
 
         @Override

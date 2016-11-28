@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>New ingredient</title>
+</head>
+<body>
+<div class="container">
+    <form th:action="@{/save_ingredient}" th:object="${ingredient}" method="post">
+        <h3 class="form-signin-heading" align="center">Ingredient</h3>
+
+        <div class="form-group">
+            <label for="name">Name</label>
+                <input type="text" th:id="name" id="name" th:field="*{name}"/>
+        </div>
+
+        <!--<div class="form-group">
+            <label for="unit">Unit</label>
+            <input type="text" th:id="unit" id="unit" th:field="*{unit}" />
+        </div>-->
+
+        <!--<div class="form-group">
+            <label for="unit">Unit</label>
+            <select th:field="*{unit}" id="unit">
+                <option th:each="type : ${units}"
+                    th:value="${type}"
+                    th:text="#{${'seedstarter.type.' + type}}">Wireframe</option>
+            </select>
+        </div>-->
+
+        <div class="form-group">
+            <button class="btn btn-primary btn-block" type="submit">Save</button>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-6">
+                    <a class="hyperlink" href="/employees">See all</a>
+                </div>
+                <div class="col-md-6" align="right">
+                    <a class="hyperlink" href="/index.jsp">Home</a>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
+</body>
+</html>

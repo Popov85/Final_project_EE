@@ -22,7 +22,8 @@
 
         <div class="form-group">
             <label for="unit">Unit</label>
-            <form:input path="unit" title="unit" cssClass="form-control"/>
+            <br>
+            <form:select path="unit" items="${units}" />
             <font color="red"><form:errors path="unit" /></font>
         </div>
 

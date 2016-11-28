@@ -76,13 +76,13 @@ public class EmployeeController {
         @RequestMapping(value = "/employees", method = RequestMethod.GET)
         public String employees(Map<String, Object> model) {
                 model.put("employees", employeeService.getEmployees());
-                return "employees";
+                return "jsp/employees";
         }
 
         // New form
         @RequestMapping("/new_employee")
         public ModelAndView showEmployeeForm(){
-                return new ModelAndView("new_employee","employee",new Employee());
+                return new ModelAndView("jsp/new_employee","employee",new Employee());
         }
 
         // Create
@@ -92,12 +92,12 @@ public class EmployeeController {
                 logger.info("File name is: "+photo.getOriginalFilename());
                 if (result.hasErrors()) {
                         logger.info("# of errors is: "+result.getFieldErrorCount());
-                        return "new_employee";
+                        return "jsp/new_employee";
                 }
                 // Bean name is: Waiter - > WaiterService (save ())
                 EmployeeService employeeService = (EmployeeService) applicationContext.getBean(position);
                 employeeService.save(employee);
-                return "redirect:/employees";
+                return "jsp/employees";
         }
 
         // Read (update form)
@@ -109,7 +109,7 @@ public class EmployeeController {
                 map.addAttribute("position", employee.getPosition().getName());
                 session.setAttribute("position",employee.getPosition().getName());
                 session.setAttribute("file",employee.getPhoto());
-                return "update_employee";
+                return "jsp/update_employee";
         }
 
         // Update
@@ -119,7 +119,7 @@ public class EmployeeController {
                                      @RequestParam("photo") MultipartFile photo){
                 if (result.hasErrors()) {
                         logger.info("# of errors is: "+result.getFieldErrorCount());
-                        return "update_employee";
+                        return "jsp/update_employee";
                 }
                 String previousPosition = (String) session.getAttribute("position");
                 EmployeeService employeeService = (EmployeeService) applicationContext.getBean(newPosition);
@@ -133,19 +133,19 @@ public class EmployeeController {
                                 //result.addError(new ObjectError("integrityViolationError", "Only SVG allowed!"));
                                 model.addAttribute("integrityViolationError",e.getMessage());
                                 logger.info("Error updating employee"+e.getMessage());
-                                return "update_employee";
+                                return "jsp/update_employee";
                         }
                 } else {
                         employeeService.update(employee);
                         logger.info("Successfully updated employee");
                 }
-                return "redirect:/employees";
+                return "jsp/employees";
         }
 
         // Delete
         @RequestMapping(value="/delete_employee/{id}",method = RequestMethod.GET)
         public ModelAndView delete(@PathVariable int id){
                 employeeService.deleteById(id);
-                return new ModelAndView("redirect:/employees");
+                return new ModelAndView("jsp/employees");
         }
 }
