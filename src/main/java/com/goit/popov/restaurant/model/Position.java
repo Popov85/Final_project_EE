@@ -54,8 +54,8 @@ public class Position {
         public int hashCode() {
                 System.out.println("I'm trying to use hashcode");
                 System.out.println("Position object is"+this.toString());
-                //return name.hashCode();
-                return 1;
+                return name.hashCode();
+                //return 1;
         }
 
         @Override

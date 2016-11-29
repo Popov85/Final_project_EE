@@ -31,7 +31,9 @@ public class PositionController {
         @GetMapping("/new_position")
         public ModelAndView showPositionForm(){
                 logger.info("Show Position form");
-                return new ModelAndView("th/new_position", "position", new Position());
+                Position position = new Position();
+                position.setName("");
+                return new ModelAndView("th/new_position", "position", position);
         }
 
         // Get All

@@ -54,22 +54,22 @@ public class IngredientController {
         // Show form
         @RequestMapping("/new_ingredient")
         public ModelAndView showIngredientForm(){
-                return new ModelAndView("th/new_ingredient_th","ingredient",new Ingredient());
+                return new ModelAndView("jsp/new_ingredient","ingredient",new Ingredient());
+        }
+
+        // Get All
+        @RequestMapping(value = "/ingredients", method = RequestMethod.GET)
+        public String ingredients(Map<String, Object> model) {
+                model.put("ingredients", ingredientService.getAll());
+                return "jsp/ingredients";
         }
 
         // Get All
         /*@RequestMapping(value = "/ingredients", method = RequestMethod.GET)
-        public String ingredients(Map<String, Object> model) {
-                model.put("ingredients", ingredientService.getAll());
-                return "ingredients";
-        }*/
-
-        // Get All
-        @RequestMapping(value = "/ingredients", method = RequestMethod.GET)
         @ModelAttribute("ingredients")
         public List<Ingredient> ingredients() {
                 return ingredientService.getAll();
-        }
+        }*/
 
         // Create
         @RequestMapping(value="/save_ingredient",method = RequestMethod.POST)
@@ -89,14 +89,14 @@ public class IngredientController {
         public ModelAndView edit(@PathVariable int id){
                 logger.info("Show data "+id);
                 Ingredient ing=ingredientService.getIngredientById(id);
-                return new ModelAndView("update_ingredient","ingredient",ing);
+                return new ModelAndView("jsp/update_ingredient","ingredient",ing);
         }
 
         // Update
         @RequestMapping(value="/update_ingredient/{id}", method = RequestMethod.POST)
         public ModelAndView editSave(@ModelAttribute Ingredient ingredient, @PathVariable Integer id){
                 logger.info("Updating");
-                ModelAndView modelAndView = new ModelAndView("redirect:/ingredients");
+                ModelAndView modelAndView = new ModelAndView("jsp/ingredients");
                 ingredientService.update(ingredient);
                 return modelAndView;
         }
@@ -105,7 +105,7 @@ public class IngredientController {
         @RequestMapping(value="/delete_ingredient/{id}",method = RequestMethod.GET)
         public ModelAndView delete(@PathVariable int id){
                 ingredientService.deleteById(id);
-                return new ModelAndView("redirect:/ingredients");
+                return new ModelAndView("jsp/ingredients");
         }
 
 }
