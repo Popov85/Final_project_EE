@@ -13,12 +13,16 @@
             <tr>
                 <th>Id</th>
                 <th>Name</th>
+                <th>Edit</th>
+                <th>delete</th>
             </tr>
         </thead>
         <tbody>
             <tr th:each="position : ${positions}">
                 <td th:text="${position.id}"/>
                 <td th:text="${position.name}"/>
+                <td><a th:href="@{'/edit_position/'+${position.id}}">Edit</a></td>
+                <td><a th:href="@{/delete_position(id=${position.id})}">Delete</a></td>
             </tr>
         </tbody>
     </table>

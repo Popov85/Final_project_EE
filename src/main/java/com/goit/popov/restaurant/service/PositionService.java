@@ -2,6 +2,7 @@ package com.goit.popov.restaurant.service;
 
 import com.goit.popov.restaurant.dao.entity.PositionDAO;
 import com.goit.popov.restaurant.model.Position;
+import javafx.geometry.Pos;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -33,4 +34,19 @@ public class PositionService {
         public void save(Position position) {
                 positionDAO.insert(position);
         }
+
+        public void update(Position position) {
+                positionDAO.update(position);
+        }
+
+        public void delete(Position position) {
+                positionDAO.delete(position);
+        }
+
+        public void deleteById(int id) {
+                Position position = new Position();
+                position.setId(id);
+                delete(position);
+        }
+
 }
