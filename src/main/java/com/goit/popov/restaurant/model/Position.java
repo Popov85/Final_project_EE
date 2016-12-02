@@ -36,8 +36,9 @@ public class Position {
                 this.id = id;
         }
 
-        public void setName(String name) {
+        public Position setName(String name) {
                 this.name = name;
+                return this;
         }
 
         @Override
