@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Order</title>
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/bootstrap-3.3.7.min.css}" />
+    <script src ="/js/jquery-1.12.1.js"/>
+    <script src ="/js/bootstrap-3.3.7.min.js"/>
+    <script src ="/js/jquery.dataTables-1.10.12.min.js"/>
+    <!--<script src ="/js/table.js"/>-->
+</head>
+<body>
+<h3 class="form-signin-heading" align="center">Dishes</h3>
+<div th:if="${not #lists.isEmpty(dishes)}">
+    <table id="dTable" class="display" cellspacing="0" width="100%" style="overflow-x:auto">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Weight</th>
+            <th>Add</th>
+        </tr>
+        </thead>
+        <!--<tbody>
+        <tr th:each="dish : ${dishes}">
+            <td th:text="${dish.id}"/>
+            <td th:text="${dish.name}"/>
+            <td th:text="${dish.category}"/>
+            <td th:text="${dish.price}"/>
+            <td th:text="${dish.weight}"/>
+            <td><a th:href="@{'/edit_position/'+${dish.id}}">Add</a></td>
+        </tr>
+        </tbody>-->
+    </table>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+    $(document).ready(function(){
+        var data =eval('${dishes}');
+        var table = $('#dTable').DataTable( {
+            "aaData": data,
+            "aoColumns": [
+                { "mData": "id"},
+                { "mData": "name"},
+                { "mData": "category"},
+                { "mData": "price"},
+                { "mData": "weight"},
+                { "mData": "weight"}
+            ],
+            "paging":true,
+            "pageLength":20,
+            "ordering":true
+        });
+    });
+</script>
