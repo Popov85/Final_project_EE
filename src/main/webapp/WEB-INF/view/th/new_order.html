@@ -22,8 +22,14 @@
                     'Your Dish',
                     '<input type="text" value = "1" size = "2"/>',
                     '0.0',
-                    '<input type="button" value="Del" class="btn btn-default" id="delRow" name ="delRow"/>'
+                    '<button type="button" class="btn btn-default" id="delRow" name ="delRow">Del</button>'
                 ] ).draw(true);
+            } );
+
+            $('#odTable tbody').on('click','button', function () {
+                var data = t.row($(this).parents('tr')).data();
+                alert( data[1] +"'s price is: "+ data[3]);
+                t.row($(this).parents('tr')).remove().draw();
             } );
 
            $('#delRow').click( function () {
