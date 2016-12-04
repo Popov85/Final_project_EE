@@ -3,56 +3,65 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Order</title>
-    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/bootstrap-3.3.7.min.css}" />
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/bootstrap-3.3.7.min.css}"/>
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/jquery.dataTables.min.css}"/>
     <script src ="/js/jquery-1.12.1.js"/>
     <script src ="/js/bootstrap-3.3.7.min.js"/>
     <script src ="/js/jquery.dataTables-1.10.12.min.js"/>
-    <!--<script src ="/js/table.js"/>-->
-</head>
-<body>
-<h3 class="form-signin-heading" align="center">Dishes</h3>
-<div th:if="${not #lists.isEmpty(dishes)}">
-    <table id="dTable" class="display" cellspacing="0" width="100%" style="overflow-x:auto">
-        <thead>
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Price</th>
-            <th>Weight</th>
-            <th>Add</th>
-        </tr>
-        </thead>
-        <!--<tbody>
-        <tr th:each="dish : ${dishes}">
-            <td th:text="${dish.id}"/>
-            <td th:text="${dish.name}"/>
-            <td th:text="${dish.category}"/>
-            <td th:text="${dish.price}"/>
-            <td th:text="${dish.weight}"/>
-            <td><a th:href="@{'/edit_position/'+${dish.id}}">Add</a></td>
-        </tr>
-        </tbody>-->
+
+    <script type="text/javascript" th:inline="javascript">
+         $(document).ready(function(){
+             var data =eval([[${dishes}]]);
+             console.log("JS is in operation (data)"+data[0]);
+             var table = $('#dTable').DataTable( {
+                 "aaData": data,
+                 "aoColumns": [
+                     { "mData": "id", "visible": false, "searchable": false},
+                     { "mData": "name"},
+                     { "mData": "category"},
+                     { "mData": "price"},
+                     { "mData": "weight"},
+                     { "defaultContent": "<button>Add</button>"}
+                 ],
+                 "paging":true,
+                 "pageLength":5,
+                 "ordering":true,
+                 "order":[1,"asc"]
+             });
+
+             $('#dTable tbody').on( 'click', 'td', function () {
+                 console.log("column 1 cell 2: "+table.column(1).data()[2]);
+                 alert( table.cell( this ).data() );
+             } );
+
+             $('#dTable tbody').on('click', 'tr', function () {
+                 var data = table.row( this ).data();
+                 alert( 'You clicked on '+data[0]+'\'s row' );
+             } )
+
+             $('#dTable tbody').on( 'click', 'button', function () {
+                 var data = table.row( $(this).parents('tr') ).data();
+                 console.log("row 2 cell 2: "+table.row(2).data()[2]);
+                 alert( data[1] +"'s price is: "+ data[3]);
+             } );
+         });
+     </script>
+ </head>
+ <body>
+ <h3 class="form-signin-heading" align="center">Dishes</h3>
+ <div th:if="${not #lists.isEmpty(dishes)}" style="max-width: 800px; margin: 0 auto; font-size: larger;">
+     <table id="dTable" class="display" cellspacing="0" width="100%" style="overflow-x:auto">
+         <thead>
+         <tr>
+             <th>Id</th>
+             <th>Dish</th>
+             <th>Category</th>
+             <th>Price, $</th>
+             <th>Weight, g</th>
+             <th>Add</th>
+         </tr>
+         </thead>
     </table>
 </div>
 </body>
 </html>
-<script type="text/javascript">
-    $(document).ready(function(){
-        var data =eval('${dishes}');
-        var table = $('#dTable').DataTable( {
-            "aaData": data,
-            "aoColumns": [
-                { "mData": "id"},
-                { "mData": "name"},
-                { "mData": "category"},
-                { "mData": "price"},
-                { "mData": "weight"},
-                { "mData": "weight"}
-            ],
-            "paging":true,
-            "pageLength":20,
-            "ordering":true
-        });
-    });
-</script>

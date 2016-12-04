@@ -1,8 +1,10 @@
 package com.goit.popov.restaurant.model;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
 
@@ -14,6 +16,10 @@ import java.util.Map;
 @Entity
 @Table(name = "orders")
 public class Order {
+
+        // Array of tables in the hall of the restaurant
+        public static final int[] TABLE_SET = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 , 12, 13, 14, 15};
+
         @Id
         @GeneratedValue(generator = "increment")
         @GenericGenerator(name = "increment", strategy = "increment")
@@ -99,6 +105,25 @@ public class Order {
                 this.closedTimeStamp = closedTimeStamp;
         }
 
+        public BigDecimal getTotal() {
+                BigDecimal total = new BigDecimal(0);
+                for (Map.Entry<Dish, Integer> entry : dishes.entrySet()) {
+                        Dish dish = entry.getKey();
+                        BigDecimal price = dish.getPrice();
+                        Integer quantityOrdered = entry.getValue();
+                        total = total.add(price.multiply(new BigDecimal(quantityOrdered)));
+                }
+                return total;
+        }
+
+        public int getDishesQuantity() {
+                int total = 0;
+                for (Integer value : dishes.values()) {
+                        total+=value;
+                }
+                return total;
+        }
+
         @Override
         public boolean equals(Object o) {
                 if (this == o) return true;
@@ -120,9 +145,7 @@ public class Order {
         public int hashCode() {
                 int result = (isOpened ? 1 : 0);
                 result = 31 * result + openedTimeStamp.hashCode();
-                result = 31 * result + (closedTimeStamp != null ? closedTimeStamp.hashCode() : 0);
                 result = 31 * result + table;
-                result = 31 * result + dishes.hashCode();
                 return result;
         }
 

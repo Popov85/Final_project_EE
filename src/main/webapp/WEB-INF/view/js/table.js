@@ -8,7 +8,7 @@ $(document).ready(function() {
 })
 
 $(document).ready(function(){
-    var data =eval('${dishes}');
+    var data =eval([[${dishes}]]);
     var table = $('#dTable').DataTable( {
         "aaData": data,
         "aoColumns": [

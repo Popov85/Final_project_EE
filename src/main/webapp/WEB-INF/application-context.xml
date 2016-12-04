@@ -16,6 +16,9 @@
     <bean id="menuDAO" class="com.goit.popov.restaurant.dao.impl.MenuDAOImplJPA"/>
     <bean id="menuService" class="com.goit.popov.restaurant.service.MenuService"/>
 
+    <bean id="orderDAO" class="com.goit.popov.restaurant.dao.impl.OrderDAOImplJPA"/>
+    <bean id="orderService" class="com.goit.popov.restaurant.service.OrderService"/>
+
     <bean id="dishDAO" class="com.goit.popov.restaurant.dao.impl.DishDAOImplJPA"/>
     <bean id="dishService" class="com.goit.popov.restaurant.service.DishService"/>
 
@@ -24,6 +27,8 @@
 
     <bean id="unitDAO" class="com.goit.popov.restaurant.dao.impl.UnitDAOImplJPA"/>
     <bean id="unitService" class="com.goit.popov.restaurant.service.UnitService"/>
+
+    <bean id = "storeHouseDAO" class="com.goit.popov.restaurant.dao.impl.StoreHouseDAOImplJPA"/>
 
     <bean id = "Waiter" class = "com.goit.popov.restaurant.service.WaiterService"/>
     <bean id = "Chef" class = "com.goit.popov.restaurant.service.ChefService"/>

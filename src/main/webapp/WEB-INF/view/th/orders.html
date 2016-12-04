@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Orders</title>
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/bootstrap-3.3.7.min.css}" />
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/jquery.dataTables.min.css}" />
+    <script src ="/js/jquery-1.12.1.js"/>
+    <script src ="/js/bootstrap-3.3.7.min.js"/>
+    <script src ="/js/jquery.dataTables-1.10.12.min.js"/>
+</head>
+<body>
+<h3 class="form-signin-heading" align="center">Orders</h3>
+<div th:if="${not #lists.isEmpty(orders)}" style="max-width: 800px; margin: 0 auto; font-size: larger;">
+    <table id="ordsTable" class="display" cellspacing="0" width="100%" style="overflow-x:auto">
+        <thead>
+        <tr>
+            <th hidden="true">Id</th>
+            <th>Opened</th>
+            <th>Closed</th>
+            <th>Table, #</th>
+            <th>Dishes</th>
+            <th>Total, $</th>
+            <th>Waiter</th>
+            <th>Details</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.id}" hidden="true"/>
+            <td th:text="${#dates.format(order.openedTimeStamp, 'dd-MM-yyyy HH:mm')}"/>
+            <td th:text="${order.closedTimeStamp != null}
+                ? ${#dates.format(order.closedTimeStamp, 'dd-MM-yyyy HH:mm')} : 'opened'"/>
+            <td th:text="${order.table}"/>
+            <td th:text="${order.getDishesQuantity()}"/>
+            <td th:text="${order.getTotal()}"/>
+            <td th:text="${order.waiter.name}"/>
+            <td>
+                <a th:href="@{/details_order(id=${order.id})}">
+                    <input type="button" class="btn btn-default" value="Details" th:name="'detailsRow_'+${order.id}"/>
+                </a>
+            </td>
+            <td>
+                <a th:href="@{/delete_order(id=${order.id})}">
+                    <input type="button" class="btn btn-default" value="Delete" th:name="'deleteRow_'+${order.id}"/>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
