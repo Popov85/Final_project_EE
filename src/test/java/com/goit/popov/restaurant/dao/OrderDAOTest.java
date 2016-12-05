@@ -91,6 +91,11 @@ public class OrderDAOTest extends AbstractDAOTest {
         }
 
         @Override
+        protected void init() {
+
+        }
+
+        @Override
         protected void insert() {
                 generatedId = orderDAO.insert(expectedOrder1);
                 assertNotNull(generatedId);

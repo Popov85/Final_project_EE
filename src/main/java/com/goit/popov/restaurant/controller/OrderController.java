@@ -8,8 +8,9 @@ import com.goit.popov.restaurant.service.OrderService;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -78,4 +79,14 @@ public class OrderController {
 
                 return "th/new_order";
         }
+
+        @RequestMapping(value="/create", method= RequestMethod.POST,
+                produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+        @ResponseBody
+        public void createOrder(@RequestBody Order order) {
+               orderService.insert(order);
+        }
+
+
+
 }

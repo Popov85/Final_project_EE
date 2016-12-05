@@ -9,6 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class IngredientDAOTest extends AbstractDAOTest {
 
         @Override
+        protected void init() {
+
+        }
+
+        @Override
         protected void insert() {
 
         }

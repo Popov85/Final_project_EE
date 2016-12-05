@@ -16,6 +16,7 @@ public abstract class AbstractDAOTest {
 
         @Test
         public void test() {
+                init();
                 // Create
                  insert();
                 // Read by id
@@ -27,6 +28,8 @@ public abstract class AbstractDAOTest {
                 // Delete
                 delete();
         }
+
+        protected abstract void init();
 
         protected abstract void insert();
 

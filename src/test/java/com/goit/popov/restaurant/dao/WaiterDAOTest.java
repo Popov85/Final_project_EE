@@ -80,6 +80,11 @@ public class WaiterDAOTest extends AbstractDAOTest {
         }
 
         @Override
+        protected void init() {
+
+        }
+
+        @Override
         protected void insert() {
                 actualWaiter = helper.getByIdWaiter(generatedId);
                 assertEquals(expectedWaiter1, actualWaiter);

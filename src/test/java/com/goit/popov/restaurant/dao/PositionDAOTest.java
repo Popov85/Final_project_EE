@@ -36,6 +36,11 @@ public class PositionDAOTest extends AbstractDAOTest {
         private int generatedId;
 
         @Override
+        protected void init() {
+
+        }
+
+        @Override
         public void insert() {
                 generatedId = positionDAO.insert(expectedPosition);
                 assertNotNull(generatedId);

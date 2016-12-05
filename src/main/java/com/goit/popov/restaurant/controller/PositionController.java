@@ -3,14 +3,17 @@ package com.goit.popov.restaurant.controller;
 import ch.qos.logback.classic.Logger;
 import com.goit.popov.restaurant.model.Position;
 import com.goit.popov.restaurant.service.PositionService;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Map;
 
 
@@ -99,6 +102,34 @@ public class PositionController {
         public ModelAndView delete(@PathVariable int id){
                 positionService.deleteById(id);
                 return new ModelAndView("jsp/positions");
+        }
+
+//--------------------------------- AJAX------------------------------------
+
+        @GetMapping("/new_position_ajax")
+        public ModelAndView showPositionAjaxForm(){
+                logger.info("Show Position Ajax form");
+                Position position = new Position();
+                position.setName("");
+                return new ModelAndView("th/new_position_ajax", "position", position);
+        }
+
+        /*@PostMapping(value="/create_position_ajax",
+                produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+        @ResponseBody
+        public String createPosition(@RequestBody String position) {
+                logger.info("Position: "+position);
+                return "{"+"\""+"result"+"\""+":"+"\""+"success"+"\""+"}";
+
+        }*/
+
+        @PostMapping(value="/create_position_ajax")
+        public @ResponseBody Position createPosition(@RequestBody String position) throws IOException {
+                logger.info("Position: "+position);
+                Position p = new Position();
+                p.setId(1000000);
+                p.setName("Position");
+                return p;
         }
 }
 

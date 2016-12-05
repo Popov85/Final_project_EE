@@ -5,6 +5,7 @@ import com.goit.popov.restaurant.dao.entity.EmployeeDAO;
 import com.goit.popov.restaurant.model.Employee;
 import com.goit.popov.restaurant.model.Position;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +58,8 @@ public class EmployeeDAOTest extends AbstractDAOTest {
 
         @Override
         public void test() {
+
+                init();
                 // Create
                 insert();
                 // Read by id
@@ -69,6 +72,13 @@ public class EmployeeDAOTest extends AbstractDAOTest {
                 update();
                 // Delete
                 delete();
+        }
+
+        @Override
+        public void init() {
+                Assert.assertNotNull(employeeDAO);
+                Assert.assertNotNull(expectedEmployee);
+                Assert.assertNotNull(expectedPosition);
         }
 
         private void createDependencies() {

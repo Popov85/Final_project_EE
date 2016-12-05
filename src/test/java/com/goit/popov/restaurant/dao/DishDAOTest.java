@@ -72,6 +72,11 @@ public class DishDAOTest extends AbstractDAOTest {
         }
 
         @Override
+        protected void init() {
+
+        }
+
+        @Override
         protected void insert() {
                 generatedId = dishDAO.insert(expectedDish1);
                 assertNotNull(generatedId);
