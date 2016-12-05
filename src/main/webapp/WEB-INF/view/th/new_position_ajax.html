@@ -11,10 +11,10 @@
     <script type="text/javascript" th:inline="javascript">
         $(document).ready(function() {
             $('#newPositionForm').submit(function(event) {
-                //var position = $('#name').val();
-                //var json = { "name" : position};
-                var position = {}
-                position["name"] = $("#name").val();
+                var position = $('#name').val();
+                var json = { "name" : position};
+                //var position = {}
+                //position["name"] = $("#name").val();
 
                 $.ajax({
                     //url: $("#newPositionForm").attr( "action"),
@@ -22,8 +22,8 @@
                 dataType : 'json',
                 type: "POST",
                 contentType : "application/json",
-                //data: JSON.stringify(position),
-                data: $('#newPositionForm').serialize(),
+                data: JSON.stringify(json),
+                //data: $('#newPositionForm').serialize(),
 
                 success: function(data) {
                     var respContent = "<p>Success</p>";

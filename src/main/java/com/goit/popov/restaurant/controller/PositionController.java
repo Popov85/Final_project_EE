@@ -124,8 +124,11 @@ public class PositionController {
         }*/
 
         @PostMapping(value="/create_position_ajax")
-        public @ResponseBody Position createPosition(@RequestBody String position) throws IOException {
+        public @ResponseBody Position createPosition(@RequestBody Position position) throws IOException {
                 logger.info("Position: "+position);
+                /*ObjectMapper mapper = new ObjectMapper();
+                Position p = mapper.readValue(position, Position.class);
+                logger.info("Converted :"+p);*/
                 Position p = new Position();
                 p.setId(1000000);
                 p.setName("Position");
