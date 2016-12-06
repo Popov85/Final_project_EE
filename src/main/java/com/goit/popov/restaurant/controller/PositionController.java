@@ -3,10 +3,8 @@ package com.goit.popov.restaurant.controller;
 import ch.qos.logback.classic.Logger;
 import com.goit.popov.restaurant.model.Position;
 import com.goit.popov.restaurant.service.PositionService;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -124,7 +122,7 @@ public class PositionController {
         }*/
 
         @PostMapping(value="/create_position_ajax")
-        public @ResponseBody Position createPosition(@RequestBody String position) throws IOException {
+        public @ResponseBody Position createPosition(@RequestBody Position position){
                 logger.info("Position: "+position);
                 Position p = new Position();
                 p.setId(1000000);

@@ -60,4 +60,12 @@
     <mvc:resources mapping="/js/**" location="/WEB-INF/view/js/" />
     <mvc:resources mapping="/css/**" location="/WEB-INF/view/css/" />
 
+    <!--<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        <property name="objectMapper">
+            <bean class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean"/>
+        </property>
+    </bean>-->
+
+
+
 </beans>
