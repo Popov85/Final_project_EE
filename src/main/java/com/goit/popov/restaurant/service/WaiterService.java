@@ -5,9 +5,6 @@ import com.goit.popov.restaurant.model.Employee;
 import com.goit.popov.restaurant.model.Waiter;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 
 /**
@@ -17,6 +14,12 @@ import java.io.IOException;
 public class WaiterService extends EmployeeService {
 
         private static final Logger logger = (Logger) LoggerFactory.getLogger(WaiterService.class);
+
+        @Override
+        public Waiter getEmployeeById(int employeeId) {
+                Waiter waiter = transform(super.getEmployeeById(employeeId));
+                return waiter ;
+        }
 
         @Override
         public void save(Employee employee) {

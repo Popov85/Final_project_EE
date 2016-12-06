@@ -1,7 +1,8 @@
 package com.goit.popov.restaurant.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.goit.popov.restaurant.controller.converters.OrderDeserializer;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -15,6 +16,7 @@ import java.util.Map;
  */
 @Entity
 @Table(name = "orders")
+@JsonDeserialize(using = OrderDeserializer.class)
 public class Order {
 
         // Array of tables in the hall of the restaurant
@@ -157,6 +159,7 @@ public class Order {
                         ", openedTimeStamp=" + openedTimeStamp +
                         ", closedTimeStamp=" + closedTimeStamp +
                         ", table=" + table +
+                        ", waiter=" + waiter +
                         ", dishes=" + dishes +
                         '}';
         }

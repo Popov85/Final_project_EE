@@ -129,7 +129,7 @@ public class PositionController {
                 logger.info("Converted :"+p);*/
                 Position p = new Position();
                 p.setId(1000000);
-                p.setName("Position");
+                p.setName(position.getName());
                 return p;
         }
 }

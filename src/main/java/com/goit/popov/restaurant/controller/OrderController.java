@@ -52,6 +52,32 @@ public class OrderController {
                 return modelAndView;
         }
 
+
+        //------------------------------AJAX-----------------------------
+
+        @GetMapping("/new_order_ajax")
+        public ModelAndView showOrderFormAjax(){
+                logger.info("Show Order Ajax form");
+                ModelAndView modelAndView = new ModelAndView("th/new_order_ajax");
+                List<Integer> tables = new ArrayList<>();
+                for (int i = 0; i < Order.TABLE_SET.length; i++) {
+                        tables.add(Order.TABLE_SET[i]);
+                }
+                modelAndView.addObject("allTables", tables);
+                /*Map<Dish, Integer> orderedDishes;
+                orderedDishes = orderService.getDishes(1);
+                modelAndView.addObject("orderedDishes", orderedDishes);*/
+                return modelAndView;
+        }
+
+        @PostMapping(value="/create_order_ajax")
+        public @ResponseBody String createOrder(@RequestBody Order order) {
+                logger.info("Controller Order: "+order);
+                return "{"+"\""+"result"+"\""+":"+"\""+"success"+"\""+"}";
+                //orderService.insert(order);
+        }
+
+        /*
         @GetMapping(value="/show_dishes")
         public String getAllDishes(Map<String, Object> model) throws IOException {
                 ObjectMapper mapper = new ObjectMapper();
@@ -66,27 +92,15 @@ public class OrderController {
                 return "th/orders";
         }
 
-
         @GetMapping(value="/select_table")
         public String selectTable(Map<String, Object> model) {
-
                 return "th/new_order";
         }
-
 
         @GetMapping(value="/delete_dish")
         public String deleteDish(Map<String, Object> model) {
-
                 return "th/new_order";
         }
 
-        @RequestMapping(value="/create", method= RequestMethod.POST,
-                produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-        @ResponseBody
-        public void createOrder(@RequestBody Order order) {
-               orderService.insert(order);
-        }
-
-
-
+*/
 }
