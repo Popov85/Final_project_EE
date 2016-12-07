@@ -68,8 +68,8 @@ public class Ingredient {
 
         @Override
         public int hashCode() {
-                System.out.println("I'm trying to use hashcode in Ingredient class");
-                System.out.println("Ingredient object is"+this.toString());
+                /*System.out.println("I'm trying to use hashcode in Ingredient class");
+                System.out.println("Ingredient object is"+this.toString());*/
                 int result = name.hashCode();
                 result = 31 * result + unit.hashCode();
                 return result;

@@ -5,14 +5,14 @@ import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Order;
 import com.goit.popov.restaurant.service.DishService;
 import com.goit.popov.restaurant.service.OrderService;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import java.io.IOException;
+
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -71,8 +71,12 @@ public class OrderController {
         }
 
         @PostMapping(value="/create_order_ajax")
-        public @ResponseBody String createOrder(@RequestBody Order order) {
+        public @ResponseBody String createOrder(@Valid @RequestBody Order order, BindingResult result) {
+                if (result.hasErrors()) {
+                        logger.error("Validation error: "+result.getErrorCount());
+                }
                 logger.info("Controller Order: "+order);
+                logger.info("Controller Order's dishes: "+order.getDishes());
                 return "{"+"\""+"result"+"\""+":"+"\""+"success"+"\""+"}";
                 //orderService.insert(order);
         }

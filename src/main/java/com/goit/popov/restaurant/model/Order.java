@@ -3,6 +3,7 @@ package com.goit.popov.restaurant.model;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.goit.popov.restaurant.controller.converters.OrderDeserializer;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -37,12 +38,14 @@ public class Order {
         @Column(name = "CLOSE_DATE")
         private Date closedTimeStamp;
 
+        @NotEmpty(message = "Table # is a required value!")
         @Column(name = "TABLE_NUMBER")
         private int table;
 
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "EMP_ID")
         private Waiter waiter;
+
 
         @ElementCollection(fetch = FetchType.EAGER)
         @CollectionTable(name = "order_dish",

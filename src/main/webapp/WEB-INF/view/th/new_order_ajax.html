@@ -24,14 +24,12 @@
                 t.row.add([
                     counter,
                     'Your Dish '+counter,
-                    '<input type="text" value = "1" size = "2"/>',
+                    '<input type="text" value = "1" size = "2" name="input"/>',
                     '0.0',
                     '<button type="button" class="btn btn-default" id="delRow" name ="delRow">Del</button>'
                 ] ).draw(true);
                 counter++;
             } );
-
-
 
             $('#odTable tbody').on('click','button', function () {
                 var data = t.row($(this).parents('tr')).data();
@@ -39,12 +37,35 @@
                 t.row($(this).parents('tr')).remove().draw();
             } );
 
+
             $('#getAll').click( function () {
                 var table = $('#table').val();
                 var json = { "table" : table};
-                var oTable = $('#odTable').DataTable();
-                //alert(oTable.fnGetData()[0][0]);
-                alert(JSON.stringify(oTable.columns(0).data().eq(0)));
+                var odTable = $('#odTable').DataTable();
+                var dishes = [];
+                //<![CDATA[
+                var dishIdArray = odTable
+                        .columns(0)
+                        .data()
+                        .eq(0)
+                        .toArray();
+                var quantityString = odTable
+                        .columns(2)
+                        .data()
+                        .eq(0)
+                        .$('input')
+                        .serialize();
+                // Converting the following string: input=1&input=4&input=9
+                var quantityArray = quantityString.split("&");
+                var len = dishIdArray.length;
+                for (var i = 0; i < len; i++) {
+                    dishes.push({
+                        dishId: dishIdArray[i],
+                        quantity: quantityArray[i].slice(6)
+                    });
+                }
+                alert(JSON.stringify(dishes));
+                //]]>
             } );
         } );
 
@@ -56,12 +77,12 @@
                 json.isOpened = true;
                 json.openedTimeStamp = new Date();
                 json.closedTimeStamp = null;
-                json.table = $('#table').val();
+                json.table = "";//$('#table').val();
                 json.waiter = 2; // Mr . Black
                 json.dishes = [
-                    {"dishId": "1", "quantity": "2"},
-                    {"dishId": "3", "quantity": "1"},
-                    {"dishId": "5", "quantity": "1"}
+                    {"dishId": 1, "quantity": 2},
+                    {"dishId": 3, "quantity": 1},
+                    {"dishId": 5, "quantity": 1}
                 ];
                 alert(JSON.stringify(json));
                 $.ajax({
@@ -98,6 +119,7 @@
                     + JSON.stringify(data, null, 4) + "</pre>";
             $('#feedback').html(json);
         }
+
     </script>
 </head>
 <body>
