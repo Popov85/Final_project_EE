@@ -71,10 +71,10 @@ public class OrderDeserializer extends JsonDeserializer<Order> {
                         dishesInMap = convertJSONToMap(dishes);
                 } catch (ParseException e) {
                         logger.info("Error while parsing JSON: " + e.getMessage());
-                        throw new JsonMappingException("Parsing error");
+                        throw new RuntimeJsonMappingException("Parsing error");
                 } catch (Exception e) {
                         logger.info("Error while processing JSON: " + e.getMessage());
-                        throw new JsonMappingException("Processing error");
+                        throw new RuntimeJsonMappingException("Processing error");
                 }
                 Order order = getOrder(id, isOpened, openedTimeStamp, closedTimeStamp, waiterId, table, dishesInMap);
                 return order;

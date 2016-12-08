@@ -1,6 +1,8 @@
 package com.goit.popov.restaurant.controller;
 
 import ch.qos.logback.classic.Logger;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Order;
 import com.goit.popov.restaurant.service.DishService;
@@ -52,21 +54,28 @@ public class OrderController {
                 return modelAndView;
         }
 
-
         //------------------------------AJAX-----------------------------
 
         @GetMapping("/new_order_ajax")
-        public ModelAndView showOrderFormAjax(){
-                logger.info("Show Order Ajax form");
+        public ModelAndView showOrderFormAjax() throws JsonProcessingException {
                 ModelAndView modelAndView = new ModelAndView("th/new_order_ajax");
-                List<Integer> tables = new ArrayList<>();
-                for (int i = 0; i < Order.TABLE_SET.length; i++) {
-                        tables.add(Order.TABLE_SET[i]);
-                }
-                modelAndView.addObject("allTables", tables);
-                /*Map<Dish, Integer> orderedDishes;
-                orderedDishes = orderService.getDishes(1);
-                modelAndView.addObject("orderedDishes", orderedDishes);*/
+                modelAndView.addObject("allTables", Order.TABLE_SET);
+                List<Dish> dishes = dishService.getAll();
+                ObjectMapper mapper = new ObjectMapper();
+                modelAndView.addObject("dishes", mapper.writeValueAsString(dishes));
+                return modelAndView;
+        }
+
+        @GetMapping("/edit_order_ajax/{id}")
+        public ModelAndView editOrderAjax(@PathVariable("id") int id) throws JsonProcessingException {
+                ModelAndView modelAndView = new ModelAndView("th/edit_order_ajax");
+                modelAndView.addObject("allTables", Order.TABLE_SET);
+                List<Dish> dishes = dishService.getAll();
+                ObjectMapper mapper = new ObjectMapper();
+                modelAndView.addObject("dishes", mapper.writeValueAsString(dishes));
+                Map<Dish, Integer> orderedDishes;
+                orderedDishes = orderService.getDishes(id);
+                modelAndView.addObject("orderedDishes", orderedDishes);
                 return modelAndView;
         }
 
@@ -80,31 +89,4 @@ public class OrderController {
                 return "{"+"\""+"result"+"\""+":"+"\""+"success"+"\""+"}";
                 //orderService.insert(order);
         }
-
-        /*
-        @GetMapping(value="/show_dishes")
-        public String getAllDishes(Map<String, Object> model) throws IOException {
-                ObjectMapper mapper = new ObjectMapper();
-                model.put("dishes", mapper.writeValueAsString(dishService.getAll()));
-                logger.info("JSON is: "+mapper.writeValueAsString(dishService.getAll()));
-                return "th/order";
-        }
-
-        @GetMapping(value="/show_orders")
-        public String getAllOrders(Map<String, Object> model) {
-                model.put("orders", orderService.getAll());
-                return "th/orders";
-        }
-
-        @GetMapping(value="/select_table")
-        public String selectTable(Map<String, Object> model) {
-                return "th/new_order";
-        }
-
-        @GetMapping(value="/delete_dish")
-        public String deleteDish(Map<String, Object> model) {
-                return "th/new_order";
-        }
-
-*/
 }
