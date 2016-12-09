@@ -3,28 +3,18 @@
 <head>
     <meta charset="UTF-8"/>
     <title>New Order Ajax</title>
-    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/bootstrap-3.3.7.min.css}" />
-    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/jquery.dataTables.min.css}" />
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/bootstrap-3.3.7.min.css}"/>
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/jquery.dataTables.min.css}"/>
     <script src ="/js/jquery-1.12.1.js"/>
+    <script src ="/js/jquery-ui-1.12.1.js"/>
     <script src ="/js/bootstrap-3.3.7.min.js"/>
     <script src ="/js/jquery.dataTables-1.10.12.min.js"/>
-
     <script type="text/javascript" th:inline="javascript">
         $(document).ready(function () {
-            var data = eval([[${dishes}]]);
-            console.log("Page: Data is:  "+data);
-            console.log("Page: First object is:  "+data[1]);
-            console.log("Page: First object ID= :  "+data[1].id);
-            $('#dishes').data("myData", data);
-            var d = $('#dishes').data("myData");
-            console.log("After manipulations: ");
-            console.log("Page: Data is:  "+d);
-            console.log("Page: First object is:  "+d[1].toString());
-            console.log("Page: First object ID= :  "+d[1].id);
+            $('#dishes').data("dishes", eval([[${dishes}]]));
         });
     </script>
-
-    <script src ="/js/test.js"/>
+    <script src ="/js/order.js"/>
 
 </head>
 <body>

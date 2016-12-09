@@ -25,8 +25,8 @@ public interface OrderServiceInterface {
 
         /**
          *  Decides if there are all the required ingredients available in stock.
-         * @param orderId of Order we want to check
+         * @param dishes Map of potential Order's dishes we want to check
          * @return
          */
-        boolean validateIngredients(int orderId);
+        boolean validateIngredients(Map<Dish, Integer> dishes);
 }

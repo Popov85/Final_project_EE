@@ -9,8 +9,11 @@ import com.goit.popov.restaurant.service.DishService;
 import com.goit.popov.restaurant.service.OrderService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -80,13 +83,25 @@ public class OrderController {
         }
 
         @PostMapping(value="/create_order_ajax")
-        public @ResponseBody String createOrder(@Valid @RequestBody Order order, BindingResult result) {
-                if (result.hasErrors()) {
-                        logger.error("Validation error: "+result.getErrorCount());
-                }
+        public ResponseEntity createOrder(@Valid @RequestBody Order order, BindingResult result) {
                 logger.info("Controller Order: "+order);
                 logger.info("Controller Order's dishes: "+order.getDishes());
-                return "{"+"\""+"result"+"\""+":"+"\""+"success"+"\""+"}";
+                // 1. If dish array is empty. Return - Error
+                if (order.getDishes().isEmpty()) {
+                        logger.info("Error: no dishes!");
+                        return new ResponseEntity("Order must contain dishes!",
+                                HttpStatus.EXPECTATION_FAILED);
+                }
+                logger.info("OrderService injected is: "+orderService);
+                // 2. Check if there is enough ingredients to fulfill an order
+                if (!orderService.validateIngredients(order.getDishes())) {
+                        logger.info("Error: not enough ingredients!");
+                        return new ResponseEntity("Not enough ingredients to fulfill the order",
+                                HttpStatus.EXPECTATION_FAILED);
+                }
+
+                return new ResponseEntity("Success!", HttpStatus.OK);
+                //return "{"+"\""+"result"+"\""+":"+"\""+"success"+"\""+"}";
                 //orderService.insert(order);
         }
 }

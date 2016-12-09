@@ -74,8 +74,7 @@ public class OrderService implements OrderServiceInterface {
 
         @Transactional
         @Override
-        public boolean validateIngredients(int orderId) {
-                Map<Dish, Integer> dishes = getDishes(orderId);
+        public boolean validateIngredients(Map<Dish, Integer> dishes) {
                 for (Map.Entry<Dish, Integer> entry : dishes.entrySet()) {
                         Dish dish = entry.getKey();
                         Integer quantityOrdered = entry.getValue();

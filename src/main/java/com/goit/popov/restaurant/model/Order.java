@@ -38,7 +38,6 @@ public class Order {
         @Column(name = "CLOSE_DATE")
         private Date closedTimeStamp;
 
-        @NotEmpty(message = "Table # is a required value!")
         @Column(name = "TABLE_NUMBER")
         private int table;
 
