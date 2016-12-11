@@ -29,4 +29,10 @@ public interface OrderServiceInterface {
          * @return
          */
         boolean validateIngredients(Map<Dish, Integer> dishes);
+
+        /**
+         * Closes an opened earlier order as soon as a client checks out
+         * @param orderId
+         */
+        void closeOrder(int orderId);
 }

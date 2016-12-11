@@ -8,6 +8,7 @@ import com.goit.popov.restaurant.model.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -63,6 +64,15 @@ public class OrderService implements OrderServiceInterface {
 
         public List<Order> getAllOpened() {
                 return orderDAO.getAllOpened();
+        }
+
+        @Transactional
+        @Override
+        public void closeOrder(int orderId) {
+                Order order = getById(orderId);
+                order.setOpened(false);
+                order.setClosedTimeStamp(new Date());
+                update(order);
         }
 
         @Transactional

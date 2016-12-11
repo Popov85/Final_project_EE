@@ -8,6 +8,16 @@
     <script src ="/js/jquery-1.12.1.js"/>
     <script src ="/js/bootstrap-3.3.7.min.js"/>
     <script src ="/js/jquery.dataTables-1.10.12.min.js"/>
+    <script type="text/javascript" th:inline="javascript">
+        $(document).ready(function () {
+            var t = $('#ordsTable').DataTable({
+                columnDefs: [
+                    {targets: [0], visible: false},
+                    {targets: '_all', visible: true}
+                ]
+            })
+        });
+    </script>
 </head>
 <body>
 <h3 class="form-signin-heading" align="center">Orders</h3>
@@ -22,6 +32,7 @@
             <th>Dishes</th>
             <th>Total, $</th>
             <th>Waiter</th>
+            <th>Details</th>
             <th>Details</th>
             <th>Delete</th>
         </tr>
@@ -41,11 +52,19 @@
                     <input type="button" class="btn btn-default" value="Details" th:name="'detailsRow_'+${order.id}"/>
                 </a>
             </td>
+
+            <td>
+                <a th:href="@{/close_order(id=${order.id})}">
+                    <input type="button" class="btn btn-default" value="Close" th:name="'closeRow_'+${order.id}"/>
+                </a>
+            </td>
+
             <td>
                 <a th:href="@{/delete_order(id=${order.id})}">
                     <input type="button" class="btn btn-default" value="Delete" th:name="'deleteRow_'+${order.id}"/>
                 </a>
             </td>
+
         </tr>
         </tbody>
     </table>

@@ -65,8 +65,8 @@ $(document).ready(function () {
             contentType: "application/json",
             data: JSON.stringify(json),
             success: function (data) {
-                var respContent = "<p>Success</p>";
-                display(data);
+                console.log("Success");
+                location.href='/orders';
             },
             error: function (e) {
                 console.log("ERROR: ", e);
@@ -108,10 +108,10 @@ $(document).ready(function () {
         return dishes;
     }
 
-    // Displays the server's feedback
+    // Displays the server's feedback on the page
     function display(data) {
-        var json = "<h4>Error</h4><pre>"
-            + JSON.stringify(data, null, 4) + "</pre>";
+        var json = "<h4>Error</h4><pre>"//+JSON.stringify(data, null, 4)
+            + data.responseText+ "</pre>";
         $('#feedback').html(json);
     }
 });

@@ -146,6 +146,6 @@ public class EmployeeController {
         @RequestMapping(value="/delete_employee/{id}",method = RequestMethod.GET)
         public ModelAndView delete(@PathVariable int id){
                 employeeService.deleteById(id);
-                return new ModelAndView("jsp/employees");
+                return new ModelAndView("redirect:/employees");
         }
 }

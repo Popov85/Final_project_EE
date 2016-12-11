@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -82,26 +81,44 @@ public class OrderController {
                 return modelAndView;
         }
 
+        // Insert new Order
         @PostMapping(value="/create_order_ajax")
         public ResponseEntity createOrder(@Valid @RequestBody Order order, BindingResult result) {
-                logger.info("Controller Order: "+order);
-                logger.info("Controller Order's dishes: "+order.getDishes());
-                // 1. If dish array is empty. Return - Error
+                logger.info("New Order: "+order+" dishes: "+order.getDishes());
+                // 1. If dish array is empty, return - Error
                 if (order.getDishes().isEmpty()) {
-                        logger.info("Error: no dishes!");
+                        logger.error("Error: no dishes!");
                         return new ResponseEntity("Order must contain dishes!",
                                 HttpStatus.EXPECTATION_FAILED);
                 }
-                logger.info("OrderService injected is: "+orderService);
                 // 2. Check if there is enough ingredients to fulfill an order
                 if (!orderService.validateIngredients(order.getDishes())) {
-                        logger.info("Error: not enough ingredients!");
+                        logger.error("Error: not enough ingredients!");
                         return new ResponseEntity("Not enough ingredients to fulfill the order",
                                 HttpStatus.EXPECTATION_FAILED);
                 }
+                try {
+                        orderService.insert(order);
+                } catch (Exception e) {
+                        logger.error("Error: failed to insert to DB!");
+                        return new ResponseEntity("Failed to insert this order to DB",
+                                HttpStatus.EXPECTATION_FAILED);
+                }
+                logger.info("Inserted: success");
+                return new ResponseEntity("{\"Result\": \"Success\"}", HttpStatus.OK);
+        }
 
-                return new ResponseEntity("Success!", HttpStatus.OK);
-                //return "{"+"\""+"result"+"\""+":"+"\""+"success"+"\""+"}";
-                //orderService.insert(order);
+        // Read All
+        @GetMapping(value = "/orders")
+        public String orders(Map<String, Object> model) {
+                model.put("orders", orderService.getAll());
+                return "th/orders";
+        }
+
+        // Close Order
+        @GetMapping("/close_order")
+        public String closeOrder(@RequestParam int id) {
+                orderService.closeOrder(id);
+                return "redirect:/orders";
         }
 }
