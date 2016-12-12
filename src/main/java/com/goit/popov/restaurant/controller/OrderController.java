@@ -124,10 +124,16 @@ public class OrderController {
         }
 
         @PostMapping(value = "/get_orders_ajax")
-        public String getAllOrders(@RequestBody String json) throws JsonProcessingException {
-                logger.info("Call for orders..."+json);
+        public @ResponseBody String getAllOrders(@RequestBody String json) throws JsonProcessingException {
+                logger.info("Request: "+json);
                 ObjectMapper mapper = new ObjectMapper();
-                return mapper.writeValueAsString(orderService.getAll());
+                System.out.println("--- start----");
+                //logger.info("Response: "+mapper.writeValueAsString(orderService.getAll()));
+                System.out.println("----finish----");
+                return "{" +
+                        "\"draw\": 1, \"recordsTotal\": 156, \"recordsFiltered\": 25," +
+                        " \"data\":" +"[[10, \"order 1\"],[11, \"order 2\"] ]"+
+                        "}";
         }
 
         @GetMapping(value = "/orders_ajax")

@@ -11,16 +11,13 @@
     <script src ="/js/jquery.dataTables-1.10.12.min.js"/>
     <script type="text/javascript" th:inline="javascript">
         $(document).ready(function() {
+            console.log("JS in business...");
             var table = $('#ordsTable').DataTable({
-                'ajax' : '/get_orders_ajax',
-                'serverSide' : true,
-                columns : [{
-                    data : 'id'
-                }, {
-                    data : 'isOpened'
-                }, {
-                    data : 'openedTimeStamp'
-                }]
+                "ajax" : {
+                    "url": "/get_orders_ajax",
+                    "type": "POST"
+                },
+                "serverSide" : true
             })
         });
     </script>
@@ -29,12 +26,12 @@
 <table id="ordsTable" name="ordsTable" class="display" cellspacing="0" width="100%" style="overflow-x:auto">
     <thead>
     <tr>
-        <th hidden="true">Id</th>
-        <th>isOpened</th>
-        <th>openedTimeStamp"</th>
+        <th>id</th>
+        <th>name</th>
+        <!--<th>openedTimeStamp"</th>
         <th>closedTimeStamp</th>
         <th>table, #</th>
-        <th>waiter</th>
+        <th>waiter</th>-->
     </tr>
     </thead>
 </table>
