@@ -111,6 +111,7 @@ public class OrderController {
         // Read All
         @GetMapping(value = "/orders")
         public String orders(Map<String, Object> model) {
+                logger.info("Method at /orders is at work");
                 model.put("orders", orderService.getAll());
                 return "th/orders";
         }
@@ -120,5 +121,18 @@ public class OrderController {
         public String closeOrder(@RequestParam int id) {
                 orderService.closeOrder(id);
                 return "redirect:/orders";
+        }
+
+        @PostMapping(value = "/get_orders_ajax")
+        public String getAllOrders(@RequestBody String json) throws JsonProcessingException {
+                logger.info("Call for orders..."+json);
+                ObjectMapper mapper = new ObjectMapper();
+                return mapper.writeValueAsString(orderService.getAll());
+        }
+
+        @GetMapping(value = "/orders_ajax")
+        public String showOrderTable() {
+                logger.info("Show empty table");
+                return "th/orders_ajax";
         }
 }
