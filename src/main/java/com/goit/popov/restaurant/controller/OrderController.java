@@ -9,6 +9,7 @@ import com.goit.popov.restaurant.service.DishService;
 import com.goit.popov.restaurant.service.OrderService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Date;
@@ -124,10 +126,27 @@ public class OrderController {
         }
 
         @PostMapping(value = "/get_orders_ajax")
-        public @ResponseBody String getAllOrders(@RequestBody String json) throws JsonProcessingException {
-                logger.info("Request: "+json);
+        public @ResponseBody String getAllOrders(@RequestBody String json, HttpServletRequest request) throws JsonProcessingException {
+                logger.info("json: "+json);
+                logger.info("Map of params: "+request.getParameterMap());
+                logger.info("Draw: "+request.getParameter("draw"));
+                logger.info("Search value: "+request.getParameter("search[value]"));
+                Map<String, String> map = request.getParameterMap();
+                try {
+                        for (Map.Entry<String, String> entry : map.entrySet()) {
+                                System.out.println((entry.getKey()+" : "+entry.getValue()));
+                        }
+                } catch (Exception e) {
+                        logger.error("Failed to go through the map, "+e.getMessage());
+                        return "{" +
+                                "\"draw\": 1, \"recordsTotal\": 156, \"recordsFiltered\": 25," +
+                                " \"data\":" +"[[10, \"order 1\"],[11, \"order 2\"] ]"+
+                                "}";
+                }
                 ObjectMapper mapper = new ObjectMapper();
                 System.out.println("--- start----");
+                System.out.println("orderService: "+orderService);
+                System.out.println("all orders: "+orderService.getAll());
                 //logger.info("Response: "+mapper.writeValueAsString(orderService.getAll()));
                 System.out.println("----finish----");
                 return "{" +
