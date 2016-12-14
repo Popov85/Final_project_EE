@@ -8,6 +8,7 @@ import com.goit.popov.restaurant.model.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +74,23 @@ public class OrderService implements OrderServiceInterface {
                 order.setOpened(false);
                 order.setClosedTimeStamp(new Date());
                 update(order);
+        }
+
+        @Transactional
+        @Override
+        public List<Order> getAll(int start, int length) {
+                List<Order> orders = getAll();
+                List<Order> subsetOfOrders = new ArrayList<>();
+                for (int i = start; i < start+length; i++) {
+                        subsetOfOrders.add(orders.get(i));
+                }
+                return subsetOfOrders;
+        }
+
+        @Transactional
+        @Override
+        public long count() {
+                return orderDAO.count();
         }
 
         @Transactional

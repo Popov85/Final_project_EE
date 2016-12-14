@@ -13,6 +13,7 @@
         $(document).ready(function() {
             console.log("JS in business...");
             var table = $('#ordsTable').DataTable({
+                "bFilter": false,
                 "ajax" : {
                     "url": "/get_orders_ajax",
                     "type": "POST"

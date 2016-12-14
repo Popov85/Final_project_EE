@@ -80,4 +80,9 @@ public class OrderDAOImplJPA implements OrderDAO {
                         "where o.isOpened = true");
                 return query.list();
         }
+
+        @Override
+        public long count() {
+              return ((long) sessionFactory.getCurrentSession().createQuery("select count(*) from Order").uniqueResult());
+        }
 }

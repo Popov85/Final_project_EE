@@ -9,7 +9,6 @@ import com.goit.popov.restaurant.service.DishService;
 import com.goit.popov.restaurant.service.OrderService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,8 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -37,28 +35,6 @@ public class OrderController {
 
         @Autowired
         private OrderService orderService;
-
-        @GetMapping("/new_order")
-        public ModelAndView showOrderForm(){
-                logger.info("Show Order form");
-                ModelAndView modelAndView = new ModelAndView("th/new_order");
-                Order order = new Order();
-                order.setOpened(true);
-                order.setTable(0);
-                order.setOpenedTimeStamp(new Date());
-                modelAndView.addObject("order", order);
-                List<Integer> tables = new ArrayList<>();
-                for (int i = 0; i < Order.TABLE_SET.length; i++) {
-                        tables.add(Order.TABLE_SET[i]);
-                }
-                modelAndView.addObject("allTables", tables);
-                Map<Dish, Integer> orderedDishes;
-                orderedDishes = orderService.getDishes(1);
-                modelAndView.addObject("orderedDishes", orderedDishes);
-                return modelAndView;
-        }
-
-        //------------------------------AJAX-----------------------------
 
         @GetMapping("/new_order_ajax")
         public ModelAndView showOrderFormAjax() throws JsonProcessingException {
@@ -127,31 +103,68 @@ public class OrderController {
 
         @PostMapping(value = "/get_orders_ajax")
         public @ResponseBody String getAllOrders(@RequestBody String json, HttpServletRequest request) throws JsonProcessingException {
-                logger.info("json: "+json);
-                logger.info("Map of params: "+request.getParameterMap());
-                logger.info("Draw: "+request.getParameter("draw"));
-                logger.info("Search value: "+request.getParameter("search[value]"));
-                Map<String, String> map = request.getParameterMap();
+                //logger.info("json: "+json);
+                //logger.info("Map of params: "+request.getParameterMap());
+                logger.info("draw: "+request.getParameter("draw"));
+                logger.info("start: "+request.getParameter("start"));
+                logger.info("length: "+request.getParameter("length"));
+                String draw =  request.getParameter("draw");
+                int start = Integer.parseInt(request.getParameter("start"));
+                int length = Integer.parseInt(request.getParameter("length"));
+                Map<String, Object> map = request.getParameterMap();
                 try {
-                        for (Map.Entry<String, String> entry : map.entrySet()) {
-                                System.out.println((entry.getKey()+" : "+entry.getValue()));
+                        for (Map.Entry<String, Object> entry : map.entrySet()) {
+                                if (entry.getValue() instanceof String[]) {
+                                        String[] strArray = (String[]) entry.getValue();
+                                        System.out.println((entry.getKey() + " : " + Arrays.toString(strArray)));
+                                } else {
+                                        System.out.println((entry.getKey() + " : " + entry.getValue()));
+                                }
                         }
                 } catch (Exception e) {
                         logger.error("Failed to go through the map, "+e.getMessage());
-                        return "{" +
-                                "\"draw\": 1, \"recordsTotal\": 156, \"recordsFiltered\": 25," +
-                                " \"data\":" +"[[10, \"order 1\"],[11, \"order 2\"] ]"+
-                                "}";
                 }
                 ObjectMapper mapper = new ObjectMapper();
-                System.out.println("--- start----");
-                System.out.println("orderService: "+orderService);
-                System.out.println("all orders: "+orderService.getAll());
-                //logger.info("Response: "+mapper.writeValueAsString(orderService.getAll()));
-                System.out.println("----finish----");
+                long recordsTotal = 0;
+                long recordsFiltered=0;
+                StringBuilder jsonOfOrders = new StringBuilder();
+                try {
+                        logger.info("response: "+mapper.writeValueAsString(orderService.getAll()));
+                        recordsTotal = orderService.count();
+                        logger.info("Total of Order is: "+recordsTotal);
+                        recordsFiltered = recordsTotal;
+                        List<Order> orders = orderService.getAll(start, length);
+
+
+                        jsonOfOrders.append("[");
+                        for (Order order : orders) {
+                                jsonOfOrders.append("[");
+                                jsonOfOrders.append(order.getId());
+                                jsonOfOrders.append(", ");
+                                jsonOfOrders.append(order.isOpened());
+                                jsonOfOrders.append("],");
+                        }
+                        jsonOfOrders.delete(jsonOfOrders.length()-1, jsonOfOrders.length());
+                        jsonOfOrders.append("]");
+                        logger.info("Orders in String: "+jsonOfOrders);
+                } catch (Exception e) {
+                        logger.error("ERROR: "+e.getMessage());
+                }
                 return "{" +
-                        "\"draw\": 1, \"recordsTotal\": 156, \"recordsFiltered\": 25," +
-                        " \"data\":" +"[[10, \"order 1\"],[11, \"order 2\"] ]"+
+                        "\"draw\": "+draw+", \"recordsTotal\": "+recordsTotal+", \"recordsFiltered\": "+recordsFiltered+"," +
+                        " \"data\":" + jsonOfOrders+
+                        /*"[" +
+                        "[10, \"order 1\"]," +
+                        "[11, \"order 2\"], " +
+                        "[12, \"order 3\"], " +
+                        "[13, \"order 4\"], " +
+                        "[14, \"order 5\"], " +
+                        "[15, \"order 6\"], " +
+                        "[16, \"order 7\"], " +
+                        "[17, \"order 8\"], " +
+                        "[18, \"order 9\"], " +
+                        "[19, \"order 10\"] " +
+                        "]"+*/
                         "}";
         }
 

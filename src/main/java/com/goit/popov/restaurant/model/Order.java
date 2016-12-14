@@ -1,10 +1,11 @@
 package com.goit.popov.restaurant.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.goit.popov.restaurant.controller.converters.OrderDeserializer;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.validator.constraints.NotEmpty;
-
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -15,9 +16,11 @@ import java.util.Map;
  * @Author: Andrey P.
  * @version 1.0
  */
+
 @Entity
 @Table(name = "orders")
 @JsonDeserialize(using = OrderDeserializer.class)
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="jsonId")
 public class Order {
 
         // Array of tables in the hall of the restaurant
@@ -41,11 +44,13 @@ public class Order {
         @Column(name = "TABLE_NUMBER")
         private int table;
 
+        //@JsonIgnore
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "EMP_ID")
         private Waiter waiter;
 
 
+        //@JsonIgnore
         @ElementCollection(fetch = FetchType.EAGER)
         @CollectionTable(name = "order_dish",
                 joinColumns = @JoinColumn(name = "ORD_ID"))

@@ -14,4 +14,5 @@ public interface OrderDAO extends GenericDAO<Order> {
         void close(Order order);
         List<Order> getAllClosed();
         List<Order> getAllOpened();
+        long count();
 }
