@@ -39,11 +39,11 @@ public interface OrderServiceInterface {
 
         /**
          * For paging
-         * @param start - starting position of Orders array
+         * @param startPosition - starting position of Orders array
          * @param length - the size of the sub-array of Orders array
          * @return list of Orders starting from start-th to finish-th Order entry
          */
-        List<Order> getAll(int start, int length);
+        List<Order> getAll(int startPosition, int length);
 
         /**
          * Counts the number of orders

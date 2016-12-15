@@ -7,6 +7,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -84,5 +85,14 @@ public class OrderDAOImplJPA implements OrderDAO {
         @Override
         public long count() {
               return ((long) sessionFactory.getCurrentSession().createQuery("select count(*) from Order").uniqueResult());
+        }
+
+        @Override
+        public List<Order> getAll(int start, int length) {
+                List<Order> subset = sessionFactory.getCurrentSession().createQuery(
+                        "from Order")
+                        .setFirstResult(start)
+                        .setMaxResults(length).list();
+                return subset;
         }
 }

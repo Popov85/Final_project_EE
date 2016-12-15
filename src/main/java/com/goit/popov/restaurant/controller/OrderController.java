@@ -102,16 +102,14 @@ public class OrderController {
         }
 
         @PostMapping(value = "/get_orders_ajax")
-        public @ResponseBody String getAllOrders(@RequestBody String json, HttpServletRequest request) throws JsonProcessingException {
-                //logger.info("json: "+json);
-                //logger.info("Map of params: "+request.getParameterMap());
-                logger.info("draw: "+request.getParameter("draw"));
-                logger.info("start: "+request.getParameter("start"));
-                logger.info("length: "+request.getParameter("length"));
-                String draw =  request.getParameter("draw");
-                int start = Integer.parseInt(request.getParameter("start"));
-                int length = Integer.parseInt(request.getParameter("length"));
+        public @ResponseBody String getPageOfOrders(HttpServletRequest request) throws Exception {
+                logger.info("\n"+"draw: "+request.getParameter("draw")+
+                                "\n"+"start: "+request.getParameter("start")+
+                                "\n"+"length: "+request.getParameter("length")+
+                                "\n"+"order: "+request.getParameter("order[0][column]")+
+                                "\n"+"dir: "+request.getParameter("order[0][dir]"));
                 Map<String, Object> map = request.getParameterMap();
+                logger.info("Parameters:");
                 try {
                         for (Map.Entry<String, Object> entry : map.entrySet()) {
                                 if (entry.getValue() instanceof String[]) {
@@ -124,47 +122,25 @@ public class OrderController {
                 } catch (Exception e) {
                         logger.error("Failed to go through the map, "+e.getMessage());
                 }
-                ObjectMapper mapper = new ObjectMapper();
+
+                String draw =  request.getParameter("draw");
+                int start = Integer.parseInt(request.getParameter("start"));
+                int length = Integer.parseInt(request.getParameter("length"));
                 long recordsTotal = 0;
-                long recordsFiltered=0;
-                StringBuilder jsonOfOrders = new StringBuilder();
+                long recordsFiltered = 0;
+                String ordersFormatted = "";
                 try {
-                        logger.info("response: "+mapper.writeValueAsString(orderService.getAll()));
                         recordsTotal = orderService.count();
-                        logger.info("Total of Order is: "+recordsTotal);
                         recordsFiltered = recordsTotal;
                         List<Order> orders = orderService.getAll(start, length);
-
-
-                        jsonOfOrders.append("[");
-                        for (Order order : orders) {
-                                jsonOfOrders.append("[");
-                                jsonOfOrders.append(order.getId());
-                                jsonOfOrders.append(", ");
-                                jsonOfOrders.append(order.isOpened());
-                                jsonOfOrders.append("],");
-                        }
-                        jsonOfOrders.delete(jsonOfOrders.length()-1, jsonOfOrders.length());
-                        jsonOfOrders.append("]");
-                        logger.info("Orders in String: "+jsonOfOrders);
+                        ordersFormatted = orderService.convertAllInJSONArray(orders);
+                        logger.info("Total: " + recordsTotal+", ordersFormatted: "+ordersFormatted);
                 } catch (Exception e) {
                         logger.error("ERROR: "+e.getMessage());
                 }
                 return "{" +
                         "\"draw\": "+draw+", \"recordsTotal\": "+recordsTotal+", \"recordsFiltered\": "+recordsFiltered+"," +
-                        " \"data\":" + jsonOfOrders+
-                        /*"[" +
-                        "[10, \"order 1\"]," +
-                        "[11, \"order 2\"], " +
-                        "[12, \"order 3\"], " +
-                        "[13, \"order 4\"], " +
-                        "[14, \"order 5\"], " +
-                        "[15, \"order 6\"], " +
-                        "[16, \"order 7\"], " +
-                        "[17, \"order 8\"], " +
-                        "[18, \"order 9\"], " +
-                        "[19, \"order 10\"] " +
-                        "]"+*/
+                        " \"data\":" + ordersFormatted +
                         "}";
         }
 

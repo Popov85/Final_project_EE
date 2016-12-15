@@ -1,7 +1,6 @@
 package com.goit.popov.restaurant.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.goit.popov.restaurant.controller.converters.OrderDeserializer;
@@ -169,5 +168,27 @@ public class Order {
                         ", waiter=" + waiter +
                         ", dishes=" + dishes +
                         '}';
+        }
+
+        public String toJSONStringArray() {
+                StringBuilder jsa = new StringBuilder();
+                jsa.append("[");
+                jsa.append(this.getId());
+                jsa.append(", ");
+                jsa.append(this.isOpened());
+                jsa.append(", ");
+                jsa.append("\""+this.getOpenedTimeStamp()+"\"");
+                jsa.append(", ");
+                jsa.append("\""+this.getClosedTimeStamp()+"\"");
+                jsa.append(", ");
+                jsa.append(this.getTable());
+                jsa.append(", ");
+                jsa.append(this.getDishesQuantity());
+                jsa.append(", ");
+                jsa.append("\""+this.getTotal()+"\"");
+                jsa.append(", ");
+                jsa.append("\""+this.getWaiter().getName()+"\"");
+                jsa.append("]");
+                return jsa.toString();
         }
 }

@@ -1,40 +1,53 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8"/>
     <title>Orders</title>
-    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/bootstrap-3.3.7.min.css}"/>
-    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/jquery.dataTables.min.css}"/>
+    <link rel="stylesheet" type="text/css" media="all" href="/css/bootstrap-3.3.7.min.css"/>
+    <link rel="stylesheet" type="text/css" media="all" href="/css/jquery.dataTables.min.css"/>
     <script src ="/js/jquery-1.12.1.js"/>
     <script src ="/js/jquery-ui-1.12.1.js"/>
     <script src ="/js/bootstrap-3.3.7.min.js"/>
     <script src ="/js/jquery.dataTables-1.10.12.min.js"/>
-    <script type="text/javascript" th:inline="javascript">
+    <script type="text/javascript">
         $(document).ready(function() {
-            console.log("JS in business...");
             var table = $('#ordsTable').DataTable({
                 "bFilter": false,
                 "ajax" : {
                     "url": "/get_orders_ajax",
                     "type": "POST"
                 },
-                "serverSide" : true
+                "serverSide" : true,
+
+                columnDefs: [
+                    {targets: [0], visible: false},
+                    {targets: '_all', visible: true},
+                    {defaultContent: "<button>Details</button>"}
+                ]
             })
         });
     </script>
 </head>
 <body>
-<table id="ordsTable" name="ordsTable" class="display" cellspacing="0" width="100%" style="overflow-x:auto">
-    <thead>
-    <tr>
-        <th>id</th>
-        <th>name</th>
-        <!--<th>openedTimeStamp"</th>
-        <th>closedTimeStamp</th>
-        <th>table, #</th>
-        <th>waiter</th>-->
-    </tr>
-    </thead>
-</table>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+        <table id="ordsTable" name="ordsTable" class="display" cellspacing="0" width="100%" style="overflow-x:auto">
+            <thead>
+            <tr>
+                <th>id</th>
+                <th>isOpened</th>
+                <th>opened time</th>
+                <th>closed time</th>
+                <th>table, #</th>
+                <th>dishes</th>
+                <th>total, $</th>
+                <th>waiter</th>
+            </tr>
+            </thead>
+        </table>
+        </div>
+</div>
+</div>
 </body>
 </html>

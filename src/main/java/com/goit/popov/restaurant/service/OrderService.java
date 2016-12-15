@@ -8,7 +8,6 @@ import com.goit.popov.restaurant.model.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -76,15 +75,26 @@ public class OrderService implements OrderServiceInterface {
                 update(order);
         }
 
-        @Transactional
         @Override
         public List<Order> getAll(int start, int length) {
-                List<Order> orders = getAll();
-                List<Order> subsetOfOrders = new ArrayList<>();
-                for (int i = start; i < start+length; i++) {
-                        subsetOfOrders.add(orders.get(i));
+                return orderDAO.getAll(start, length);
+        }
+
+        /**
+         * Converts all selected Orders into a JSON array of String arrays
+         * @param orders
+         * @return
+         */
+        public String convertAllInJSONArray(List<Order> orders) {
+                StringBuilder jso = new StringBuilder();
+                jso.append("[");
+                for (Order order : orders) {
+                        jso.append(order.toJSONStringArray());
+                        jso.append(",");
                 }
-                return subsetOfOrders;
+                jso.delete(jso.length()-1, jso.length());
+                jso.append("]");
+                return jso.toString();
         }
 
         @Transactional
