@@ -1,5 +1,7 @@
 package com.goit.popov.restaurant.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.goit.popov.restaurant.dao.entity.OrderDAO;
 import com.goit.popov.restaurant.dao.entity.StoreHouseDAO;
 import com.goit.popov.restaurant.model.Dish;
@@ -8,6 +10,8 @@ import com.goit.popov.restaurant.model.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -80,23 +84,6 @@ public class OrderService implements OrderServiceInterface {
                 return orderDAO.getAll(start, length);
         }
 
-        /**
-         * Converts all selected Orders into a JSON array of String arrays
-         * @param orders
-         * @return
-         */
-        public String convertAllInJSONArray(List<Order> orders) {
-                StringBuilder jso = new StringBuilder();
-                jso.append("[");
-                for (Order order : orders) {
-                        jso.append(order.toJSONStringArray());
-                        jso.append(",");
-                }
-                jso.delete(jso.length()-1, jso.length());
-                jso.append("]");
-                return jso.toString();
-        }
-
         @Transactional
         @Override
         public long count() {
@@ -137,5 +124,23 @@ public class OrderService implements OrderServiceInterface {
                                 storeHouseDAO.decreaseQuantity(ingredient, quantityRequired * quantityOrdered);
                         }
                 }
+        }
+
+        public ArrayNode convertAllInJSONArray(List<Order> orders) throws IOException {
+                ObjectMapper mapper = new ObjectMapper();
+                ArrayNode ordersArray = mapper.createArrayNode();
+                for (Order order : orders) {
+                        ordersArray.add(order.toJSONArray());
+                }
+                return ordersArray;
+        }
+
+        public void handleRequest(HttpServletRequest request) {
+                String draw =  request.getParameter("draw");
+                int start = Integer.parseInt(request.getParameter("start"));
+                int length = Integer.parseInt(request.getParameter("length"));
+                String order = request.getParameter("order[0][column]");
+                String dir = request.getParameter("order[0][dir]");
+                String search =request.getParameter("search[value]");
         }
 }

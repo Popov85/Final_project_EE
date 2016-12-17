@@ -11,7 +11,12 @@
        http://www.springframework.org/schema/context/spring-context.xsd">
 
     <context:component-scan base-package="com.goit.popov.restaurant.controller"/>
-    <mvc:annotation-driven/>
+    <mvc:annotation-driven conversion-service="conversionService">
+        <mvc:argument-resolvers>
+            <bean class="com.goit.popov.restaurant.controller.converters.DataTablesInputDTOHandlerMethodArgumentResolver"/>
+        </mvc:argument-resolvers>
+    </mvc:annotation-driven>
+
     <bean class = "org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value = "org.springframework.web.servlet.view.JstlView"/>
         <property name="prefix" value="/WEB-INF/view/"/>
@@ -49,7 +54,7 @@
         </property>
     </bean>
 
-    <mvc:annotation-driven conversion-service="conversionService"/>
+    <!--<mvc:annotation-driven conversion-service="conversionService"/>-->
 
     <bean id="multipartResolver"
           class="org.springframework.web.multipart.commons.CommonsMultipartResolver">

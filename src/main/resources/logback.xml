@@ -8,7 +8,11 @@
         </layout>
     </appender>
 
-    <logger name="org.springframework.web" level="info"/>
+    <!--<logger name="org.springframework.web" level="debug"/>-->
+
+    <logger name="org.springframework" level="debug" additivity="false">
+        <appender-ref ref="STDOUT" />
+    </logger>
 
    <!-- <logger name="org.hibernate.type" level="ALL" />
     <logger name="org.hibernate" level="DEBUG" />-->

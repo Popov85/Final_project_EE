@@ -3,8 +3,11 @@ package com.goit.popov.restaurant.controller;
 import ch.qos.logback.classic.Logger;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Order;
+import com.goit.popov.restaurant.service.DataTablesDTO.DataTablesInputDTO;
+import com.goit.popov.restaurant.service.DataTablesDTO.DataTablesOutputDTO;
 import com.goit.popov.restaurant.service.DishService;
 import com.goit.popov.restaurant.service.OrderService;
 import org.slf4j.LoggerFactory;
@@ -18,7 +21,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +37,19 @@ public class OrderController {
 
         @Autowired
         private OrderService orderService;
+
+        @GetMapping("/get_dishes")
+        @ResponseBody
+        public List<Dish> getDishes() {
+               return dishService.getAll();
+        }
+
+        // Read All
+        @GetMapping(value = "/orders")
+        public String orders(Map<String, Object> model) {
+                model.put("orders", orderService.getAll());
+                return "th/orders";
+        }
 
         @GetMapping("/new_order_ajax")
         public ModelAndView showOrderFormAjax() throws JsonProcessingException {
@@ -82,16 +97,8 @@ public class OrderController {
                         return new ResponseEntity("Failed to insert this order to DB",
                                 HttpStatus.EXPECTATION_FAILED);
                 }
-                logger.info("Inserted: success");
+                logger.info("Inserted new Order: success");
                 return new ResponseEntity("{\"Result\": \"Success\"}", HttpStatus.OK);
-        }
-
-        // Read All
-        @GetMapping(value = "/orders")
-        public String orders(Map<String, Object> model) {
-                logger.info("Method at /orders is at work");
-                model.put("orders", orderService.getAll());
-                return "th/orders";
         }
 
         // Close Order
@@ -102,46 +109,42 @@ public class OrderController {
         }
 
         @PostMapping(value = "/get_orders_ajax")
-        public @ResponseBody String getPageOfOrders(HttpServletRequest request) throws Exception {
+        @ResponseBody
+        public DataTablesOutputDTO getOrdersForDataTables(DataTablesInputDTO input, HttpServletRequest request,
+                                                          @RequestParam("draw") int draw,
+                                                          @RequestParam("start") int start,
+                                                          @RequestParam("length") int length,
+                                                          @RequestParam("order[0][column]") int column,
+                                                          @RequestParam("order[0][dir]") String dir,
+                                                          @RequestParam("search[value]") String search
+                                                          ) throws Exception {
                 logger.info("\n"+"draw: "+request.getParameter("draw")+
                                 "\n"+"start: "+request.getParameter("start")+
                                 "\n"+"length: "+request.getParameter("length")+
-                                "\n"+"order: "+request.getParameter("order[0][column]")+
-                                "\n"+"dir: "+request.getParameter("order[0][dir]"));
-                Map<String, Object> map = request.getParameterMap();
-                logger.info("Parameters:");
-                try {
-                        for (Map.Entry<String, Object> entry : map.entrySet()) {
-                                if (entry.getValue() instanceof String[]) {
-                                        String[] strArray = (String[]) entry.getValue();
-                                        System.out.println((entry.getKey() + " : " + Arrays.toString(strArray)));
-                                } else {
-                                        System.out.println((entry.getKey() + " : " + entry.getValue()));
-                                }
-                        }
-                } catch (Exception e) {
-                        logger.error("Failed to go through the map, "+e.getMessage());
-                }
-
-                String draw =  request.getParameter("draw");
-                int start = Integer.parseInt(request.getParameter("start"));
-                int length = Integer.parseInt(request.getParameter("length"));
+                                "\n"+"column: "+column+
+                                "\n"+"dir: "+ dir+
+                                "\n"+"search: "+search);
+                logger.info("input: "+input);
                 long recordsTotal = 0;
                 long recordsFiltered = 0;
-                String ordersFormatted = "";
+                List<Order> orders = null;
+                ArrayNode ordersJSON = null;
                 try {
                         recordsTotal = orderService.count();
                         recordsFiltered = recordsTotal;
-                        List<Order> orders = orderService.getAll(start, length);
-                        ordersFormatted = orderService.convertAllInJSONArray(orders);
-                        logger.info("Total: " + recordsTotal+", ordersFormatted: "+ordersFormatted);
+                        orders = orderService.getAll(start, length);
+                        ordersJSON = orderService.convertAllInJSONArray(orders);
                 } catch (Exception e) {
                         logger.error("ERROR: "+e.getMessage());
                 }
-                return "{" +
-                        "\"draw\": "+draw+", \"recordsTotal\": "+recordsTotal+", \"recordsFiltered\": "+recordsFiltered+"," +
-                        " \"data\":" + ordersFormatted +
-                        "}";
+                DataTablesOutputDTO output = new DataTablesOutputDTO();
+                output.setDraw(draw)
+                        .setRecordsTotal(recordsTotal)
+                        .setRecordsFiltered(recordsFiltered)
+                        .setData(ordersJSON);
+                ObjectMapper mapper = new ObjectMapper();
+                logger.info("Output is: "+mapper.writeValueAsString(output));
+                return output;
         }
 
         @GetMapping(value = "/orders_ajax")

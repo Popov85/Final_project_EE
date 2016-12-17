@@ -12,7 +12,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             var table = $('#ordsTable').DataTable({
-                "bFilter": false,
+                "bFilter": true,
                 "ajax" : {
                     "url": "/get_orders_ajax",
                     "type": "POST"

@@ -3,11 +3,10 @@ package com.goit.popov.restaurant.dao.impl;
 import com.goit.popov.restaurant.dao.entity.OrderDAO;
 import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Order;
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,11 +30,6 @@ public class OrderDAOImplJPA implements OrderDAO {
         @Override
         public void update(Order order) {
                 sessionFactory.getCurrentSession().update(order);
-        }
-
-        @Override
-        public List<Order> getAll() {
-                return sessionFactory.getCurrentSession().createQuery("select o from Order o").list();
         }
 
         @Override
@@ -88,11 +82,38 @@ public class OrderDAOImplJPA implements OrderDAO {
         }
 
         @Override
+        public List<Order> getAll() {
+                return sessionFactory.getCurrentSession().createQuery("select o from Order o").list();
+        }
+
+        @Override
         public List<Order> getAll(int start, int length) {
                 List<Order> subset = sessionFactory.getCurrentSession().createQuery(
                         "from Order")
                         .setFirstResult(start)
                         .setMaxResults(length).list();
                 return subset;
+        }
+
+        @Override
+        public List<Order> getAll(int start, int length, String orderColumn, String direction) {
+                Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Order.class);
+                criteria.setFirstResult(start);
+                criteria.setMaxResults(length);
+                if (direction.equals("asc")) {
+                        criteria.addOrder(org.hibernate.criterion.Order.asc(orderColumn));
+                } else {
+                        criteria.addOrder(org.hibernate.criterion.Order.desc(orderColumn));
+                }
+                return criteria.list();
+        }
+
+        @Override
+        public List<Order> getAll(int start, int length, String orderColumn, String direction, String search) {
+                // Create CriteriaBuilder
+                /*CriteriaBuilder builder = sessionFactory.getCurrentSession().getCriteriaBuilder();
+                CriteriaQuery<Order> criteria = builder.createQuery(Order.class);
+                criteria.orderBy();*/
+                throw new UnsupportedOperationException();
         }
 }
