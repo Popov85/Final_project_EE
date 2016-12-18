@@ -28,6 +28,7 @@ public class DataTablesInputDTOHandlerMethodArgumentResolver implements HandlerM
         int start= Integer.parseInt(webRequest.getParameter("start"));
         int length = Integer.parseInt(webRequest.getParameter("length"));
         int column = Integer.parseInt(webRequest.getParameter("order[0][column]"));
+        String columnName = webRequest.getParameter("columns["+column+"][name]");
         String dir = webRequest.getParameter("order[0][dir]");
         String search = webRequest.getParameter("search[value]");
         return new DataTablesInputDTO()
@@ -35,6 +36,7 @@ public class DataTablesInputDTOHandlerMethodArgumentResolver implements HandlerM
                 .setStart(start)
                 .setLength(length)
                 .setColumn(column)
+                .setColumnName(columnName)
                 .setDir(dir)
                 .setSearch(search);
     }

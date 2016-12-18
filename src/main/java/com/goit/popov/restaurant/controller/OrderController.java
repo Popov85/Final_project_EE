@@ -3,7 +3,6 @@ package com.goit.popov.restaurant.controller;
 import ch.qos.logback.classic.Logger;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Order;
 import com.goit.popov.restaurant.service.DataTablesDTO.DataTablesInputDTO;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
@@ -77,7 +75,7 @@ public class OrderController {
         // Insert new Order
         @PostMapping(value="/create_order_ajax")
         public ResponseEntity createOrder(@Valid @RequestBody Order order, BindingResult result) {
-                logger.info("New Order: "+order+" dishes: "+order.getDishes());
+                logger.info("New Order created: "+order+" dishes: "+order.getDishes());
                 // 1. If dish array is empty, return - Error
                 if (order.getDishes().isEmpty()) {
                         logger.error("Error: no dishes!");
@@ -97,7 +95,7 @@ public class OrderController {
                         return new ResponseEntity("Failed to insert this order to DB",
                                 HttpStatus.EXPECTATION_FAILED);
                 }
-                logger.info("Inserted new Order: success");
+                logger.info("New Order inserted: success");
                 return new ResponseEntity("{\"Result\": \"Success\"}", HttpStatus.OK);
         }
 
@@ -110,41 +108,11 @@ public class OrderController {
 
         @PostMapping(value = "/get_orders_ajax")
         @ResponseBody
-        public DataTablesOutputDTO getOrdersForDataTables(DataTablesInputDTO input, HttpServletRequest request,
-                                                          @RequestParam("draw") int draw,
-                                                          @RequestParam("start") int start,
-                                                          @RequestParam("length") int length,
-                                                          @RequestParam("order[0][column]") int column,
-                                                          @RequestParam("order[0][dir]") String dir,
-                                                          @RequestParam("search[value]") String search
-                                                          ) throws Exception {
-                logger.info("\n"+"draw: "+request.getParameter("draw")+
-                                "\n"+"start: "+request.getParameter("start")+
-                                "\n"+"length: "+request.getParameter("length")+
-                                "\n"+"column: "+column+
-                                "\n"+"dir: "+ dir+
-                                "\n"+"search: "+search);
-                logger.info("input: "+input);
-                long recordsTotal = 0;
-                long recordsFiltered = 0;
-                List<Order> orders = null;
-                ArrayNode ordersJSON = null;
-                try {
-                        recordsTotal = orderService.count();
-                        recordsFiltered = recordsTotal;
-                        orders = orderService.getAll(start, length);
-                        ordersJSON = orderService.convertAllInJSONArray(orders);
-                } catch (Exception e) {
-                        logger.error("ERROR: "+e.getMessage());
-                }
-                DataTablesOutputDTO output = new DataTablesOutputDTO();
-                output.setDraw(draw)
-                        .setRecordsTotal(recordsTotal)
-                        .setRecordsFiltered(recordsFiltered)
-                        .setData(ordersJSON);
-                ObjectMapper mapper = new ObjectMapper();
-                logger.info("Output is: "+mapper.writeValueAsString(output));
-                return output;
+        public DataTablesOutputDTO getOrdersForDataTables(DataTablesInputDTO input, HttpServletRequest request) throws Exception {
+            logger.info("Input: " + input);
+            DataTablesOutputDTO output = orderService.getAll(input);
+            logger.info("Output: " + output);
+            return output;
         }
 
         @GetMapping(value = "/orders_ajax")
@@ -153,3 +121,20 @@ public class OrderController {
                 return "th/orders_ajax";
         }
 }
+
+/*
+            Map<String, Object> map = request.getParameterMap();
+            logger.info("Parameters:");
+            try {
+                for (Map.Entry<String, Object> entry : map.entrySet()) {
+                    if (entry.getValue() instanceof String[]) {
+                        String[] strArray = (String[]) entry.getValue();
+                        System.out.println((entry.getKey() + " : " + Arrays.toString(strArray)));
+                    } else {
+                        System.out.println((entry.getKey() + " : " + entry.getValue()));
+                    }
+                }
+            } catch (Exception e) {
+                logger.error("Failed to go through the map, " + e.getMessage());
+            }
+ */

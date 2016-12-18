@@ -46,4 +46,14 @@ public class DataTablesOutputDTO {
         this.data = data;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "DataTablesOutputDTO{" +
+                "draw=" + draw +
+                ", recordsTotal=" + recordsTotal +
+                ", recordsFiltered=" + recordsFiltered +
+                ", data=" + data +
+                '}';
+    }
 }

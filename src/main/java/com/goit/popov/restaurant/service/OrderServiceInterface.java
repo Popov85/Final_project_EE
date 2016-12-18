@@ -38,16 +38,14 @@ public interface OrderServiceInterface {
         void closeOrder(int orderId);
 
         /**
-         * For paging
-         * @param startPosition - starting position of Orders array
-         * @param length - the size of the sub-array of Orders array
-         * @return list of Orders starting from start-th to finish-th Order entry
-         */
-        List<Order> getAll(int startPosition, int length);
-
-        /**
          * Counts the number of orders
          * @return the total number of orders
          */
         long count();
+
+        /**
+         * Counts the number of orders after a filter was applied
+         * @return the total number of orders after filtering
+         */
+        long count(String search);
 }

@@ -1,17 +1,16 @@
 package com.goit.popov.restaurant.service;
 
+import ch.qos.logback.classic.Logger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.goit.popov.restaurant.dao.entity.OrderDAO;
 import com.goit.popov.restaurant.dao.entity.StoreHouseDAO;
-import com.goit.popov.restaurant.model.Dish;
-import com.goit.popov.restaurant.model.Ingredient;
-import com.goit.popov.restaurant.model.Order;
+import com.goit.popov.restaurant.model.*;
+import com.goit.popov.restaurant.service.DataTablesDTO.DataTablesInputDTO;
+import com.goit.popov.restaurant.service.DataTablesDTO.DataTablesOutputDTO;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +18,9 @@ import java.util.Map;
 /**
  * Created by Andrey on 12/3/2016.
  */
-public class OrderService implements OrderServiceInterface {
+public class OrderService implements OrderServiceInterface, JSONArrayOfArraysConvertible<Order> {
+
+        private static final Logger logger = (Logger) LoggerFactory.getLogger(OrderService.class);
 
         @Autowired
         private OrderDAO orderDAO;
@@ -30,16 +31,17 @@ public class OrderService implements OrderServiceInterface {
         @Autowired
         private StoreHouseDAO storeHouseDAO;
 
+        @Deprecated
+        public List<Order> getAll() {
+                return orderDAO.getAll();
+        }
+
         public void insert(Order order) {
                 orderDAO.insert(order);
         }
 
         public void update(Order order) {
                 orderDAO.update(order);
-        }
-
-        public List<Order> getAll() {
-                return orderDAO.getAll();
         }
 
         public Order getById(int id) {
@@ -79,15 +81,15 @@ public class OrderService implements OrderServiceInterface {
                 update(order);
         }
 
-        @Override
-        public List<Order> getAll(int start, int length) {
-                return orderDAO.getAll(start, length);
-        }
-
         @Transactional
         @Override
         public long count() {
                 return orderDAO.count();
+        }
+
+        @Override
+        public long count(String search) {
+                return orderDAO.count(search);
         }
 
         @Transactional
@@ -126,7 +128,8 @@ public class OrderService implements OrderServiceInterface {
                 }
         }
 
-        public ArrayNode convertAllInJSONArray(List<Order> orders) throws IOException {
+        @Override
+        public ArrayNode toJSONArray(List<Order> orders) {
                 ObjectMapper mapper = new ObjectMapper();
                 ArrayNode ordersArray = mapper.createArrayNode();
                 for (Order order : orders) {
@@ -135,12 +138,24 @@ public class OrderService implements OrderServiceInterface {
                 return ordersArray;
         }
 
-        public void handleRequest(HttpServletRequest request) {
-                String draw =  request.getParameter("draw");
-                int start = Integer.parseInt(request.getParameter("start"));
-                int length = Integer.parseInt(request.getParameter("length"));
-                String order = request.getParameter("order[0][column]");
-                String dir = request.getParameter("order[0][dir]");
-                String search =request.getParameter("search[value]");
+        public DataTablesOutputDTO getAll(DataTablesInputDTO input) {
+                long recordsTotal = count();
+                long recordsFiltered;
+                List<Order> orders;
+                if (!input.getSearch().isEmpty()) {
+                        logger.info("Search with filter applied...");
+                        orders = orderDAO.getAll(input.getStart(), input.getLength(),
+                                input.getColumnName(), input.getDir(), input.getSearch());
+                        recordsFiltered = orders.size();
+                } else {
+                        orders = orderDAO.getAll(input.getStart(), input.getLength(),
+                                input.getColumnName(), input.getDir());
+                        recordsFiltered = recordsTotal;
+                }
+                return new DataTablesOutputDTO()
+                        .setDraw(input.getDraw())
+                        .setRecordsTotal(recordsTotal)
+                        .setRecordsFiltered(recordsFiltered)
+                        .setData(toJSONArray(orders));
         }
 }

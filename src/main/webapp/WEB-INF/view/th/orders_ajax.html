@@ -18,11 +18,16 @@
                     "type": "POST"
                 },
                 "serverSide" : true,
-
-                columnDefs: [
-                    {targets: [0], visible: false},
-                    {targets: '_all', visible: true},
-                    {defaultContent: "<button>Details</button>"}
+                columns: [
+                    { "name": "id", "title": "id", "visible": false},
+                    { "name": "isOpened", "title": "isOpened"},
+                    { "name": "openedTimeStamp", "title": "opened time"},
+                    { "name": "closedTimeStamp", "title": "closedTimeStamp"},
+                    { "name": "table", "title": "table"},
+                    { "name": "dishes", "title": "dishes", "sortable": false},
+                    { "name": "total", "title": "total", "sortable": false},
+                    { "name": "waiter", "title": "waiter"},
+                    { "data": null, "defaultContent": "<button>Details</button>"}
                 ]
             })
         });
@@ -32,22 +37,9 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-        <table id="ordsTable" name="ordsTable" class="display" cellspacing="0" width="100%" style="overflow-x:auto">
-            <thead>
-            <tr>
-                <th>id</th>
-                <th>isOpened</th>
-                <th>opened time</th>
-                <th>closed time</th>
-                <th>table, #</th>
-                <th>dishes</th>
-                <th>total, $</th>
-                <th>waiter</th>
-            </tr>
-            </thead>
-        </table>
+            <table id="ordsTable" name="ordsTable" class="display" cellspacing="0" width="100%" style="overflow-x:auto"/>
         </div>
-</div>
+    </div>
 </div>
 </body>
 </html>

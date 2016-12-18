@@ -1,12 +1,25 @@
 package com.goit.popov.restaurant.dao.impl;
 
+import ch.qos.logback.classic.Logger;
 import com.goit.popov.restaurant.dao.entity.OrderDAO;
 import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Order;
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.query.Query;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,7 +29,16 @@ import java.util.Map;
 @Transactional
 public class OrderDAOImplJPA implements OrderDAO {
 
+        private static final Logger logger = (Logger) LoggerFactory.getLogger(OrderDAOImplJPA.class);
+
         private SessionFactory sessionFactory;
+
+        @PersistenceContext
+        private EntityManager em;
+
+        public void setEm(EntityManager em) {
+                this.em = em;
+        }
 
         public void setSessionFactory(SessionFactory sessionFactory) {
                 this.sessionFactory = sessionFactory;
@@ -82,6 +104,12 @@ public class OrderDAOImplJPA implements OrderDAO {
         }
 
         @Override
+        // TODO
+        public long count(String search) {
+                return ((long) sessionFactory.getCurrentSession().createQuery("select count(*) from Order").uniqueResult());
+        }
+
+        @Override
         public List<Order> getAll() {
                 return sessionFactory.getCurrentSession().createQuery("select o from Order o").list();
         }
@@ -98,6 +126,7 @@ public class OrderDAOImplJPA implements OrderDAO {
         @Override
         public List<Order> getAll(int start, int length, String orderColumn, String direction) {
                 Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Order.class);
+                criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
                 criteria.setFirstResult(start);
                 criteria.setMaxResults(length);
                 if (direction.equals("asc")) {
@@ -110,10 +139,59 @@ public class OrderDAOImplJPA implements OrderDAO {
 
         @Override
         public List<Order> getAll(int start, int length, String orderColumn, String direction, String search) {
+                List<Order> or = new ArrayList<>();
+                logger.info("em: "+em);
+                try {
+                        CriteriaBuilder builder = em.getCriteriaBuilder();
+                        CriteriaQuery<Order> c = builder.createQuery( Order.class );
+                        Root<Order> orderRoot = c.from( Order.class );
+                        c.select(orderRoot);
+                        c.where( builder.equal( orderRoot.<String>get("id"), Integer.valueOf(search) ) );
+                        or = em.createQuery( c ).getResultList();
+                } catch (Exception e) {
+                        logger.error("ERROR: "+e.getMessage());
+                }
+                return or;
+
+                /*Criteria criteria = null;
+                try {
+                        criteria = sessionFactory.getCurrentSession().createCriteria(Order.class);
+                        criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+                        criteria.add(Restrictions.gt("id", Integer.valueOf(search)));
+                        criteria.setFirstResult(start);
+                        criteria.setMaxResults(length);
+                        if (direction.equals("asc")) {
+                                criteria.addOrder(org.hibernate.criterion.Order.asc(orderColumn));
+                        } else {
+                                criteria.addOrder(org.hibernate.criterion.Order.desc(orderColumn));
+                        }
+                        List<Order> orders = criteria.list();
+                        System.out.println("Size is "+orders.size());
+                        for (Order order : orders) {
+                                System.out.println(order.toString());
+                        }
+                        logger.info("OK, got all orders at getAll() with the search parameter");
+                } catch (Throwable e) {
+                        logger.error("ERROR: "+e.getMessage());
+                }
+                return criteria.list();*/
+
+
+
+
                 // Create CriteriaBuilder
-                /*CriteriaBuilder builder = sessionFactory.getCurrentSession().getCriteriaBuilder();
-                CriteriaQuery<Order> criteria = builder.createQuery(Order.class);
-                criteria.orderBy();*/
-                throw new UnsupportedOperationException();
+                /*CriteriaBuilder cb = sessionFactory.getCurrentSession().getCriteriaBuilder();
+                CriteriaQuery<String> criteria = cb.createQuery(String.class);
+
+                //CriteriaBuilder cb = em.getCriteriaBuilder();
+
+                final CriteriaQuery<Order> query = cb.createQuery(Order.class);
+                final Root<Order> u = query.from(Order.class );
+                u.fetch(Order.id);
+                query.select( u ).distinct( true ).where( cb.equal( u.get( Order.waiter), "Emmanuel" ) );
+                final TypedQuery<Order> typedQuery = em.createQuery(query);
+                typedQuery.setFirstResult( 0 ).setMaxResults( 20 );
+                final List<Order> resultList = typedQuery.getResultList();
+                return  resultList;*/
         }
 }

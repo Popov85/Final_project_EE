@@ -22,7 +22,7 @@ import java.util.Map;
 @Table(name = "orders")
 @JsonDeserialize(using = OrderDeserializer.class)
 @JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="jsonId")
-public class Order implements JSONStringArrayConvertible {
+public class Order implements JSONValueArrayConvertible {
 
         // Array of tables in the hall of the restaurant
         public static final int[] TABLE_SET = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 , 12, 13, 14, 15};

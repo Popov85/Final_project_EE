@@ -9,6 +9,7 @@ public class DataTablesInputDTO {
     private int start;
     private int length;
     private int column;
+    private String columnName;
     private String dir;
     private String search;
 
@@ -66,6 +67,15 @@ public class DataTablesInputDTO {
         return this;
     }
 
+    public String getColumnName() {
+        return columnName;
+    }
+
+    public DataTablesInputDTO setColumnName(String columnName) {
+        this.columnName = columnName;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "DataTablesInputDTO{" +
@@ -73,6 +83,7 @@ public class DataTablesInputDTO {
                 ", start=" + start +
                 ", length=" + length +
                 ", column=" + column +
+                ", columnName='" + columnName + '\'' +
                 ", dir='" + dir + '\'' +
                 ", search='" + search + '\'' +
                 '}';
