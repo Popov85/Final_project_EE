@@ -17,6 +17,7 @@ dependencies {
     compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.7'
     compile group: 'javax.servlet', name: 'jstl', version: '1.2'
     compile group: 'org.hibernate', name: 'hibernate-core', version: '5.2.4.Final'
+
     //compile group: 'org.hibernate', name: 'hibernate-search-orm', version: '5.5.5.Final'
     compile group: 'org.postgresql', name: 'postgresql', version: '9.4.1211.jre7'
     compile group: 'postgresql', name: 'postgresql', version: '9.1-901-1.jdbc4'

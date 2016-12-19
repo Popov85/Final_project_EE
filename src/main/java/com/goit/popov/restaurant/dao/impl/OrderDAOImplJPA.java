@@ -33,12 +33,8 @@ public class OrderDAOImplJPA implements OrderDAO {
 
         private SessionFactory sessionFactory;
 
-        @PersistenceContext
+        @PersistenceContext(unitName = "entityManagerFactory")
         private EntityManager em;
-
-        public void setEm(EntityManager em) {
-                this.em = em;
-        }
 
         public void setSessionFactory(SessionFactory sessionFactory) {
                 this.sessionFactory = sessionFactory;
@@ -58,6 +54,7 @@ public class OrderDAOImplJPA implements OrderDAO {
         public Order getById(int id) {
                 return sessionFactory.getCurrentSession().get(Order.class, id);
         }
+
 
         @Override
         public void delete(Order order) {

@@ -4,7 +4,7 @@
        xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <tx:annotation-driven transaction-manager="txManager" proxy-target-class="true"/>
+    <tx:annotation-driven transaction-manager="txManagerHibernate" proxy-target-class="true"/>
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="location" value="classpath:jdbc.properties"/>
@@ -27,8 +27,30 @@
         </property>
     </bean>
 
-    <bean id ="txManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager" autowire="byName">
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan" value="com.goit.popov.restaurant.model" />
+        <property name="persistenceUnitName" value="jpaPersistenceUnit"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+        </property>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQL9Dialect</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id ="txManagerHibernate" class="org.springframework.orm.hibernate5.HibernateTransactionManager" autowire="byName">
         <property name="sessionFactory" ref = "sessionFactory"/>
+        <!-- Is NOT USED seemingly -->
+        <qualifier value="hibernate"/>
+    </bean>
+
+    <bean id="txManagerJPA" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+        <!-- Is NOT USED seemingly -->
+        <qualifier value="jpa"/>
     </bean>
 
 </beans>
