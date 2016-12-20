@@ -143,7 +143,6 @@ public class OrderService implements OrderServiceInterface, JSONArrayOfArraysCon
                 long recordsFiltered;
                 List<Order> orders;
                 if (!input.getSearch().isEmpty()) {
-                        logger.info("Search with filter applied...");
                         orders = orderDAO.getAll(input.getStart(), input.getLength(),
                                 input.getColumnName(), input.getDir(), input.getSearch());
                         recordsFiltered = orders.size();
