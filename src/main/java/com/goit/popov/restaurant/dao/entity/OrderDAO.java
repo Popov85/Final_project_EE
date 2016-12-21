@@ -2,6 +2,7 @@ package com.goit.popov.restaurant.dao.entity;
 
 import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Order;
+import com.goit.popov.restaurant.service.DataTablesDTO.DataTablesInputDTO;
 
 import java.util.List;
 
@@ -15,8 +16,5 @@ public interface OrderDAO extends GenericDAO<Order> {
         List<Order> getAllClosed();
         List<Order> getAllOpened();
         long count();
-        long count(String search);
-        List<Order> getAll(int start, int length);
-        List<Order> getAll(int start, int length, String orderColumn, String direction);
-        List<Order> getAll(int start, int length, String orderColumn, String direction, String search);
+        List<Order> getAll(DataTablesInputDTO dt);
 }

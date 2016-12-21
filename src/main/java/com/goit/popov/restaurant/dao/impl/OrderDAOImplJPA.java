@@ -4,11 +4,8 @@ import ch.qos.logback.classic.Logger;
 import com.goit.popov.restaurant.dao.entity.OrderDAO;
 import com.goit.popov.restaurant.model.*;
 import com.goit.popov.restaurant.model.Order;
-import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
+import com.goit.popov.restaurant.service.DataTablesDTO.DataTablesInputDTO;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.CriteriaSpecification;
-import org.hibernate.criterion.Restrictions;
 import org.hibernate.query.Query;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,12 +28,14 @@ public class OrderDAOImplJPA implements OrderDAO {
 
         private SessionFactory sessionFactory;
 
-        @PersistenceContext(unitName = "entityManagerFactory")
-        private EntityManager em;
-
         public void setSessionFactory(SessionFactory sessionFactory) {
                 this.sessionFactory = sessionFactory;
         }
+
+        @PersistenceContext(unitName = "entityManagerFactory")
+        private EntityManager em;
+
+
 
         @Override
         public int insert(Order order) {
@@ -98,107 +97,53 @@ public class OrderDAOImplJPA implements OrderDAO {
               return ((long) sessionFactory.getCurrentSession().createQuery("select count(*) from Order").uniqueResult());
         }
 
-        @Override
-        // TODO
-        public long count(String search) {
-                return ((long) sessionFactory.getCurrentSession().createQuery("select count(*) from Order").uniqueResult());
-        }
 
+        @Deprecated
         @Override
         public List<Order> getAll() {
                 return sessionFactory.getCurrentSession().createQuery("select o from Order o").list();
         }
 
         @Override
-        public List<Order> getAll(int start, int length) {
-                List<Order> subset = sessionFactory.getCurrentSession().createQuery(
-                        "from Order")
-                        .setFirstResult(start)
-                        .setMaxResults(length).list();
-                return subset;
-        }
-
-        @Override
-        public List<Order> getAll(int start, int length, String orderColumn, String direction) {
-                List<Order> result = new ArrayList<>();
-                logger.info("em: "+em);
+        public List<Order> getAll(DataTablesInputDTO dt) {
+                List<Order> resultOrders = new ArrayList<>();
                 try {
                         CriteriaBuilder builder = em.getCriteriaBuilder();
-                        CriteriaQuery<Order> criteriaQuery = builder.createQuery( Order.class );
-                        Root<Order> orderRoot = criteriaQuery.from( Order.class );
+                        CriteriaQuery<Order> criteriaQuery = builder.createQuery(Order.class);
+                        Root<Order> orderRoot = criteriaQuery.from(Order.class);
                         criteriaQuery.select(orderRoot);
                         criteriaQuery.distinct(true);
-                        if (direction.equals("asc")) {
-                                criteriaQuery.orderBy(builder.asc(orderRoot.get(orderColumn)));
-                        } else {
-                                criteriaQuery.orderBy(builder.desc(orderRoot.get(orderColumn)));
-                        }
-                        final TypedQuery<Order> typedQuery = em.createQuery(criteriaQuery);
-                        typedQuery.setFirstResult( start ).setMaxResults( length );
-                        result = typedQuery.getResultList();
+                        criteriaQuery = toFilter(dt, builder, criteriaQuery, orderRoot);
+                        criteriaQuery = toSort(dt, builder, criteriaQuery, orderRoot);
+                        resultOrders = toPage(dt, criteriaQuery).getResultList();
                 } catch (Exception e) {
-                        logger.error("ERROR: "+e.getMessage());
+                        logger.error("ERROR: " + e.getMessage());
                 }
-                return result;
+                logger.info("# of orders selected: " + resultOrders.size());
+                return resultOrders;
+        }
 
-                /*Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Order.class);
-                criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-                criteria.setFirstResult(start);
-                criteria.setMaxResults(length);
-                if (direction.equals("asc")) {
-                        criteria.addOrder(org.hibernate.criterion.Order.asc(orderColumn));
+        private CriteriaQuery<Order> toFilter(DataTablesInputDTO dt, CriteriaBuilder builder,
+                                              CriteriaQuery<Order> criteriaQuery, Root<Order> orderRoot) {
+                criteriaQuery.where(builder.like(orderRoot.<String>get("waiter").get("name"), dt.getSearch() + "%"));
+                return criteriaQuery;
+        }
+
+        private CriteriaQuery<Order> toSort(DataTablesInputDTO dt, CriteriaBuilder builder,
+                                            CriteriaQuery<Order> criteriaQuery, Root<Order> orderRoot) {
+                if (dt.getDir().equals("asc")) {
+                        criteriaQuery.orderBy(builder.asc(orderRoot.get(dt.getColumnName())));
                 } else {
-                        criteria.addOrder(org.hibernate.criterion.Order.desc(orderColumn));
+                        criteriaQuery.orderBy(builder.desc(orderRoot.get(dt.getColumnName())));
                 }
-                return criteria.list();*/
-
+                return criteriaQuery;
         }
 
-        @Override
-        public List<Order> getAll(int start, int length, String orderColumn, String direction, String search) {
-                List<Order> result = new ArrayList<>();
-                logger.info("em: "+em);
-                try {
-                        CriteriaBuilder builder = em.getCriteriaBuilder();
-                        CriteriaQuery<Order> criteriaQuery = builder.createQuery( Order.class );
-                        Root<Order> orderRoot = criteriaQuery.from( Order.class );
-                        criteriaQuery.select(orderRoot);
-                        criteriaQuery.distinct(true);
-                        if (direction.equals("asc")) {
-                                criteriaQuery.orderBy(builder.asc(orderRoot.get(orderColumn)));
-                        } else {
-                                criteriaQuery.orderBy(builder.desc(orderRoot.get(orderColumn)));
-                        }
-                        criteriaQuery.where( builder.like( orderRoot.<String>get("waiter").get("name"), search+"%" ) );
-                        final TypedQuery<Order> typedQuery = em.createQuery(criteriaQuery);
-                        typedQuery.setFirstResult( start ).setMaxResults( length );
-                        result = typedQuery.getResultList();
-                } catch (Exception e) {
-                        logger.error("ERROR: "+e.getMessage());
-                }
-                return result;
-
-                /*Criteria criteria = null;
-                try {
-                        criteria = sessionFactory.getCurrentSession().createCriteria(Order.class);
-                        criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-                        criteria.add(Restrictions.gt("id", Integer.valueOf(search)));
-                        criteria.setFirstResult(start);
-                        criteria.setMaxResults(length);
-                        if (direction.equals("asc")) {
-                                criteria.addOrder(org.hibernate.criterion.Order.asc(orderColumn));
-                        } else {
-                                criteria.addOrder(org.hibernate.criterion.Order.desc(orderColumn));
-                        }
-                        List<Order> orders = criteria.list();
-                        System.out.println("Size is "+orders.size());
-                        for (Order order : orders) {
-                                System.out.println(order.toString());
-                        }
-                        logger.info("OK, got all orders at getAll() with the search parameter");
-                } catch (Throwable e) {
-                        logger.error("ERROR: "+e.getMessage());
-                }
-                return criteria.list();*/
+        private TypedQuery<Order> toPage(DataTablesInputDTO dt,
+                                         CriteriaQuery<Order> criteriaQuery) {
+                final TypedQuery<Order> typedQuery = em.createQuery(criteriaQuery);
+                typedQuery.setFirstResult(dt.getStart()).setMaxResults(dt.getLength());
+                return typedQuery;
         }
+
 }

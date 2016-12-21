@@ -8,6 +8,7 @@ import com.goit.popov.restaurant.dao.entity.StoreHouseDAO;
 import com.goit.popov.restaurant.model.*;
 import com.goit.popov.restaurant.service.DataTablesDTO.DataTablesInputDTO;
 import com.goit.popov.restaurant.service.DataTablesDTO.DataTablesOutputDTO;
+import com.goit.popov.restaurant.service.DataTablesDTO.DataTablesSearchable;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +19,7 @@ import java.util.Map;
 /**
  * Created by Andrey on 12/3/2016.
  */
-public class OrderService implements OrderServiceInterface, JSONArrayOfArraysConvertible<Order> {
+public class OrderService implements OrderServiceInterface, JSONArrayOfArraysConvertible<Order>, DataTablesSearchable {
 
         private static final Logger logger = (Logger) LoggerFactory.getLogger(OrderService.class);
 
@@ -31,7 +32,6 @@ public class OrderService implements OrderServiceInterface, JSONArrayOfArraysCon
         @Autowired
         private StoreHouseDAO storeHouseDAO;
 
-        @Deprecated
         public List<Order> getAll() {
                 return orderDAO.getAll();
         }
@@ -50,14 +50,6 @@ public class OrderService implements OrderServiceInterface, JSONArrayOfArraysCon
 
         public void delete(Order order) {
                 orderDAO.delete(order);
-        }
-
-        public void addDish(Order order, Dish dish, int quantity) {
-                orderDAO.addDish(order, dish, quantity);
-        }
-
-        public void deleteDish(Order order, Dish dish, int quantity) {
-                orderDAO.deleteDish(order, dish, quantity);
         }
 
         public void close(Order order) {
@@ -85,11 +77,6 @@ public class OrderService implements OrderServiceInterface, JSONArrayOfArraysCon
         @Override
         public long count() {
                 return orderDAO.count();
-        }
-
-        @Override
-        public long count(String search) {
-                return orderDAO.count(search);
         }
 
         @Transactional
@@ -138,21 +125,18 @@ public class OrderService implements OrderServiceInterface, JSONArrayOfArraysCon
                 return ordersArray;
         }
 
-        public DataTablesOutputDTO getAll(DataTablesInputDTO input) {
+        @Override
+        public DataTablesOutputDTO getAll(DataTablesInputDTO dt) {
                 long recordsTotal = count();
                 long recordsFiltered;
-                List<Order> orders;
-                if (!input.getSearch().isEmpty()) {
-                        orders = orderDAO.getAll(input.getStart(), input.getLength(),
-                                input.getColumnName(), input.getDir(), input.getSearch());
+                List<Order> orders = orderDAO.getAll(dt);
+                if (!dt.getSearch().isEmpty()) {
                         recordsFiltered = orders.size();
                 } else {
-                        orders = orderDAO.getAll(input.getStart(), input.getLength(),
-                                input.getColumnName(), input.getDir());
-                        recordsFiltered = recordsTotal;
+                        recordsFiltered=recordsTotal;
                 }
                 return new DataTablesOutputDTO()
-                        .setDraw(input.getDraw())
+                        .setDraw(dt.getDraw())
                         .setRecordsTotal(recordsTotal)
                         .setRecordsFiltered(recordsFiltered)
                         .setData(toJSONArray(orders));

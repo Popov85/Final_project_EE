@@ -2,6 +2,8 @@ package com.goit.popov.restaurant.service;
 
 import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Order;
+import com.goit.popov.restaurant.service.DataTablesDTO.DataTablesInputDTO;
+import com.goit.popov.restaurant.service.DataTablesDTO.DataTablesOutputDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -42,10 +44,4 @@ public interface OrderServiceInterface {
          * @return the total number of orders
          */
         long count();
-
-        /**
-         * Counts the number of orders after a filter was applied
-         * @return the total number of orders after filtering
-         */
-        long count(String search);
 }
