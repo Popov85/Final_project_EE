@@ -13,9 +13,11 @@ $(document).ready(function () {
     });
 });
 
+
+
 // Set up a Dish table in modal window
 $(document).ready(function () {
-    var data = $('#dishes').data("dishes");
+    /*var data = $('#dishes').data("dishes");
     var table = $('#dTable').DataTable({
         "aaData": data,
         "aoColumns": [
@@ -30,6 +32,21 @@ $(document).ready(function () {
         "pageLength": 5,
         "ordering": true,
         "order": [1, "asc"]
+    });*/
+    var table = $('#dTable').DataTable({
+        "ajax" : {
+            "url": "/get_dishes",
+            "type": "POST",
+            "dataType": "json"
+        },
+        columns: [
+            { "data": "id", "visible": false, "searchable": false},
+            { "data": "name"},
+            { "data": "category"},
+            { "data": "price"},
+            { "data": "weight"},
+            { "data": null,"defaultContent": "<button>Add</button>"}
+        ]
     });
 
     // Adds a selected dish to the order

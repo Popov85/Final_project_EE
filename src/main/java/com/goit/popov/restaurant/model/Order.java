@@ -1,6 +1,8 @@
 package com.goit.popov.restaurant.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -22,7 +24,7 @@ import java.util.Map;
 @Entity
 @Table(name = "orders")
 @JsonDeserialize(using = OrderDeserializer.class)
-@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="jsonId")
+//@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="jsonId")
 public class Order implements JSONValueArrayConvertible {
 
         // Array of tables in the hall of the restaurant
@@ -38,21 +40,23 @@ public class Order implements JSONValueArrayConvertible {
         private boolean isOpened;
 
         @Column(name = "OPEN_DATE")
+        @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm")
         private Date openedTimeStamp;
 
         @Column(name = "CLOSE_DATE")
+        @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm")
         private Date closedTimeStamp;
 
         @Column(name = "TABLE_NUMBER")
         private int table;
 
-        //@JsonIgnore
+        @JsonIgnore
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "EMP_ID")
         private Waiter waiter;
 
 
-        //@JsonIgnore
+        @JsonIgnore
         @ElementCollection(fetch = FetchType.EAGER)
         @CollectionTable(name = "order_dish",
                 joinColumns = @JoinColumn(name = "ORD_ID"))
@@ -133,6 +137,10 @@ public class Order implements JSONValueArrayConvertible {
                         total+=value;
                 }
                 return total;
+        }
+
+        public String getWaiterName() {
+                return this.waiter.getName();
         }
 
         @Override

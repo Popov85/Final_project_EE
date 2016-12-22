@@ -36,16 +36,54 @@ public class OrderController {
         @Autowired
         private OrderService orderService;
 
-        @GetMapping("/get_dishes")
+        @PostMapping("/get_dishes")
         @ResponseBody
         public List<Dish> getDishes() {
                return dishService.getAll();
         }
 
+        /*@PostMapping("/get_dishes")
+        @ResponseBody
+        public String getDishes() {
+                return "[[1, \" name\", \" category\", \" 2.3\", \" 0.3\"]]";
+        }*/
+
         // Read All
         @GetMapping(value = "/orders")
         public String orders(Map<String, Object> model) {
                 model.put("orders", orderService.getAll());
+                return "th/orders";
+        }
+
+
+        @PostMapping(value = "/all_orders")
+        @ResponseBody
+        public List<Order> allOrders() throws JsonProcessingException {
+                ObjectMapper mapper = new ObjectMapper();
+                logger.info(mapper.writeValueAsString(orderService.getAll()));
+                return orderService.getAll();
+        }
+
+        /*@PostMapping(value = "/all_orders")
+        @ResponseBody
+        public String allOrders() {
+
+                return "{\n" +
+                        "  \"data\": [\n" +
+                        "    [\n" +
+                        "      \"1\",\n" +
+                        "      \"true\",\n" +
+                        "      \"2011/04/25\",\n" +
+                        "      \"2011/04/25\",\n" +
+                        "      \"15\",\n" +
+                        "      \"3\"\n" +
+                        "    ]" +
+                        "]}";
+        }*/
+
+        // Read All
+        @GetMapping(value = "/test_orders")
+        public String testOrders() {
                 return "th/orders";
         }
 

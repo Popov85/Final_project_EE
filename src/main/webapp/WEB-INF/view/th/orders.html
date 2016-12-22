@@ -10,18 +10,36 @@
     <script src ="/js/lib/jquery.dataTables-1.10.12.min.js"/>
     <script type="text/javascript" th:inline="javascript">
         $(document).ready(function () {
-            var t = $('#ordsTable').DataTable({
+            var table = $('#ordsTable').DataTable({
+                "ajax" : {
+                    "url": "/all_orders",
+                    "type": "POST"
+                },
+                columns: [
+                    { "data": "id", "title": "id", "visible": false},
+                    { "data": "opened", "title": "isOpened"},
+                    { "data": "openedTimeStamp", "title": "opened time"},
+                    { "data": "closedTimeStamp", "title": "closedTimeStamp"},
+                    { "data": "table", "title": "table"},
+                    { "data": "dishesQuantity", "title": "dishes", "sortable": false},
+                    { "data": "total", "title": "total", "sortable": false},
+                    { "data": "waiterName", "title": "waiter"},
+                    { "data": null, "sortable": false, "defaultContent": "<button>Details</button>"}
+                ]
+            });
+
+            /*var t = $('#ordsTable').DataTable({
                 columnDefs: [
                     {targets: [0], visible: false},
                     {targets: '_all', visible: true}
                 ]
-            })
+            })*/
         });
     </script>
 </head>
 <body>
 <h3 class="form-signin-heading" align="center">Orders</h3>
-<div th:if="${not #lists.isEmpty(orders)}" style="max-width: 800px; margin: 0 auto; font-size: larger;">
+<!--<div th:if="${not #lists.isEmpty(orders)}" style="max-width: 800px; margin: 0 auto; font-size: larger;">-->
     <table id="ordsTable" class="display" cellspacing="0" width="100%" style="overflow-x:auto">
         <thead>
         <tr>
@@ -37,7 +55,7 @@
             <th>Delete</th>
         </tr>
         </thead>
-        <tbody>
+        <!--<tbody>
         <tr th:each="order : ${orders}">
             <td th:text="${order.id}" hidden="true"/>
             <td th:text="${#dates.format(order.openedTimeStamp, 'dd-MM-yyyy HH:mm')}"/>
@@ -66,8 +84,8 @@
             </td>
 
         </tr>
-        </tbody>
+        </tbody>-->
     </table>
-</div>
+<!--</div>-->
 </body>
 </html>
