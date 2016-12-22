@@ -9,17 +9,11 @@
     <script src ="/js/lib/jquery-ui-1.12.1.js"/>
     <script src ="/js/lib/bootstrap-3.3.7.min.js"/>
     <script src ="/js/lib/jquery.dataTables-1.10.12.min.js"/>
-    <script type="text/javascript" th:inline="javascript">
-        $(document).ready(function () {
-            $('#dishes').data("dishes", eval([[${dishes}]]));
-        });
-    </script>
     <script src ="/js/order.js"/>
 
 </head>
 <body>
 <h3 class="form-signin-heading" align="center">New Order</h3>
-<span id="dishes" name="dishes" hidden = "true"></span>
 <div class="container">
     <form id="newOrderForm" th:action="@{/create_order_ajax}" method="post"
           style="max-width: 500px; margin: 0 auto; font-size: larger;" onsubmit="return false;">
@@ -60,10 +54,9 @@
         <div id = "feedback"></div>
     </form>
 </div>
-
+<!-- Modal window-->
 <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
-        <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>

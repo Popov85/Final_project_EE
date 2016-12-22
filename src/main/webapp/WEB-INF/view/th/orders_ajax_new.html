@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Orders</title>
+    <link rel="stylesheet" type="text/css" media="all" href="/css/bootstrap-3.3.7.min.css"/>
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css"/>
+    <script src ="/js/lib/jquery-1.12.1.js"/>
+    <script src ="/js/lib/jquery-ui-1.12.1.js"/>
+    <script src ="/js/lib/bootstrap-3.3.7.min.js"/>
+    <script src ="/js/lib/jquery.dataTables-1.10.12.min.js"/>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var table = $('#ordsTable').DataTable({
+                "bFilter": true,
+                "ajax" : {
+                    "url": "/get_orders",
+                    "type": "POST"
+                },
+                "serverSide" : true,
+                columns: [
+                    { "data": "id", "name": "id", "title": "id", "visible": false},
+                    { "data": "opened","name": "isOpened", "title": "isOpened"},
+                    { "data": "openedTimeStamp", "name": "openedTimeStamp",  "title": "opened time"},
+                    { "data": "closedTimeStamp", "name":"closedTimeStamp", "title": "closedTimeStamp"},
+                    { "data": "table", "name": "table", "title": "table"},
+                    { "data": "dishesQuantity", "name": "dishes", "title": "dishes", "sortable": false},
+                    { "data": "total", "name": "total", "title": "total", "sortable": false},
+                    { "data": "waiterName", "name": "waiter", "title": "waiter"},
+                    { "data": null, "sortable": false, "defaultContent": "<button>Details</button>"}
+                ]
+            })
+        });
+    </script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <table id="ordsTable" name="ordsTable" class="display" cellspacing="0" width="100%" style="overflow-x:auto"/>
+        </div>
+    </div>
+</div>
+</body>
+</html>

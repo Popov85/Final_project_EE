@@ -9,6 +9,7 @@ import com.goit.popov.restaurant.model.*;
 import com.goit.popov.restaurant.model.dataTablesAdapter.JSONArrayOfArraysConvertible;
 import com.goit.popov.restaurant.service.dataTablesDTO.DataTablesInputDTO;
 import com.goit.popov.restaurant.service.dataTablesDTO.DataTablesOutputDTO;
+import com.goit.popov.restaurant.service.dataTablesDTO.DataTablesOutputDTOUniversal;
 import com.goit.popov.restaurant.service.dataTablesDTO.DataTablesSearchable;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,5 +142,21 @@ public class OrderService implements OrderServiceInterface, JSONArrayOfArraysCon
                         .setRecordsTotal(recordsTotal)
                         .setRecordsFiltered(recordsFiltered)
                         .setData(toJSONArray(orders));
+        }
+
+        public DataTablesOutputDTOUniversal<Order> getAllOrders(DataTablesInputDTO dt) {
+                long recordsTotal = count();
+                long recordsFiltered;
+                List<Order> data = orderDAO.getAll(dt);
+                if (!dt.getSearch().isEmpty()) {
+                        recordsFiltered = data.size();
+                } else {
+                        recordsFiltered=recordsTotal;
+                }
+                return new DataTablesOutputDTOUniversal<Order>()
+                        .setDraw(dt.getDraw())
+                        .setRecordsTotal(recordsTotal)
+                        .setRecordsFiltered(recordsFiltered)
+                        .setData(data);
         }
 }

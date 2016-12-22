@@ -9,6 +9,8 @@ import com.goit.popov.restaurant.service.dataTablesDTO.DataTablesInputDTO;
 import com.goit.popov.restaurant.service.dataTablesDTO.DataTablesOutputDTO;
 import com.goit.popov.restaurant.service.DishService;
 import com.goit.popov.restaurant.service.OrderService;
+import com.goit.popov.restaurant.service.dataTablesDTO.DataTablesOutputDTOArrayWrapper;
+import com.goit.popov.restaurant.service.dataTablesDTO.DataTablesOutputDTOUniversal;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,17 +40,13 @@ public class OrderController {
 
         @PostMapping("/get_dishes")
         @ResponseBody
-        public List<Dish> getDishes() {
-               return dishService.getAll();
+        public DataTablesOutputDTOArrayWrapper<Dish> getDishes() {
+                DataTablesOutputDTOArrayWrapper<Dish> data = new DataTablesOutputDTOArrayWrapper<>();
+                data.setData(dishService.getAll());
+                return data;
         }
 
-        /*@PostMapping("/get_dishes")
-        @ResponseBody
-        public String getDishes() {
-                return "[[1, \" name\", \" category\", \" 2.3\", \" 0.3\"]]";
-        }*/
-
-        // Read All
+        // Read All Spring MVC
         @GetMapping(value = "/orders")
         public String orders(Map<String, Object> model) {
                 model.put("orders", orderService.getAll());
@@ -56,47 +54,32 @@ public class OrderController {
         }
 
 
+        // Read All DataTables
         @PostMapping(value = "/all_orders")
         @ResponseBody
-        public List<Order> allOrders() throws JsonProcessingException {
+        public DataTablesOutputDTOArrayWrapper<Order> getOrders() throws JsonProcessingException {
+                DataTablesOutputDTOArrayWrapper<Order> data = new DataTablesOutputDTOArrayWrapper<>();
+                data.setData(orderService.getAll());
                 ObjectMapper mapper = new ObjectMapper();
-                logger.info(mapper.writeValueAsString(orderService.getAll()));
-                return orderService.getAll();
+                logger.info("Output: "+mapper.writeValueAsString(data));
+                return data;
         }
 
-        /*@PostMapping(value = "/all_orders")
-        @ResponseBody
-        public String allOrders() {
-
-                return "{\n" +
-                        "  \"data\": [\n" +
-                        "    [\n" +
-                        "      \"1\",\n" +
-                        "      \"true\",\n" +
-                        "      \"2011/04/25\",\n" +
-                        "      \"2011/04/25\",\n" +
-                        "      \"15\",\n" +
-                        "      \"3\"\n" +
-                        "    ]" +
-                        "]}";
-        }*/
-
-        // Read All
+        // Go to a page with All Orders
         @GetMapping(value = "/test_orders")
         public String testOrders() {
                 return "th/orders";
         }
 
+        // Go to page to create a new Order
         @GetMapping("/new_order_ajax")
-        public ModelAndView showOrderFormAjax() throws JsonProcessingException {
+        public ModelAndView showOrderFormAjax() {
                 ModelAndView modelAndView = new ModelAndView("th/new_order_ajax");
                 modelAndView.addObject("allTables", Order.TABLE_SET);
-                List<Dish> dishes = dishService.getAll();
-                ObjectMapper mapper = new ObjectMapper();
-                modelAndView.addObject("dishes", mapper.writeValueAsString(dishes));
                 return modelAndView;
         }
 
+        // TODO
         @GetMapping("/edit_order_ajax/{id}")
         public ModelAndView editOrderAjax(@PathVariable("id") int id) throws JsonProcessingException {
                 ModelAndView modelAndView = new ModelAndView("th/edit_order_ajax");
@@ -133,7 +116,7 @@ public class OrderController {
                         return new ResponseEntity("Failed to insert this order to DB",
                                 HttpStatus.EXPECTATION_FAILED);
                 }
-                logger.info("New Order inserted: success");
+                logger.info("New Order inserted");
                 return new ResponseEntity("{\"Result\": \"Success\"}", HttpStatus.OK);
         }
 
@@ -141,24 +124,54 @@ public class OrderController {
         @GetMapping("/close_order")
         public String closeOrder(@RequestParam int id) {
                 orderService.closeOrder(id);
+                logger.info("Order (id= : "+id + ") has been closed");
                 return "redirect:/orders";
         }
 
+        // Read All orders, server-side search, paging and sorting
         @PostMapping(value = "/get_orders_ajax")
         @ResponseBody
-        public DataTablesOutputDTO getOrdersForDataTables(DataTablesInputDTO input, HttpServletRequest request) throws Exception {
+        public DataTablesOutputDTO getOrdersForDataTables(DataTablesInputDTO input, HttpServletRequest request){
             logger.info("Input: " + input);
             DataTablesOutputDTO output = orderService.getAll(input);
             logger.info("Output: " + output);
             return output;
         }
 
+        // Read All orders, server-side search, paging and sorting
+        @PostMapping(value = "/get_orders")
+        @ResponseBody
+        public DataTablesOutputDTOUniversal<Order> getOrdersForDataTables(DataTablesInputDTO input) throws JsonProcessingException {
+                logger.info("Input: " + input);
+                DataTablesOutputDTOUniversal<Order> data = orderService.getAllOrders(input);
+                ObjectMapper mapper = new ObjectMapper();
+                logger.info("Output: " + mapper.writeValueAsString(data));
+                return data;
+        }
+
+
         @GetMapping(value = "/orders_ajax")
         public String showOrderTable() {
                 logger.info("Show empty table");
                 return "th/orders_ajax";
         }
+
+        @GetMapping(value = "/orders_ajax_new")
+        public String showOrderTable2() {
+                logger.info("Show empty table");
+                return "th/orders_ajax_new";
+        }
 }
+
+
+
+
+
+
+
+
+
+
 
 /*
             Map<String, Object> map = request.getParameterMap();

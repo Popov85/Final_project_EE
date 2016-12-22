@@ -13,26 +13,8 @@ $(document).ready(function () {
     });
 });
 
-
-
 // Set up a Dish table in modal window
 $(document).ready(function () {
-    /*var data = $('#dishes').data("dishes");
-    var table = $('#dTable').DataTable({
-        "aaData": data,
-        "aoColumns": [
-            {"mData": "id", "visible": false, "searchable": false},
-            {"mData": "name"},
-            {"mData": "category"},
-            {"mData": "price"},
-            {"mData": "weight"},
-            {"defaultContent": "<button>Add</button>"}
-        ],
-        "paging": true,
-        "pageLength": 5,
-        "ordering": true,
-        "order": [1, "asc"]
-    });*/
     var table = $('#dTable').DataTable({
         "ajax" : {
             "url": "/get_dishes",
