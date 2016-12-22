@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.goit.popov.restaurant.controller.converters.OrderDeserializer;
+import com.goit.popov.restaurant.model.dataTablesAdapter.JSONValueArrayConvertible;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.math.BigDecimal;

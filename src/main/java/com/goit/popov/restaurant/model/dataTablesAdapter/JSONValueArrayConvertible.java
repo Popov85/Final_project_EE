@@ -1,4 +1,4 @@
-package com.goit.popov.restaurant.model;
+package com.goit.popov.restaurant.model.dataTablesAdapter;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 

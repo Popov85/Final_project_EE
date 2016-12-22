@@ -1,4 +1,4 @@
-package com.goit.popov.restaurant.service.DataTablesDTO;
+package com.goit.popov.restaurant.service.dataTablesDTO;
 
 /**
  * Created by Andrey on 21.12.2016.

@@ -2,7 +2,6 @@ package com.goit.popov.restaurant.service;
 
 import com.goit.popov.restaurant.dao.entity.PositionDAO;
 import com.goit.popov.restaurant.model.Position;
-import javafx.geometry.Pos;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;

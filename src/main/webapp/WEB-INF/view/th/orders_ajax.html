@@ -4,11 +4,11 @@
     <meta charset="UTF-8"/>
     <title>Orders</title>
     <link rel="stylesheet" type="text/css" media="all" href="/css/bootstrap-3.3.7.min.css"/>
-    <link rel="stylesheet" type="text/css" media="all" href="/css/jquery.dataTables.min.css"/>
-    <script src ="/js/jquery-1.12.1.js"/>
-    <script src ="/js/jquery-ui-1.12.1.js"/>
-    <script src ="/js/bootstrap-3.3.7.min.js"/>
-    <script src ="/js/jquery.dataTables-1.10.12.min.js"/>
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css"/>
+    <script src ="/js/lib/jquery-1.12.1.js"/>
+    <script src ="/js/lib/jquery-ui-1.12.1.js"/>
+    <script src ="/js/lib/bootstrap-3.3.7.min.js"/>
+    <script src ="/js/lib/jquery.dataTables-1.10.12.min.js"/>
     <script type="text/javascript">
         $(document).ready(function() {
             var table = $('#ordsTable').DataTable({
@@ -27,7 +27,7 @@
                     { "name": "dishes", "title": "dishes", "sortable": false},
                     { "name": "total", "title": "total", "sortable": false},
                     { "name": "waiter", "title": "waiter"},
-                    { "data": null, "defaultContent": "<button>Details</button>"}
+                    { "data": null, "sortable": false, "defaultContent": "<button>Details</button>"}
                 ]
             })
         });

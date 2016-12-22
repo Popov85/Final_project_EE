@@ -4,7 +4,7 @@ import ch.qos.logback.classic.Logger;
 import com.goit.popov.restaurant.dao.entity.OrderDAO;
 import com.goit.popov.restaurant.model.*;
 import com.goit.popov.restaurant.model.Order;
-import com.goit.popov.restaurant.service.DataTablesDTO.DataTablesInputDTO;
+import com.goit.popov.restaurant.service.dataTablesDTO.DataTablesInputDTO;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.slf4j.LoggerFactory;
@@ -119,7 +119,6 @@ public class OrderDAOImplJPA implements OrderDAO {
                 } catch (Exception e) {
                         logger.error("ERROR: " + e.getMessage());
                 }
-                logger.info("# of orders selected: " + resultOrders.size());
                 return resultOrders;
         }
 
