@@ -12,6 +12,7 @@ import java.util.List;
 public interface OrderDAO extends GenericDAO<Order> {
         void addDish(Order order, Dish dish, int quantity);
         void deleteDish(Order order, Dish dish, int quantity);
+        void delete(int id);
         void close(Order order);
         List<Order> getAllClosed();
         List<Order> getAllOpened();

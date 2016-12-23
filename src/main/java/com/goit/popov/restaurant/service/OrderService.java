@@ -54,6 +54,10 @@ public class OrderService implements OrderServiceInterface, JSONArrayOfArraysCon
                 orderDAO.delete(order);
         }
 
+        public void delete(int orderId) {
+                orderDAO.delete(orderId);
+        }
+
         public void close(Order order) {
                 orderDAO.close(order);
         }

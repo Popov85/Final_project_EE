@@ -5,6 +5,7 @@ import com.goit.popov.restaurant.dao.entity.OrderDAO;
 import com.goit.popov.restaurant.model.*;
 import com.goit.popov.restaurant.model.Order;
 import com.goit.popov.restaurant.service.dataTablesDTO.DataTablesInputDTO;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.slf4j.LoggerFactory;
@@ -56,6 +57,15 @@ public class OrderDAOImplJPA implements OrderDAO {
         @Override
         public void delete(Order order) {
                 sessionFactory.getCurrentSession().delete(order);
+        }
+
+        @Override
+        public void delete(int orderId) {
+                Session session = sessionFactory.getCurrentSession();
+                Order myObject = (Order)session.load(Order.class,orderId);
+                session.delete(myObject);
+                //This makes the pending delete to be done
+                session.flush() ;
         }
 
         @Override

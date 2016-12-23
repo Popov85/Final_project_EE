@@ -38,6 +38,7 @@ public class OrderController {
         @Autowired
         private OrderService orderService;
 
+        // Auxiliary data source for creating Orders
         @PostMapping("/get_dishes")
         @ResponseBody
         public DataTablesOutputDTOArrayWrapper<Dish> getDishes() {
@@ -46,32 +47,7 @@ public class OrderController {
                 return data;
         }
 
-        // Read All Spring MVC
-        @GetMapping(value = "/orders")
-        public String orders(Map<String, Object> model) {
-                model.put("orders", orderService.getAll());
-                return "th/orders";
-        }
-
-
-        // Read All DataTables
-        @PostMapping(value = "/all_orders")
-        @ResponseBody
-        public DataTablesOutputDTOArrayWrapper<Order> getOrders() throws JsonProcessingException {
-                DataTablesOutputDTOArrayWrapper<Order> data = new DataTablesOutputDTOArrayWrapper<>();
-                data.setData(orderService.getAll());
-                ObjectMapper mapper = new ObjectMapper();
-                logger.info("Output: "+mapper.writeValueAsString(data));
-                return data;
-        }
-
-        // Go to a page with All Orders
-        @GetMapping(value = "/test_orders")
-        public String testOrders() {
-                return "th/orders";
-        }
-
-        // Go to page to create a new Order
+        // Create (Page)
         @GetMapping("/new_order_ajax")
         public ModelAndView showOrderFormAjax() {
                 ModelAndView modelAndView = new ModelAndView("th/new_order_ajax");
@@ -79,24 +55,10 @@ public class OrderController {
                 return modelAndView;
         }
 
-        // TODO
-        @GetMapping("/edit_order_ajax/{id}")
-        public ModelAndView editOrderAjax(@PathVariable("id") int id) throws JsonProcessingException {
-                ModelAndView modelAndView = new ModelAndView("th/edit_order_ajax");
-                modelAndView.addObject("allTables", Order.TABLE_SET);
-                List<Dish> dishes = dishService.getAll();
-                ObjectMapper mapper = new ObjectMapper();
-                modelAndView.addObject("dishes", mapper.writeValueAsString(dishes));
-                Map<Dish, Integer> orderedDishes;
-                orderedDishes = orderService.getDishes(id);
-                modelAndView.addObject("orderedDishes", orderedDishes);
-                return modelAndView;
-        }
-
-        // Insert new Order
+        // Create (Action)
         @PostMapping(value="/create_order_ajax")
         public ResponseEntity createOrder(@Valid @RequestBody Order order, BindingResult result) {
-                logger.info("New Order created: "+order+" dishes: "+order.getDishes());
+                logger.info("New Order requested: "+order+" dishes: "+order.getDishes());
                 // 1. If dish array is empty, return - Error
                 if (order.getDishes().isEmpty()) {
                         logger.error("Error: no dishes!");
@@ -120,26 +82,15 @@ public class OrderController {
                 return new ResponseEntity("{\"Result\": \"Success\"}", HttpStatus.OK);
         }
 
-        // Close Order
-        @GetMapping("/close_order")
-        public String closeOrder(@RequestParam int id) {
-                orderService.closeOrder(id);
-                logger.info("Order (id= : "+id + ") has been closed");
-                return "redirect:/orders";
+
+        // Read All (Page)
+        @GetMapping(value = "/orders")
+        public String getOrders() {
+                return "th/orders_js_server_side";
         }
 
-        // Read All orders, server-side search, paging and sorting
-        @PostMapping(value = "/get_orders_ajax")
-        @ResponseBody
-        public DataTablesOutputDTO getOrdersForDataTables(DataTablesInputDTO input, HttpServletRequest request){
-            logger.info("Input: " + input);
-            DataTablesOutputDTO output = orderService.getAll(input);
-            logger.info("Output: " + output);
-            return output;
-        }
-
-        // Read All orders, server-side search, paging and sorting
-        @PostMapping(value = "/get_orders")
+        // Read All (Action): server-side search, paging and sorting
+        @PostMapping(value = "/all_orders")
         @ResponseBody
         public DataTablesOutputDTOUniversal<Order> getOrdersForDataTables(DataTablesInputDTO input) throws JsonProcessingException {
                 logger.info("Input: " + input);
@@ -149,43 +100,81 @@ public class OrderController {
                 return data;
         }
 
-
-        @GetMapping(value = "/orders_ajax")
-        public String showOrderTable() {
-                logger.info("Show empty table");
-                return "th/orders_ajax";
+        // Update (Page) TODO
+        @GetMapping("/edit_order_ajax/{id}")
+        public ModelAndView editOrderAjax(@PathVariable("id") int id) throws JsonProcessingException {
+                ModelAndView modelAndView = new ModelAndView("th/edit_order_ajax");
+                modelAndView.addObject("allTables", Order.TABLE_SET);
+                List<Dish> dishes = dishService.getAll();
+                ObjectMapper mapper = new ObjectMapper();
+                modelAndView.addObject("dishes", mapper.writeValueAsString(dishes));
+                Map<Dish, Integer> orderedDishes;
+                orderedDishes = orderService.getDishes(id);
+                modelAndView.addObject("orderedDishes", orderedDishes);
+                return modelAndView;
         }
 
-        @GetMapping(value = "/orders_ajax_new")
-        public String showOrderTable2() {
-                logger.info("Show empty table");
-                return "th/orders_ajax_new";
+        // Update (Action) TODO
+        @PostMapping(value="/update_order_ajax")
+        public ResponseEntity updateOrder(@RequestBody Order order) {
+                logger.info("Existing Order requested: "+order+" dishes: "+order.getDishes());
+                // 1. If dish array is empty, return - Error
+                if (order.getDishes().isEmpty()) {
+                        logger.error("Error: no dishes!");
+                        return new ResponseEntity("Order must contain dishes!",
+                                HttpStatus.EXPECTATION_FAILED);
+                }
+                // 2. Check if there is enough ingredients to fulfill an order
+                if (!orderService.validateIngredients(order.getDishes())) {
+                        logger.error("Error: not enough ingredients!");
+                        return new ResponseEntity("Not enough ingredients to fulfill the order",
+                                HttpStatus.EXPECTATION_FAILED);
+                }
+                try {
+                        orderService.update(order);
+                } catch (Exception e) {
+                        logger.error("Error: failed to insert to DB!");
+                        return new ResponseEntity("Failed to update the order in DB",
+                                HttpStatus.EXPECTATION_FAILED);
+                }
+                logger.info("Order: id= "+order.getId()+" was updated");
+                return new ResponseEntity("{\"Result\": \"Success\"}", HttpStatus.OK);
+        }
+
+        // Delete (Action)
+        @GetMapping("/delete_order")
+        public String delete(@RequestParam int id) {
+                orderService.delete(id);
+                return "redirect:/orders_js_server_side";
+        }
+
+        // Close (Action)
+        @GetMapping("/close_order")
+        public String closeOrder(@RequestParam int id) {
+                orderService.closeOrder(id);
+                logger.info("Order (id= : "+id + ") has been closed");
+                return "redirect:/test_orders";
+        }
+
+        // ---------------------@Deprecated mappings --------------------
+
+
+        // @Deprecated (because of legacy DataTablesOutputDTO)
+        // Read All (Action): server-side search, paging and sorting
+        @PostMapping(value = "/get_orders_ajax")
+        @ResponseBody
+        public DataTablesOutputDTO getOrdersForDataTables(DataTablesInputDTO input, HttpServletRequest request){
+            logger.info("Input: " + input);
+            DataTablesOutputDTO output = orderService.getAll(input);
+            logger.info("Output: " + output);
+            return output;
+        }
+
+        // @Deprecated (because of server-side rendering)
+        // Read All Page
+        @GetMapping(value = "/test_orders")
+        public String testOrders(Map<String, Object> model) {
+                model.put("orders", orderService.getAll());
+                return "th/orders_th_server_side";
         }
 }
-
-
-
-
-
-
-
-
-
-
-
-/*
-            Map<String, Object> map = request.getParameterMap();
-            logger.info("Parameters:");
-            try {
-                for (Map.Entry<String, Object> entry : map.entrySet()) {
-                    if (entry.getValue() instanceof String[]) {
-                        String[] strArray = (String[]) entry.getValue();
-                        System.out.println((entry.getKey() + " : " + Arrays.toString(strArray)));
-                    } else {
-                        System.out.println((entry.getKey() + " : " + entry.getValue()));
-                    }
-                }
-            } catch (Exception e) {
-                logger.error("Failed to go through the map, " + e.getMessage());
-            }
- */
