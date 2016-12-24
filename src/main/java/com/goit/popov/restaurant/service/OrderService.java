@@ -3,6 +3,7 @@ package com.goit.popov.restaurant.service;
 import ch.qos.logback.classic.Logger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.goit.popov.restaurant.dao.entity.OrderDAO;
 import com.goit.popov.restaurant.dao.entity.StoreHouseDAO;
 import com.goit.popov.restaurant.model.*;
@@ -70,6 +71,10 @@ public class OrderService implements OrderServiceInterface, JSONArrayOfArraysCon
                 return orderDAO.getAllOpened();
         }
 
+        public Integer[] getTables() {
+                return Order.TABLE_SET;
+        }
+
         @Transactional
         @Override
         public void closeOrder(int orderId) {
@@ -129,6 +134,20 @@ public class OrderService implements OrderServiceInterface, JSONArrayOfArraysCon
                         ordersArray.add(order.toJSONArray());
                 }
                 return ordersArray;
+        }
+
+        public ArrayNode toJSON(Map<Dish, Integer> dishes) {
+                ObjectMapper mapper = new ObjectMapper();
+                ArrayNode ana = mapper.createArrayNode();
+                for (Map.Entry<Dish, Integer> dish : dishes.entrySet()) {
+                        ObjectNode a = mapper.createObjectNode();
+                        a.put("id", dish.getKey().getId());
+                        a.put("name", dish.getKey().getName());
+                        a.put("price", dish.getKey().getPrice());
+                        a.put("quantity", dish.getValue());
+                        ana.add(a);
+                }
+                return ana;
         }
 
         @Override

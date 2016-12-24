@@ -1,17 +1,52 @@
-// Set up an empty Order table
+// Set up tables
 $(document).ready(function () {
-    var t = $('#odTable').DataTable({
-        columnDefs: [
-            {targets: [0], visible: false},
-            {targets: '_all', visible: true}
-        ]
-    });
-
-    // Removes a selected dish from order
-    $('#odTable tbody').on('click', 'button', function () {
-        t.row($(this).parents('tr')).remove().draw();
+    $.ajax({
+        type: "POST",
+        data: null,
+        url: '/get_tables',
+        dataType: 'json',
+        success: function(json) {
+            var $el = $("#table");
+            $el.empty();
+            $.each(json, function(value, key) {
+                $el.append($("<option></option>")
+                    .attr("value", value).text(key));
+            });
+        }
     });
 });
+
+// Set up Order's dishes
+$(document).ready(function () {
+    console.log("id= "+$("#id").val());
+    var table = $('#odTable').DataTable({
+        "ajax" : {
+            "data": {"orderId": $("#id").val()},
+            "url": "/get_orders_dishes",
+            "type": "POST",
+            "dataType": "json"
+        },
+        columns: [
+            { "data": "id", "visible": false, "searchable": false},
+            { "data": "name"},
+            { "data": "quantity", "render": function(data) {
+                return '<input type="text" value = "' + data+ '" onchange="alert(\'' + table.row($(this).parents('tr')) + '\')"size = "2" name="input"/>'
+            }
+            },
+            { "data": "price"},
+            { "data": null, "render": function() {
+                return '<button type="button" class="btn btn-default" id="delRow" name ="delRow">Del</button>'
+            }
+            }
+        ]
+    });
+    // Remove a selected dish from order
+    $('#odTable tbody').on('click', 'button', function () {
+        console.log("Deleted!");
+        table.row($(this).parents('tr')).remove().draw();
+    });
+});
+
 
 // Set up a Dish table in modal window
 $(document).ready(function () {
@@ -31,17 +66,16 @@ $(document).ready(function () {
         ]
     });
 
-    // Adds a selected dish to the order
+    //Adds a selected dish to the order
     $('#dTable tbody').on('click', 'button', function () {
         var data = table.row($(this).parents('tr')).data();
         var t = $('#odTable').DataTable();
-        t.row.add([
-            data.id,
-            data.name,
-            '<input type="text" value = "1" size = "2" name="input" onchange="alert(\'' + data.price + '\')"/>',
-            data.price,
-            '<button type="button" class="btn btn-default" id="delRow" name ="delRow">Del</button>'
-        ]).draw(true);
+        t.row.add({
+            "id": data.id,
+            "name": data.name,
+            "quantity": 1,
+            "price": data.price
+        }).draw();
     });
 });
 
@@ -49,14 +83,13 @@ $(document).ready(function () {
 $(document).ready(function () {
     $('#newOrderForm').submit(function (event) {
         var json = new Object();
-        json.id = 1000;
+        json.id = parseInt($("#id").val());
         json.isOpened = true;
         json.openedTimeStamp = new Date();
         json.closedTimeStamp = null;
         json.table = $('#table').val();
         json.waiter = 2; // Mr . Black
         json.dishes = getDishes();
-        //alert(JSON.stringify(json));
         $.ajax({
             url: $("#newOrderForm").attr( "action"),
             dataType: 'json',

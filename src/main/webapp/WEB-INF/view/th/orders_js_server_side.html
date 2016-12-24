@@ -17,7 +17,7 @@
                 },
                 serverSide: true,
                 columns: [
-                    { "data": "id", "name": "id",  "title": "id", "visible": false},
+                    { "data": "id", "name": "id",  "title": "id", "visible": true},
                     { "data": "opened", "name": "isOpened", "title": "isOpened"},
                     { "data": "openedTimeStamp", "name": "openedTimeStamp", "title": "opened time"},
                     { "data": "closedTimeStamp", "name": "closedTimeStamp", "title": "closedTimeStamp"},
@@ -37,7 +37,6 @@
                     },
 
                     { "data": null, "sortable": false, "render": function(data){
-                        //return '<a href="/close_order?id=\'' + data.id + '\'"><input type="button" class="btn btn-default" value="Close"/></a>';
                         return '<a href="/close_order?id=' + data.id + '"><input type="button" class="btn btn-default" value="Close"/></a>';
                     }
                     }
@@ -54,7 +53,7 @@
             <table id="ordsTable" name="ordsTable" class="display" cellspacing="0" width="100%" style="overflow-x:auto">
                 <thead>
                 <tr>
-                    <th hidden="true">Id</th>
+                    <th>Id</th>
                     <th>isOpened</th>
                     <th>Opened</th>
                     <th>Closed</th>

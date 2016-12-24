@@ -28,7 +28,7 @@ import java.util.Map;
 public class Order implements JSONValueArrayConvertible {
 
         // Array of tables in the hall of the restaurant
-        public static final int[] TABLE_SET = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 , 12, 13, 14, 15};
+        public static final Integer[] TABLE_SET = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 , 12, 13, 14, 15};
 
         @Id
         @GeneratedValue(generator = "increment")
