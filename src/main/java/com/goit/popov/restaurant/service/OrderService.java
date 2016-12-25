@@ -142,7 +142,7 @@ public class OrderService implements OrderServiceInterface,
         }
 
         @Override
-        public DataTablesOutputDTOUniversal<Order> getAllOrders(DataTablesInputDTO dt) {
+        public DataTablesOutputDTOUniversal<Order> getAll(DataTablesInputDTO dt) {
                 long recordsTotal = count();
                 long recordsFiltered;
                 List<Order> data = orderDAO.getAll(dt);

@@ -9,5 +9,5 @@ public interface DataTablesSearchable<T> {
          * @param dt
          * @return adapted for Data Tables output object
          */
-        DataTablesOutputDTOUniversal<T> getAllOrders(DataTablesInputDTO dt);
+        DataTablesOutputDTOUniversal<T> getAll(DataTablesInputDTO dt);
 }

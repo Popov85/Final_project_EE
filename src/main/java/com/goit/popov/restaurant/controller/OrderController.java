@@ -85,7 +85,7 @@ public class OrderController {
         @ResponseBody
         public DataTablesOutputDTOUniversal<Order> getOrders(DataTablesInputDTO input) throws JsonProcessingException {
                 logger.info("Input: " + input);
-                DataTablesOutputDTOUniversal<Order> data = orderService.getAllOrders(input);
+                DataTablesOutputDTOUniversal<Order> data = orderService.getAll(input);
                 ObjectMapper mapper = new ObjectMapper();
                 logger.info("Output: " + mapper.writeValueAsString(data));
                 return data;
