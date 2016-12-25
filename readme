@@ -1,20 +1,29 @@
+Technology:
+1. Java 8, Gradle 3.2.1
+2. Spring MVC 4.3.3
+3. PostgreSQL 9.4 & Hibernate 5.2.4
+4. Server template: Thymeleaf 4
+5. Front-end technology: jQuery 1.12 /DataTables 1.10
+6. CSS framework: Bootstrap 3.3.7
+
 Task
 
-Используя Spring MVC и JSP реализуйте веб-интерфейс для приложения «Ресторан». Приложение должно иметь страницы:
-1. Главная. Должна содержать: - общую информация о ресторане (название, адрес, контактный телефон, почта и т.п.); - меню (содержит) краткое описание блюда: название, вес, цена; - на отдельной странице просматривать детальную информацию о каждом блюде: название, вес, цена, список ингредиентов (можно добавить фото). Переход на нее должен осуществляться по нажатию на соответствующее блюдо в меню. На главной странице должна быть возможность искать блюда по названию.
-2. Схема ресторана. Должна содержать: - схему ресторана с расположением столиков Схема может быть представлена обычным изображением (.jpeg, .png). Нарисуйте сами или найдите подходящую картинку в интернете.
-3. Наш персонал. Должна содержать: -	список официантов с именами (без фамилий) и фото (вместо фото можно использовать рисунки, смайлы и т.п.)
-4. Контакты Должна содержать: -	адрес, контактный телефон, почта, и т.п. -	cхему проезда (можно использовать просто картинку);
+Using Spring MVC and JSP/Thymeleaf/JavaScript develop a web-application «Restaurant». The app must have the following features:
+1. Start page with the general info about a restaurant (name, location, phone, email).
+The restaurant's menu contains info about dishes and their prices. An unregistered user should be able to search a dish by its name and see detailed info about a dish.
+2. Staff must be logged on before doing theirs job. Staff is divided into 3 categories:
+    - Manager;
+    - Chef;
+    - Waiter;
+ Waiters can take orders, do check-outs, close orders and edit them.
+ A waiter must inform a client if a dish cannot be prepared because of shortage in ingredients.
+ Chefs can manage prepared dishes of orders.
+ Other chefs and waiters cannot see orders and prepared dishes of theirs colleagues.
+ Managers can edit staff information, see all prepared dishes and orders (analyse effectiveness of chefs), see the stock state
+(ingredients running out), analyse the most and last popular dishes.
 
 Additional
 
-Используя Spring MVC и JSP реализуйте веб-интерфейс для приложения «Ресторан». Приложение должно иметь 3 группы пользователей: manager, chef, waiter.
-Задачи waiter: принимать заказы от клиентов, делать расчёт клиентов, просматривать доступные меню и блюда, немедленно информировать клиентов, если нужных ингредиентов для приготовления блюда нету в наличие на складе, предлагать замену блюда на основе состава компонентов, просматривать историю своих заказов за сегодня/ за период.
-Задачи chef: принимать информацию от официантов на приготовление различных блюд, предоставлять мгновенную информацию о том через сколько данное блюдо может быть готово, уменьшать кол-во ингредиентов на складе по приготовлении блюда, просматривать историю приготовленных блюд.
-Задачи manager: добавление/изменение информации о персонале (CRUD по работникам), анализ деятельности персонала включает просмотр текущих заказов за день/период, выручку за день/период, просмотр приготовленных блюд за день/ период, просмотр состояния склада и обнаружение ингредиентов в малом количестве или отсутствующих, анализ самых востребованных блюд и самых редко заказываемых блюд.
+Application should provide information to the manager view without reloading his page.
+Web-socket technology should be realized.
 
-Страницы:
-1. Главная. Должна содержать: - общую информацию о ресторане (название, адрес, контактный телефон, почта и т.п.), cхему проезда (можно использовать просто картинку); приглашение на авторизацию/регистрацию;
-2. После авторизации под официантом видны страницы: menus.jsp, orders.jsp, new_order.jsp
-3. После авторизации под поваром видны страницы: orders.jsp, prepared_dishes.jsp, new_prepared_dish.jsp
-4. После авторизации под менеджером видны страницы: employees.jsp, orders.jsp, prepared_dishes.jsp, stock.jsp
