@@ -14,6 +14,19 @@ $(document).ready(function () {
             });
         }
     });
+
+    // Make selected the Order's table
+    $.ajax({
+        type: "POST",
+        data: {"orderId": $("#id").val()},
+        url: '/get_orders_table',
+        dataType: 'json',
+        success: function(json) {
+            console.log("table= "+json);
+            var $el = $("#table");
+            $("#table").val(json);
+        }
+    });
 });
 
 // Set up Order's dishes

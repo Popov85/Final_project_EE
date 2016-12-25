@@ -67,7 +67,7 @@ $(document).ready(function () {
 $(document).ready(function () {
     $('#newOrderForm').submit(function (event) {
         var json = new Object();
-        json.id = 1000;
+        json.id = 0;
         json.isOpened = true;
         json.openedTimeStamp = new Date();
         json.closedTimeStamp = null;

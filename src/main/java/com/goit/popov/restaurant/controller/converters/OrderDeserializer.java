@@ -57,7 +57,6 @@ public class OrderDeserializer extends JsonDeserializer<Order> {
                 Map<Dish, Integer> dishesInMap = null;
                 try {
                         id = (Integer) ((IntNode) node.get("id")).numberValue();
-                        //id = Integer.parseInt(node.get("id").asText());
                         isOpened = node.get("isOpened").booleanValue();
                         openedTS = node.get("openedTimeStamp").asText();
                         openedTimeStamp = convertStringToData(openedTS);
