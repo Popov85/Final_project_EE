@@ -7,9 +7,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.goit.popov.restaurant.dao.entity.OrderDAO;
 import com.goit.popov.restaurant.dao.entity.StoreHouseDAO;
 import com.goit.popov.restaurant.model.*;
-import com.goit.popov.restaurant.model.dataTablesAdapter.JSONArrayOfArraysConvertible;
 import com.goit.popov.restaurant.service.dataTablesDTO.DataTablesInputDTO;
-import com.goit.popov.restaurant.service.dataTablesDTO.DataTablesOutputDTO;
+import com.goit.popov.restaurant.service.dataTablesDTO.DataTablesMapToJSONConvertible;
 import com.goit.popov.restaurant.service.dataTablesDTO.DataTablesOutputDTOUniversal;
 import com.goit.popov.restaurant.service.dataTablesDTO.DataTablesSearchable;
 import org.slf4j.LoggerFactory;
@@ -22,7 +21,8 @@ import java.util.Map;
 /**
  * Created by Andrey on 12/3/2016.
  */
-public class OrderService implements OrderServiceInterface, JSONArrayOfArraysConvertible<Order>, DataTablesSearchable {
+public class OrderService implements OrderServiceInterface,
+        DataTablesMapToJSONConvertible<Dish, Integer>, DataTablesSearchable<Order> {
 
         private static final Logger logger = (Logger) LoggerFactory.getLogger(OrderService.class);
 
@@ -127,15 +127,6 @@ public class OrderService implements OrderServiceInterface, JSONArrayOfArraysCon
         }
 
         @Override
-        public ArrayNode toJSONArray(List<Order> orders) {
-                ObjectMapper mapper = new ObjectMapper();
-                ArrayNode ordersArray = mapper.createArrayNode();
-                for (Order order : orders) {
-                        ordersArray.add(order.toJSONArray());
-                }
-                return ordersArray;
-        }
-
         public ArrayNode toJSON(Map<Dish, Integer> dishes) {
                 ObjectMapper mapper = new ObjectMapper();
                 ArrayNode ana = mapper.createArrayNode();
@@ -151,22 +142,6 @@ public class OrderService implements OrderServiceInterface, JSONArrayOfArraysCon
         }
 
         @Override
-        public DataTablesOutputDTO getAll(DataTablesInputDTO dt) {
-                long recordsTotal = count();
-                long recordsFiltered;
-                List<Order> orders = orderDAO.getAll(dt);
-                if (!dt.getSearch().isEmpty()) {
-                        recordsFiltered = orders.size();
-                } else {
-                        recordsFiltered=recordsTotal;
-                }
-                return new DataTablesOutputDTO()
-                        .setDraw(dt.getDraw())
-                        .setRecordsTotal(recordsTotal)
-                        .setRecordsFiltered(recordsFiltered)
-                        .setData(toJSONArray(orders));
-        }
-
         public DataTablesOutputDTOUniversal<Order> getAllOrders(DataTablesInputDTO dt) {
                 long recordsTotal = count();
                 long recordsFiltered;

@@ -1,14 +1,9 @@
 package com.goit.popov.restaurant.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.goit.popov.restaurant.controller.converters.OrderDeserializer;
-import com.goit.popov.restaurant.model.dataTablesAdapter.JSONValueArrayConvertible;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -25,7 +20,7 @@ import java.util.Map;
 @Table(name = "orders")
 @JsonDeserialize(using = OrderDeserializer.class)
 //@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="jsonId")
-public class Order implements JSONValueArrayConvertible {
+public class Order {
 
         // Array of tables in the hall of the restaurant
         public static final Integer[] TABLE_SET = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 , 12, 13, 14, 15};
@@ -179,24 +174,5 @@ public class Order implements JSONValueArrayConvertible {
                         ", waiter=" + waiter +
                         ", dishes=" + dishes +
                         '}';
-        }
-
-        @Override
-        public ArrayNode toJSONArray() {
-                ObjectMapper mapper = new ObjectMapper();
-                ArrayNode an = mapper.createArrayNode();
-                an.add(this.getId());
-                an.add(this.isOpened());
-                an.add(this.getOpenedTimeStamp().toString());
-                if (this.getClosedTimeStamp()==null) {
-                        an.add("opened");
-                } else {
-                        an.add(this.getClosedTimeStamp().toString());
-                }
-                an.add(this.getTable());
-                an.add(this.getDishesQuantity());
-                an.add(this.getTotal());
-                an.add(this.getWaiter().getName());
-                return an;
         }
 }
