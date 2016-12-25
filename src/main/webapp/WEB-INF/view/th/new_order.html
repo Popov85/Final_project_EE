@@ -1,71 +1,30 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8"/>
-    <title>Order</title>
-    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/bootstrap-3.3.7.min.css}" />
-    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/jquery.dataTables.min.css}" />
+    <title>New Order Ajax</title>
+    <link rel="stylesheet" type="text/css" media="all" href="/css/bootstrap-3.3.7.min.css"/>
+    <link rel="stylesheet" type="text/css" media="all" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css"/>
     <script src ="/js/lib/jquery-1.12.1.js"/>
+    <script src ="/js/lib/jquery-ui-1.12.1.js"/>
     <script src ="/js/lib/bootstrap-3.3.7.min.js"/>
     <script src ="/js/lib/jquery.dataTables-1.10.12.min.js"/>
-    <script type="text/javascript" th:inline="javascript">
-        $(document).ready(function() {
-            var t = $('#odTable').DataTable({
-                columnDefs: [
-                    { targets: [0], visible: false},
-                    { targets: '_all', visible: true}
-                ]
-            });
-            $('#addRow').on('click', function () {
-                t.row.add( [
-                    10,
-                    'Your Dish',
-                    '<input type="text" value = "1" size = "2"/>',
-                    '0.0',
-                    '<button type="button" class="btn btn-default" id="delRow" name ="delRow">Del</button>'
-                ] ).draw(true);
-            } );
+    <script src ="/js/new_order.js"/>
 
-            $('#odTable tbody').on('click','button', function () {
-                var data = t.row($(this).parents('tr')).data();
-                alert( data[1] +"'s price is: "+ data[3]);
-                t.row($(this).parents('tr')).remove().draw();
-            } );
-
-           $('#delRow').click( function () {
-                t.row(0).remove().draw();
-            } );
-
-            $('#getAll').click( function () {
-                var oTable = $('#odTable').dataTable();
-                alert(oTable.fnGetData()[3][3]);
-            } );
-        } );
-    </script>
 </head>
 <body>
 <h3 class="form-signin-heading" align="center">New Order</h3>
 <div class="container">
-    <form action="#" th:action="@{/save_order}" th:object="${order}" method="post"
-          style="max-width: 500px; margin: 0 auto; font-size: larger;">
+    <form id="newOrderForm" action="/edit_order" method="post"
+          style="max-width: 500px; margin: 0 auto; font-size: larger;" onsubmit="return false;">
 
         <div class="form-group">
-            <input type="hidden" th:id="id" id="id" th:field="*{id}"/>
-        </div>
-
-        <div class="form-group">
-            <label for="table">Table</label>
-            <select id="table" th:field="*{table}"
-                    class="list-group" title="Select a table number">
-                <option th:each="table : ${allTables}"
-                        th:value="${table}"
-                        th:text="${table}">
-                </option>
+            <label for="table">Table #</label>
+            <select id="table" class="list-group" title="Select a table number">
             </select>
-            <p th:if="${#fields.hasErrors('table')}" th:errors="*{table}">Incorrect data</p>
         </div>
 
-        <div th:if="${not #lists.isEmpty(orderedDishes)}">
+        <div class="form-group">
             <table id="odTable" class="display" cellspacing="0" width="100%" style="overflow-x:auto">
                 <thead>
                 <tr>
@@ -76,32 +35,46 @@
                     <th>Del</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr th:each="oDish : ${orderedDishes}">
-                    <td th:text="${oDish.key.id}" hidden="true"/>
-                    <td th:text="${oDish.key.name}"/>
-                    <td><input type="text" th:value="${oDish.value}" th:id="${oDish.key.id}" size="2" width="1cm" height="5mm"/></td>
-                    <td th:text="${oDish.key.price}*${oDish.value}"/>
-                    <td>
-                        <a th:href="@{/delete_dish(id=${oDish.key.id})}">
-                            <input type="button" class="btn btn-default" value="Del" th:name="'delRow_'+${oDish.key.id}"/>
-                        </a>
-                    </td>
-                </tr>
-                </tbody>
             </table>
         </div>
         <div class="form-group">
             <br/>
-            <!--<a th:href="@{/add_dish}">
-                <input type="button" class="btn btn-default" value="Add Dish" id="addRow"/>
-            </a>-->
-            <button class="btn btn-default" type="button" id = "addRow">Add Dish</button>
-            <button class="btn btn-default" type="button" id = "delRow">Del Dish</button>
-            <button class="btn btn-default" type="button" id = "getAll">Get All</button>
+            <button class="btn btn-default" type="button" data-toggle="modal" data-target="#myModal">Add Dish</button>
             <button class="btn btn-primary" type="submit">Confirm</button>
         </div>
+
+        <div id = "feedback"></div>
     </form>
 </div>
+<!-- Modal window-->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Select a dish your client wants</h4>
+            </div>
+            <div class="modal-body">
+                <table id="dTable" class="display" cellspacing="0" width="100%" style="overflow-x:auto">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Dish</th>
+                        <th>Category</th>
+                        <th>Price, $</th>
+                        <th>Weight, g</th>
+                        <th>Add</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 </body>
 </html>

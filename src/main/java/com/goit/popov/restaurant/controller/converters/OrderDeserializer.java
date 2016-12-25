@@ -130,6 +130,7 @@ public class OrderDeserializer extends JsonDeserializer<Order> {
                         for (JsonNode jsonNode : arrayNode) {
                                 Dish dish = dishService.getById((Integer) jsonNode.get("dishId").numberValue()); ;
                                 Integer quantity = (Integer) jsonNode.get("quantity").numberValue();
+                                if (quantity < 0) throw new RuntimeException("Quantity cannot be negative!");
                                 map.put(dish, quantity);
                         }
                 } catch (Exception e) {

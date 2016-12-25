@@ -69,21 +69,21 @@ public class OrderController {
         }
 
         // Create (Page)
-        @GetMapping("/new_order_ajax")
-        public String showOrderFormAjax() {
-                return "th/new_order_ajax";
+        @GetMapping("/new_order")
+        public String showOrderForm() {
+                return "th/new_order";
         }
 
         // Read All (Page)
         @GetMapping(value = "/orders")
-        public String getOrders() {
-                return "th/orders_js_server_side";
+        public String showOrdersTable() {
+                return "th/orders";
         }
 
         // Read All (Action): server-side search, paging and sorting
-        @PostMapping(value = "/all_orders")
+        @PostMapping(value = "/get_orders")
         @ResponseBody
-        public DataTablesOutputDTOUniversal<Order> getOrdersForDataTables(DataTablesInputDTO input) throws JsonProcessingException {
+        public DataTablesOutputDTOUniversal<Order> getOrders(DataTablesInputDTO input) throws JsonProcessingException {
                 logger.info("Input: " + input);
                 DataTablesOutputDTOUniversal<Order> data = orderService.getAllOrders(input);
                 ObjectMapper mapper = new ObjectMapper();
@@ -93,8 +93,8 @@ public class OrderController {
 
         // Update (Page)
         @GetMapping("/edit_order")
-        public ModelAndView editOrderAjax(@RequestParam int id) {
-                ModelAndView modelAndView = new ModelAndView("th/edit_order_ajax");
+        public ModelAndView editOrder(@RequestParam int id) {
+                ModelAndView modelAndView = new ModelAndView("th/edit_order");
                 modelAndView.addObject("id", id);
                 logger.info("Edit Order, id= "+id);
                 return modelAndView;
@@ -134,9 +134,10 @@ public class OrderController {
 
         // Delete (Action)
         @GetMapping("/delete_order")
-        public String delete(@RequestParam int id) {
+        public String deleteOrder(@RequestParam int id) {
                 try {
                         orderService.delete(id);
+                        logger.info("Deleted Order, id= "+id);
                 } catch (Exception e) {
                         logger.error("Failed to delete this order!");
                         return "th/error";
@@ -148,8 +149,7 @@ public class OrderController {
         @GetMapping("/close_order")
         public String closeOrder(@RequestParam int id) {
                 orderService.closeOrder(id);
-                logger.info("Order (id= : "+id + ") has been closed");
+                logger.info("Order (id= : "+id + ") closed");
                 return "redirect:/orders";
         }
-
 }
