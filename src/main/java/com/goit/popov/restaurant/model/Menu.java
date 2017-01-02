@@ -3,6 +3,7 @@ package com.goit.popov.restaurant.model;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -81,5 +82,17 @@ public class Menu {
                         ", name='" + name + '\'' +
                         ", dishes=" + dishes +
                         '}';
+        }
+
+        public BigDecimal getPrice() {
+                BigDecimal total = new BigDecimal(0);
+                for (Dish dish : dishes) {
+                        total = total.add(dish.getPrice());
+                }
+                return total;
+        }
+
+        public int calcDishes() {
+                return this.dishes.size();
         }
 }

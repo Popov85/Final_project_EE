@@ -1,7 +1,7 @@
 package com.goit.popov.restaurant.controller.converters;
 
 import ch.qos.logback.classic.Logger;
-import com.goit.popov.restaurant.service.dataTablesDTO.DataTablesInputDTO;
+import com.goit.popov.restaurant.service.dataTables.DataTablesInputDTO;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;

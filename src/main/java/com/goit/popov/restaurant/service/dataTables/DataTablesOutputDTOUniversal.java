@@ -1,4 +1,4 @@
-package com.goit.popov.restaurant.service.dataTablesDTO;
+package com.goit.popov.restaurant.service.dataTables;
 
 import java.util.List;
 

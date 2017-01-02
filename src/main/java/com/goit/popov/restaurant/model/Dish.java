@@ -1,9 +1,6 @@
 package com.goit.popov.restaurant.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.goit.popov.restaurant.model.dataTablesAdapter.JSONValueArrayConvertible;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;

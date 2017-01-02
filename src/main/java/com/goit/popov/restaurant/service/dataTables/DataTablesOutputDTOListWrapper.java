@@ -1,11 +1,11 @@
-package com.goit.popov.restaurant.service.dataTablesDTO;
+package com.goit.popov.restaurant.service.dataTables;
 
 import java.util.List;
 
 /**
  * Created by Andrey on 12/22/2016.
  */
-public class DataTablesOutputDTOArrayWrapper<T> {
+public class DataTablesOutputDTOListWrapper<T> {
 
     private List<T> data;
 

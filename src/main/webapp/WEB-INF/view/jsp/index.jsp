@@ -6,6 +6,21 @@
 <head>
         <title>Home</title>
         <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css">
+        <script src ="/js/lib/jquery-1.12.1.js"/>
+        <script src ="/js/lib/bootstrap-3.3.7.min.js"/>
+        <script src ="/js/lib/jquery.dataTables-1.10.12.min.js"/>
+
+        <script type="text/javascript">
+                $(document).ready(function () {
+                        var t = $('#menu').DataTable({
+                                columnDefs: [
+                                        {targets: [0], visible: false},
+                                        {targets: '_all', visible: true}
+                                ]
+                        })
+                });
+        </script>
+
 </head>
 <style type="text/css">
         #header1 {float:left;}
@@ -44,7 +59,7 @@
                 <td bgcolor="#aaa" width="100%">
                         <details title="All existing dishes:">
                                 <label for="menu">Our menus:</label>
-                                <table id="menu" align="center" width="100%" border="0">
+                                <table id = "menu" name="menu" class="display" align="center" width="100%" border="0">
                                         <thead>
                                         <tr>
                                                 <th>Id</th>
@@ -59,16 +74,16 @@
                                         <tbody>
                                         <c:forEach items="${menus}" var="menu">
                                                 <tr>
-                                                        <td><c:out value="${menu.id}"/></td>
-                                                        <td><c:out value="${menu.name}"/></td>
-                                                        <c:forEach items="${menu.dishes}" var="dish">
-                                                                        <td><c:out value="${dish.name}"/></td>
-                                                                        <td><c:out value="${dish.category}"/></td>
-                                                                        <td><c:out value="${dish.price}"/></td>
-                                                                        <td><c:out value="${dish.weight}"/></td>
-                                                                        <td><a href="/like_dish/${dish.id}">Like</a></td>
-                                                                </tr><tr><td></td><td></td>
-                                                        </c:forEach>
+                                                <td><c:out value="${menu.id}"/></td>
+                                                <td><c:out value="${menu.name}"/></td>
+                                                <c:forEach items="${menu.dishes}" var="dish">
+                                                        <td><c:out value="${dish.name}"/></td>
+                                                        <td><c:out value="${dish.category}"/></td>
+                                                        <td><c:out value="${dish.price}"/></td>
+                                                        <td><c:out value="${dish.weight}"/></td>
+                                                        <td><a href="/like_dish/${dish.id}">Like</a></td>
+                                                        </tr><tr><td></td><td></td>
+                                                </c:forEach>
                                                 </tr>
                                         </c:forEach>
                                         </tbody>

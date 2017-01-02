@@ -1,14 +1,11 @@
-package com.goit.popov.restaurant.service.dataTablesDTO;
+package com.goit.popov.restaurant.service.dataTables;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-
-import java.util.Map;
 
 /**
  * Created by Andrey on 12/24/2016.
  */
-public class DataTablesOutputDTOMapWrapper {
+public class DataTablesOutputDTOCollectionWrapper {
 
     private ArrayNode data;
 

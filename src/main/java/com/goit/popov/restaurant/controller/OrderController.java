@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Order;
-import com.goit.popov.restaurant.service.dataTablesDTO.*;
+import com.goit.popov.restaurant.service.dataTables.*;
 import com.goit.popov.restaurant.service.DishService;
 import com.goit.popov.restaurant.service.OrderService;
 import org.slf4j.LoggerFactory;
@@ -36,8 +36,8 @@ public class OrderController {
         // Auxiliary data source for creating Orders
         @PostMapping("/get_dishes")
         @ResponseBody
-        public DataTablesOutputDTOArrayWrapper<Dish> getDishes() {
-                DataTablesOutputDTOArrayWrapper<Dish> data = new DataTablesOutputDTOArrayWrapper<>();
+        public DataTablesOutputDTOListWrapper<Dish> getDishes() {
+                DataTablesOutputDTOListWrapper<Dish> data = new DataTablesOutputDTOListWrapper<>();
                 data.setData(dishService.getAll());
                 return data;
         }
@@ -45,8 +45,8 @@ public class OrderController {
         // Auxiliary data source for fetching Order's existing dishes
         @PostMapping("/get_orders_dishes")
         @ResponseBody
-        public DataTablesOutputDTOMapWrapper getOrdersDishes(@RequestParam Integer orderId) throws JsonProcessingException {
-                DataTablesOutputDTOMapWrapper data = new DataTablesOutputDTOMapWrapper();
+        public DataTablesOutputDTOCollectionWrapper getOrdersDishes(@RequestParam Integer orderId) throws JsonProcessingException {
+                DataTablesOutputDTOCollectionWrapper data = new DataTablesOutputDTOCollectionWrapper();
                 data.setData(orderService.toJSON(orderService.getDishes(orderId)));
                 ObjectMapper mapper = new ObjectMapper();
                 logger.info("Dishes of this Order : "+mapper.writeValueAsString(data));

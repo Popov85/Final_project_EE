@@ -4,7 +4,7 @@ import ch.qos.logback.classic.Logger;
 import com.goit.popov.restaurant.dao.entity.OrderDAO;
 import com.goit.popov.restaurant.model.*;
 import com.goit.popov.restaurant.model.Order;
-import com.goit.popov.restaurant.service.dataTablesDTO.DataTablesInputDTO;
+import com.goit.popov.restaurant.service.dataTables.DataTablesInputDTO;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;

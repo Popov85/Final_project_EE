@@ -4,6 +4,7 @@ import com.goit.popov.restaurant.dao.entity.MenuDAO;
 import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Menu;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -36,10 +37,17 @@ public class MenuDAOImplJPA implements MenuDAO {
                 return sessionFactory.getCurrentSession().createQuery("select m from Menu m").list();
         }
 
-        @Transactional
+        /*@Transactional
         @Override
         public Menu getById(int id) {
                 return sessionFactory.getCurrentSession().get(Menu.class, id);
+        }*/
+
+        @Transactional
+        @Override
+        public Menu getById(int id) {
+                return (Menu) sessionFactory.getCurrentSession().
+                        createQuery("select m from Menu m join m.dishes where m.id="+id).getSingleResult();
         }
 
         @Transactional

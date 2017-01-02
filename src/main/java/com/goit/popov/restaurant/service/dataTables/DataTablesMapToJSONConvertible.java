@@ -1,4 +1,4 @@
-package com.goit.popov.restaurant.service.dataTablesDTO;
+package com.goit.popov.restaurant.service.dataTables;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import java.util.Map;
