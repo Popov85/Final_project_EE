@@ -3,6 +3,7 @@ package com.goit.popov.restaurant.dao.entity;
 import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Order;
 import com.goit.popov.restaurant.service.dataTables.DataTablesInputDTO;
+import com.goit.popov.restaurant.service.dataTables.DataTablesInputExtendedDTO;
 
 import java.util.List;
 
@@ -17,5 +18,5 @@ public interface OrderDAO extends GenericDAO<Order> {
         List<Order> getAllClosed();
         List<Order> getAllOpened();
         long count();
-        List<Order> getAll(DataTablesInputDTO dt);
+        List<Order> getAll(DataTablesInputExtendedDTO dt);
 }

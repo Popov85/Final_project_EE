@@ -7,10 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.goit.popov.restaurant.dao.entity.OrderDAO;
 import com.goit.popov.restaurant.dao.entity.StoreHouseDAO;
 import com.goit.popov.restaurant.model.*;
-import com.goit.popov.restaurant.service.dataTables.DataTablesInputDTO;
-import com.goit.popov.restaurant.service.dataTables.DataTablesMapToJSONConvertible;
-import com.goit.popov.restaurant.service.dataTables.DataTablesOutputDTOUniversal;
-import com.goit.popov.restaurant.service.dataTables.DataTablesSearchable;
+import com.goit.popov.restaurant.service.dataTables.*;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -141,8 +138,26 @@ public class OrderService implements OrderServiceInterface,
                 return ana;
         }
 
-        @Override
+        /*@Override
         public DataTablesOutputDTOUniversal<Order> getAll(DataTablesInputDTO dt) {
+                long recordsTotal = count();
+                long recordsFiltered;
+                List<Order> data = orderDAO.getAll(dt);
+                if (!dt.getSearch().isEmpty()) {
+                        recordsFiltered = data.size();
+                } else {
+                        recordsFiltered=recordsTotal;
+                }
+                return new DataTablesOutputDTOUniversal<Order>()
+                        .setDraw(dt.getDraw())
+                        .setRecordsTotal(recordsTotal)
+                        .setRecordsFiltered(recordsFiltered)
+                        .setData(data);
+        }*/
+
+
+        @Override
+        public DataTablesOutputDTOUniversal<Order> getAll(DataTablesInputExtendedDTO dt) {
                 long recordsTotal = count();
                 long recordsFiltered;
                 List<Order> data = orderDAO.getAll(dt);

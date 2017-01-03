@@ -43,7 +43,7 @@ public class Order {
         private Date closedTimeStamp;
 
         @Column(name = "TABLE_NUMBER")
-        private int table;
+        private String table;
 
         @JsonIgnore
         @ManyToOne(fetch = FetchType.EAGER)
@@ -67,7 +67,7 @@ public class Order {
                 return isOpened;
         }
 
-        public int getTable() {
+        public String getTable() {
                 return table;
         }
 
@@ -87,7 +87,7 @@ public class Order {
                 isOpened = opened;
         }
 
-        public void setTable(int table) {
+        public void setTable(String table) {
                 this.table = table;
         }
 
@@ -159,7 +159,7 @@ public class Order {
         public int hashCode() {
                 int result = (isOpened ? 1 : 0);
                 result = 31 * result + openedTimeStamp.hashCode();
-                result = 31 * result + table;
+                result = 31 * result + table.hashCode();
                 return result;
         }
 

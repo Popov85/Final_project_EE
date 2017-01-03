@@ -14,6 +14,7 @@
     <mvc:annotation-driven conversion-service="conversionService">
         <mvc:argument-resolvers>
             <bean class="com.goit.popov.restaurant.controller.converters.DataTablesInputDTOHandlerMethodArgumentResolver"/>
+            <bean class="com.goit.popov.restaurant.controller.converters.DataTablesInputExtendedDTOHandlerMethodArgumentResolver"/>
         </mvc:argument-resolvers>
     </mvc:annotation-driven>
 

@@ -52,7 +52,7 @@ public class OrderDeserializer extends JsonDeserializer<Order> {
                 Date closedTimeStamp = null;
                 int waiterId = 0;
                 String tableInString;
-                int table = 0;
+                String table = "";
                 ArrayNode dishes;
                 Map<Dish, Integer> dishesInMap = null;
                 try {
@@ -65,7 +65,7 @@ public class OrderDeserializer extends JsonDeserializer<Order> {
                                 closedTimeStamp = convertStringToData(closedTS);
                         }
                         tableInString = node.get("table").asText();
-                        table = Integer.parseInt(tableInString);
+                        table = tableInString;
                         waiterId = (Integer) ((IntNode) node.get("waiter")).numberValue();
                         dishes = ((ArrayNode) node.get("dishes"));
                         dishesInMap = convertJSONToMap(dishes);
@@ -92,7 +92,7 @@ public class OrderDeserializer extends JsonDeserializer<Order> {
          * @return
          */
         private Order getOrder(int id, boolean isOpened, Date openedTimeStamp, Date closedTimeStamp,
-                               int waiterId, int table, Map<Dish, Integer> dishesInMap) {
+                               int waiterId, String table, Map<Dish, Integer> dishesInMap) {
                 Order order = new Order();
                 order.setId(id);
                 order.setOpened(isOpened);

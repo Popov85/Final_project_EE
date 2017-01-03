@@ -10,13 +10,17 @@ import com.goit.popov.restaurant.service.DishService;
 import com.goit.popov.restaurant.service.OrderService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -63,8 +67,8 @@ public class OrderController {
         // Auxiliary data source for fetching the Order's table
         @PostMapping("/get_orders_table")
         @ResponseBody
-        public int getOrdersTable(@RequestParam Integer orderId) {
-                int table = orderService.getById(orderId).getTable();
+        public String getOrdersTable(@RequestParam Integer orderId) {
+                String table = orderService.getById(orderId).getTable();
                 return table;
         }
 
@@ -80,15 +84,61 @@ public class OrderController {
                 return "th/orders";
         }
 
+        // Read All (Page) Manager view
+        @GetMapping(value = "/orders_m")
+        public String showOrdersTableManager() {
+                return "th/manager/orders";
+        }
+
         // Read All (Action): server-side search, paging and sorting
-        @PostMapping(value = "/get_orders")
+        /*@PostMapping(value = "/get_orders")
         @ResponseBody
-        public DataTablesOutputDTOUniversal<Order> getOrders(DataTablesInputDTO input) throws JsonProcessingException {
+        public DataTablesOutputDTOUniversal<Order> getOrders(DataTablesInputDTO input, HttpServletRequest request) throws JsonProcessingException {
                 logger.info("Input: " + input);
+                Map<String, Object> map = request.getParameterMap();
+                logger.info("Parameters:");
+                try {
+                        for (Map.Entry<String, Object> entry : map.entrySet()) {
+                                if (entry.getValue() instanceof String[]) {
+                                        String[] strArray = (String[]) entry.getValue();
+                                        System.out.println((entry.getKey() + " : " + Arrays.toString(strArray)));
+                                } else {
+                                        System.out.println((entry.getKey() + " : " + entry.getValue()));
+                                }
+                        }
+                } catch (Exception e) {
+                        logger.error("Failed to go through the map, " + e.getMessage());
+                }
+
                 DataTablesOutputDTOUniversal<Order> data = orderService.getAll(input);
                 ObjectMapper mapper = new ObjectMapper();
                 logger.info("Output: " + mapper.writeValueAsString(data));
                 return data;
+        }*/
+
+
+        @PostMapping(value = "/get_orders")
+        @ResponseBody
+        public DataTablesOutputDTOUniversal<Order> getOrders(DataTablesInputExtendedDTO input, HttpServletRequest request) throws JsonProcessingException {
+            logger.info("Input: " + input);
+            Map<String, Object> map = request.getParameterMap();
+            logger.info("Parameters:");
+            try {
+                for (Map.Entry<String, Object> entry : map.entrySet()) {
+                    if (entry.getValue() instanceof String[]) {
+                        String[] strArray = (String[]) entry.getValue();
+                        System.out.println((entry.getKey() + " : " + Arrays.toString(strArray)));
+                    } else {
+                        System.out.println((entry.getKey() + " : " + entry.getValue()));
+                    }
+                }
+            } catch (Exception e) {
+                logger.error("Failed to go through the map, " + e.getMessage());
+            }
+            DataTablesOutputDTOUniversal<Order> data = orderService.getAll(input);
+            ObjectMapper mapper = new ObjectMapper();
+            logger.info("Output: " + mapper.writeValueAsString(data));
+            return data;
         }
 
         // Update (Page)
