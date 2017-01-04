@@ -68,6 +68,14 @@ public class OrderService implements OrderServiceInterface,
                 return orderDAO.getAllOpened();
         }
 
+        public List<Order> getAllWaiterToday(int waiterId) {
+                return orderDAO.getAllWaiterToday(waiterId);
+        }
+
+        public List<Order> getAllWaiterArchive(int waiterId, DataTablesInputExtendedDTO dt) {
+                return orderDAO.getAllWaiterArchive(waiterId, dt);
+        }
+
         public Integer[] getTables() {
                 return Order.TABLE_SET;
         }
@@ -138,30 +146,12 @@ public class OrderService implements OrderServiceInterface,
                 return ana;
         }
 
-        /*@Override
-        public DataTablesOutputDTOUniversal<Order> getAll(DataTablesInputDTO dt) {
-                long recordsTotal = count();
-                long recordsFiltered;
-                List<Order> data = orderDAO.getAll(dt);
-                if (!dt.getSearch().isEmpty()) {
-                        recordsFiltered = data.size();
-                } else {
-                        recordsFiltered=recordsTotal;
-                }
-                return new DataTablesOutputDTOUniversal<Order>()
-                        .setDraw(dt.getDraw())
-                        .setRecordsTotal(recordsTotal)
-                        .setRecordsFiltered(recordsFiltered)
-                        .setData(data);
-        }*/
-
-
         @Override
         public DataTablesOutputDTOUniversal<Order> getAll(DataTablesInputExtendedDTO dt) {
                 long recordsTotal = count();
                 long recordsFiltered;
                 List<Order> data = orderDAO.getAll(dt);
-                if (!dt.getSearch().isEmpty()) {
+                if (!dt.getColumnSearch().isEmpty()) {
                         recordsFiltered = data.size();
                 } else {
                         recordsFiltered=recordsTotal;

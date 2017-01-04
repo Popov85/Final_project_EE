@@ -5,6 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,6 +33,18 @@ public class Dish {
 
         @Column(name = "WEIGHT")
         private double weight;
+
+        @JsonIgnore
+        @ManyToMany(fetch = FetchType.EAGER, mappedBy="dishes")
+        private List<Menu> menus;
+
+        public List<Menu> getMenus() {
+                return menus;
+        }
+
+        public void setMenus(List<Menu> menus) {
+                this.menus = menus;
+        }
 
         @JsonIgnore
         @ElementCollection(fetch = FetchType.EAGER)

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.goit.popov.restaurant.dao.entity.MenuDAO;
-import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Menu;
 import com.goit.popov.restaurant.service.dataTables.DataTablesListToJSONConvertible;
 import org.springframework.transaction.annotation.Transactional;

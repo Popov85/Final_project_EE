@@ -1,29 +1,38 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
-    <title>Home</title>
+    <title>Menus</title>
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css"/>
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css"/>
     <script src ="/js/lib/jquery-1.12.1.js"/>
     <script src ="/js/lib/bootstrap-3.3.7.min.js"/>
     <script src ="/js/lib/jquery.dataTables-1.10.12.min.js"/>
 
-    <script type="text/javascript" th:inline="javascript">
+    <script type="text/javascript">
         $(document).ready(function () {
-            var id = [[${id}]];
-            console.log("id = "+id);
             var table = $('#menu').DataTable({
                 "bFilter":false,
                 "bLengthChange": false,
+                "bAutoWidth": false,
                 "ajax" : {
-                    "url": "/get_menus_dishes?id="+id,
+                    "url": "/get_menus",
                     "type": "POST"
                 },
+                "columnDefs": [
+                    { "width": "15%", "targets": 0 },
+                    { "width": "40%", "targets": 1 },
+                    { "width": "15%", "targets": 2 },
+                    { "width": "15%", "targets": 3 },
+                    { "width": "15%", "targets": 4 }
+                ],
                 columns: [
                     { "data": "id", "name": "id",  "title": "id", "visible": false},
-                    { "data": "name", "name": "name", "title": "dish"},
+                    { "data": "name", "name": "name", "title": "menu"},
                     { "data": "price", "name": "price, $", "title": "price, $"},
-                    { "data": "category", "name": "category", "title": "category"},
-                    { "data": "weight", "name": "weight", "title": "weight"}
+                    { "data": "dishes", "name": "dishes", "title": "dishes"},
+                    { "data": null, "sortable": false, "render": function(data){
+                        return '<a href="/show_dishes?id=' + data.id + '"><input type="button" class="btn btn-default" value="Show"/></a>';
+                    }
+                    }
                 ]
             });
         });
@@ -31,32 +40,29 @@
     </script>
 
 </head>
+
 <body>
+
 <div class="container">
     <div class="row">
         <div class="col-md-3"></div>
         <div class="col-md-6">
-            <label for="name">Menu name:</label>
-            <p id = "name" th:text = "${menu}" title="Menu name"/>
-            <label for="menu">Dishes</label>
+            <label for="menu">Our menus:</label>
             <table id="menu" name="menu" class="display" align="center" width="100%" border="0">
                 <thead>
                 <tr>
                     <th>Id</th>
                     <th>Menu</th>
-                    <th>Price, $</th>
+                    <th>Price</th>
                     <th>Dishes</th>
-                    <th>Details</th>
+                    <th>details</th>
                 </tr>
                 </thead>
             </table>
-            <br/>
-            <a th:href="@{/show_menus}">
-                <input type="button" class="btn btn-default" value="Back"/>
-            </a>
         </div>
         <div class="col-md-3"></div>
     </div>
 </div>
+
 </body>
 </html>

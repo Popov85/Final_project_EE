@@ -8,22 +8,11 @@
     <script src ="/js/lib/jquery-1.12.1.js"/>
     <script src ="/js/lib/bootstrap-3.3.7.min.js"/>
     <script src ="/js/lib/jquery.dataTables-1.10.12.min.js"/>
-    <script src ="/js/manager/orders.js"/>
+    <script src ="/js/waiter/orders.js"/>
 
 </head>
-<style type="text/css">
-    tfoot input {
-        width: 100%;
-        padding: 3px;
-        box-sizing: border-box;
-    }
-
-    .dataTables_filter {
-        display: none;
-    }
-</style>
 <body>
-<h3 class="form-signin-heading" align="center">Orders (Manager view)</h3>
+<h3 class="form-signin-heading" align="center">Orders</h3>
 <div class="container">
     <div class="row">
         <div class="col-md-12">
@@ -32,12 +21,11 @@
                 <tr>
                     <th>Id</th>
                     <th>isOpened</th>
-                    <th class="select-filter">Opened</th>
+                    <th>Opened</th>
                     <th>Closed</th>
-                    <th class="select-filter">Table, #</th>
+                    <th>Table, #</th>
                     <th>Dishes</th>
                     <th>Total, $</th>
-                    <th class="select-filter">Waiter</th>
 
                     <th>Edit</th>
                     <th>Delete</th>

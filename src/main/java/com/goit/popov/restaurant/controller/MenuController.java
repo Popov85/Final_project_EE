@@ -23,6 +23,12 @@ public class MenuController {
     @Autowired
     private MenuService menuService;
 
+
+    @GetMapping("/show_menus")
+    public String showMenus() {
+        return "th/menus";
+    }
+
     @PostMapping("/get_menus")
     @ResponseBody
     public DataTablesOutputDTOCollectionWrapper getMenus() {
@@ -32,7 +38,6 @@ public class MenuController {
     }
 
     @GetMapping("/show_dishes")
-    @ResponseBody
     public ModelAndView getDishes(@RequestParam int id, ModelAndView modelAndView) {
         modelAndView.addObject("id",menuService.getById(id).getId());
         modelAndView.addObject("menu",menuService.getById(id).getName());
@@ -44,12 +49,8 @@ public class MenuController {
     @ResponseBody
     public DataTablesOutputDTOListWrapper<Dish> getMenusDishes(@RequestParam int id) {
         DataTablesOutputDTOListWrapper data = new DataTablesOutputDTOListWrapper<>();
-        data.setData(menuService.getById(id).getDishes());
-        System.out.println("menu: "+menuService.getById(id));
         List<Dish> dishes = menuService.getById(id).getDishes();
-        for (Dish dish : dishes) {
-            System.out.println(dish);
-        }
+        data.setData(dishes);
         return data;
     }
 

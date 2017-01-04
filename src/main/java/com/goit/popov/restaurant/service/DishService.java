@@ -1,9 +1,15 @@
 package com.goit.popov.restaurant.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.goit.popov.restaurant.dao.entity.DishDAO;
 import com.goit.popov.restaurant.dao.entity.StoreHouseDAO;
 import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Ingredient;
+import com.goit.popov.restaurant.model.Menu;
+import com.goit.popov.restaurant.service.dataTables.DataTablesListToJSONConvertible;
+import com.goit.popov.restaurant.service.dataTables.DataTablesMapToJSONConvertible;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,7 +19,8 @@ import java.util.Map;
 /**
  * Created by Andrey on 02.12.2016.
  */
-public class DishService implements DishServiceInterface {
+public class DishService implements DishServiceInterface, DataTablesListToJSONConvertible<Dish>,
+        DataTablesMapToJSONConvertible<Ingredient, Double> {
 
         @Autowired
         private DishDAO dishDAO;
@@ -64,4 +71,44 @@ public class DishService implements DishServiceInterface {
                 Dish dish = getById(id);
                 return dish.getIngredients();
         }
+
+        @Override
+        public ArrayNode toJSON(List<Dish> dishes) {
+                ObjectMapper mapper = new ObjectMapper();
+                ArrayNode ana = mapper.createArrayNode();
+                for (Dish dish : dishes) {
+                        ObjectNode a = mapper.createObjectNode();
+                        a.put("id", dish.getId());
+                        a.put("name", dish.getName());
+                        a.put("category", dish.getCategory());
+                        a.put("price", dish.getPrice());
+                        a.put("weight", dish.getWeight());
+                        List<Menu> menus = dish.getMenus();
+                        StringBuilder sb = new StringBuilder();
+                        for (Menu menu : menus) {
+                              sb.append(menu.getName());
+                                sb.append(", ");
+                        }
+                        String m = sb.toString();
+                        m = m.substring(0, m.length() - 2);
+                        a.put("menus", m);
+                        ana.add(a);
+                }
+                return ana;
+        }
+
+        @Override
+        public ArrayNode toJSON(Map<Ingredient, Double> ingredients) {
+                ObjectMapper mapper = new ObjectMapper();
+                ArrayNode ana = mapper.createArrayNode();
+                for (Map.Entry<Ingredient, Double> ingredient : ingredients.entrySet()) {
+                        ObjectNode a = mapper.createObjectNode();
+                        a.put("id", ingredient.getKey().getId());
+                        a.put("name", ingredient.getKey().getName());
+                        a.put("quantity", ingredient.getValue());
+                        ana.add(a);
+                }
+                return ana;
+        }
+
 }

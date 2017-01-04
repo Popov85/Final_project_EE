@@ -9,33 +9,60 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            var table = $('#menu').DataTable({
-                "bFilter":false,
+            var table = $('#dish').DataTable({
+                "bFilter":true,
                 "bLengthChange": false,
                 "bAutoWidth": false,
                 "ajax" : {
-                    "url": "/get_menus",
+                    "url": "/get_all_dishes",
                     "type": "POST"
                 },
                 "columnDefs": [
-                    { "width": "15%", "targets": 0 },
-                    { "width": "40%", "targets": 1 },
+                    { "width": "5%", "targets": 0 },
+                    { "width": "50%", "targets": 1 },
                     { "width": "15%", "targets": 2 },
-                    { "width": "15%", "targets": 3 },
-                    { "width": "15%", "targets": 4 }
+                    { "width": "10%", "targets": 3 },
+                    { "width": "10%", "targets": 4 },
+                    { "width": "10%", "targets": 5 }
                 ],
                 columns: [
-                    { "data": "id", "name": "id",  "title": "id", "visible": false},
-                    { "data": "name", "name": "name", "title": "menu"},
+                    { "data": "id", "name": "id",  "title": "id", "visible": true},
+                    { "data": "name", "name": "name", "title": "dish"},
+                    { "data": "category", "name": "category", "title": "category"},
+                    { "data": "weight", "name": "weight, g", "title": "weight, g"},
                     { "data": "price", "name": "price, $", "title": "price, $"},
-                    { "data": "dishes", "name": "dishes", "title": "dishes"},
+                    { "data": "menus", "name": "menus", "title": "menus"},
                     { "data": null, "sortable": false, "render": function(data){
-                        return '<a href="/show_dishes?id=' + data.id + '"><input type="button" class="btn btn-default" value="Show"/></a>';
+                        return '<a href="/show_ingredients?id=' + data.id + '"><input type="button" class="btn btn-default" value="Show"/></a>';
                     }
                     }
                 ]
             });
         });
+
+        $(document).ready(function() {
+            // Setup - add a text input to each footer cell
+            $('#dish tfoot th.search').each( function () {
+                var title = $(this).text();
+                $(this).html( '<input type="text" size="10" placeholder="Search '+title+'" />' );
+            } );
+
+            // DataTable
+            var table = $('#dish').DataTable();
+
+            // Apply the search
+            table.columns().every( function () {
+                var that = this;
+
+                $( 'input', this.footer() ).on( 'keyup change', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                                .search( this.value )
+                                .draw();
+                    }
+                } );
+            } );
+        } );
 
     </script>
 
@@ -59,6 +86,10 @@
         position:fixed;
         width:100%;
     }
+
+    .dataTables_filter {
+        display: none;
+    }
 </style>
 <body>
 <table width="100%" border="0">
@@ -77,22 +108,35 @@
         <td>
             <div class="container">
                 <div class="row">
-                    <div class="col-md-3"></div>
-                    <div class="col-md-6">
-                        <label for="menu">Our menus:</label>
-                        <table id="menu" name="menu" class="display" align="center" width="100%" border="0">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+                        <label for="dish">Our Dishes:</label>
+                        <table id="dish" name="dish" class="display" align="center" width="100%" border="0">
                             <thead>
                             <tr>
                                 <th>Id</th>
-                                <th>Menu</th>
+                                <th>Dish</th>
+                                <th>Category</th>
+                                <th>Weight</th>
                                 <th>Price</th>
-                                <th>Dishes</th>
+                                <th>Menus</th>
                                 <th>details</th>
                             </tr>
                             </thead>
+                            <tfoot>
+                            <tr>
+                                <th></th>
+                                <th class="search">Dish</th>
+                                <th class="search">Category</th>
+                                <th></th>
+                                <th></th>
+                                <th class="search">Menus</th>
+                                <th></th>
+                            </tr>
+                            </tfoot>
                         </table>
                     </div>
-                    <div class="col-md-3"></div>
+                    <div class="col-md-2"></div>
                 </div>
             </div>
 

@@ -10,7 +10,6 @@ import com.goit.popov.restaurant.service.DishService;
 import com.goit.popov.restaurant.service.OrderService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -85,60 +84,53 @@ public class OrderController {
         }
 
         // Read All (Page) Manager view
-        @GetMapping(value = "/orders_m")
+        @GetMapping(value = "/restaurant/manager/orders")
         public String showOrdersTableManager() {
                 return "th/manager/orders";
         }
 
-        // Read All (Action): server-side search, paging and sorting
-        /*@PostMapping(value = "/get_orders")
-        @ResponseBody
-        public DataTablesOutputDTOUniversal<Order> getOrders(DataTablesInputDTO input, HttpServletRequest request) throws JsonProcessingException {
-                logger.info("Input: " + input);
-                Map<String, Object> map = request.getParameterMap();
-                logger.info("Parameters:");
-                try {
-                        for (Map.Entry<String, Object> entry : map.entrySet()) {
-                                if (entry.getValue() instanceof String[]) {
-                                        String[] strArray = (String[]) entry.getValue();
-                                        System.out.println((entry.getKey() + " : " + Arrays.toString(strArray)));
-                                } else {
-                                        System.out.println((entry.getKey() + " : " + entry.getValue()));
-                                }
-                        }
-                } catch (Exception e) {
-                        logger.error("Failed to go through the map, " + e.getMessage());
-                }
+        // Read All (Page) Waiter view
+        @GetMapping(value = "/waiter/orders")
+        public String showOrdersTableWaiter() {
+                return "th/waiter/orders";
+        }
 
-                DataTablesOutputDTOUniversal<Order> data = orderService.getAll(input);
-                ObjectMapper mapper = new ObjectMapper();
-                logger.info("Output: " + mapper.writeValueAsString(data));
-                return data;
-        }*/
-
+        // Read All (Page) Waiter view (archive)
+        @GetMapping(value = "/waiter/orders/archive")
+        public String showOrdersTableWaiterArchive() {
+                return "th/waiter/orders/archive";
+        }
 
         @PostMapping(value = "/get_orders")
         @ResponseBody
-        public DataTablesOutputDTOUniversal<Order> getOrders(DataTablesInputExtendedDTO input, HttpServletRequest request) throws JsonProcessingException {
+        public DataTablesOutputDTOUniversal<Order> getOrders(DataTablesInputExtendedDTO input) throws JsonProcessingException {
             logger.info("Input: " + input);
-            Map<String, Object> map = request.getParameterMap();
-            logger.info("Parameters:");
-            try {
-                for (Map.Entry<String, Object> entry : map.entrySet()) {
-                    if (entry.getValue() instanceof String[]) {
-                        String[] strArray = (String[]) entry.getValue();
-                        System.out.println((entry.getKey() + " : " + Arrays.toString(strArray)));
-                    } else {
-                        System.out.println((entry.getKey() + " : " + entry.getValue()));
-                    }
-                }
-            } catch (Exception e) {
-                logger.error("Failed to go through the map, " + e.getMessage());
-            }
             DataTablesOutputDTOUniversal<Order> data = orderService.getAll(input);
             ObjectMapper mapper = new ObjectMapper();
             logger.info("Output: " + mapper.writeValueAsString(data));
             return data;
+        }
+
+        // TODO
+        @PostMapping(value = "/waiter/get_orders")
+        @ResponseBody
+        public DataTablesOutputDTOListWrapper<Order> getWaiterOrders(@RequestParam int waiterId) throws JsonProcessingException {
+                DataTablesOutputDTOListWrapper<Order> data = new DataTablesOutputDTOListWrapper<>();
+                        data.setData(orderService.getAllWaiterToday(waiterId));
+                ObjectMapper mapper = new ObjectMapper();
+                logger.info("Output: " + mapper.writeValueAsString(data));
+                return data;
+        }
+
+        // TODO
+        @PostMapping(value = "/waiter/get_archive")
+        @ResponseBody
+        public DataTablesOutputDTOListWrapper<Order> getWaiterOrdersArchive(@RequestParam int waiterId, DataTablesInputExtendedDTO input) throws JsonProcessingException {
+                DataTablesOutputDTOListWrapper<Order> data = new DataTablesOutputDTOListWrapper<>();
+                data.setData(orderService.getAllWaiterArchive(waiterId, input));
+                ObjectMapper mapper = new ObjectMapper();
+                logger.info("Output: " + mapper.writeValueAsString(data));
+                return data;
         }
 
         // Update (Page)

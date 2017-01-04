@@ -11,19 +11,23 @@
         $(document).ready(function () {
             var id = [[${id}]];
             console.log("id = "+id);
-            var table = $('#menu').DataTable({
+            var table = $('#ingredients').DataTable({
                 "bFilter":false,
                 "bLengthChange": false,
                 "ajax" : {
-                    "url": "/get_menus_dishes?id="+id,
+                    "url": "/get_dishs_ingredients?id="+id,
                     "type": "POST"
                 },
+                "columnDefs": [
+                    { "width": "10%", "targets": 0 },
+                    { "width": "60%", "targets": 1 },
+                    { "width": "30%", "targets": 2 }
+                ],
                 columns: [
-                    { "data": "id", "name": "id",  "title": "id", "visible": false},
-                    { "data": "name", "name": "name", "title": "dish"},
-                    { "data": "price", "name": "price, $", "title": "price, $"},
-                    { "data": "category", "name": "category", "title": "category"},
-                    { "data": "weight", "name": "weight", "title": "weight"}
+                    { "data": "id", "name": "id",  "title": "id", "visible": true},
+                    { "data": "name", "name": "name", "title": "ingredient"},
+                    { "data": "quantity", "name": "quantity, g", "title": "quantity, g"},
+
                 ]
             });
         });
@@ -34,28 +38,26 @@
 <body>
 <div class="container">
     <div class="row">
-        <div class="col-md-3"></div>
-        <div class="col-md-6">
-            <label for="name">Menu name:</label>
-            <p id = "name" th:text = "${menu}" title="Menu name"/>
-            <label for="menu">Dishes</label>
-            <table id="menu" name="menu" class="display" align="center" width="100%" border="0">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <label for="name">Dish name:</label>
+            <p id = "name" th:text = "${dish}" title="Dish name"/>
+            <label for="ingredients">Ingredients</label>
+            <table id="ingredients" name="ingredients" class="display" align="center" width="100%" border="0">
                 <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Menu</th>
-                    <th>Price, $</th>
-                    <th>Dishes</th>
-                    <th>Details</th>
+                    <th>Ingredient</th>
+                    <th>Quantity, g</th>
                 </tr>
                 </thead>
             </table>
             <br/>
-            <a th:href="@{/show_menus}">
+            <a th:href="@{/}">
                 <input type="button" class="btn btn-default" value="Back"/>
             </a>
         </div>
-        <div class="col-md-3"></div>
+        <div class="col-md-4"></div>
     </div>
 </div>
 </body>

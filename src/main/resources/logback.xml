@@ -17,7 +17,7 @@
    <!-- <logger name="org.hibernate.type" level="ALL" />
     <logger name="org.hibernate" level="DEBUG" />-->
 
-    <root level = "debug">
+    <root level = "info">
         <appender-ref ref = "STDOUT"/>
     </root>
 
