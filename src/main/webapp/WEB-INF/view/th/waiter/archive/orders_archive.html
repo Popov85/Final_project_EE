@@ -2,17 +2,18 @@
 <html lang="en" >
 <head>
     <meta charset="UTF-8"/>
-    <title>Orders</title>
+    <title>Orders (archive)</title>
     <link rel="stylesheet" type="text/css" media="all" href="/css/bootstrap-3.3.7.min.css" />
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/filterDisabled.css"/>
     <script src ="/js/lib/jquery-1.12.1.js"/>
     <script src ="/js/lib/bootstrap-3.3.7.min.js"/>
     <script src ="/js/lib/jquery.dataTables-1.10.12.min.js"/>
-    <script src ="/js/waiter/orders.js"/>
+    <script src ="/js/waiter/archive/orders_archive.js"/>
 
 </head>
 <body>
-<h3 class="form-signin-heading" align="center">Orders</h3>
+<h3 class="form-signin-heading" align="center">Orders (archive)</h3>
 <div class="container">
     <div class="row">
         <div class="col-md-12">
@@ -21,9 +22,9 @@
                 <tr>
                     <th>Id</th>
                     <th>isOpened</th>
-                    <th>Opened</th>
+                    <th class="select-filter">Opened</th>
                     <th>Closed</th>
-                    <th>Table, #</th>
+                    <th class="select-filter">Table, #</th>
                     <th>Dishes</th>
                     <th>Total, $</th>
 

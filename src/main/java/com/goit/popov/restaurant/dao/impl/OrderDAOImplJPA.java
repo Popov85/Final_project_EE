@@ -37,8 +37,6 @@ public class OrderDAOImplJPA implements OrderDAO {
         @PersistenceContext(unitName = "entityManagerFactory")
         private EntityManager em;
 
-
-
         @Override
         public int insert(Order order) {
                 return (int) sessionFactory.getCurrentSession().save(order);
@@ -108,12 +106,18 @@ public class OrderDAOImplJPA implements OrderDAO {
               return ((long) sessionFactory.getCurrentSession().createQuery("select count(*) from Order").uniqueResult());
         }
 
+
+        public long countWaiter(Waiter waiter) {
+            return ((long) sessionFactory.getCurrentSession().createQuery("select count(*) from Order o where o.waiter=:waiter")
+                    .setParameter("waiter", waiter)
+                    .uniqueResult());
+        }
+
         @Override
         public List<Order> getAll() {
                 return sessionFactory.getCurrentSession().createQuery("select o from Order o").list();
         }
 
-        // TODO
         public List<Order> getAllWaiterToday(int waiterId) {
                 Waiter waiter = new Waiter();
                 waiter.setId(waiterId);
@@ -128,9 +132,35 @@ public class OrderDAOImplJPA implements OrderDAO {
                         .list();
         }
 
-        // TODO
         public List<Order> getAllWaiterArchive(int waiterId, DataTablesInputExtendedDTO dt) {
-                return getAll(dt);
+            List<Order> resultOrders = new ArrayList<>();
+            try {
+                    CriteriaBuilder builder = em.getCriteriaBuilder();
+                    CriteriaQuery<Order> criteriaQuery = builder.createQuery(Order.class);
+                    Root<Order> orderRoot = criteriaQuery.from(Order.class);
+                    criteriaQuery.select(orderRoot);
+                    criteriaQuery.distinct(true);
+                    criteriaQuery = toFilterWaiter(waiterId, dt, builder, criteriaQuery, orderRoot);
+                    criteriaQuery = toSort(dt, builder, criteriaQuery, orderRoot);
+                    resultOrders = toPage(dt, criteriaQuery).getResultList();
+            } catch (Exception e) {
+                    logger.error("ERROR: " + e.getMessage());
+            }
+            return resultOrders;
+        }
+
+        private CriteriaQuery<Order> toFilterWaiter(int waiterId, DataTablesInputExtendedDTO dt, CriteriaBuilder builder,
+                                              CriteriaQuery<Order> criteriaQuery, Root<Order> orderRoot) {
+                Path<Integer> w = orderRoot.get("waiter").<Integer>get("id");
+                Predicate waiter = builder.equal(w, waiterId);
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                predicates.add(waiter);
+                if (!dt.getColumnSearch().isEmpty()) {
+                        filterDate(dt, builder, orderRoot, predicates);
+                        filterTable(dt, builder, orderRoot, predicates);
+                }
+                criteriaQuery.where(predicates.toArray(new Predicate[]{}));
+                return criteriaQuery;
         }
 
         public List<Order> getAll(DataTablesInputExtendedDTO dt) {
@@ -152,28 +182,10 @@ public class OrderDAOImplJPA implements OrderDAO {
 
         private CriteriaQuery<Order> toFilter(DataTablesInputExtendedDTO dt, CriteriaBuilder builder,
                                               CriteriaQuery<Order> criteriaQuery, Root<Order> orderRoot) {
-
                 List<Predicate> predicates = new ArrayList<Predicate>();
-
                 if (!dt.getColumnSearch().isEmpty()) {
-                        if (dt.getColumnSearch().containsKey("openedTimeStamp")) {
-                                String openDate = dt.getColumnSearch().get("openedTimeStamp");
-                                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                                Date date = null;
-                                try {
-                                        date = formatter.parse(openDate);
-                                } catch (ParseException e) {
-                                        logger.error("ERROR"+e.getMessage());
-                                }
-                                predicates.add(builder.greaterThanOrEqualTo(orderRoot.<Date>get("openedTimeStamp"), date));
-                        }
-
-                        if (dt.getColumnSearch().containsKey("table")) {
-                                String table = dt.getColumnSearch().get("table");
-                                Path<String> t = orderRoot.get("table");
-                                predicates.add(builder.equal(t, table));
-                        }
-
+                        filterDate(dt, builder, orderRoot, predicates);
+                        filterTable(dt, builder, orderRoot, predicates);
                         if (dt.getColumnSearch().containsKey("waiter")) {
                                 String waiter = dt.getColumnSearch().get("waiter");
                                 predicates.add(builder.like(orderRoot.<String>get("waiter").get("name"), waiter + "%"));
@@ -181,6 +193,32 @@ public class OrderDAOImplJPA implements OrderDAO {
                 }
                 criteriaQuery.where(predicates.toArray(new Predicate[]{}));
                 return criteriaQuery;
+        }
+
+        private List<Predicate> filterTable(DataTablesInputExtendedDTO dt, CriteriaBuilder builder,
+                                            Root<Order> orderRoot, List<Predicate> predicates) {
+            if (dt.getColumnSearch().containsKey("table")) {
+                    String table = dt.getColumnSearch().get("table");
+                    Path<String> t = orderRoot.get("table");
+                    predicates.add(builder.equal(t, table));
+            }
+            return predicates;
+        }
+
+        private List<Predicate> filterDate(DataTablesInputExtendedDTO dt, CriteriaBuilder builder,
+                                           Root<Order> orderRoot, List<Predicate> predicates) {
+                if (dt.getColumnSearch().containsKey("openedTimeStamp")) {
+                        String openDate = dt.getColumnSearch().get("openedTimeStamp");
+                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                        Date date = null;
+                        try {
+                                date = formatter.parse(openDate);
+                        } catch (ParseException e) {
+                                logger.error("ERROR" + e.getMessage());
+                        }
+                        predicates.add(builder.greaterThanOrEqualTo(orderRoot.<Date>get("openedTimeStamp"), date));
+                }
+                return predicates;
         }
 
         private CriteriaQuery<Order> toSort(DataTablesInputExtendedDTO dt, CriteriaBuilder builder,

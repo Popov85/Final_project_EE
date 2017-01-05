@@ -5,17 +5,19 @@
     <title>Orders</title>
     <link rel="stylesheet" type="text/css" media="all" href="/css/bootstrap-3.3.7.min.css" />
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/filterDisabled.css"/>
     <script src ="/js/lib/jquery-1.12.1.js"/>
     <script src ="/js/lib/bootstrap-3.3.7.min.js"/>
     <script src ="/js/lib/jquery.dataTables-1.10.12.min.js"/>
-    <script src ="/js/orders.js"/>
+    <script src ="/js/waiter/orders.js"/>
 
 </head>
 <body>
-<h3 class="form-signin-heading" align="center">Orders</h3>
+<h3 class="form-signin-heading" align="center">Orders (today)</h3>
 <div class="container">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-1"/>
+        <div class="col-md-10">
             <table id="ordsTable" name="ordsTable" class="display" cellspacing="0" width="100%" style="overflow-x:auto">
                 <thead>
                 <tr>
@@ -26,7 +28,6 @@
                     <th>Table, #</th>
                     <th>Dishes</th>
                     <th>Total, $</th>
-                    <th>Waiter</th>
 
                     <th>Edit</th>
                     <th>Delete</th>
@@ -34,7 +35,17 @@
                 </tr>
                 </thead>
             </table>
+            <div class="form-group">
+                <br/>
+                <a href="/new_order">
+                    <input type="button" class="btn btn-primary" value="New Order"/>
+                </a>
+                <a href="/waiter/orders/archive">
+                    <input type="button" class="btn btn-default" value="Archive"/>
+                </a>
+            </div>
         </div>
+        <div class="col-md-1"/>
     </div>
 </div>
 </body>

@@ -68,14 +68,6 @@ public class OrderService implements OrderServiceInterface,
                 return orderDAO.getAllOpened();
         }
 
-        public List<Order> getAllWaiterToday(int waiterId) {
-                return orderDAO.getAllWaiterToday(waiterId);
-        }
-
-        public List<Order> getAllWaiterArchive(int waiterId, DataTablesInputExtendedDTO dt) {
-                return orderDAO.getAllWaiterArchive(waiterId, dt);
-        }
-
         public Integer[] getTables() {
                 return Order.TABLE_SET;
         }
@@ -93,6 +85,10 @@ public class OrderService implements OrderServiceInterface,
         @Override
         public long count() {
                 return orderDAO.count();
+        }
+
+        public long countWaiter(Waiter waiter) {
+                return orderDAO.countWaiter(waiter);
         }
 
         @Transactional
@@ -161,5 +157,28 @@ public class OrderService implements OrderServiceInterface,
                         .setRecordsTotal(recordsTotal)
                         .setRecordsFiltered(recordsFiltered)
                         .setData(data);
+        }
+
+        public List<Order> getAllWaiterToday(int waiterId) {
+                return orderDAO.getAllWaiterToday(waiterId);
+        }
+
+        public DataTablesOutputDTOUniversal<Order> getAllWaiterArchive(int waiterId, DataTablesInputExtendedDTO dt) {
+                Waiter waiter = new Waiter();
+                waiter.setId(waiterId);
+                long recordsTotal = countWaiter(waiter);
+                long recordsFiltered;
+                List<Order> data = orderDAO.getAllWaiterArchive(waiterId, dt);
+                if (!dt.getColumnSearch().isEmpty()) {
+                        recordsFiltered = data.size();
+                } else {
+                        recordsFiltered=recordsTotal;
+                }
+                return new DataTablesOutputDTOUniversal<Order>()
+                        .setDraw(dt.getDraw())
+                        .setRecordsTotal(recordsTotal)
+                        .setRecordsFiltered(recordsFiltered)
+                        .setData(data);
+
         }
 }

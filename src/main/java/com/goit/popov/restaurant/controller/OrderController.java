@@ -15,11 +15,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
 import javax.servlet.http.HttpServletRequest;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
+
 
 
 /**
@@ -77,28 +78,22 @@ public class OrderController {
                 return "th/new_order";
         }
 
-        // Read All (Page)
-        @GetMapping(value = "/orders")
-        public String showOrdersTable() {
-                return "th/orders";
-        }
-
         // Read All (Page) Manager view
         @GetMapping(value = "/restaurant/manager/orders")
         public String showOrdersTableManager() {
                 return "th/manager/orders";
         }
 
-        // Read All (Page) Waiter view
-        @GetMapping(value = "/waiter/orders")
+        // Read All (Page) Waiter view (today)
+        @GetMapping(value = "/waiter/orders/today")
         public String showOrdersTableWaiter() {
-                return "th/waiter/orders";
+                return "th/waiter/orders_today";
         }
 
         // Read All (Page) Waiter view (archive)
         @GetMapping(value = "/waiter/orders/archive")
         public String showOrdersTableWaiterArchive() {
-                return "th/waiter/orders/archive";
+                return "th/waiter/archive/orders_archive";
         }
 
         @PostMapping(value = "/get_orders")
@@ -111,7 +106,7 @@ public class OrderController {
             return data;
         }
 
-        // TODO
+
         @PostMapping(value = "/waiter/get_orders")
         @ResponseBody
         public DataTablesOutputDTOListWrapper<Order> getWaiterOrders(@RequestParam int waiterId) throws JsonProcessingException {
@@ -122,12 +117,12 @@ public class OrderController {
                 return data;
         }
 
-        // TODO
+
         @PostMapping(value = "/waiter/get_archive")
         @ResponseBody
-        public DataTablesOutputDTOListWrapper<Order> getWaiterOrdersArchive(@RequestParam int waiterId, DataTablesInputExtendedDTO input) throws JsonProcessingException {
-                DataTablesOutputDTOListWrapper<Order> data = new DataTablesOutputDTOListWrapper<>();
-                data.setData(orderService.getAllWaiterArchive(waiterId, input));
+        public DataTablesOutputDTOUniversal<Order> getWaiterOrdersArchive(@RequestParam int waiterId, DataTablesInputExtendedDTO input) throws JsonProcessingException {
+                logger.info("Input: " + input);
+                DataTablesOutputDTOUniversal<Order> data = orderService.getAllWaiterArchive(waiterId, input);
                 ObjectMapper mapper = new ObjectMapper();
                 logger.info("Output: " + mapper.writeValueAsString(data));
                 return data;
@@ -176,22 +171,29 @@ public class OrderController {
 
         // Delete (Action)
         @GetMapping("/delete_order")
-        public String deleteOrder(@RequestParam int id) {
+        public String deleteOrder(@RequestParam int id, HttpServletRequest request) throws MalformedURLException {
+                URL url = new URL(request.getHeader("referer"));
                 try {
                         orderService.delete(id);
                         logger.info("Deleted Order, id= "+id);
                 } catch (Exception e) {
-                        logger.error("Failed to delete this order!");
+                        logger.error("ERROR: Failed to delete the order!");
                         return "th/error";
                 }
-                return "redirect:/orders";
+                return "redirect:"+url.getPath();
         }
 
         // Close (Action)
         @GetMapping("/close_order")
-        public String closeOrder(@RequestParam int id) {
+        public String closeOrder(@RequestParam int id, HttpServletRequest request) {
+                URL url=null;
+                try {
+                        url = new URL(request.getHeader("referer"));
+                } catch (MalformedURLException e) {
+                        logger.error("ERROR: "+e.getMessage());
+                }
                 orderService.closeOrder(id);
                 logger.info("Order (id= : "+id + ") closed");
-                return "redirect:/orders";
+                return "redirect:"+url.getPath();
         }
 }

@@ -33,6 +33,7 @@ $(document).ready(function () {
 $(document).ready(function () {
     console.log("id= "+$("#id").val());
     var table = $('#odTable').DataTable({
+        bLengthChange: false,
         "ajax" : {
             "data": {"orderId": $("#id").val()},
             "url": "/get_orders_dishes",
@@ -111,7 +112,7 @@ $(document).ready(function () {
             data: JSON.stringify(json),
             success: function (data) {
                 console.log("Success");
-                location.href='/orders';
+                location.href='/waiter/orders/today';
             },
             error: function (e) {
                 console.log("ERROR: ", e);

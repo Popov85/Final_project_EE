@@ -1,6 +1,7 @@
 // Set up an empty Order table
 $(document).ready(function () {
     var t = $('#odTable').DataTable({
+        bLengthChange: false,
         columnDefs: [
             {targets: [0], visible: false},
             {targets: '_all', visible: true}
@@ -82,7 +83,7 @@ $(document).ready(function () {
             data: JSON.stringify(json),
             success: function (data) {
                 console.log("Success");
-                location.href = '/orders';
+                location.href = '/waiter/orders/today';
             },
             error: function (e) {
                 console.log("ERROR: ", e);

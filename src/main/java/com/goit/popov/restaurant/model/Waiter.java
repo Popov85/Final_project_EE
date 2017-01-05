@@ -33,4 +33,6 @@ public class Waiter extends Employee {
                         ", salary=" + salary +
                         '}';
         }
+
+
 }
