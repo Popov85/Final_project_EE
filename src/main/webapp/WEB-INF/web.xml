@@ -27,8 +27,19 @@
             WEB-INF/application-context.xml
             WEB-INF/hibernate-context.xml
             WEB-INF/web-context.xml
+            WEB-INF/security.xml
         </param-value>
     </context-param>
+
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 
 
 </web-app>

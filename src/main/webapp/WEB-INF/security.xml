@@ -1,0 +1,23 @@
+<b:beans xmlns="http://www.springframework.org/schema/security"
+         xmlns:b="http://www.springframework.org/schema/beans"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <http pattern="/" security="none"/>
+    <http pattern="/get_all_dishes" security="none"/>
+    <http auto-config="true" use-expressions="true">
+        <!--<intercept-url pattern="/" access="hasRole('ANONYMOUS')"/>-->
+        <intercept-url pattern="/new_order" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/restaurant/manager/orders" access="hasRole('ROLE_ADMIN')"/>
+        <logout/>
+        <csrf disabled="true"/>
+    </http>
+
+
+    <user-service>
+        <user name="user" password="password" authorities="ROLE_USER"/>
+        <user name="admin" password="dT09Rx06" authorities="ROLE_ADMIN"/>
+    </user-service>
+
+</b:beans>
