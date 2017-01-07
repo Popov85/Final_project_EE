@@ -9,4 +9,5 @@ import com.goit.popov.restaurant.model.Employee;
  */
 public interface EmployeeDAO extends GenericDAO<Employee> {
         Employee getByName(String name);
+        Employee getByLoginAndPassword(String login, String password);
 }

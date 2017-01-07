@@ -64,6 +64,13 @@ public class Employee {
         @Column(name = "PHOTO")
         protected byte[] photo;
 
+        @Transient
+        private String role = "ROLE_EMPLOYEE";
+
+        public String getRole() {
+                return role;
+        }
+
         public int getId() {
                 return id;
         }
@@ -177,6 +184,7 @@ public class Employee {
                         ", phone='" + phone + '\'' +
                         ", position=" + position +
                         ", salary=" + salary +
+                        ", role=" + role +
                         '}';
         }
 }

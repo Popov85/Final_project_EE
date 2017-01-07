@@ -6,9 +6,6 @@ import com.goit.popov.restaurant.model.Employee;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.*;
 import java.util.List;
 
 /**
@@ -47,6 +44,10 @@ public class EmployeeService {
                 Employee emp = transform(employee);
                 employeeDAO.update(employee);
                 logger.info("Updated employee: "+employee);
+        }
+
+        public Employee getEmployeeByLoginAndPassword(String login, String password) {
+                return employeeDAO.getByLoginAndPassword(login, password);
         }
 
         /**

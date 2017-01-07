@@ -17,14 +17,6 @@ import java.util.Map;
  */
 public class DataTablesInputExtendedDTOHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
-    static {
-        System.out.println("New converter is in use: static");
-    }
-
-    {
-        System.out.println("New converter is in use: dynamic");
-    }
-
     private static final Logger logger = (Logger) LoggerFactory.getLogger(DataTablesInputExtendedDTOHandlerMethodArgumentResolver.class);
 
     @Override
@@ -35,8 +27,6 @@ public class DataTablesInputExtendedDTOHandlerMethodArgumentResolver implements 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-
-        logger.info("Trying to convert!");
         int draw = Integer.parseInt(webRequest.getParameter("draw"));
         int start= Integer.parseInt(webRequest.getParameter("start"));
         int length = Integer.parseInt(webRequest.getParameter("length"));

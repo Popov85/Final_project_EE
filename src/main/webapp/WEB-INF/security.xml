@@ -8,16 +8,23 @@
     <http pattern="/get_all_dishes" security="none"/>
     <http auto-config="true" use-expressions="true">
         <!--<intercept-url pattern="/" access="hasRole('ANONYMOUS')"/>-->
-        <intercept-url pattern="/new_order" access="hasRole('ROLE_USER')"/>
+        <intercept-url pattern="/new_order" access="hasRole('ROLE_WAITER')"/>
         <intercept-url pattern="/restaurant/manager/orders" access="hasRole('ROLE_ADMIN')"/>
+        <form-login login-page="/login"
+                    username-parameter="employee"
+                    password-parameter="password"
+                    authentication-success-handler-ref="dispatcher"
+                    authentication-failure-url="/access_denied" />
         <logout/>
         <csrf disabled="true"/>
     </http>
 
+    <b:bean id="dispatcher" class="com.goit.popov.restaurant.controller.MainDispatcher"/>
 
     <user-service>
-        <user name="user" password="password" authorities="ROLE_USER"/>
-        <user name="admin" password="dT09Rx06" authorities="ROLE_ADMIN"/>
+        <user name="waiter" password="dT09Rx06" authorities="ROLE_WAITER"/>
+        <user name="manager" password="dT09Rx06" authorities="ROLE_ADMIN"/>
+        <user name="chef" password="dT09Rx06" authorities="ROLE_CHEF"/>
     </user-service>
 
 </b:beans>

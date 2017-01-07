@@ -14,6 +14,13 @@ public class Waiter extends Employee {
         @OneToMany(fetch = FetchType.EAGER, mappedBy = "waiter", cascade = CascadeType.REMOVE)
         private List<Order> orders;
 
+        @Transient
+        private String role = "ROLE_WAITER";
+
+        public String getRole() {
+                return role;
+        }
+
         public List<Order> getOrders() {
                 return orders;
         }
@@ -31,6 +38,7 @@ public class Waiter extends Employee {
                         ", phone='" + phone + '\'' +
                         ", position=" + position +
                         ", salary=" + salary +
+                        ", role=" + role +
                         '}';
         }
 

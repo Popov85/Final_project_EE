@@ -49,6 +49,16 @@ public class EmployeeDAOImplJPA implements EmployeeDAO {
 
         @Transactional
         @Override
+        public Employee getByLoginAndPassword(String login, String password) {
+                Query query = sessionFactory.getCurrentSession().createQuery("select e from Employee e " +
+                        "where e.login =:login and e.password=:password");
+                query.setParameter("login", login);
+                query.setParameter("password", password);
+                return (Employee) query.uniqueResult();
+        }
+
+        @Transactional
+        @Override
         public void delete(Employee employee) {
                 sessionFactory.getCurrentSession().delete(employee);
                 sessionFactory.getCurrentSession().flush();

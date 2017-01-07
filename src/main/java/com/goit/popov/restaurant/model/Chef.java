@@ -1,8 +1,8 @@
 package com.goit.popov.restaurant.model;
 
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import java.util.List;
 
 /**
@@ -15,6 +15,13 @@ public class Chef extends Employee {
         @OneToMany(mappedBy="chef")
         List<PreparedDish> preparedDishes;
 
+        @Transient
+        private String role = "ROLE_CHEF";
+
+        public String getRole() {
+                return role;
+        }
+
         @Override
         public String toString() {
                 return "Chef{" +
@@ -24,6 +31,7 @@ public class Chef extends Employee {
                         ", phone='" + phone + '\'' +
                         ", position=" + position +
                         ", salary=" + salary +
+                        ", role=" + role +
                         '}';
         }
 }
