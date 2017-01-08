@@ -31,6 +31,14 @@ public class EmployeeService {
                 return employeeDAO.getById(employeeId);
         }
 
+        public Employee getEmployeeByName(String name) {
+                return employeeDAO.getByName(name);
+        }
+
+        public Employee getEmployeeByLogin(String login) {
+                return employeeDAO.getByLogin(login);
+        }
+
         public void deleteById(int employeeId) {
                 employeeDAO.delete(getEmployeeById(employeeId));
         }

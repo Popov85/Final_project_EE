@@ -7,12 +7,12 @@
 <body>
 <div class="container">
 <h3 class="form-signin-heading" align="center">Authorization</h3>
-    <form th:action="@{/try_login}" method="post" class="form-signin"
+    <form th:action="@{/perform_login}" method="post" class="form-signin"
           style="max-width: 240px; margin: 0 auto; font-size: larger;">
         <div class="form-group">
             <div class="input-group">
                 <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                <input type="text" id="login" name="login" autofocus="autofocus" placeholder="Enter Login"/> <br/>
+                <input type="text" id="username" name="username" autofocus="autofocus" placeholder="Enter Login"/> <br/>
             </div>
         </div>
         <div class="form-group">

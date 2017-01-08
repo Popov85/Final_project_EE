@@ -6,13 +6,13 @@
 
     <http pattern="/" security="none"/>
     <http pattern="/get_all_dishes" security="none"/>
-    <http auto-config="true" use-expressions="true">
-        <!--<intercept-url pattern="/" access="hasRole('ANONYMOUS')"/>-->
+    <http authentication-manager-ref="dao-auth" auto-config="true" use-expressions="true">
         <intercept-url pattern="/new_order" access="hasRole('ROLE_WAITER')"/>
         <intercept-url pattern="/restaurant/manager/orders" access="hasRole('ROLE_ADMIN')"/>
         <form-login login-page="/login"
-                    username-parameter="employee"
+                    username-parameter="username"
                     password-parameter="password"
+                    login-processing-url="/perform_login"
                     authentication-success-handler-ref="dispatcher"
                     authentication-failure-url="/access_denied" />
         <logout/>
@@ -21,10 +21,19 @@
 
     <b:bean id="dispatcher" class="com.goit.popov.restaurant.controller.MainDispatcher"/>
 
-    <user-service>
+    <!--<user-service>
         <user name="waiter" password="dT09Rx06" authorities="ROLE_WAITER"/>
         <user name="manager" password="dT09Rx06" authorities="ROLE_ADMIN"/>
         <user name="chef" password="dT09Rx06" authorities="ROLE_CHEF"/>
-    </user-service>
+    </user-service>-->
+
+    <authentication-manager id="dao-auth">
+        <authentication-provider user-service-ref="employeeDetailsService">
+            <!--<password-encoder ref="encoder" />-->
+        </authentication-provider>
+    </authentication-manager>
+
+    <b:bean id="employeeDetailsService" class="com.goit.popov.restaurant.service.EmployeeDetailsService"/>
+    <b:bean id="encoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 
 </b:beans>
