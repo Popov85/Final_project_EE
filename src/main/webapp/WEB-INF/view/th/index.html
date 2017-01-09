@@ -1,102 +1,31 @@
-<html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <title>Home</title>
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css"/>
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/index.css"/>
     <script src ="/js/lib/jquery-1.12.1.js"/>
     <script src ="/js/lib/bootstrap-3.3.7.min.js"/>
     <script src ="/js/lib/jquery.dataTables-1.10.12.min.js"/>
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            var table = $('#dish').DataTable({
-                "bFilter":true,
-                "bLengthChange": false,
-                "bAutoWidth": false,
-                "ajax" : {
-                    "url": "/get_all_dishes",
-                    "type": "POST"
-                },
-                "columnDefs": [
-                    { "width": "5%", "targets": 0 },
-                    { "width": "50%", "targets": 1 },
-                    { "width": "15%", "targets": 2 },
-                    { "width": "10%", "targets": 3 },
-                    { "width": "10%", "targets": 4 },
-                    { "width": "10%", "targets": 5 }
-                ],
-                columns: [
-                    { "data": "id", "name": "id",  "title": "id", "visible": true},
-                    { "data": "name", "name": "name", "title": "dish"},
-                    { "data": "category", "name": "category", "title": "category"},
-                    { "data": "weight", "name": "weight, g", "title": "weight, g"},
-                    { "data": "price", "name": "price, $", "title": "price, $"},
-                    { "data": "menus", "name": "menus", "title": "menus"},
-                    { "data": null, "sortable": false, "render": function(data){
-                        return '<a href="/show_ingredients?id=' + data.id + '"><input type="button" class="btn btn-default" value="Show"/></a>';
-                    }
-                    }
-                ]
-            });
-        });
-
-        $(document).ready(function() {
-            // Setup - add a text input to each footer cell
-            $('#dish tfoot th.search').each( function () {
-                var title = $(this).text();
-                $(this).html( '<input type="text" size="10" placeholder="Search '+title+'" />' );
-            } );
-
-            // DataTable
-            var table = $('#dish').DataTable();
-
-            // Apply the search
-            table.columns().every( function () {
-                var that = this;
-
-                $( 'input', this.footer() ).on( 'keyup change', function () {
-                    if ( that.search() !== this.value ) {
-                        that
-                                .search( this.value )
-                                .draw();
-                    }
-                } );
-            } );
-        } );
-
-    </script>
-
+    <script src ="/js/index.js"/>
 </head>
-<style type="text/css">
-    #header1 {float:left;}
-    #header2 {float:right;}
-    .footer1 {
-        background-color:#606060 ;
-        color: #ffffff;
-        height: 20px;
-        bottom:0px;
-        position:fixed;
-        width:100%;
-    }
-    .footer2 {
-        background-color:#b5dcb3 ;
-        color: #ffffff;
-        height: 20px;
-        bottom:20px;
-        position:fixed;
-        width:100%;
-    }
-
-    .dataTables_filter {
-        display: none;
-    }
-</style>
 <body>
 <table width="100%" border="0">
     <tr>
-        <td colspan="2" bgcolor="#b5dcb3">
-            <div id="header1">Welcome, guest!</div><div id = "header2"> <a href="/login">Sign in</a></div>
-        </td>
+        <div th:switch="${#authorization.expression('isAuthenticated()')}">
+            <div th:case="true">
+                <td colspan="2" bgcolor="#b5dcb3">
+                    <div id="header1">Welcome, <b><span th:text="${#authentication.principal.username}"/></b></div>
+                    <div id="header2"><a href="/perform_logout">Logout</a></div>
+                </td>
+            </div>
+            <div th:case="false">
+                <td colspan="2" bgcolor="#b5dcb3">
+                    <div id="header1">Welcome, guest!</div>
+                    <div id="header2"><a href="/login">Sign in</a></div>
+                </td>
+            </div>
+        </div>
     </tr>
     <tr valign="top">
         <td bgcolor="white" width="50%" align="center">

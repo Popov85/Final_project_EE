@@ -5,6 +5,8 @@ import com.goit.popov.restaurant.model.Employee;
 import com.goit.popov.restaurant.model.Manager;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -14,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class ManagerService extends EmployeeService {
 
         private static final Logger logger = (Logger) LoggerFactory.getLogger(ManagerService.class);
+
+        private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         @Autowired
         protected ManagerDAO managerDAO;
@@ -56,7 +60,7 @@ public class ManagerService extends EmployeeService {
                 Manager manager = new Manager();
                 manager.setId(employee.getId());
                 manager.setLogin(employee.getLogin());
-                manager.setPassword(employee.getPassword());
+                manager.setPassword(passwordEncoder.encode(employee.getPassword()));
                 manager.setName(employee.getName());
                 manager.setDob(employee.getDob());
                 manager.setPhone(employee.getPhone());

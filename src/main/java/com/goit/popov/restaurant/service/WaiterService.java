@@ -4,6 +4,8 @@ import ch.qos.logback.classic.Logger;
 import com.goit.popov.restaurant.model.Employee;
 import com.goit.popov.restaurant.model.Waiter;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -12,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public class WaiterService extends EmployeeService {
+
+        private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         private static final Logger logger = (Logger) LoggerFactory.getLogger(WaiterService.class);
 
@@ -55,7 +59,7 @@ public class WaiterService extends EmployeeService {
                 Waiter waiter = new Waiter();
                 waiter.setId(employee.getId());
                 waiter.setLogin(employee.getLogin());
-                waiter.setPassword(employee.getPassword());
+                waiter.setPassword(passwordEncoder.encode(employee.getPassword()));
                 waiter.setName(employee.getName());
                 waiter.setDob(employee.getDob());
                 waiter.setPhone(employee.getPhone());

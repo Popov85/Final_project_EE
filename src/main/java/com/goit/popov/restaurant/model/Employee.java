@@ -2,7 +2,6 @@ package com.goit.popov.restaurant.model;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
-
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -34,7 +33,7 @@ public class Employee {
         protected String login;
 
         @NotEmpty(message = "Password is a required field")
-        @Size(min=8, max=16, message = "Password must have from 8 to 16 characters")
+        @Size(min=8, max=60, message = "Password must have from 8 to 16 characters")
         @Column(name = "EMP_PASSWORD")
         protected String password;
 

@@ -19,6 +19,8 @@
     <form id="newOrderForm" action="/edit_order" method="post"
           style="max-width: 500px; margin: 0 auto; font-size: larger;" onsubmit="return false;">
 
+        <div th:replace="/th/header :: header"/>
+
         <div class="form-group">
             <input type="hidden" id="id" name="id" size="2" th:value="${id}"/>
         </div>

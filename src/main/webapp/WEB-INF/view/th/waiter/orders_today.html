@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
     <title>Orders</title>
@@ -9,8 +9,7 @@
     <script src ="/js/lib/jquery-1.12.1.js"/>
     <script src ="/js/lib/bootstrap-3.3.7.min.js"/>
     <script src ="/js/lib/jquery.dataTables-1.10.12.min.js"/>
-    <script src ="/js/waiter/orders.js"/>
-
+    <script src ="/js/waiter/orders_today.js"/>
 </head>
 <body>
 <h3 class="form-signin-heading" align="center">Orders (today)</h3>
@@ -18,7 +17,10 @@
     <div class="row">
         <div class="col-md-1"/>
         <div class="col-md-10">
-            <p align="right">Hello, Mr. <b th:inline="text"> [[${#httpServletRequest.remoteUser}]] </b></p>
+            <!--<p align="right">Hello, Mr. <b th:inline="text"> [[${#httpServletRequest.remoteUser}]] </b></p>
+            <p align="right">Hello, Mr. <b><span th:text="${#authentication.principal.username}"/></b></p>
+            <p align="right">Id: <span th:text="${#authentication.principal.id}"/></p>-->
+            <div th:replace="/th/header :: header"/>
             <table id="ordsTable" name="ordsTable" class="display" cellspacing="0" width="100%" style="overflow-x:auto">
                 <thead>
                 <tr>

@@ -1,0 +1,22 @@
+#header1 {float:left;}
+#header2 {float:right;}
+.footer1 {
+    background-color:#606060 ;
+    color: #ffffff;
+    height: 20px;
+    bottom:0px;
+    position:fixed;
+    width:100%;
+}
+.footer2 {
+    background-color:#b5dcb3 ;
+    color: #ffffff;
+    height: 20px;
+    bottom:20px;
+    position:fixed;
+    width:100%;
+}
+
+.dataTables_filter {
+    display: none;
+}

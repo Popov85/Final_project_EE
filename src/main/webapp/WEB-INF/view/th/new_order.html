@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <title>New Order Ajax</title>
@@ -18,6 +18,8 @@
 <div class="container">
     <form id="newOrderForm" action="/edit_order" method="post"
           style="max-width: 500px; margin: 0 auto; font-size: larger;" onsubmit="return false;">
+
+        <div th:replace="/th/header :: header"/>
 
         <div class="form-group">
             <label for="table">Table #</label>

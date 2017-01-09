@@ -25,19 +25,21 @@ public class EmployeeDetailsService implements UserDetailsService {
 
         @Override
         public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                logger.info("EmployeeDetailsService in use!");
                 Employee employee = employeeService.getEmployeeByLogin(username);
                 if (employee!=null) {
                         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
                         authorities.add( new SimpleGrantedAuthority(employee.getRole()));
-                        UserDetails ud  = new org.springframework.security.core.userdetails.User(
+                        /*UserDetails ud  = new org.springframework.security.core.userdetails.User(
                                 employee.getLogin(), employee.getPassword(),
-                                true, true, true, true, authorities);
+                                true, true, true, true, authorities);*/
+                        UserDetails ud  = new com.goit.popov.restaurant.service.authentification.Employee(
+                                employee.getName(), employee.getPassword(),
+                                true, true, true, true, authorities, employee.getId());
                         logger.info("User details: "+ud);
                         return ud;
                 } else {
-                    logger.error("ERROR: User not found!");
-                        throw new UsernameNotFoundException("No such an employee!");
+                        logger.error("ERROR: Employee not found!");
+                        throw new UsernameNotFoundException("Employee not found!");
                 }
         }
 }

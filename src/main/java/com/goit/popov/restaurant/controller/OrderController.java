@@ -110,6 +110,7 @@ public class OrderController {
         @PostMapping(value = "/waiter/get_orders")
         @ResponseBody
         public DataTablesOutputDTOListWrapper<Order> getWaiterOrders(@RequestParam int waiterId) throws JsonProcessingException {
+                logger.info("waiterId = "+waiterId);
                 DataTablesOutputDTOListWrapper<Order> data = new DataTablesOutputDTOListWrapper<>();
                         data.setData(orderService.getAllWaiterToday(waiterId));
                 ObjectMapper mapper = new ObjectMapper();

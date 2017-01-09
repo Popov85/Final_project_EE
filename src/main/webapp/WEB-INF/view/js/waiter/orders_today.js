@@ -1,7 +1,7 @@
 $(document).ready(function () {
     var table = $('#ordsTable').DataTable({
         "ajax" : {
-            "url": "/waiter/get_orders?waiterId=2",
+            "url": "/waiter/get_orders?waiterId="+parseInt($('#waiterId').val()),
             "type": "POST"
         },
         serverSide: false,

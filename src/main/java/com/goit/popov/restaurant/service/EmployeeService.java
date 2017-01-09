@@ -5,6 +5,8 @@ import com.goit.popov.restaurant.dao.entity.EmployeeDAO;
 import com.goit.popov.restaurant.model.Employee;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
@@ -15,6 +17,8 @@ import java.util.List;
 public class EmployeeService {
 
         private static final Logger logger = (Logger) LoggerFactory.getLogger(EmployeeService.class);
+
+        private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         @Autowired
         protected EmployeeDAO employeeDAO;
@@ -88,7 +92,7 @@ public class EmployeeService {
                 Employee newEmployee = new Employee();
                 newEmployee.setId(oldEmployee.getId());
                 newEmployee.setLogin(oldEmployee.getLogin());
-                newEmployee.setPassword(oldEmployee.getPassword());
+                newEmployee.setPassword(passwordEncoder.encode(oldEmployee.getPassword()));
                 newEmployee.setName(oldEmployee.getName());
                 newEmployee.setDob(oldEmployee.getDob());
                 newEmployee.setPhone(oldEmployee.getPhone());

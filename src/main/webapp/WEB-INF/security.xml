@@ -4,10 +4,13 @@
          xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 						http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
-    <http pattern="/" security="none"/>
-    <http pattern="/get_all_dishes" security="none"/>
+    <!--<http pattern="/" security="none"/>
+    <http pattern="/get_all_dishes" security="none"/>-->
     <http authentication-manager-ref="dao-auth" auto-config="true" use-expressions="true">
+        <intercept-url pattern="/" access="permitAll" />
+        <intercept-url pattern="/get_all_dishes" access="permitAll" />
         <intercept-url pattern="/new_order" access="hasRole('ROLE_WAITER')"/>
+        <intercept-url pattern="/waiter/**" access="hasRole('ROLE_WAITER')"/>
         <intercept-url pattern="/restaurant/manager/orders" access="hasRole('ROLE_ADMIN')"/>
         <form-login login-page="/login"
                     username-parameter="username"
@@ -15,7 +18,8 @@
                     login-processing-url="/perform_login"
                     authentication-success-handler-ref="dispatcher"
                     authentication-failure-url="/access_denied" />
-        <logout/>
+        <logout logout-success-url="/"
+                logout-url="/perform_logout"/>
         <csrf disabled="true"/>
     </http>
 
@@ -29,7 +33,7 @@
 
     <authentication-manager id="dao-auth">
         <authentication-provider user-service-ref="employeeDetailsService">
-            <!--<password-encoder ref="encoder" />-->
+            <password-encoder ref="encoder" />
         </authentication-provider>
     </authentication-manager>
 

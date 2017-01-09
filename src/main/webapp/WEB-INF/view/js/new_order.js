@@ -73,7 +73,7 @@ $(document).ready(function () {
         json.openedTimeStamp = new Date();
         json.closedTimeStamp = null;
         json.table = $('#table').val();
-        json.waiter = 2; // Mr . Black
+        json.waiter = parseInt($('#waiterId').val()); // 2; // Mr . Black
         json.dishes = getDishes();
         $.ajax({
             url: $("#newOrderForm").attr("action"),
