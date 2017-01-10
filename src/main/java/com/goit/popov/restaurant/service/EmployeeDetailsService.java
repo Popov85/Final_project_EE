@@ -29,9 +29,6 @@ public class EmployeeDetailsService implements UserDetailsService {
                 if (employee!=null) {
                         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
                         authorities.add( new SimpleGrantedAuthority(employee.getRole()));
-                        /*UserDetails ud  = new org.springframework.security.core.userdetails.User(
-                                employee.getLogin(), employee.getPassword(),
-                                true, true, true, true, authorities);*/
                         UserDetails ud  = new com.goit.popov.restaurant.service.authentification.Employee(
                                 employee.getName(), employee.getPassword(),
                                 true, true, true, true, authorities, employee.getId());

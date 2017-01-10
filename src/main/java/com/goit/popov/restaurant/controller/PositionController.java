@@ -30,7 +30,7 @@ public class PositionController {
                 this.positionService = positionService;
         }
 
-        @GetMapping("/new_position")
+        @GetMapping("/admin/new_position")
         public ModelAndView showPositionForm(){
                 logger.info("Show Position form");
                 Position position = new Position();
@@ -38,15 +38,7 @@ public class PositionController {
                 return new ModelAndView("th/new_position", "position", position);
         }
 
-        // Get All
-        /*@GetMapping(value = "th/positions")
-        @ModelAttribute("positions")
-        public List<Position> positions() {
-                logger.info("Display all positions");
-                return positionService.getAll();
-        }*/
-
-        @GetMapping("/positions")
+        @GetMapping("/admin/positions")
         public String getPositions(Map<String, Object> model) {
                 model.put("positions", positionService.getAll());
                 logger.info("Display all positions");
@@ -63,12 +55,12 @@ public class PositionController {
                 } else {
                         positionService.save(position);
                         logger.info("Success saved: OK");
-                        return "redirect:/positions";
+                        return "redirect:/admin/positions";
                 }
         }
 
         // Read (update form)
-        @GetMapping(value = "/edit_position/{id}")
+        @GetMapping(value = "/admin/edit_position/{id}")
         public String showPositionEditForm(@PathVariable("id") int id, ModelMap map){
                 logger.info("Show form Position for updating "+id);
                 Position position = positionService.getById(id);
@@ -82,21 +74,16 @@ public class PositionController {
         public String editSave(@Valid @ModelAttribute("position") Position position, BindingResult result){
                 logger.info("Updating "+position);
                 if (result.hasErrors()) {
-                        logger.info("Errors are present");
                         logger.info("Errors number: "+result.getFieldErrorCount());
-                        logger.info("Error in name is: "+result.getFieldError("name"));
-                        //return new ModelAndView("th/update_position");
-                        //return "redirect:/new_position";
                         return "th/update_position";
                 } else {
                         positionService.update(position);
-                        //ModelAndView modelAndView = new ModelAndView("th/positions");
-                        return "redirect:/positions";
+                        return "redirect:/admin/positions";
                 }
         }
 
         // Delete
-        @RequestMapping(value="/delete_position/{id}",method = RequestMethod.GET)
+        @RequestMapping(value="/admin/delete_position/{id}",method = RequestMethod.GET)
         public ModelAndView delete(@PathVariable int id){
                 positionService.deleteById(id);
                 return new ModelAndView("jsp/positions");

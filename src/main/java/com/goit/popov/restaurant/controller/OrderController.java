@@ -20,7 +20,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -77,13 +76,6 @@ public class OrderController {
         public String showOrderForm() {
                 return "th/new_order";
         }
-
-        /*// Read All
-        @GetMapping(value = "/orders/th")
-        public String employeesTh(Map<String, Object> model) {
-                model.put("orders", orderService.getAll());
-                return "th/orders_th";
-        }*/
 
         // Read All (Page) Manager view
         @GetMapping(value = "/admin/orders")

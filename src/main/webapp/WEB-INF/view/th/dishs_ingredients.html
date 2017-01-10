@@ -1,48 +1,22 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Home</title>
+    <title>Details</title>
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css"/>
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css"/>
     <script src ="/js/lib/jquery-1.12.1.js"/>
     <script src ="/js/lib/bootstrap-3.3.7.min.js"/>
     <script src ="/js/lib/jquery.dataTables-1.10.12.min.js"/>
-
-    <script type="text/javascript" th:inline="javascript">
-        $(document).ready(function () {
-            var id = [[${id}]];
-            console.log("id = "+id);
-            var table = $('#ingredients').DataTable({
-                "bFilter":false,
-                "bLengthChange": false,
-                "ajax" : {
-                    "url": "/get_dishs_ingredients?id="+id,
-                    "type": "POST"
-                },
-                "columnDefs": [
-                    { "width": "10%", "targets": 0 },
-                    { "width": "60%", "targets": 1 },
-                    { "width": "30%", "targets": 2 }
-                ],
-                columns: [
-                    { "data": "id", "name": "id",  "title": "id", "visible": true},
-                    { "data": "name", "name": "name", "title": "ingredient"},
-                    { "data": "quantity", "name": "quantity, g", "title": "quantity, g"},
-
-                ]
-            });
-        });
-
-    </script>
-
+    <script src ="/js/dishs_ingredients.js"/>
 </head>
 <body>
+<input type="hidden" id="dishId" name="dishId" th:value="${id}"/>
 <div class="container">
     <div class="row">
         <div class="col-md-4"></div>
         <div class="col-md-4">
-            <label for="name">Dish name:</label>
-            <p id = "name" th:text = "${dish}" title="Dish name"/>
-            <label for="ingredients">Ingredients</label>
+            <label th:for="name">Dish name:</label>
+            <th:block id="name" th:text="${dish}" title="Dish name"/>
+            <p><label for="ingredients">Ingredients:</label></p>
             <table id="ingredients" name="ingredients" class="display" align="center" width="100%" border="0">
                 <thead>
                 <tr>

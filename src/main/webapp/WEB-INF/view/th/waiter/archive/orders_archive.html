@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <title>Orders (archive)</title>
@@ -14,9 +14,11 @@
 </head>
 <body>
 <h3 class="form-signin-heading" align="center">Orders (archive)</h3>
+
 <div class="container">
     <div class="row">
         <div class="col-md-12">
+            <div th:replace="/th/header :: header"/>
             <table id="ordsTable" name="ordsTable" class="display" cellspacing="0" width="100%" style="overflow-x:auto">
                 <thead>
                 <tr>
@@ -34,6 +36,9 @@
                 </tr>
                 </thead>
             </table>
+            <a href="/waiter/orders/today">
+                <input type="button" class="btn btn-default" value="Back>>"/>
+            </a>
         </div>
     </div>
 </div>

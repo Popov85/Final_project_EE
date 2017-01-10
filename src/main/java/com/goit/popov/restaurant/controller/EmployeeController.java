@@ -80,7 +80,7 @@ public class EmployeeController {
         }
 
         // New form
-        @RequestMapping("/new_employee")
+        @RequestMapping("/admin/new_employee")
         public ModelAndView showEmployeeForm(){
                 return new ModelAndView("jsp/new_employee","employee",new Employee());
         }
@@ -105,7 +105,7 @@ public class EmployeeController {
         }
 
         // Read (update form)
-        @RequestMapping(value = "/edit_employee/{id}", method = RequestMethod.GET)
+        @RequestMapping(value = "/admin/edit_employee/{id}", method = RequestMethod.GET)
         public String showEmployeeEditForm(@PathVariable("id") int id, ModelMap map, HttpSession session){
                 Employee employee = employeeService.getEmployeeById(id);
                 map.addAttribute("employee", employee);

@@ -13,16 +13,7 @@
         <script src ="/js/lib/jquery-1.12.1.js"/>
         <script src ="/js/lib/bootstrap-3.3.7.min.js"/>
         <script src ="/js/lib/jquery.dataTables-1.10.12.min.js"/>
-        <script type="text/javascript">
-                $(document).ready(function () {
-                        var t = $('#employees').DataTable({
-                                columnDefs: [
-                                        {targets: [0], visible: false},
-                                        {targets: '_all', visible: true}
-                                ]
-                        })
-                });
-        </script>
+
 </head>
 <body>
 <h3 class="form-signin-heading" align="center">Employees:</h3>

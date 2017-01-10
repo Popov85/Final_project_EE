@@ -24,8 +24,8 @@
             <tr th:each="position : ${positions}">
                 <td th:text="${position.id}"/>
                 <td th:text="${position.name}"/>
-                <td><a th:href="@{'/edit_position/'+${position.id}}">Edit</a></td>
-                <td><a th:href="@{/delete_position(id=${position.id})}">Delete</a></td>
+                <td><a th:href="@{'/admin/edit_position/'+${position.id}}">Edit</a></td>
+                <td><a th:href="@{/admin/delete_position(id=${position.id})}">Delete</a></td>
             </tr>
         </tbody>
     </table>
