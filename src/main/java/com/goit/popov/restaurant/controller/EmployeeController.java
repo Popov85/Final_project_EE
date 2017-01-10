@@ -73,10 +73,10 @@ public class EmployeeController {
         }
 
         // Read All
-        @RequestMapping(value = "/employees", method = RequestMethod.GET)
-        public String employees(Map<String, Object> model) {
+        @GetMapping(value = "/admin/employees")
+        public String employeesTh(Map<String, Object> model) {
                 model.put("employees", employeeService.getEmployees());
-                return "jsp/employees";
+                return "th/manager/employees";
         }
 
         // New form
@@ -94,10 +94,14 @@ public class EmployeeController {
                         logger.info("# of errors is: "+result.getFieldErrorCount());
                         return "jsp/new_employee";
                 }
-                // Bean name is: Waiter - > WaiterService (save ())
-                EmployeeService employeeService = (EmployeeService) applicationContext.getBean(position);
+                if ((position.equals("Waiter")) || (position.equals("Chef")) || (position.equals("Manager"))) {
+                        // Bean name is: Waiter - > WaiterService (save ())
+                        EmployeeService employeeService = (EmployeeService) applicationContext.getBean(position);
+                } else {
+                        EmployeeService employeeService = new EmployeeService();
+                }
                 employeeService.save(employee);
-                return "jsp/employees";
+                return "redirect:/admin/employees";
         }
 
         // Read (update form)
@@ -122,7 +126,12 @@ public class EmployeeController {
                         return "jsp/update_employee";
                 }
                 String previousPosition = (String) session.getAttribute("position");
-                EmployeeService employeeService = (EmployeeService) applicationContext.getBean(newPosition);
+                if ((newPosition.equals("Waiter")) || (newPosition.equals("Chef")) || (newPosition.equals("Manager"))) {
+                        // Bean name is: Waiter - > WaiterService (save ())
+                        EmployeeService employeeService = (EmployeeService) applicationContext.getBean(newPosition);
+                } else {
+                        EmployeeService employeeService = new EmployeeService();
+                }
                 if (photo.isEmpty()) employee.setPhoto((byte[]) session.getAttribute("file"));
                 if (!previousPosition.equals(newPosition)) {
                         logger.info("Position changed! Previous was: "+previousPosition+
@@ -139,13 +148,13 @@ public class EmployeeController {
                         employeeService.update(employee);
                         logger.info("Successfully updated employee");
                 }
-                return "jsp/employees";
+                return "redirect:/admin/employees";
         }
 
         // Delete
         @RequestMapping(value="/delete_employee/{id}",method = RequestMethod.GET)
         public ModelAndView delete(@PathVariable int id){
                 employeeService.deleteById(id);
-                return new ModelAndView("redirect:/employees");
+                return new ModelAndView("redirect:/admin/employees");
         }
 }

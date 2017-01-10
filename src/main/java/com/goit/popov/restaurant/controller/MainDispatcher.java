@@ -68,7 +68,7 @@ public class MainDispatcher implements AuthenticationSuccessHandler {
                         return "/";
                 } else if (isManager) {
                         logger.info("ROLE_ADMIN identified!");
-                        return "/restaurant/manager/orders";
+                        return "/admin";
                 } else {
                         throw new IllegalStateException();
                 }

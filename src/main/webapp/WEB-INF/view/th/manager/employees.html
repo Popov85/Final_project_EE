@@ -1,0 +1,79 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Employees</title>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/filterDisabled.css"/>
+    <script src ="/js/lib/jquery-1.12.1.js"/>
+    <script src ="/js/lib/bootstrap-3.3.7.min.js"/>
+    <script src ="/js/lib/jquery.dataTables-1.10.12.min.js"/>
+    <script type="text/javascript" th:inline = "javascript">
+        $(document).ready(function () {
+            var t = $('#employees').DataTable({
+                columnDefs: [
+                    {targets: [0], visible: false},
+                    {targets: '_all', visible: true}
+                ]
+            })
+        });
+    </script>
+</head>
+<body>
+<h3 class="form-signin-heading" align="center">Employees:</h3>
+<div th:if="${not #lists.isEmpty(employees)}" style="max-width: 800px; margin: 0 auto; font-size: larger;">
+    <div th:replace="/th/header :: header"/>
+    <table id="employees" name="employees" class="display" align="center">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>DOB</th>
+            <th>Phone</th>
+            <th>Position</th>
+            <th>Salary</th>
+            <th>Photo</th>
+
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr th:each="employee : ${employees}">
+            <td th:text="${employee.id}" hidden="true"/>
+            <td th:text="${employee.name}"/>
+            <td th:text="${#dates.format(employee.dob, 'dd-MM-yyyy')}"/>
+            <td th:text="${employee.phone}"/>
+            <td th:text="${employee.position.name}"/>
+            <td th:text="${employee.salary}"/>
+            <td align="center">
+                <th:block th:switch="${employee.getPhotoSize()}">
+                    <div th:case="'0'">
+                        <img th:src="@{/img/noimage.jpg}"
+                             alt="NO image" height="100" width="100"/>
+                    </div>
+                    <div th:case="*">
+                        <img th:src="@{/img/photo(id=${employee.id})}"
+                             alt="photo" height="100" width="100"/>
+                    </div>
+                </th:block>
+            </td>
+
+            <td>
+                <a th:href="@{'/edit_employee/'+${employee.id}}">
+                    <input type="button" class="btn btn-default" value="Edit" th:name="'detailsRow_'+${employee.id}"/>
+                </a>
+            </td>
+
+            <td>
+                <a th:href="@{'/delete_employee/'+${employee.id}}">
+                    <input type="button" class="btn btn-default" value="Delete" th:name="'deleteRow_'+${employee.id}"/>
+                </a>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

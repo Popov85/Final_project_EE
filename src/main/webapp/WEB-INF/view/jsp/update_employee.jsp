@@ -58,7 +58,7 @@
         </div>
 
         <div class="form-group">
-                <label for="dob">DOB</label>
+                <label for="dob">DOB (ММ/dd/yyyy)</label>
                 <fmt:formatDate value="${employee.dob}" var="dateString" pattern="MM/dd/yyyy" />
                 <form:input path="dob" value="${dateString}" title="MM/dd/yyyy" cssClass="form-control"/>
                 <font color="red"><form:errors path="dob"/></font>
@@ -91,7 +91,7 @@
         <div class="form-group">
                 <div class="row">
                         <div class="col-md-6">
-                                <a class="hyperlink" href="/employees">See all</a>
+                                <a class="hyperlink" href="/admin/employees">See all</a>
                         </div>
                         <div class="col-md-6" align="right">
                                 <a class="hyperlink" href="/">Home</a>

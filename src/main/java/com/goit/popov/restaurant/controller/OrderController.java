@@ -20,7 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
-
+import java.util.Map;
 
 
 /**
@@ -73,13 +73,20 @@ public class OrderController {
         }
 
         // Create (Page)
-        @GetMapping("/new_order")
+        @GetMapping("/waiter/new_order")
         public String showOrderForm() {
                 return "th/new_order";
         }
 
+        /*// Read All
+        @GetMapping(value = "/orders/th")
+        public String employeesTh(Map<String, Object> model) {
+                model.put("orders", orderService.getAll());
+                return "th/orders_th";
+        }*/
+
         // Read All (Page) Manager view
-        @GetMapping(value = "/restaurant/manager/orders")
+        @GetMapping(value = "/admin/orders")
         public String showOrdersTableManager() {
                 return "th/manager/orders";
         }

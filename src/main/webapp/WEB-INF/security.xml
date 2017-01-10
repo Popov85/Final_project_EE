@@ -9,9 +9,10 @@
     <http authentication-manager-ref="dao-auth" auto-config="true" use-expressions="true">
         <intercept-url pattern="/" access="permitAll" />
         <intercept-url pattern="/get_all_dishes" access="permitAll" />
-        <intercept-url pattern="/new_order" access="hasRole('ROLE_WAITER')"/>
+        <!--<intercept-url pattern="/new_order" access="hasRole('ROLE_WAITER')"/>-->
         <intercept-url pattern="/waiter/**" access="hasRole('ROLE_WAITER')"/>
-        <intercept-url pattern="/restaurant/manager/orders" access="hasRole('ROLE_ADMIN')"/>
+        <!--<intercept-url pattern="/restaurant/manager/orders" access="hasRole('ROLE_ADMIN')"/>-->
+        <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
         <form-login login-page="/login"
                     username-parameter="username"
                     password-parameter="password"

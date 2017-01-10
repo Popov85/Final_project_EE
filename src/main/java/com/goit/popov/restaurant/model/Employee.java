@@ -142,6 +142,16 @@ public class Employee {
                 this.photo = photo;
         }
 
+        public double getPhotoSize() {
+                if (photo!=null) {
+                        System.out.println("Size is: "+this.photo.length);
+                        return this.photo.length;
+                } else {
+                        System.out.println("Size is: null");
+                        return 0;
+                }
+        }
+
         @Override
         public boolean equals(Object o) {
                 if (this == o) return true;
