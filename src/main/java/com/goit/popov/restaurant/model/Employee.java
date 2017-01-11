@@ -29,12 +29,12 @@ public class Employee {
 
         @NotEmpty(message = "Login is a required field")
         @Size(min=4, max=25, message = "Login has from 4 to 25 characters")
-        @Column(name = "EMP_LOGIN")
+        @Column(name = "EMP_LOGIN", unique=true)
         protected String login;
 
         @NotEmpty(message = "Password is a required field")
         @Size(min=8, max=60, message = "Password must have from 8 to 16 characters")
-        @Column(name = "EMP_PASSWORD")
+        @Column(name = "EMP_PASSWORD", unique=true)
         protected String password;
 
         @NotEmpty(message = "Please, provide name for an employee")
@@ -47,7 +47,7 @@ public class Employee {
         protected Date dob;
 
         @NotEmpty(message = "Phone field mustn't be empty")
-        @Column(name = "PHONE")
+        @Column(name = "PHONE", unique=true)
         protected String phone;
 
         @NotNull(message = "Please, appoint a position for an employee")

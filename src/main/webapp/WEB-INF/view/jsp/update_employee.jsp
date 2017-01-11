@@ -84,6 +84,9 @@
                 <font color="red"><form:errors path="salary"/></font>
         </div>
 
+        <font color="red"><c:out value="${constraintViolationError}"/></font>
+        <font color="red"><c:out value="${unexpectedError}"/></font>
+
         <div class="form-group">
                 <button class="btn btn-primary btn-block" type="submit">Save</button>
         </div>

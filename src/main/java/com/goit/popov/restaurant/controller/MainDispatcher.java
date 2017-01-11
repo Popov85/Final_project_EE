@@ -47,6 +47,7 @@ public class MainDispatcher implements AuthenticationSuccessHandler {
                 boolean isWaiter = false;
                 boolean isChef = false;
                 boolean isManager = false;
+                boolean isEmployee = false;
                 Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
                 for (GrantedAuthority grantedAuthority : authorities) {
                         if (grantedAuthority.getAuthority().equals("ROLE_WAITER")) {
@@ -58,7 +59,10 @@ public class MainDispatcher implements AuthenticationSuccessHandler {
                         } else if (grantedAuthority.getAuthority().equals("ROLE_ADMIN")) {
                                 isManager = true;
                                 break;
-                        }
+                        } else if (grantedAuthority.getAuthority().equals("ROLE_EMPLOYEE")) {
+                                isEmployee = true;
+                                break;
+                        } else throw new RuntimeException("Undefined role!");
                 }
                 if (isWaiter) {
                         logger.info("ROLE_WAITER identified!");
@@ -69,6 +73,9 @@ public class MainDispatcher implements AuthenticationSuccessHandler {
                 } else if (isManager) {
                         logger.info("ROLE_ADMIN identified!");
                         return "/admin";
+                } else if (isEmployee) {
+                        logger.info("ROLE_EMPLOYEE identified!");
+                        return "/";
                 } else {
                         throw new IllegalStateException();
                 }

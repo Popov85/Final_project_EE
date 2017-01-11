@@ -10,7 +10,7 @@
 <body>
 <div class="container">
     <h3 class="form-signin-heading" align="center">Employee:</h3>
-    <form:form action="save_employee" method="post" modelAttribute="employee" enctype="multipart/form-data"
+    <form:form action="${pageContext.request.contextPath}/save_employee" method="post" modelAttribute="employee" enctype="multipart/form-data"
                style="max-width: 320px; margin: 0 auto; font-size: larger;">
         <div class="form-group">
             <form:hidden path="id" title="id" size="10"/>
@@ -64,6 +64,9 @@
             <form:input path="salary" title="salary" cssClass="form-control"/>
             <font color="red"><form:errors path="salary" /></font>
         </div>
+
+        <font color="red"><c:out value="${constraintViolationError}"/></font>
+        <font color="red"><c:out value="${unexpectedError}"/></font>
 
         <div class="form-group">
             <button class="btn btn-primary btn-block" type="submit">Save</button>

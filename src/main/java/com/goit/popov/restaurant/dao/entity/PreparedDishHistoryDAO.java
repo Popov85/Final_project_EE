@@ -1,7 +1,6 @@
 package com.goit.popov.restaurant.dao.entity;
 
 import com.goit.popov.restaurant.model.PreparedDish;
-
 import java.util.List;
 
 /**

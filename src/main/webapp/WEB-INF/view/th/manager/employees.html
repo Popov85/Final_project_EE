@@ -69,11 +69,14 @@
                 <a th:href="@{'/delete_employee/'+${employee.id}}">
                     <input type="button" class="btn btn-default" value="Delete" th:name="'deleteRow_'+${employee.id}"/>
                 </a>
+
             </td>
 
         </tr>
         </tbody>
     </table>
+    <font color="red"><p th:text="${constraintViolationError}"/></font>
+    <font color="red"><p th:text="${unexpectedError}"/></font>
 </div>
 </body>
 </html>

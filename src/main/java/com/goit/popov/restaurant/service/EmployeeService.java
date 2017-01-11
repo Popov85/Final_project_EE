@@ -48,13 +48,14 @@ public class EmployeeService {
         }
 
         public void save(Employee employee) {
-                employeeDAO.insert(employee);
+                Employee emp = transform(employee);
+                employeeDAO.insert(emp);
                 logger.info("Saved employee: "+employee);
         }
 
         public void update(Employee employee) {
                 Employee emp = transform(employee);
-                employeeDAO.update(employee);
+                employeeDAO.update(emp);
                 logger.info("Updated employee: "+employee);
         }
 

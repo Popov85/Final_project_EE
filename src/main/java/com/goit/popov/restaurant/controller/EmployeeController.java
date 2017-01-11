@@ -4,10 +4,12 @@ import ch.qos.logback.classic.Logger;
 import com.goit.popov.restaurant.model.*;
 import com.goit.popov.restaurant.service.EmployeeService;
 import com.goit.popov.restaurant.service.PositionService;
+import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.context.ApplicationContext;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -19,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.ByteArrayMultipartFileEditor;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
@@ -87,20 +90,32 @@ public class EmployeeController {
 
         // Create
         @RequestMapping(value="/save_employee",method = RequestMethod.POST)
-        public String saveEmployee(@Valid @ModelAttribute("employee") Employee employee, BindingResult result,
+        public String saveEmployee(@Valid @ModelAttribute("employee") Employee employee, BindingResult result, Model model,
                                    @RequestParam("position") String position, @RequestParam("photo") MultipartFile photo){
                 logger.info("File name is: "+photo.getOriginalFilename());
                 if (result.hasErrors()) {
                         logger.info("# of errors is: "+result.getFieldErrorCount());
+                        logger.info("error name of dob is: "+result.getFieldError("dob"));
                         return "jsp/new_employee";
                 }
+                EmployeeService employeeService;
                 if ((position.equals("Waiter")) || (position.equals("Chef")) || (position.equals("Manager"))) {
                         // Bean name is: Waiter - > WaiterService (save ())
-                        EmployeeService employeeService = (EmployeeService) applicationContext.getBean(position);
+                        employeeService = (EmployeeService) applicationContext.getBean(position);
                 } else {
-                        EmployeeService employeeService = new EmployeeService();
+                        employeeService = (EmployeeService) applicationContext.getBean("Employee");
                 }
-                employeeService.save(employee);
+                try {
+                        employeeService.save(employee);
+                } catch (DataIntegrityViolationException e) {
+                        model.addAttribute("constraintViolationError", "Some values on the form are not unique");
+                        logger.info("Constraint violation exception inserting employee"+e.getMessage()+" exception name is: "+ e.getClass());
+                        return "jsp/new_employee";
+                } catch (Throwable e) {
+                        model.addAttribute("unexpectedError", e.getMessage());
+                        logger.info("Another error inserting employee"+e.getMessage()+" exception name is: "+ e.getClass());
+                        return "jsp/new_employee";
+                }
                 return "redirect:/admin/employees";
         }
 
@@ -123,38 +138,63 @@ public class EmployeeController {
                                      @RequestParam("photo") MultipartFile photo){
                 if (result.hasErrors()) {
                         logger.info("# of errors is: "+result.getFieldErrorCount());
+                        logger.info("error name of dob is: "+result.getFieldError("dob"));
                         return "jsp/update_employee";
                 }
                 String previousPosition = (String) session.getAttribute("position");
+                EmployeeService employeeService;
                 if ((newPosition.equals("Waiter")) || (newPosition.equals("Chef")) || (newPosition.equals("Manager"))) {
                         // Bean name is: Waiter - > WaiterService (save ())
-                        EmployeeService employeeService = (EmployeeService) applicationContext.getBean(newPosition);
+                        employeeService = (EmployeeService) applicationContext.getBean(newPosition);
                 } else {
-                        EmployeeService employeeService = new EmployeeService();
+                        employeeService = (EmployeeService) applicationContext.getBean("Employee");
                 }
                 if (photo.isEmpty()) employee.setPhoto((byte[]) session.getAttribute("file"));
-                if (!previousPosition.equals(newPosition)) {
-                        logger.info("Position changed! Previous was: "+previousPosition+
-                                " new position is: "+newPosition);
-                        try {
+
+                try {
+                        if (!previousPosition.equals(newPosition)) {
+                                logger.info("Position changed! Previous was: "+previousPosition+
+                                                " new position is: "+newPosition);
                                 employeeService.update(employee, true);
-                        } catch (Exception e) {
-                                //result.addError(new ObjectError("integrityViolationError", "Only SVG allowed!"));
-                                model.addAttribute("integrityViolationError",e.getMessage());
-                                logger.info("Error updating employee"+e.getMessage());
-                                return "jsp/update_employee";
+
+                        } else {
+                                employeeService.update(employee);
                         }
-                } else {
-                        employeeService.update(employee);
-                        logger.info("Successfully updated employee");
+                } catch (DataIntegrityViolationException e) {
+                        model.addAttribute("constraintViolationError", "Some values on the form are not unique");
+                        logger.info("Constraint violation exception updating employee"+e.getMessage()+" exception name is: "+ e.getClass());
+                        return "jsp/update_employee";
+                } catch (RuntimeException e) {
+                        model.addAttribute("integrityViolationError", e.getMessage());
+                        logger.info("Data integrity exception updating employee"+e.getMessage()+" exception name is: "+ e.getClass());
+                        return "jsp/update_employee";
+                } catch (Throwable e) {
+                        model.addAttribute("unexpectedError", e.getMessage());
+                        logger.info("Another error updating employee"+e.getMessage()+" exception name is: "+ e.getClass());
+                        return "jsp/update_employee";
                 }
+                logger.info("Successfully updated employee");
                 return "redirect:/admin/employees";
         }
 
         // Delete
         @RequestMapping(value="/delete_employee/{id}",method = RequestMethod.GET)
         public ModelAndView delete(@PathVariable int id){
-                employeeService.deleteById(id);
+                try {
+                        employeeService.deleteById(id);
+                } catch (PersistenceException e) {
+                        ModelAndView mv = new ModelAndView();
+                        mv.setViewName("redirect:/admin/employees");
+                        mv.addObject("constraintViolationError", "Constraint violation exception deleting employee!");
+                        logger.info("Constraint violation exception deleting employee"+e.getMessage()+" exception name is: "+ e.getClass());
+                        return mv;
+                } catch (Throwable e) {
+                        ModelAndView mv = new ModelAndView();
+                        mv.setViewName("redirect:/admin/employees");
+                        mv.addObject("unexpectedError", "Unexpected error");
+                        logger.info("Another exception deleting employee"+e.getMessage()+" exception name is: "+ e.getClass());
+                        return mv;
+                }
                 return new ModelAndView("redirect:/admin/employees");
         }
 }
