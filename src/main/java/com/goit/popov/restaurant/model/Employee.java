@@ -42,7 +42,7 @@ public class Employee {
         @Column(name = "EMP_NAME")
         protected String name;
 
-        @DateTimeFormat(pattern = "MM/dd/yyyy")
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
         @Column(name = "DOB")
         protected Date dob;
 

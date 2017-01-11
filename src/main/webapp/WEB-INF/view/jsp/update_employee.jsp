@@ -12,7 +12,7 @@
 <body>
 <div class="container">
 <h3 class="form-signin-heading" align="center">Employee</h3>
-<form:form action="${pageContext.request.contextPath}/update_employee"
+<form:form id="update_employee" name="update_employee" action="${pageContext.request.contextPath}/update_employee"
            method="post" modelAttribute="employee" enctype="multipart/form-data"
            style="max-width: 320px; margin: 0 auto; font-size: larger;">
 
@@ -57,11 +57,15 @@
                 <font color="red"><form:errors path="name"/></font>
         </div>
 
-        <div class="form-group">
-                <label for="dob">DOB (ММ/dd/yyyy)</label>
-                <fmt:formatDate value="${employee.dob}" var="dateString" pattern="MM/dd/yyyy" />
-                <form:input path="dob" value="${dateString}" title="MM/dd/yyyy" cssClass="form-control"/>
-                <font color="red"><form:errors path="dob"/></font>
+
+
+        <div class="control-group">
+                <form:label cssClass="control-label" path="dob">DOB</form:label>
+                <div class="controls">
+                        <input type="date" path="dob" class= "date" name = "dob"
+                               value = "<fmt:formatDate value="${employee.dob}" pattern="yyyy-MM-dd" />"/>
+                        <font color="red"><form:errors path="dob"/></font>
+                </div>
         </div>
 
         <div class="form-group">

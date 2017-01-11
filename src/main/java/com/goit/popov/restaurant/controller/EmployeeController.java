@@ -69,7 +69,8 @@ public class EmployeeController {
         // Date settings
         @InitBinder
         public void initBinder(WebDataBinder binder) {
-                SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+                //SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 sdf.setLenient(true);
                 binder.registerCustomEditor(Date.class, new CustomDateEditor(sdf, true));
                 binder.registerCustomEditor(byte[].class, new ByteArrayMultipartFileEditor());
@@ -129,6 +130,13 @@ public class EmployeeController {
                 session.setAttribute("position",employee.getPosition().getName());
                 session.setAttribute("file",employee.getPhoto());
                 return "jsp/update_employee";
+        }
+
+        // Test
+        @RequestMapping(value="/update_test", method = RequestMethod.POST)
+        public String updateTest(@RequestParam("dob") Date dob) {
+                logger.info("dob: "+dob);
+                return "jsp/update_test";
         }
 
         // Update

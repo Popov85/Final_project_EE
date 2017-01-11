@@ -10,7 +10,7 @@
 <body>
 <div class="container">
     <h3 class="form-signin-heading" align="center">Employee:</h3>
-    <form:form action="${pageContext.request.contextPath}/save_employee" method="post" modelAttribute="employee" enctype="multipart/form-data"
+    <form:form id="new_employee" name="new_employee" action="${pageContext.request.contextPath}/save_employee" method="post" modelAttribute="employee" enctype="multipart/form-data"
                style="max-width: 320px; margin: 0 auto; font-size: larger;">
         <div class="form-group">
             <form:hidden path="id" title="id" size="10"/>
@@ -34,10 +34,12 @@
             <font color="red"><form:errors path="name" /></font>
         </div>
 
-        <div class="form-group">
-            <label for="dob">DOB (ММ/dd/yyyy)</label>
-            <form:input path="dob" title="dob" cssClass="form-control"/>
-            <font color="red"><form:errors path="dob" /></font>
+        <div class="control-group">
+            <form:label cssClass="control-label" path="dob">DOB</form:label>
+            <div class="controls">
+                <input type="date" path="dob" class= "date" name = "dob"/>
+                <font color="red"><form:errors path="dob"/></font>
+            </div>
         </div>
 
         <div class="form-group">
