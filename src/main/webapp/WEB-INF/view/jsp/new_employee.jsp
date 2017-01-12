@@ -34,10 +34,10 @@
             <font color="red"><form:errors path="name" /></font>
         </div>
 
-        <div class="control-group">
+        <div class="form-group">
             <form:label cssClass="control-label" path="dob">DOB</form:label>
             <div class="controls">
-                <input type="date" path="dob" class= "date" name = "dob"/>
+                <input type="date" path="dob" class= "date" name = "dob" cssClass="form-control"/>
                 <font color="red"><form:errors path="dob"/></font>
             </div>
         </div>

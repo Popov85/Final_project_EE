@@ -57,12 +57,10 @@
                 <font color="red"><form:errors path="name"/></font>
         </div>
 
-
-
-        <div class="control-group">
+        <div class="form-group">
                 <form:label cssClass="control-label" path="dob">DOB</form:label>
                 <div class="controls">
-                        <input type="date" path="dob" class= "date" name = "dob"
+                        <input type="date" path="dob" class= "date" name = "dob" cssClass="form-control"
                                value = "<fmt:formatDate value="${employee.dob}" pattern="yyyy-MM-dd" />"/>
                         <font color="red"><form:errors path="dob"/></font>
                 </div>

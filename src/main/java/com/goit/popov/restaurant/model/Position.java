@@ -54,7 +54,6 @@ public class Position {
         @Override
         public int hashCode() {
                 return name.hashCode();
-
         }
 
         @Override

@@ -42,6 +42,7 @@ public class Employee {
         @Column(name = "EMP_NAME")
         protected String name;
 
+        @NotNull(message = "DOB field mustn't be empty")
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         @Column(name = "DOB")
         protected Date dob;
@@ -144,10 +145,8 @@ public class Employee {
 
         public double getPhotoSize() {
                 if (photo!=null) {
-                        System.out.println("Size is: "+this.photo.length);
                         return this.photo.length;
                 } else {
-                        System.out.println("Size is: null");
                         return 0;
                 }
         }
@@ -175,9 +174,9 @@ public class Employee {
                 int result = login.hashCode();
                 result = 31 * result + password.hashCode();
                 result = 31 * result + name.hashCode();
-                result = 31 * result + dob.hashCode();
+                result = 31 * result + ((dob == null) ? 0 : dob.hashCode());
                 result = 31 * result + phone.hashCode();
-                result = 31 * result + position.hashCode();
+                result = 31 * result + ((position == null) ? 0 : position.hashCode());
                 result = 31 * result + salary.hashCode();
                 return result;
         }
