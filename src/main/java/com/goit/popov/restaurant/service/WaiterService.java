@@ -8,6 +8,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.PersistenceException;
+
 
 /**
  * Created by Andrey on 11/13/2016.
@@ -22,7 +24,7 @@ public class WaiterService extends EmployeeService {
         @Override
         public Waiter getEmployeeById(int employeeId) {
                 Waiter waiter = transform(super.getEmployeeById(employeeId));
-                return waiter ;
+                return waiter;
         }
 
         @Override
@@ -40,13 +42,14 @@ public class WaiterService extends EmployeeService {
         }
 
         @Override
-        public void update(Employee employee, boolean rewrite) throws Exception {
+        public void update(Employee employee, boolean rewrite) throws PersistenceException {
                 Waiter waiter = transform(employee);
                 if (rewrite) {
                         try {
                                 employeeDAO.delete(employee);
-                        } catch (Exception e) {
-                                throw new RuntimeException("Cannot change the position to waiter, employee has references!");
+                        } catch (PersistenceException e) {
+                                throw new PersistenceException("Cannot change the position to waiter," +
+                                        " the employee has references!");
                         }
                         employeeDAO.insert(waiter);
                         logger.info("Re-inserted waiter: "+waiter);

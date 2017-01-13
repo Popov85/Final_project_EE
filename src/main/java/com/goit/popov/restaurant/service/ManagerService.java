@@ -9,6 +9,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.PersistenceException;
+
 
 /**
  * Created by Andrey on 11/13/2016.
@@ -41,16 +43,17 @@ public class ManagerService extends EmployeeService {
         }
         @Override
         @Transactional
-        public void update(Employee employee, boolean rewrite) throws Exception {
+        public void update(Employee employee, boolean rewrite) throws PersistenceException {
                 Manager manager = transform(employee);
                 if (rewrite) {
                         try {
                                 employeeDAO.delete(employee);
-                        } catch (Exception e) {
-                                throw new RuntimeException("Cannot change the position to manager, employee has references!");
+                        } catch (PersistenceException e) {
+                                throw new PersistenceException("Cannot change the position to manager," +
+                                        " the employee has references!");
                         }
                         employeeDAO.insert(manager);
-                        logger.info("Re-inserted chef: "+manager);
+                        logger.info("Re-inserted manager: "+manager);
                 } else {
                         update(manager);
                 }

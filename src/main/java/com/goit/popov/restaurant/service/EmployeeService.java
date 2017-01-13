@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.PersistenceException;
 import java.util.List;
 
 /**
@@ -68,13 +70,14 @@ public class EmployeeService {
          * @param employee
          * @param rewrite
          */
-        public void update(Employee employee, boolean rewrite) throws Exception {
+        public void update(Employee employee, boolean rewrite) throws PersistenceException {
                 Employee emp = transform(employee);
                 if (rewrite) {
                         try {
                                 employeeDAO.delete(employee);
-                        } catch (Exception e) {
-                                throw new RuntimeException("Cannot change the position, employee has references!");
+                        } catch (PersistenceException e) {
+                                throw new PersistenceException("Cannot change the position to regular employee," +
+                                        " the employee has references!");
                         }
                         employeeDAO.insert(emp);
                         logger.info("Re-inserted employee: "+emp);

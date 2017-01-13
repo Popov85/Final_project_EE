@@ -4,12 +4,12 @@ import ch.qos.logback.classic.Logger;
 import com.goit.popov.restaurant.model.*;
 import com.goit.popov.restaurant.service.EmployeeService;
 import com.goit.popov.restaurant.service.PositionService;
-import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -20,10 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.ByteArrayMultipartFileEditor;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import javax.persistence.PersistenceException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
@@ -41,6 +38,7 @@ public class EmployeeController {
         private static final Logger logger = (Logger) LoggerFactory.getLogger(EmployeeController.class);
 
         private static final String NON_UNIQUE_CONSTRAINT_MESSAGE = "Some values on the form are not unique";
+        private static final String DELETION_FAILURE_MESSAGE = "Failed to delete an employee: id =";
 
         private EmployeeService employeeService;
         private PositionService positionService;
@@ -101,7 +99,8 @@ public class EmployeeController {
                         return "jsp/new_employee";
                 }
                 EmployeeService employeeService;
-                if ((position.equals("Waiter")) || (position.equals("Chef")) || (position.equals("Manager"))) {
+                if ((position.equals("Waiter")) || (position.equals("Chef"))
+                        || (position.equals("Manager"))) {
                         employeeService = (EmployeeService) applicationContext.getBean(position);
                 } else {
                         employeeService = (EmployeeService) applicationContext.getBean("Employee");
@@ -116,7 +115,7 @@ public class EmployeeController {
                 } catch (Throwable e) {
                         model.addAttribute("unexpectedError", e.getMessage());
                         logger.info("Another error inserting employee: "+e.getMessage()+
-                                " exception name is: "+ e.getClass());
+                                "/ exception name is: "+ e.getClass());
                         return "jsp/new_employee";
                 }
                 logger.info("Successfully added employee: "+employee);
@@ -146,7 +145,8 @@ public class EmployeeController {
                 }
                 String previousPosition = (String) session.getAttribute("position");
                 EmployeeService employeeService;
-                if ((newPosition.equals("Waiter")) || (newPosition.equals("Chef")) || (newPosition.equals("Manager"))) {
+                if ((newPosition.equals("Waiter")) || (newPosition.equals("Chef"))
+                        || (newPosition.equals("Manager"))) {
                         employeeService = (EmployeeService) applicationContext.getBean(newPosition);
                 } else {
                         employeeService = (EmployeeService) applicationContext.getBean("Employee");
@@ -165,15 +165,15 @@ public class EmployeeController {
                         logger.info("Constraint violation exception updating employee: "+e.getMessage()+
                                 "/ exception name is: "+ e.getClass());
                         return "jsp/update_employee";
-                } catch (RuntimeException e) {
+                } catch (PersistenceException e) {
                         model.addAttribute("integrityViolationError", e.getMessage());
                         logger.info("Data integrity exception updating employee: "+e.getMessage()+
                                 "/ exception name is: "+ e.getClass());
                         return "jsp/update_employee";
                 } catch (Throwable e) {
                         model.addAttribute("unexpectedError", e.getMessage());
-                        logger.info("Another error updating employee"+e.getMessage()+
-                                " exception name is: "+ e.getClass());
+                        logger.info("Another error updating employee: "+e.getMessage()+
+                                "/ exception name is: "+ e.getClass());
                         return "jsp/update_employee";
                 }
                 logger.info("Successfully updated employee: "+employee);
@@ -182,63 +182,30 @@ public class EmployeeController {
 
         // Delete
         @RequestMapping(value="/delete_employee/{id}",method = RequestMethod.GET)
-        public ModelAndView delete(@PathVariable int id, RedirectAttributes ra){
-                //employeeService.deleteById(id);
+        public String delete(@PathVariable int id, RedirectAttributes ra){
                 try {
                         employeeService.deleteById(id);
                 } catch (PersistenceException e) {
-                        ModelAndView mv = new ModelAndView();
-                        mv.setViewName("redirect:/error");/*
-                        mv.addObject("error", "Constraint violation exception deleting employee!");
-                        mv.addObject("message", "Failed to delete an employee: id = "+id);*/
+                        ra.addFlashAttribute("status", HttpStatus.FORBIDDEN);
                         ra.addFlashAttribute("error", "Constraint violation exception deleting employee!");
-                        ra.addFlashAttribute("message", "Failed to delete an employee: id = "+id);
-                        logger.info("Constraint violation exception deleting employee"+e.getMessage()+
-                                " exception name is: "+ e.getClass());
-                        return mv;
+                        ra.addFlashAttribute("message", DELETION_FAILURE_MESSAGE +id);
+                        logger.info("Constraint violation exception deleting employee: "+e.getMessage()+
+                                "/ exception name is: "+ e.getClass());
+                        return "redirect:/error";
                 } catch (Throwable e) {
-                        ModelAndView mv = new ModelAndView();
-                        mv.setViewName("redirect:/error");
-                        mv.addObject("error", "Unexpected error");
-                        mv.addObject("message", "Failed to delete an employee: id = "+id);
-                        logger.info("Another exception deleting employee"+e.getMessage()+
-                                " exception name is: "+ e.getClass());
-                        return mv;
+                        ra.addFlashAttribute("status", HttpStatus.FORBIDDEN);
+                        ra.addFlashAttribute("error", e.getMessage());
+                        ra.addFlashAttribute("message", DELETION_FAILURE_MESSAGE +id);
+                        logger.info("Unexpected exception deleting employee: "+e.getMessage()+
+                                "/ exception name is: "+ e.getClass());
+                        return "redirect:/error";
                 }
-                return new ModelAndView("redirect:/admin/employees");
+                return "redirect:/admin/employees";
         }
-
-        /*@ExceptionHandler(PersistenceException.class)
-        public String handleUnknownIdentifierException(final PersistenceException e,
-                                                       final HttpServletRequest request,
-                                                       final HttpServletResponse response) {
-                logger.info("e: "+e.getMessage());
-                logger.info("request: "+request);
-                logger.info("response: "+response);
-                response.setStatus(403);
-                request.setAttribute("error", "Unable to perform the request!");
-                request.setAttribute("message", e.getMessage());
-
-                return "redirect:/error";
-        }*/
 
         // Redirect to error page
         @GetMapping("/error")
         public String showErrorPage() {
                 return "th/error";
         }
-
-        // Redirect to error page
-        @GetMapping("/error/error")
-        public ModelAndView showErrorPage2(RedirectAttributes ra) {
-                ModelAndView mv = new ModelAndView();
-                mv.setViewName("redirect:/error");
-                /*mv.addObject("error", "Constraint violation exception deleting employee!");
-                mv.addObject("message", "Failed to delete an employee");*/
-                ra.addFlashAttribute("error", "Constraint violation exception deleting employee!");
-                ra.addFlashAttribute("message", "Failed to delete an employee");
-                logger.info("error/error invoked...");
-                return mv;
-        }
-
 }
