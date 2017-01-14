@@ -7,7 +7,7 @@
 <html>
 <head>
         <title>Employees</title>
-        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css">
+        <link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" >
         <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css"/>
         <link rel="stylesheet" type="text/css" href="/css/filterDisabled.css"/>
         <script src ="/js/lib/jquery-1.12.1.js"/>

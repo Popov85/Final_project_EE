@@ -4,13 +4,13 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <html>
 <head>
-    <title>Ingredient</title>
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css">
+    <title>New Ingredient</title>
+    <link rel="stylesheet" type="text/css" href="/css/lib/bootstrap-3.3.7.min.css"/>
 </head>
 <body>
 <div class="container">
     <form:form action="save_ingredient" method="post" modelAttribute="ingredient" style="max-width: 320px; margin: 0 auto; font-size: larger;">
-        <h3 class="form-signin-heading" align="center">Ingredient:</h3>
+        <h3 class="form-signin-heading" align="center">New Ingredient</h3>
         <div class="form-group">
             <form:input path="id" readonly="true" title="id" size="10"/>
         </div>

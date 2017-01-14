@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import javax.servlet.http.HttpServletRequest;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -29,6 +31,9 @@ import java.util.List;
 public class OrderController {
 
         private static final Logger logger = (Logger) LoggerFactory.getLogger(OrderController.class);
+
+        private static final String DELETION_FAILURE_MESSAGE = "Failed to delete the order: id =";
+        private static final String FORBIDDEN_ACTION_MESSAGE = "This action is forbidden!";
 
         @Autowired
         private DishService dishService;
@@ -120,9 +125,10 @@ public class OrderController {
 
         @PostMapping(value = "/waiter/get_archive")
         @ResponseBody
-        public DataTablesOutputDTOUniversal<Order> getWaiterOrdersArchive(@RequestParam int waiterId, DataTablesInputExtendedDTO input) throws JsonProcessingException {
+        public DataTablesOutputDTOUniversal<Order> getWaiterOrdersArchive(@RequestParam int waiterId,
+                                                                          DataTablesInputExtendedDTO input) throws JsonProcessingException {
                 logger.info("Input: " + input);
-                DataTablesOutputDTOUniversal<Order> data = orderService.getAllWaiterArchive(waiterId, input);
+                DataTablesOutputDTOUniversal<Order> data = orderService.getAllWaiterArchive(input, waiterId);
                 ObjectMapper mapper = new ObjectMapper();
                 logger.info("Output: " + mapper.writeValueAsString(data));
                 return data;
@@ -171,29 +177,56 @@ public class OrderController {
 
         // Delete (Action)
         @GetMapping("/delete_order")
-        public String deleteOrder(@RequestParam int id, HttpServletRequest request) throws MalformedURLException {
-                URL url = new URL(request.getHeader("referer"));
+        public String deleteOrder(@RequestParam int id, HttpServletRequest request, RedirectAttributes ra) {
+                URL url;
                 try {
+                        url = new URL(request.getHeader("referer"));
                         orderService.delete(id);
                         logger.info("Deleted Order, id= "+id);
-                } catch (Exception e) {
-                        logger.error("ERROR: Failed to delete the order!");
-                        return "th/error";
+                } catch (MalformedURLException e) {
+                        setErrorMessages(id, ra,
+                                HttpStatus.BAD_REQUEST.toString(),
+                                FORBIDDEN_ACTION_MESSAGE,
+                                DELETION_FAILURE_MESSAGE +id);
+                        return "redirect:/error";
+                } catch (Throwable e) {
+                        setErrorMessages(id, ra,
+                                HttpStatus.FORBIDDEN.toString(),
+                                e.getMessage(),
+                                DELETION_FAILURE_MESSAGE +id);
+                        return "redirect:/error";
                 }
                 return "redirect:"+url.getPath();
         }
 
         // Close (Action)
         @GetMapping("/close_order")
-        public String closeOrder(@RequestParam int id, HttpServletRequest request) {
+        public String closeOrder(@RequestParam int id, HttpServletRequest request, RedirectAttributes ra) {
                 URL url=null;
                 try {
                         url = new URL(request.getHeader("referer"));
+                        orderService.closeOrder(id);
+                        logger.info("Order (id= : "+id + ") closed");
                 } catch (MalformedURLException e) {
-                        logger.error("ERROR: "+e.getMessage());
+                        setErrorMessages(id, ra,
+                                HttpStatus.BAD_REQUEST.toString(),
+                                FORBIDDEN_ACTION_MESSAGE,
+                                "Failed to close the order: id = "+id);
+                        return "redirect:/error";
+                } catch (Throwable e) {
+                        setErrorMessages(id, ra,
+                                HttpStatus.FORBIDDEN.toString(),
+                                e.getMessage(),
+                                "Unexpected error closing the order: id = "+id);
+                        return "redirect:/error";
                 }
-                orderService.closeOrder(id);
-                logger.info("Order (id= : "+id + ") closed");
                 return "redirect:"+url.getPath();
+        }
+
+        private void setErrorMessages(int id, RedirectAttributes ra, String... messages) {
+                logger.error("ERROR: status: "+messages[0]+" / error: "+messages[1]+"/ message: "+messages[2]);
+                ra.addFlashAttribute("status", messages[0]);
+                ra.addFlashAttribute("error", messages[1]);
+                ra.addFlashAttribute("message", messages[2]);
         }
 }

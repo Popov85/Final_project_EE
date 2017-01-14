@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8"/>
     <title>New Position</title>
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="/css/lib/bootstrap-3.3.7.min.css"/>
 </head>
 <body>
 
 <div class="container">
-    <form action="#" th:action="@{/save_position}" th:object="${position}" method="post"
+    <form action="#" th:action="@{/admin/save_position}" th:object="${position}" method="post"
           style="max-width: 220px; margin: 0 auto; font-size: larger;">
-        <h3 class="form-signin-heading" align="center">Position</h3>
+        <h3 class="form-signin-heading" align="center">New Position</h3>
 
         <div class="form-group">
             <input type="hidden" th:id="id" id="id" th:field="*{id}"/>
@@ -19,21 +19,31 @@
         <div class="form-group">
             <label for="name">Name</label>
             <input type="text" th:id="name" id="name" th:field="*{name}" size="22"/>
-            <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Incorrect data</p>
+            <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="label label-danger">Incorrect data</p>
         </div>
 
         <div class="form-group">
-            <button class="btn btn-primary btn-block" type="submit">Save</button>
-        </div>
+            <div class="btn-group btn-group-justified">
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary ">Save</button>
+                </div>
+                <div class="btn-group">
+                    <a th:href="@{/admin/positions/}">
+                        <input type="button" class="btn btn-default" value="Cancel"/>
+                    </a>
+                </div>
+            </div>
 
         <div class="form-group">
             <div class="row">
                 <div class="col-md-6">
-                    <a class="hyperlink" href="/positions">See all</a>
+                    <a class="hyperlink" href="/admin/positions">See all</a>
                 </div>
                 <div class="col-md-6" align="right">
-                    <a class="hyperlink" href="/index">Home</a>
+                    <a class="hyperlink" href="/">Home</a>
                 </div>
+            </div>
+
             </div>
         </div>
         </form>

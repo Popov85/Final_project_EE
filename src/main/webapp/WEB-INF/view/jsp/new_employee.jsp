@@ -4,12 +4,12 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <html>
 <head>
-    <title>New Waiter</title>
-     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css">
+    <title>New Employee</title>
+    <link rel="stylesheet" type="text/css" href="/css/lib/bootstrap-3.3.7.min.css"/>
 </head>
 <body>
 <div class="container">
-    <h3 class="form-signin-heading" align="center">Employee:</h3>
+    <h3 class="form-signin-heading" align="center">New Employee:</h3>
     <form:form id="new_employee" name="new_employee" action="${pageContext.request.contextPath}/save_employee" method="post" modelAttribute="employee" enctype="multipart/form-data"
                style="max-width: 320px; margin: 0 auto; font-size: larger;">
         <div class="form-group">

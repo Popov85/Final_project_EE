@@ -3,32 +3,66 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Positions</title>
-    <!--<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css"/>-->
-    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/bootstrap-3.3.7.min.css}" />
+    <link rel="stylesheet" type="text/css" href="/css/lib/bootstrap-3.3.7.min.css"/>
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/filterDisabled.css"/>
     <script src ="/js/lib/jquery-3.1.1.min.js"/>
-    <script src ="/js/lib/bootstrap-3.3.7.min.js"/>
+    <script src ="/js/lib/jquery.dataTables-1.10.12.min.js"/>
+    <script type="text/javascript" th:inline="javascript">
+        $(document).ready(function () {
+            var t = $('#positions').DataTable({
+                columnDefs: [
+                    {targets: [0], visible: false, width: "30%"},
+                    {targets: '_all', visible: true},
+                    {targets: [1], visible: true, width: "50%"},
+                    {targets: [2], visible: true, width: "10%"},
+                    {targets: [3], visible: true, width: "10%"},
+                ]
+
+            })
+        });
+    </script>
 </head>
 <body>
 <h3 class="form-signin-heading" align="center">Positions</h3>
+
 <div th:if="${not #lists.isEmpty(positions)}">
-    <table>
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Edit</th>
-                <th>delete</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="position : ${positions}">
-                <td th:text="${position.id}"/>
-                <td th:text="${position.name}"/>
-                <td><a th:href="@{'/admin/edit_position/'+${position.id}}">Edit</a></td>
-                <td><a th:href="@{/admin/delete_position(id=${position.id})}">Delete</a></td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="row">
+        <div class="col-md-4"/>
+        <div class="col-md-4">
+            <div th:replace="/th/header :: header"/>
+            <table id="positions" name="positions" class="display">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Edit</th>
+                    <th>delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="position : ${positions}">
+                    <td th:text="${position.id}"/>
+                    <td th:text="${position.name}"/>
+                    <td>
+                        <a th:href="@{'/admin/edit_position/'+${position.id}}">
+                            <input type="button" class="btn btn-default" value="Edit"/>
+                        </a>
+                    </td>
+                    <td>
+                        <a th:href="@{'/admin/delete_position/'+${position.id}}">
+                            <input type="button" class="btn btn-default" value="Delete"/>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <a th:href="@{/admin/new_position}">
+                <input type="button" class="btn btn-default" value="New Position"/>
+            </a>
+        </div>
+        <div class="col-md-4"/>
+    </div>
 </div>
 </body>
 </html>

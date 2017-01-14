@@ -17,7 +17,7 @@ public interface OrderServiceInterface {
         void updateStock(Order order);
 
         /**
-         * Gets all the dishes ordered in this Order
+         * Gets all the dishes included in this Order
          * @param orderId
          * @return
          */

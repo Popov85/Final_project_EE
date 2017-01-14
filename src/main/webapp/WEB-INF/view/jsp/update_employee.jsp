@@ -6,12 +6,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <html>
 <head>
-        <title>Employee</title>
-        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css">
+        <title>Edit Employee</title>
+        <link rel="stylesheet" type="text/css" href="/css/lib/bootstrap-3.3.7.min.css"/>
 </head>
 <body>
 <div class="container">
-<h3 class="form-signin-heading" align="center">Employee</h3>
+<h3 class="form-signin-heading" align="center">Edit Employee</h3>
 <form:form id="update_employee" name="update_employee" action="${pageContext.request.contextPath}/update_employee"
            method="post" modelAttribute="employee" enctype="multipart/form-data"
            style="max-width: 320px; margin: 0 auto; font-size: larger;">

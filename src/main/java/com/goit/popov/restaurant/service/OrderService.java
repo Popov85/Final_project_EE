@@ -19,7 +19,7 @@ import java.util.Map;
  * Created by Andrey on 12/3/2016.
  */
 public class OrderService implements OrderServiceInterface,
-        DataTablesMapToJSONConvertible<Dish, Integer>, DataTablesSearchable<Order> {
+        DataTablesMapToJSONConvertible<Dish, Integer>,  DataTablesSearchableParam<Order> {
 
         private static final Logger logger = (Logger) LoggerFactory.getLogger(OrderService.class);
 
@@ -163,7 +163,13 @@ public class OrderService implements OrderServiceInterface,
                 return orderDAO.getAllWaiterToday(waiterId);
         }
 
-        public DataTablesOutputDTOUniversal<Order> getAllWaiterArchive(int waiterId, DataTablesInputExtendedDTO dt) {
+
+        public DataTablesOutputDTOUniversal<Order> getAllWaiterArchive(DataTablesInputExtendedDTO dt, int waiterId) {
+                return getAll(dt, waiterId);
+        }
+
+        @Override
+        public DataTablesOutputDTOUniversal<Order> getAll(DataTablesInputExtendedDTO dt, int waiterId) {
                 Waiter waiter = new Waiter();
                 waiter.setId(waiterId);
                 long recordsTotal = countWaiter(waiter);
@@ -179,6 +185,5 @@ public class OrderService implements OrderServiceInterface,
                         .setRecordsTotal(recordsTotal)
                         .setRecordsFiltered(recordsFiltered)
                         .setData(data);
-
         }
 }

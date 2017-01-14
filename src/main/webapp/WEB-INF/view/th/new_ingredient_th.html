@@ -3,30 +3,17 @@
 <head>
     <meta charset="UTF-8"/>
     <title>New ingredient</title>
+    <link rel="stylesheet" type="text/css" href="/css/lib/bootstrap-3.3.7.min.css"/>
 </head>
 <body>
 <div class="container">
     <form th:action="@{/save_ingredient}" th:object="${ingredient}" method="post">
-        <h3 class="form-signin-heading" align="center">Ingredient</h3>
+        <h3 class="form-signin-heading" align="center">New Ingredient</h3>
 
         <div class="form-group">
             <label for="name">Name</label>
                 <input type="text" th:id="name" id="name" th:field="*{name}"/>
         </div>
-
-        <!--<div class="form-group">
-            <label for="unit">Unit</label>
-            <input type="text" th:id="unit" id="unit" th:field="*{unit}" />
-        </div>-->
-
-        <!--<div class="form-group">
-            <label for="unit">Unit</label>
-            <select th:field="*{unit}" id="unit">
-                <option th:each="type : ${units}"
-                    th:value="${type}"
-                    th:text="#{${'seedstarter.type.' + type}}">Wireframe</option>
-            </select>
-        </div>-->
 
         <div class="form-group">
             <button class="btn btn-primary btn-block" type="submit">Save</button>

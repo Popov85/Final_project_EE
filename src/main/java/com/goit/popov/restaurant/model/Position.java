@@ -4,6 +4,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 /**
  * Positions class, positions available at restaurant
@@ -21,6 +22,7 @@ public class Position {
         private int id;
 
         @NotEmpty(message = "Position cannot be empty!")
+        @Size(min=2, max=30, message = "Position has from 2 to 30 characters")
         @Column(name = "POS_NAME")
         private String name;
 

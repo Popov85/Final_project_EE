@@ -202,10 +202,4 @@ public class EmployeeController {
                 }
                 return "redirect:/admin/employees";
         }
-
-        // Redirect to error page
-        @GetMapping("/error")
-        public String showErrorPage() {
-                return "th/error";
-        }
 }

@@ -1,7 +1,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Employees</title>
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="/css/lib/bootstrap-3.3.7.min.css"/>
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css"/>
     <link rel="stylesheet" type="text/css" href="/css/filterDisabled.css"/>
     <script src ="/js/lib/jquery-1.12.1.js"/>
@@ -61,13 +61,13 @@
 
             <td>
                 <a th:href="@{'/admin/edit_employee/'+${employee.id}}">
-                    <input type="button" class="btn btn-default" value="Edit" th:name="'detailsRow_'+${employee.id}"/>
+                    <input type="button" class="btn btn-default" value="Edit"/>
                 </a>
             </td>
 
             <td>
                 <a th:href="@{'/delete_employee/'+${employee.id}}">
-                    <input type="button" class="btn btn-default" value="Delete" th:name="'deleteRow_'+${employee.id}"/>
+                    <input type="button" class="btn btn-default" value="Delete"/>
                 </a>
 
             </td>
