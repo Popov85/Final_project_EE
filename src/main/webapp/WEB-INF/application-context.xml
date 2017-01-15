@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
+       http://www.springframework.org/schema/beans/spring-beans.xsd"
        default-autowire="byName">
-
-    <!--<context:property-placeholder location="classpath:restaurant.properties" />-->
 
     <bean id = "employeeService" class="com.goit.popov.restaurant.service.EmployeeService"/>
     <bean id="employeeDAO" class="com.goit.popov.restaurant.dao.impl.EmployeeDAOImplJPA"/>
@@ -31,6 +27,9 @@
 
     <bean id="unitDAO" class="com.goit.popov.restaurant.dao.impl.UnitDAOImplJPA"/>
     <bean id="unitService" class="com.goit.popov.restaurant.service.UnitService"/>
+
+    <bean id="preparedDishDAO" class="com.goit.popov.restaurant.dao.impl.PreparedDishHistoryDAOImplJPA"/>
+    <bean id="preparedDishService" class="com.goit.popov.restaurant.service.PreparedDishService"/>
 
     <bean id = "storeHouseDAO" class="com.goit.popov.restaurant.dao.impl.StoreHouseDAOImplJPA"/>
 

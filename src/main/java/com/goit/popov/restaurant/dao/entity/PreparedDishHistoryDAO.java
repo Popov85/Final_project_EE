@@ -9,4 +9,5 @@ import java.util.List;
 public interface PreparedDishHistoryDAO {
         int addPreparedDish(PreparedDish dish);
         List<PreparedDish> getAll();
+        List<PreparedDish> getAllChefToday(int chefId);
 }
