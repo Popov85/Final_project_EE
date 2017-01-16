@@ -56,7 +56,6 @@ $(document).ready(function () {
     });
     // Remove a selected dish from order
     $('#odTable tbody').on('click', 'button', function () {
-        console.log("Deleted!");
         table.row($(this).parents('tr')).remove().draw();
     });
 });
@@ -102,7 +101,7 @@ $(document).ready(function () {
         json.openedTimeStamp = new Date();
         json.closedTimeStamp = null;
         json.table = $('#table').val();
-        json.waiter = parseInt($('#waiterId').val()); // 2; Mr . Black
+        json.waiter = parseInt($('#waiterId').val());
         json.dishes = getDishes();
         $.ajax({
             url: $("#newOrderForm").attr( "action"),

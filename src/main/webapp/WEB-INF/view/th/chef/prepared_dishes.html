@@ -9,58 +9,17 @@
     <script src ="/js/lib/jquery-1.12.1.js"/>
     <script src ="/js/lib/bootstrap-3.3.7.min.js"/>
     <script src ="/js/lib/jquery.dataTables-1.10.12.min.js"/>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            var table = $('#ordsTable').DataTable({
-                "ajax" : {
-                    //"url": "/waiter/get_orders?waiterId="+parseInt($('#waiterId').val()),
-                    "url": "/get_orders_for_chef",
-                    "type": "POST"
-                },
-                columns: [
-                    { "data": "id", "name": "id",  "title": "id", "visible": true},
-                    { "data": "waiter", "name": "waiter", "title": "waiter"},
-                    { "data": "openedTimeStamp", "name": "openedTimeStamp", "title": "opened time"},
-                    { "data": "dishes", "name": "dishes quantity", "title": "dishes quantity"},
-                    { "data": "isFulfilled", "name": "isFulfilled", "title": "isFulfilled"},
-
-                    { "data": null, "sortable": false, "render": function(data){
-                        return '<a href="/get_details?id=' + data.id + '"><input type="button" class="btn btn-default" value="Details"/></a>';
-                    }
-                    }
-                ]
-            });
-
-            var table = $('#dishesTable').DataTable({
-                "ajax" : {
-                    "url": "/get_orders_prepared_dishes?orderId=1",
-                    "type": "POST"
-                },
-                columns: [
-                    { "data": "id", "name": "id",  "title": "id", "visible": true},
-                    { "data": "dish", "name": "dish", "title": "dish"},
-                    { "data": "quantity", "name": "quantity", "title": "quantity"},
-                    { "data": "isPrepared", "name": "isPrepared", "title": "isPrepared"},
-
-                    { "data": null, "sortable": false, "render": function(data){
-                        return '<a href="/confirm_dish_prepared?id=' + data.id + '"><input type="button" class="btn btn-default" value="Confirm"/></a>';
-                    }
-                    }
-                ]
-            });
-
-
-        });
-    </script>
+    <script src ="/js/chef/prepared_dishes.js"/>
 </head>
 <body>
 <h3 class="form-signin-heading" align="center">Prepared dishes</h3>
 <div class="container">
     <div class="row">
-        <div class="col-md-1"/>
-        <div class="col-md-10">
+        <div class="col-md-3"/>
+        <div class="col-md-6">
             <div th:replace="/th/header :: header"/>
             <h3 class="form-signin-heading" align="center">Dishes</h3>
+            <h5 class="form-signin-heading" align="center">(of Order #)<div id="orderId" name="orderId"></div></h5>
             <table id="dishesTable" name="dishesTable" class="display" cellspacing="0" width="100%" style="overflow-x:auto">
                 <thead>
                 <tr>
@@ -74,13 +33,12 @@
                 </thead>
             </table>
         </div>
-        <div class="col-md-1"/>
+        <div class="col-md-3"/>
     </div>
 
-
     <div class="row">
-        <div class="col-md-1"/>
-        <div class="col-md-10">
+        <div class="col-md-3"/>
+        <div class="col-md-6">
             <h3 class="form-signin-heading" align="center">Orders</h3>
             <table id="ordsTable" name="ordsTable" class="display" cellspacing="0" width="100%" style="overflow-x:auto">
                 <thead>
@@ -90,12 +48,13 @@
                     <th>OpenedTime</th>
                     <th>Dishes</th>
                     <th>isFulfilled</th>
+
                     <th>Details</th>
                 </tr>
                 </thead>
             </table>
         </div>
-        <div class="col-md-1"/>
+        <div class="col-md-3"/>
     </div>
 </div>
 </body>

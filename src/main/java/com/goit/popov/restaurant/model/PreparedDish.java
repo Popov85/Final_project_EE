@@ -1,11 +1,7 @@
 package com.goit.popov.restaurant.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.util.Date;
 
@@ -14,7 +10,6 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "prepared_dish")
-//@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="jsonId")
 public class PreparedDish {
 
         @Id
@@ -23,7 +18,6 @@ public class PreparedDish {
         @Column(name = "PD_ID")
         private int id;
 
-        //@DateTimeFormat(pattern="MM/dd/yyyy")
         @Column(name = "WHEN_PREPARED")
         @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm")
         private Date whenPrepared;

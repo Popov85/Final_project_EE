@@ -29,7 +29,7 @@ public class PreparedDishController {
         @Autowired
         private OrderService orderService;
 
-        // Create (Page)
+        // Show (Page)
         @GetMapping("/cook/prepared_dishes")
         public String showPreparedDishForm() {
                 return "th/chef/prepared_dishes";
@@ -52,7 +52,7 @@ public class PreparedDishController {
                 return data;
         }
 
-        @PostMapping("/get_orders_prepared_dishes")
+        @GetMapping("/get_orders_prepared_dishes")
         @ResponseBody
         public DataTablesOutputDTOCollectionWrapper getOrdersPreparedDishes(@RequestParam int orderId) throws JsonProcessingException {
                 DataTablesOutputDTOCollectionWrapper data = new DataTablesOutputDTOCollectionWrapper();
