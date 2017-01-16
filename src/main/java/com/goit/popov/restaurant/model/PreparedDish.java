@@ -14,7 +14,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "prepared_dish")
-@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="jsonId")
+//@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="jsonId")
 public class PreparedDish {
 
         @Id
@@ -85,7 +85,6 @@ public class PreparedDish {
                 if (id != that.id) return false;
                 if (!dish.equals(that.dish)) return false;
                 if (!chef.equals(that.chef)) return false;
-                //return id==that.id;
                 return order.equals(that.order);
 
         }

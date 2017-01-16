@@ -134,6 +134,14 @@ public class Order {
                 return total;
         }
 
+        public int getDishesQuantity(Dish dish) {
+                int total = 0;
+                for (Map.Entry<Dish, Integer> entry : dishes.entrySet()){
+                        if (entry.getKey().equals(dish)) total+=entry.getValue();
+                }
+                return total;
+        }
+
         public String getWaiterName() {
                 return this.waiter.getName();
         }

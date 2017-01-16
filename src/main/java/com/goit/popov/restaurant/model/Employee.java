@@ -1,4 +1,5 @@
 package com.goit.popov.restaurant.model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -32,6 +33,7 @@ public class Employee {
         @Column(name = "EMP_LOGIN", unique=true)
         protected String login;
 
+        @JsonIgnore
         @NotEmpty(message = "Password is a required field")
         @Size(min=8, max=60, message = "Password must have from 8 to 16 characters")
         @Column(name = "EMP_PASSWORD", unique=true)
@@ -61,6 +63,7 @@ public class Employee {
         @Column(name = "SALARY")
         protected BigDecimal salary;
 
+        @JsonIgnore
         @Column(name = "PHOTO")
         protected byte[] photo;
 

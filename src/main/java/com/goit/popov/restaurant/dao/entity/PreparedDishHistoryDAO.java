@@ -1,5 +1,7 @@
 package com.goit.popov.restaurant.dao.entity;
 
+import com.goit.popov.restaurant.model.Dish;
+import com.goit.popov.restaurant.model.Order;
 import com.goit.popov.restaurant.model.PreparedDish;
 import java.util.List;
 
@@ -9,5 +11,9 @@ import java.util.List;
 public interface PreparedDishHistoryDAO {
         int addPreparedDish(PreparedDish dish);
         List<PreparedDish> getAll();
+        List<Dish> getAll(Order order);
         List<PreparedDish> getAllChefToday(int chefId);
+        long getPreparedDishesQuantity(Order order);
+        long getPreparedDishesQuantity(Dish dish, Order order);
+        List<Order> getAllOrderForChef();
 }
