@@ -11,9 +11,7 @@ import com.goit.popov.restaurant.service.dataTables.DataTablesObjectToJSONConver
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Andrey on 1/15/2017.
@@ -87,7 +85,7 @@ public class PreparedDishService implements DataTablesListToJSONConvertible<Orde
 
         private boolean isPrepared(Dish dish, Order order) {
                 logger.info("Order #: "+order.getId()+ "/ Dish #: "+dish.getId()+
-                        "Expected: "+order.getDishesQuantity(dish)+" - "+preparedDishDAO.getPreparedDishesQuantity(dish, order)+": Actual");
+                        "Expected: "+order.getDishesQuantity(dish)+" - "+preparedDishDAO.getPreparedDishesQuantity(dish, order)+" :Actual");
                 return order.getDishesQuantity(dish)==preparedDishDAO.getPreparedDishesQuantity(dish, order);
         }
 
@@ -95,15 +93,15 @@ public class PreparedDishService implements DataTablesListToJSONConvertible<Orde
                 Dish dish = dishService.getById(dishId);
                 Order order = orderService.getById(orderId);
                 Chef chef = (Chef) chefService.getEmployeeById(chefId);
-                PreparedDish preparedDish = new PreparedDish();
-                preparedDish.setChef(chef);
-                preparedDish.setDish(dish);
-                preparedDish.setOrder(order);
-                try {
-                        preparedDishDAO.confirmDishPrepared(preparedDish, quantity);
-                } catch (InterruptedException e) {
-                        throw new RuntimeException();
+                Set<PreparedDish> preparedDishes = new HashSet<>();
+                for (int i=0; i<quantity; i++) {
+                        PreparedDish preparedDish = new PreparedDish();
+                        preparedDish.setChef(chef);
+                        preparedDish.setDish(dish);
+                        preparedDish.setOrder(order);
+                        preparedDish.setWhenPrepared(new Date());
+                        preparedDishes.add(preparedDish);
                 }
-
+                preparedDishDAO.confirmDishPrepared(preparedDishes);
         }
 }

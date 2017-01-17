@@ -68,6 +68,14 @@ public class OrderService implements OrderServiceInterface,
                 return orderDAO.getAllOpened();
         }
 
+        public List<Order> getAllWaiterToday(int waiterId) {
+                return orderDAO.getAllWaiterToday(waiterId);
+        }
+
+        public List<Order> getAllToday() {
+                return orderDAO.getAllToday();
+        }
+
         public Integer[] getTables() {
                 return Order.TABLE_SET;
         }
@@ -157,10 +165,6 @@ public class OrderService implements OrderServiceInterface,
                         .setRecordsTotal(recordsTotal)
                         .setRecordsFiltered(recordsFiltered)
                         .setData(data);
-        }
-
-        public List<Order> getAllWaiterToday(int waiterId) {
-                return orderDAO.getAllWaiterToday(waiterId);
         }
 
 

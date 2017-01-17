@@ -4,7 +4,7 @@
 $(document).ready(function () {
     var table = $('#ordsTable').DataTable({
         "ajax": {
-            "url": "/get_orders_for_chef",
+            "url": "/chef/get_orders_today",
             "type": "POST",
             "dataType": "json"
         },
@@ -35,7 +35,7 @@ $(document).ready(function () {
         $('#orderId').text(data.id);
         var table2 = $('#dishesTable').DataTable()
             .ajax.url(
-                "/get_orders_prepared_dishes?orderId="
+                "/chef/get_orders_prepared_dishes?orderId="
                 + encodeURIComponent(data.id)
             )
             .load()
@@ -60,7 +60,7 @@ $(document).ready(function () {
                 if (data.isPrepared=="true") {
                     return '<input type="button" class="btn btn-default" disabled="true" value="Confirm"/>';
                 } else {
-                    return '<a href="/confirm_dish_prepared?dishId=' + data.id+'&quantity='+data.quantity +'&orderId='+$('#orderId').text()+ '">' +
+                    return '<a href="/chef/confirm_dish_prepared?dishId=' + data.id+'&quantity='+data.quantity +'&orderId='+$('#orderId').text()+ '">' +
                         '<input type="button" class="btn btn-default" value="Confirm"/></a>';
                 }
             }

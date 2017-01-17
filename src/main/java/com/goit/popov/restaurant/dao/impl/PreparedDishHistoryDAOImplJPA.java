@@ -6,7 +6,9 @@ import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Order;
 import com.goit.popov.restaurant.model.PreparedDish;
 import com.goit.popov.restaurant.service.IngredientService;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,7 +54,6 @@ public class PreparedDishHistoryDAOImplJPA implements PreparedDishHistoryDAO {
         public List<PreparedDish> getAll() {
                 return sessionFactory.getCurrentSession().createQuery("select distinct pd from PreparedDish pd").list();
         }
-
 
 
         @Override
@@ -107,15 +108,15 @@ public class PreparedDishHistoryDAOImplJPA implements PreparedDishHistoryDAO {
         }
 
         @Override
-        public void confirmDishPrepared(PreparedDish preparedDish, int quantity) throws InterruptedException {
-                for (int i=0; i<quantity; i++) {
-                        preparedDish.setWhenPrepared(new Date());
-                        Thread.sleep(10);
-                        int id = insert(preparedDish);
-                        System.out.println("id= "+id);
+        public void confirmDishPrepared(Set<PreparedDish> preparedDishes){
+                Session session = sessionFactory.openSession();
+                Transaction tx = session.beginTransaction();
+                for (PreparedDish preparedDish : preparedDishes) {
+                        session.save(preparedDish);
                         // Decrease ingredients TODO
 
-                        System.out.println("Confirmed!");
                 }
+                tx.commit();
+                session.close();
         }
 }

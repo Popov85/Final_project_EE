@@ -31,37 +31,24 @@ public class PreparedDishController {
         @Autowired
         private OrderService orderService;
 
-        // Show (Page)
-        @GetMapping("/cook/prepared_dishes")
+        @GetMapping("/chef/prepared_dishes")
         public String showPreparedDishForm() {
                 return "th/chef/prepared_dishes";
         }
 
-        @GetMapping("/get_prepared_dishes")
+        @GetMapping("/chef/archive/get_prepared_dishes")
         @ResponseBody
         public List<PreparedDish> getPreparedDishes() {
                 logger.info("List: "+preparedDishService.getAll());
                 return preparedDishService.getAll();
         }
 
-        @PostMapping("/get_orders_for_chef")
+        @PostMapping("/chef/get_orders_today")
         @ResponseBody
-        public DataTablesOutputDTOCollectionWrapper getOrdersForChef() throws JsonProcessingException {
+        public DataTablesOutputDTOCollectionWrapper getOrdersForChef() {
                 DataTablesOutputDTOCollectionWrapper data = new DataTablesOutputDTOCollectionWrapper();
                 data.setData(preparedDishService.toJSON(preparedDishService.getAllOrdersForChef()));
-                ObjectMapper mapper = new ObjectMapper();
-                logger.info("Orders for chef view: "+mapper.writeValueAsString(data));
-                return data;
-        }
-
-        @GetMapping("/get_orders_prepared_dishes")
-        @ResponseBody
-        public DataTablesOutputDTOCollectionWrapper getOrdersPreparedDishes(@RequestParam int orderId) throws JsonProcessingException {
-                DataTablesOutputDTOCollectionWrapper data = new DataTablesOutputDTOCollectionWrapper();
-                Order order = orderService.getById(orderId);
-                data.setData(preparedDishService.toJSON(order));
-                ObjectMapper mapper = new ObjectMapper();
-                logger.info("Order's prepared dishes: "+mapper.writeValueAsString(data));
+                logger.info("Orders for chef view: "+data);
                 return data;
         }
 
@@ -72,12 +59,22 @@ public class PreparedDishController {
                 return preparedDishService.getAllChefToday(chefId);
         }
 
-        @GetMapping("/confirm_dish_prepared")
+        @GetMapping("/chef/get_orders_prepared_dishes")
+        @ResponseBody
+        public DataTablesOutputDTOCollectionWrapper getOrdersPreparedDishes(@RequestParam int orderId) {
+                DataTablesOutputDTOCollectionWrapper data = new DataTablesOutputDTOCollectionWrapper();
+                Order order = orderService.getById(orderId);
+                data.setData(preparedDishService.toJSON(order));
+                logger.info("Order's prepared dishes: "+data);
+                return data;
+        }
+
+        @GetMapping("/chef/confirm_dish_prepared")
         public String confirmDishPrepared(@RequestParam int dishId, @RequestParam int quantity, @RequestParam int orderId) {
                 /*Authentication auth = SecurityContextHolder.getContext().getAuthentication();
                 Employee userDetails = (Employee) auth.getPrincipal();*/
                 int chefId = 1; //userDetails.getId();
                 preparedDishService.confirmDishPrepared(dishId, quantity, orderId, chefId);
-                return "redirect:/cook/prepared_dishes";
+                return "redirect:/chef/prepared_dishes";
         }
 }

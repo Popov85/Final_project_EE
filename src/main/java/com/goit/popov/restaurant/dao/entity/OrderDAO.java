@@ -20,7 +20,7 @@ public interface OrderDAO extends GenericDAO<Order> {
         long count();
         long countWaiter(Waiter waiter);
         List<Order> getAll(DataTablesInputExtendedDTO dt);
-
+        List<Order> getAllToday();
         List<Order> getAllWaiterToday(int waiterId);
         List<Order> getAllWaiterArchive(int waiterId, DataTablesInputExtendedDTO dt);
 }

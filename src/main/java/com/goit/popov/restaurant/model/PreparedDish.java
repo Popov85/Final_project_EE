@@ -78,30 +78,6 @@ public class PreparedDish {
         }
 
         @Override
-        public boolean equals(Object o) {
-                if (this == o) return true;
-                if (o == null || getClass() != o.getClass()) return false;
-
-                PreparedDish that = (PreparedDish) o;
-
-                if (id != that.id) return false;
-                if (!dish.equals(that.dish)) return false;
-                if (!chef.equals(that.chef)) return false;
-                return order.equals(that.order);
-
-        }
-
-        @Override
-        public int hashCode() {
-                int result = id;
-                result = 31 * result + dish.hashCode();
-                result = 31 * result + chef.hashCode();
-                result = 31 * result + order.hashCode();
-                result = 31 * result + ((whenPrepared == null) ? 0 : whenPrepared.hashCode());
-                return result;
-        }
-
-        @Override
         public String toString() {
                 return "PreparedDish{" +
                         "id=" + id +

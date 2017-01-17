@@ -10,7 +10,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TemporalType;
@@ -51,7 +50,6 @@ public class OrderDAOImplJPA implements OrderDAO {
         public Order getById(int id) {
                 return sessionFactory.getCurrentSession().get(Order.class, id);
         }
-
 
         @Override
         public void delete(Order order) {
@@ -128,6 +126,18 @@ public class OrderDAOImplJPA implements OrderDAO {
                 return sessionFactory.getCurrentSession().createQuery("select o from Order o where o.waiter = :waiter"+
                         " and o.openedTimeStamp >= :today")
                         .setParameter("waiter", waiter)
+                        .setParameter("today", today, TemporalType.DATE)
+                        .list();
+        }
+
+        @Override
+        public List<Order> getAllToday() {
+                Calendar today = Calendar.getInstance();
+                today.set(Calendar.HOUR_OF_DAY, 0);
+                today.set(Calendar.MINUTE, 0);
+                today.set(Calendar.SECOND, 0);
+                return sessionFactory.getCurrentSession().createQuery("select o from Order o where "+
+                        "o.openedTimeStamp >= :today")
                         .setParameter("today", today, TemporalType.DATE)
                         .list();
         }
