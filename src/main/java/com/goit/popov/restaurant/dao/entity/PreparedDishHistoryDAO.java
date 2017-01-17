@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by Andrey on 10/14/2016.
  */
-public interface PreparedDishHistoryDAO {
+public interface PreparedDishHistoryDAO extends GenericDAO<PreparedDish>  {
         int addPreparedDish(PreparedDish dish);
         List<PreparedDish> getAll();
         List<Dish> getAll(Order order);
@@ -16,4 +16,5 @@ public interface PreparedDishHistoryDAO {
         long getPreparedDishesQuantity(Order order);
         long getPreparedDishesQuantity(Dish dish, Order order);
         List<Order> getAllOrderForChef();
+        void confirmDishPrepared(PreparedDish preparedDish, int quantity) throws InterruptedException;
 }

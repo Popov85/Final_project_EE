@@ -11,6 +11,7 @@ import com.goit.popov.restaurant.service.dataTables.DataTablesObjectToJSONConver
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +24,15 @@ public class PreparedDishService implements DataTablesListToJSONConvertible<Orde
 
         @Autowired
         private PreparedDishHistoryDAO preparedDishDAO;
+
+        @Autowired
+        private OrderService orderService;
+
+        @Autowired
+        private DishService dishService;
+
+        @Autowired
+        private ChefService chefService;
 
         public List<PreparedDish> getAll() {
                 return preparedDishDAO.getAll();
@@ -54,9 +64,8 @@ public class PreparedDishService implements DataTablesListToJSONConvertible<Orde
         }
 
         private boolean isFulfilled(Order order) {
-                logger.info("Order #: "+order.getId());
-                logger.info("Expected quantity: "+order.getDishesQuantity());
-                logger.info("Actual quantity: "+preparedDishDAO.getPreparedDishesQuantity(order));
+                logger.info("Order #: "+order.getId()+"Expected: "+order.getDishesQuantity()+" - "+
+                        preparedDishDAO.getPreparedDishesQuantity(order)+": Actual");
                 return order.getDishesQuantity()==preparedDishDAO.getPreparedDishesQuantity(order);
         }
 
@@ -77,10 +86,24 @@ public class PreparedDishService implements DataTablesListToJSONConvertible<Orde
         }
 
         private boolean isPrepared(Dish dish, Order order) {
-                logger.info("Order #: "+order.getId()+ "/ Dish #: "+dish.getId());
-                logger.info("Expected quantity: "+order.getDishesQuantity(dish));
-                logger.info("Actual quantity: "+preparedDishDAO.getPreparedDishesQuantity(dish, order));
+                logger.info("Order #: "+order.getId()+ "/ Dish #: "+dish.getId()+
+                        "Expected: "+order.getDishesQuantity(dish)+" - "+preparedDishDAO.getPreparedDishesQuantity(dish, order)+": Actual");
                 return order.getDishesQuantity(dish)==preparedDishDAO.getPreparedDishesQuantity(dish, order);
         }
 
+        public void confirmDishPrepared(int dishId, int quantity, int orderId, int chefId) {
+                Dish dish = dishService.getById(dishId);
+                Order order = orderService.getById(orderId);
+                Chef chef = (Chef) chefService.getEmployeeById(chefId);
+                PreparedDish preparedDish = new PreparedDish();
+                preparedDish.setChef(chef);
+                preparedDish.setDish(dish);
+                preparedDish.setOrder(order);
+                try {
+                        preparedDishDAO.confirmDishPrepared(preparedDish, quantity);
+                } catch (InterruptedException e) {
+                        throw new RuntimeException();
+                }
+
+        }
 }

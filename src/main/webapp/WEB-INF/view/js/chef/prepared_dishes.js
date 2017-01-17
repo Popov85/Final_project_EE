@@ -3,25 +3,26 @@
  */
 $(document).ready(function () {
     var table = $('#ordsTable').DataTable({
-        "ajax" : {
+        "ajax": {
             "url": "/get_orders_for_chef",
             "type": "POST",
             "dataType": "json"
         },
         columnDefs: [
-            { "width": "5%", "targets": 0 },
-            { "width": "30%", "targets": 1 },
-            { "width": "40%", "targets": 2 },
-            { "width": "10%", "targets": 5 }
+            {"width": "5%", "targets": 0},
+            {"width": "30%", "targets": 1},
+            {"width": "40%", "targets": 2},
+            {"width": "10%", "targets": 5}
         ],
         columns: [
-            { "data": "id", "name": "id",  "title": "id", "visible": true},
-            { "data": "waiter", "name": "waiter", "title": "waiter"},
-            { "data": "openedTimeStamp", "name": "openedTimeStamp", "title": "opened time"},
-            { "data": "dishes", "name": "dishes quantity", "title": "dishes quantity"},
-            { "data": "isFulfilled", "name": "isFulfilled", "title": "isFulfilled"},
+            {"data": "id", "name": "id", "title": "id", "visible": true},
+            {"data": "waiter", "name": "waiter", "title": "waiter"},
+            {"data": "openedTimeStamp", "name": "openedTimeStamp", "title": "opened time"},
+            {"data": "dishes", "name": "dishes quantity", "title": "dishes quantity"},
+            {"data": "isFulfilled", "name": "isFulfilled", "title": "isFulfilled"},
 
-            { "data": null, "sortable": false, "render": function(){
+            {
+                "data": null, "sortable": false, "render": function () {
                 return '<button class="btn btn-default">Details</button>';
             }
             }
@@ -31,7 +32,6 @@ $(document).ready(function () {
     // Onclick on a table row
     $('#ordsTable tbody').on('click', 'button', function () {
         var data = table.row($(this).parents('tr')).data();
-        console.log("id: "+data.id);
         $('#orderId').text(data.id);
         var table2 = $('#dishesTable').DataTable()
             .ajax.url(
@@ -44,18 +44,25 @@ $(document).ready(function () {
     $('#dishesTable').DataTable({
         bLengthChange: false,
         columnDefs: [
-            { "width": "5%", "targets": 0 },
-            { "width": "50%", "targets": 1 },
-            { "width": "10%", "targets": 4 }
+            {"width": "5%", "targets": 0},
+            {"width": "50%", "targets": 1},
+            {"width": "10%", "targets": 4}
         ],
         columns: [
-            { "data": "id", "name": "id",  "title": "id", "visible": true},
-            { "data": "dish", "name": "dish", "title": "dish"},
-            { "data": "quantity", "name": "quantity", "title": "quantity"},
-            { "data": "isPrepared", "name": "isPrepared", "title": "isPrepared"},
+            {"data": "id", "name": "id", "title": "id", "visible": true},
+            {"data": "dish", "name": "dish", "title": "dish"},
+            {"data": "quantity", "name": "quantity", "title": "quantity"},
+            {"data": "isPrepared", "name": "isPrepared", "title": "isPrepared"},
 
-            { "data": null, "sortable": false, "render": function(data){
-                return '<a href="/confirm_dish_prepared?id=' + data.id + '"><input type="button" class="btn btn-default" value="Confirm"/></a>';
+            {
+                "data": null, "sortable": false, "render": function (data) {
+                console.log(data.isPrepared);
+                if (data.isPrepared=="true") {
+                    return '<input type="button" class="btn btn-default" disabled="true" value="Confirm"/>';
+                } else {
+                    return '<a href="/confirm_dish_prepared?dishId=' + data.id+'&quantity='+data.quantity +'&orderId='+$('#orderId').text()+ '">' +
+                        '<input type="button" class="btn btn-default" value="Confirm"/></a>';
+                }
             }
             }
         ]

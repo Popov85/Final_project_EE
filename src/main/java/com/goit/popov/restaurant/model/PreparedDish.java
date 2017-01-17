@@ -45,6 +45,14 @@ public class PreparedDish {
                 this.id = id;
         }
 
+        public Date getWhenPrepared() {
+                return whenPrepared;
+        }
+
+        public void setWhenPrepared(Date whenPrepared) {
+                this.whenPrepared = whenPrepared;
+        }
+
         public Dish getDish() {
                 return dish;
         }
@@ -89,6 +97,7 @@ public class PreparedDish {
                 result = 31 * result + dish.hashCode();
                 result = 31 * result + chef.hashCode();
                 result = 31 * result + order.hashCode();
+                result = 31 * result + ((whenPrepared == null) ? 0 : whenPrepared.hashCode());
                 return result;
         }
 

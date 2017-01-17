@@ -7,12 +7,14 @@ import com.goit.popov.restaurant.model.Order;
 import com.goit.popov.restaurant.model.PreparedDish;
 import com.goit.popov.restaurant.service.OrderService;
 import com.goit.popov.restaurant.service.PreparedDishService;
+import com.goit.popov.restaurant.service.authentification.Employee;
 import com.goit.popov.restaurant.service.dataTables.DataTablesOutputDTOCollectionWrapper;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 /**
@@ -70,4 +72,12 @@ public class PreparedDishController {
                 return preparedDishService.getAllChefToday(chefId);
         }
 
+        @GetMapping("/confirm_dish_prepared")
+        public String confirmDishPrepared(@RequestParam int dishId, @RequestParam int quantity, @RequestParam int orderId) {
+                /*Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                Employee userDetails = (Employee) auth.getPrincipal();*/
+                int chefId = 1; //userDetails.getId();
+                preparedDishService.confirmDishPrepared(dishId, quantity, orderId, chefId);
+                return "redirect:/cook/prepared_dishes";
+        }
 }
