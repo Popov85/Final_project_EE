@@ -18,5 +18,6 @@ public interface StoreHouseDAO extends GenericDAO<StoreHouse> {
          */
         List<StoreHouse> getAllRunOut(double threshold);
 
-        void decreaseQuantity(Ingredient ingredient, Double quantity);
+        StoreHouse getByIngredient(Ingredient ingredient);
+
 }

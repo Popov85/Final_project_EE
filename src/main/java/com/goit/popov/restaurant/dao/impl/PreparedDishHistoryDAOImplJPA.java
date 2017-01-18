@@ -1,14 +1,13 @@
 package com.goit.popov.restaurant.dao.impl;
 
+import ch.qos.logback.classic.Logger;
 import com.goit.popov.restaurant.dao.entity.PreparedDishHistoryDAO;
-import com.goit.popov.restaurant.model.Chef;
-import com.goit.popov.restaurant.model.Dish;
-import com.goit.popov.restaurant.model.Order;
-import com.goit.popov.restaurant.model.PreparedDish;
-import com.goit.popov.restaurant.service.IngredientService;
+import com.goit.popov.restaurant.model.*;
+import com.goit.popov.restaurant.service.StockService;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +20,8 @@ import java.util.*;
 @Transactional
 public class PreparedDishHistoryDAOImplJPA implements PreparedDishHistoryDAO {
 
+        private static final Logger logger = (Logger) LoggerFactory.getLogger(PreparedDishHistoryDAOImplJPA.class);
+
         private SessionFactory sessionFactory;
 
         public void setSessionFactory(SessionFactory sessionFactory) {
@@ -28,7 +29,7 @@ public class PreparedDishHistoryDAOImplJPA implements PreparedDishHistoryDAO {
         }
 
         @Autowired
-        private IngredientService ingredientService;
+        private StockService stockService;
 
         @Override
         public int insert(PreparedDish preparedDish) {
@@ -113,10 +114,20 @@ public class PreparedDishHistoryDAOImplJPA implements PreparedDishHistoryDAO {
                 Transaction tx = session.beginTransaction();
                 for (PreparedDish preparedDish : preparedDishes) {
                         session.save(preparedDish);
-                        // Decrease ingredients TODO
-
+                        // Decrease ingredients in stock
+                        decreaseQuantity(preparedDish
+                                .getDish()
+                                .getIngredients());
                 }
                 tx.commit();
                 session.close();
+        }
+
+        private void decreaseQuantity(Map<Ingredient, Double> ingredients) {
+                for (Map.Entry<Ingredient, Double> entry : ingredients.entrySet()) {
+                        Ingredient ingredient = entry.getKey();
+                        Double quantityRequired = entry.getValue();
+                        stockService.decreaseQuantity(ingredient, quantityRequired);
+                }
         }
 }

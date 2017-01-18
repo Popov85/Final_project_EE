@@ -56,8 +56,7 @@ $(document).ready(function () {
 
             {
                 "data": null, "sortable": false, "render": function (data) {
-                console.log(data.isPrepared);
-                if (data.isPrepared=="true") {
+                if (data.isPrepared) {
                     return '<input type="button" class="btn btn-default" disabled="true" value="Confirm"/>';
                 } else {
                     return '<a href="/chef/confirm_dish_prepared?dishId=' + data.id+'&quantity='+data.quantity +'&orderId='+$('#orderId').text()+ '">' +

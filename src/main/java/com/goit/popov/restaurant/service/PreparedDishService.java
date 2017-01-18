@@ -44,6 +44,14 @@ public class PreparedDishService implements DataTablesListToJSONConvertible<Orde
                 return preparedDishDAO.getAllOrderForChef();
         }
 
+        public long getPreparedDishesQuantity(Dish dish, Order order) {
+                return preparedDishDAO.getPreparedDishesQuantity(dish, order);
+        }
+
+        public long getPreparedDishesQuantity(Order order) {
+                return preparedDishDAO.getPreparedDishesQuantity(order);
+        }
+
         @Override
         public ArrayNode toJSON(List<Order> orders) {
                 ObjectMapper mapper = new ObjectMapper();

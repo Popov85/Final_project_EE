@@ -8,6 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -58,6 +59,22 @@ public class Order {
         @MapKeyJoinColumn(name = "D_ID")
         @Column(name = "quantity")
         Map<Dish, Integer> dishes;
+
+
+
+
+        @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
+        private List<PreparedDish> preparedDishes;
+
+        public List<PreparedDish> getPreparedDishes() {
+                return preparedDishes;
+        }
+
+        public void setPreparedDishes(List<PreparedDish> preparedDishes) {
+                this.preparedDishes = preparedDishes;
+        }
+
+
 
         public int getId() {
                 return id;

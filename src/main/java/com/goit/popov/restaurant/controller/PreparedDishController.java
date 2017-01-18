@@ -1,8 +1,6 @@
 package com.goit.popov.restaurant.controller;
 
 import ch.qos.logback.classic.Logger;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goit.popov.restaurant.model.Order;
 import com.goit.popov.restaurant.model.PreparedDish;
 import com.goit.popov.restaurant.service.OrderService;
@@ -43,6 +41,13 @@ public class PreparedDishController {
                 return preparedDishService.getAll();
         }
 
+        @GetMapping("/get_all_orders_with_prepared_dishes")
+        @ResponseBody
+        public List<Order> getAllWithPreparedDishes() {
+                logger.info("List: "+orderService.getAllWithPreparedDishes());
+                return orderService.getAllWithPreparedDishes();
+        }
+
         @PostMapping("/chef/get_orders_today")
         @ResponseBody
         public DataTablesOutputDTOCollectionWrapper getOrdersForChef() {
@@ -71,9 +76,16 @@ public class PreparedDishController {
 
         @GetMapping("/chef/confirm_dish_prepared")
         public String confirmDishPrepared(@RequestParam int dishId, @RequestParam int quantity, @RequestParam int orderId) {
-                /*Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-                Employee userDetails = (Employee) auth.getPrincipal();*/
-                int chefId = 1; //userDetails.getId();
+                int chefId;
+                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                try {
+                        Employee userDetails = (Employee) auth.getPrincipal();
+                        chefId = userDetails.getId();
+                } catch (Exception e) {
+                        logger.error("ERROR: "+e.getMessage());
+                        chefId = 1;
+                }
+                logger.info("Proceeds... after possible exception caught: chefId= "+chefId);
                 preparedDishService.confirmDishPrepared(dishId, quantity, orderId, chefId);
                 return "redirect:/chef/prepared_dishes";
         }

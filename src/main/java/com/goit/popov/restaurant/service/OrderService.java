@@ -11,6 +11,8 @@ import com.goit.popov.restaurant.service.dataTables.*;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +33,12 @@ public class OrderService implements OrderServiceInterface,
 
         @Autowired
         private StoreHouseDAO storeHouseDAO;
+
+        @Autowired
+        private PreparedDishService preparedDishService;
+
+        @Autowired
+        private StockService stockService;
 
         public List<Order> getAll() {
                 return orderDAO.getAll();
@@ -76,6 +84,10 @@ public class OrderService implements OrderServiceInterface,
                 return orderDAO.getAllToday();
         }
 
+        public List<Order> getAllWithPreparedDishes() {
+                return orderDAO.getAllWithPreparedDishes();
+        }
+
         public Integer[] getTables() {
                 return Order.TABLE_SET;
         }
@@ -107,6 +119,15 @@ public class OrderService implements OrderServiceInterface,
         }
 
         @Transactional
+        public boolean isFulfilled(Order order) {
+                logger.info("Order #: "+order.getId()+"Expected: "+order.getDishesQuantity()+" - "+
+                        preparedDishService.getPreparedDishesQuantity(order)+": Actual");
+                return order.getDishesQuantity()==preparedDishService.getPreparedDishesQuantity(order);
+        }
+
+        // TODO include orders that have not ben fulfilled yet.
+        @Deprecated
+        @Transactional
         @Override
         public boolean validateIngredients(Map<Dish, Integer> dishes) {
                 for (Map.Entry<Dish, Integer> entry : dishes.entrySet()) {
@@ -120,6 +141,48 @@ public class OrderService implements OrderServiceInterface,
         }
 
         @Transactional
+        public boolean validateIngredients(Order o) {
+                List<Order> orders = new ArrayList<>();
+                orders.add(o);
+                // 0. Get Map of Stock state
+                Map<Ingredient, Double> stock = stockService.convertStockToMap(stockService.getAll());
+                // 1. Get all opened orders
+                // 2. Add them to the list
+                orders.addAll(1, getAllOpened());
+                for (Order order : orders) {
+                        // For each OPENED (NOT FULFILLED !!!) Order get map of dishes
+                        Map<Dish, Integer> dishes = order.getDishes();
+                        for (Map.Entry<Dish, Integer> entry : dishes.entrySet()) {
+                                Dish dish = entry.getKey();
+                                Integer quantityOrdered = entry.getValue();
+                                if (preparedDishService.getPreparedDishesQuantity(dish, order)==0) {
+                                        // For each NOT PREPARED order's dish get map of ingredients
+                                        Map<Ingredient, Double> ingredients = dish.getIngredients();
+                                        for (Map.Entry<Ingredient, Double> ingredient : ingredients.entrySet()) {
+                                                Double stockQuantity = stock.get(ingredient).doubleValue();
+                                                Double requiredQuantity = ingredient.getValue()*quantityOrdered;
+                                                // Detract the total value of ingredient required from stock
+                                                // if we get negative quantity - return false
+                                                // at the end return true
+                                                if ((stockQuantity - requiredQuantity) < 0) {
+                                                        return false;
+                                                }
+                                                stock.put(ingredient.getKey(), (stockQuantity - requiredQuantity));
+                                        }
+                                } else {
+                                        // TODO no idea what to do
+                                        // Several (but not ALL) identical dishes of Order have already been prepared
+                                        // Loop over those NOT prepared dishes
+                                        // Loop over ingredients of those not yet prepared dishes of an order
+                                }
+                        }
+                }
+                return true;
+        }
+
+        // TODO it is done in another place
+        @Deprecated
+        @Transactional
         @Override
         public void updateStock(Order order) {
                 Map<Dish, Integer> dishes = order.getDishes();
@@ -130,7 +193,7 @@ public class OrderService implements OrderServiceInterface,
                         for (Map.Entry<Ingredient, Double> ing : ingredients.entrySet()) {
                                 Ingredient ingredient = ing.getKey();
                                 Double quantityRequired = ing.getValue();
-                                storeHouseDAO.decreaseQuantity(ingredient, quantityRequired * quantityOrdered);
+                                stockService.decreaseQuantity(ingredient, quantityRequired * quantityOrdered);
                         }
                 }
         }

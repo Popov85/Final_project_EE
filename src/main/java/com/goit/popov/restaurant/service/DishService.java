@@ -48,6 +48,7 @@ public class DishService implements DishServiceInterface, DataTablesListToJSONCo
                 dishDAO.delete(dish);
         }
 
+        @Deprecated
         @Transactional
         @Override
         public boolean validateIngredients(int id, int number) {

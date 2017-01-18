@@ -23,4 +23,5 @@ public interface OrderDAO extends GenericDAO<Order> {
         List<Order> getAllToday();
         List<Order> getAllWaiterToday(int waiterId);
         List<Order> getAllWaiterArchive(int waiterId, DataTablesInputExtendedDTO dt);
+        List<Order> getAllWithPreparedDishes();
 }
