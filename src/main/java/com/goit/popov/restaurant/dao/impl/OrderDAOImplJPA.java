@@ -113,14 +113,14 @@ public class OrderDAOImplJPA implements OrderDAO {
 
         @Override
         public List<Order> getAll() {
-                return sessionFactory.getCurrentSession().createQuery("select o from Order o").list();
+                return sessionFactory.getCurrentSession().createQuery("select distinct o from Order o").list();
         }
 
 
         // TODO not working
         @Override
-        public List<Order> getAllWithPreparedDishes() {
-                return sessionFactory.getCurrentSession().createQuery("select o from Order o join o.preparedDishes").list();
+        public List<PreparedDish> getAllWithPreparedDishes() {
+                return sessionFactory.getCurrentSession().createQuery("select o.preparedDishes from Order o").list();
         }
 
         public List<Order> getAllWaiterToday(int waiterId) {

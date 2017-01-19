@@ -1,6 +1,7 @@
 package com.goit.popov.restaurant.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.Date;
@@ -33,6 +34,7 @@ public class PreparedDish {
         private Chef chef;
 
 
+        @JsonIgnore
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "ORD_ID")
         private Order order;
@@ -81,9 +83,9 @@ public class PreparedDish {
         public String toString() {
                 return "PreparedDish{" +
                         "id=" + id +
-                        ", dish=" + dish +
-                        ", chef=" + chef +
-                        ", order=" + order +
+                        ", dish=" + dish.getName() +
+                        ", chef=" + chef.getName() +
+                        ", order=" + order.getId() +
                         ", dateTime=" + whenPrepared +
                         '}';
         }

@@ -13,6 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,15 +39,22 @@ public class PreparedDishController {
         @GetMapping("/chef/archive/get_prepared_dishes")
         @ResponseBody
         public List<PreparedDish> getPreparedDishes() {
+                logger.info("Count: "+preparedDishService.count());
                 logger.info("List: "+preparedDishService.getAll());
                 return preparedDishService.getAll();
         }
 
         @GetMapping("/get_all_orders_with_prepared_dishes")
         @ResponseBody
-        public List<Order> getAllWithPreparedDishes() {
-                logger.info("List: "+orderService.getAllWithPreparedDishes());
-                return orderService.getAllWithPreparedDishes();
+        public Order getAllWithPreparedDishes() {
+                logger.info("Count orders: "+orderService.count());
+                Order order = orderService.getById(1);
+                logger.info("Order #1 : "+order);
+                logger.info("Order #1 isFulfilled : "+order.isFulfilled());
+                logger.info("Order #1 dishes : "+order.getDishesQuantity()+ " preparedDishes: "+order.getPreparedDishes().size());
+                /*logger.info("PreparedDish # for Order #1 : "+preparedDishService.getAllPreparedDish(1).size());
+                logger.info("List: "+orderService.getAllWithPreparedDishes().size());*/
+                return null;
         }
 
         @PostMapping("/chef/get_orders_today")

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.goit.popov.restaurant.controller.converters.OrderDeserializer;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -20,10 +22,8 @@ import java.util.Map;
 @Entity
 @Table(name = "orders")
 @JsonDeserialize(using = OrderDeserializer.class)
-//@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="jsonId")
 public class Order {
 
-        // Array of tables in the hall of the restaurant
         public static final Integer[] TABLE_SET = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 , 12, 13, 14, 15};
 
         @Id
@@ -51,7 +51,6 @@ public class Order {
         @JoinColumn(name = "EMP_ID")
         private Waiter waiter;
 
-
         @JsonIgnore
         @ElementCollection(fetch = FetchType.EAGER)
         @CollectionTable(name = "order_dish",
@@ -60,21 +59,19 @@ public class Order {
         @Column(name = "quantity")
         Map<Dish, Integer> dishes;
 
-
-
-
-        @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
+        @JsonIgnore
+        @OneToMany(fetch = FetchType.EAGER, mappedBy = "order")
+        @Fetch(FetchMode.SELECT)
         private List<PreparedDish> preparedDishes;
 
-        public List<PreparedDish> getPreparedDishes() {
-                return preparedDishes;
+        @Transient
+        private boolean isFulfilled;
+
+        public boolean isFulfilled() {
+                if (preparedDishes==null || preparedDishes.size()==0) return false;
+                if (getDishesQuantity()!=preparedDishes.size()) return false;
+                return true;
         }
-
-        public void setPreparedDishes(List<PreparedDish> preparedDishes) {
-                this.preparedDishes = preparedDishes;
-        }
-
-
 
         public int getId() {
                 return id;
@@ -132,7 +129,15 @@ public class Order {
                 this.closedTimeStamp = closedTimeStamp;
         }
 
-        public BigDecimal getTotal() {
+        public List<PreparedDish> getPreparedDishes() {
+                return preparedDishes;
+        }
+
+        public void setPreparedDishes(List<PreparedDish> preparedDishes) {
+                this.preparedDishes = preparedDishes;
+        }
+
+        public BigDecimal getTotalSum() {
                 BigDecimal total = new BigDecimal(0);
                 for (Map.Entry<Dish, Integer> entry : dishes.entrySet()) {
                         Dish dish = entry.getKey();
@@ -157,10 +162,6 @@ public class Order {
                         if (entry.getKey().equals(dish)) total+=entry.getValue();
                 }
                 return total;
-        }
-
-        public String getWaiterName() {
-                return this.waiter.getName();
         }
 
         @Override
@@ -196,8 +197,10 @@ public class Order {
                         ", openedTimeStamp=" + openedTimeStamp +
                         ", closedTimeStamp=" + closedTimeStamp +
                         ", table=" + table +
-                        ", waiter=" + waiter +
-                        ", dishes=" + dishes +
+                        ", waiter=" + waiter.getName() +
+                        ", dishes=" + dishes.size() +
+                        ", preparedDishes=" + preparedDishes.size() +
+                        ", isFulfilled=" + isFulfilled() +
                         '}';
         }
 }

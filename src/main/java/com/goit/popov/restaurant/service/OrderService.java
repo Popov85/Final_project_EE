@@ -11,7 +11,6 @@ import com.goit.popov.restaurant.service.dataTables.*;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -84,7 +83,7 @@ public class OrderService implements OrderServiceInterface,
                 return orderDAO.getAllToday();
         }
 
-        public List<Order> getAllWithPreparedDishes() {
+        public List<PreparedDish> getAllWithPreparedDishes() {
                 return orderDAO.getAllWithPreparedDishes();
         }
 
@@ -118,12 +117,6 @@ public class OrderService implements OrderServiceInterface,
                 return order.getDishes();
         }
 
-        @Transactional
-        public boolean isFulfilled(Order order) {
-                logger.info("Order #: "+order.getId()+"Expected: "+order.getDishesQuantity()+" - "+
-                        preparedDishService.getPreparedDishesQuantity(order)+": Actual");
-                return order.getDishesQuantity()==preparedDishService.getPreparedDishesQuantity(order);
-        }
 
         // TODO include orders that have not ben fulfilled yet.
         @Deprecated

@@ -10,7 +10,6 @@ import org.hibernate.Transaction;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.TemporalType;
 import java.util.*;
 
@@ -56,6 +55,11 @@ public class PreparedDishHistoryDAOImplJPA implements PreparedDishHistoryDAO {
                 return sessionFactory.getCurrentSession().createQuery("select distinct pd from PreparedDish pd").list();
         }
 
+        @Override
+        public long count() {
+                return (long) sessionFactory.getCurrentSession().createQuery("select count(pd) from PreparedDish pd").uniqueResult();
+        }
+
 
         @Override
         public int addPreparedDish(PreparedDish dish) {
@@ -65,6 +69,14 @@ public class PreparedDishHistoryDAOImplJPA implements PreparedDishHistoryDAO {
         @Override
         public List<Dish> getAll(Order order) {
                 return sessionFactory.getCurrentSession().createQuery("select distinct pd.dish from PreparedDish pd " +
+                        "where pd.order=:order")
+                        .setParameter("order", order)
+                        .list();
+        }
+
+        @Override
+        public List<PreparedDish> getAllPreparedDish(Order order) {
+                return sessionFactory.getCurrentSession().createQuery("select pd from PreparedDish pd " +
                         "where pd.order=:order")
                         .setParameter("order", order)
                         .list();

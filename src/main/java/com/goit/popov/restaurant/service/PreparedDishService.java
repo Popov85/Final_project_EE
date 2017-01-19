@@ -36,12 +36,21 @@ public class PreparedDishService implements DataTablesListToJSONConvertible<Orde
                 return preparedDishDAO.getAll();
         }
 
+        public long count() {
+                return preparedDishDAO.count();
+        }
+
         public List<PreparedDish> getAllChefToday(int chefId) {
                 return preparedDishDAO.getAllChefToday(chefId);
         }
 
         public List<Order> getAllOrdersForChef() {
                 return preparedDishDAO.getAllOrderForChef();
+        }
+
+        public List<PreparedDish> getAllPreparedDish(int orderId) {
+                Order order = orderService.getById(orderId);
+                return preparedDishDAO.getAllPreparedDish(order);
         }
 
         public long getPreparedDishesQuantity(Dish dish, Order order) {
@@ -59,20 +68,14 @@ public class PreparedDishService implements DataTablesListToJSONConvertible<Orde
                 for (Order order : orders) {
                         ObjectNode a = mapper.createObjectNode();
                         a.put("id", order.getId());
-                        a.put("waiter", order.getWaiterName());
+                        a.put("waiter", order.getWaiter().getName());
                         SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                         a.put("openedTimeStamp", sdfDate.format(order.getOpenedTimeStamp()));
                         a.put("dishes", order.getDishesQuantity());
-                        a.put("isFulfilled", isFulfilled(order));
+                        a.put("isFulfilled", order.isFulfilled());
                         ana.add(a);
                 }
                 return ana;
-        }
-
-        private boolean isFulfilled(Order order) {
-                logger.info("Order #: "+order.getId()+"Expected: "+order.getDishesQuantity()+" - "+
-                        preparedDishDAO.getPreparedDishesQuantity(order)+": Actual");
-                return order.getDishesQuantity()==preparedDishDAO.getPreparedDishesQuantity(order);
         }
 
         @Override
