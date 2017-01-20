@@ -75,8 +75,14 @@ public class PreparedDish {
                 this.chef = chef;
         }
 
+
         public void setOrder(Order order) {
                 this.order = order;
+        }
+
+        public boolean contains(Dish dish) {
+             if (this.dish.equals(dish)) return true;
+                return false;
         }
 
         @Override

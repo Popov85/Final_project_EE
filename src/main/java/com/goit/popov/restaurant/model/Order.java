@@ -9,9 +9,7 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Order class. A restaurant order is made by its visitors, it may contain many dishes
@@ -62,14 +60,16 @@ public class Order {
         @JsonIgnore
         @OneToMany(fetch = FetchType.EAGER, mappedBy = "order")
         @Fetch(FetchMode.SELECT)
-        private List<PreparedDish> preparedDishes;
-
-        @Transient
-        private boolean isFulfilled;
+        private Set<PreparedDish> preparedDishes;
 
         public boolean isFulfilled() {
-                if (preparedDishes==null || preparedDishes.size()==0) return false;
+                if (!hasPreparedDishes()) return false;
                 if (getDishesQuantity()!=preparedDishes.size()) return false;
+                return true;
+        }
+
+        public boolean hasPreparedDishes() {
+                if (preparedDishes==null || preparedDishes.size()==0) return false;
                 return true;
         }
 
@@ -87,6 +87,9 @@ public class Order {
 
         public Waiter getWaiter() {
                 return waiter;
+        }
+        public String getWaiterName() {
+                return waiter.getName();
         }
 
         public Map<Dish, Integer> getDishes() {
@@ -129,11 +132,11 @@ public class Order {
                 this.closedTimeStamp = closedTimeStamp;
         }
 
-        public List<PreparedDish> getPreparedDishes() {
+        public Set<PreparedDish> getPreparedDishes() {
                 return preparedDishes;
         }
 
-        public void setPreparedDishes(List<PreparedDish> preparedDishes) {
+        public void setPreparedDishes(Set<PreparedDish> preparedDishes) {
                 this.preparedDishes = preparedDishes;
         }
 
@@ -160,6 +163,40 @@ public class Order {
                 int total = 0;
                 for (Map.Entry<Dish, Integer> entry : dishes.entrySet()){
                         if (entry.getKey().equals(dish)) total+=entry.getValue();
+                }
+                return total;
+        }
+
+        public Map<Dish, Integer> getNotPreparedDishes() {
+                Map<Dish, Integer> notPreparedDishes = new HashMap<>();
+                if (isFulfilled()) return notPreparedDishes;
+                for (Map.Entry<Dish, Integer> dish : dishes.entrySet()){
+                        Dish nextDish = dish.getKey();
+                        Integer nextQuantity = dish.getValue();
+                        if (!contains(preparedDishes, nextDish)) {
+                                notPreparedDishes.put(nextDish, nextQuantity);
+                        } else {// Count down how many such Dishes (has not been prepared yet)
+                                int counter = nextQuantity;
+                                for (PreparedDish preparedDish : preparedDishes) {
+                                        if (preparedDish.contains(nextDish)) counter--;
+                                }
+                                if (counter!=0) notPreparedDishes.put(nextDish, counter);
+                        }
+                }
+                return notPreparedDishes;
+        }
+
+        private boolean contains(Set<PreparedDish> preparedDishes, Dish dish) {
+                for (PreparedDish preparedDish : preparedDishes) {
+                        if (preparedDish.contains(dish)) return true;
+                }
+                return false;
+        }
+
+        public int getQuantityOutOfMap(Map<?, Integer> items) {
+                int total = 0;
+                for (Integer value : items.values()) {
+                        total+=value;
                 }
                 return total;
         }
@@ -191,16 +228,18 @@ public class Order {
 
         @Override
         public String toString() {
-                return "Order{" +
-                        "id=" + id +
-                        ", isOpened=" + isOpened +
-                        ", openedTimeStamp=" + openedTimeStamp +
-                        ", closedTimeStamp=" + closedTimeStamp +
-                        ", table=" + table +
-                        ", waiter=" + waiter.getName() +
-                        ", dishes=" + dishes.size() +
-                        ", preparedDishes=" + preparedDishes.size() +
-                        ", isFulfilled=" + isFulfilled() +
+                return "\n Order{" +
+                        "id=" + id +"\n"+
+                        "isOpened=" + isOpened +"\n"+
+                        "openedTimeStamp=" + openedTimeStamp +"\n"+
+                        "closedTimeStamp=" + closedTimeStamp +"\n"+
+                        "table=" + table +"\n"+
+                        "waiter=" + waiter.getName() +"\n"+
+                        "dishes=" + getDishesQuantity() +"\n"+
+                        "preparedDishes=" + preparedDishes.size() +"\n"+
+                        "isFulfilled=" + isFulfilled() +"\n"+
+                        "notPrepared=" + getQuantityOutOfMap(getNotPreparedDishes()) +"\n"+
+                        "readiness=" + preparedDishes.size() / (float) getQuantityOutOfMap(getDishes())*100+" %" +"\n"+
                         '}';
         }
 }

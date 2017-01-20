@@ -134,42 +134,62 @@ public class OrderService implements OrderServiceInterface,
         }
 
         @Transactional
-        public boolean validateIngredients(Order o) {
+        public boolean validateOrder(Order o) {
+
                 List<Order> orders = new ArrayList<>();
                 orders.add(o);
                 // 0. Get Map of Stock state
                 Map<Ingredient, Double> stock = stockService.convertStockToMap(stockService.getAll());
+                System.out.println("Current stock:");
+                stockService.printStockState(stock);
                 // 1. Get all opened orders
                 // 2. Add them to the list
                 orders.addAll(1, getAllOpened());
+                System.out.println("orders size: "+orders.size());
+                // Get all opened orders
                 for (Order order : orders) {
                         // For each OPENED (NOT FULFILLED !!!) Order get map of dishes
-                        Map<Dish, Integer> dishes = order.getDishes();
-                        for (Map.Entry<Dish, Integer> entry : dishes.entrySet()) {
-                                Dish dish = entry.getKey();
-                                Integer quantityOrdered = entry.getValue();
-                                if (preparedDishService.getPreparedDishesQuantity(dish, order)==0) {
-                                        // For each NOT PREPARED order's dish get map of ingredients
-                                        Map<Ingredient, Double> ingredients = dish.getIngredients();
-                                        for (Map.Entry<Ingredient, Double> ingredient : ingredients.entrySet()) {
-                                                Double stockQuantity = stock.get(ingredient).doubleValue();
-                                                Double requiredQuantity = ingredient.getValue()*quantityOrdered;
-                                                // Detract the total value of ingredient required from stock
-                                                // if we get negative quantity - return false
-                                                // at the end return true
-                                                if ((stockQuantity - requiredQuantity) < 0) {
-                                                        return false;
-                                                }
-                                                stock.put(ingredient.getKey(), (stockQuantity - requiredQuantity));
-                                        }
+                        if (!order.isFulfilled()) {
+                                // 1. 0 preparedDishes
+                                // 2. Some preparedDishes
+                                Map<Dish, Integer> dishes;
+                                if (!order.hasPreparedDishes()) {
+                                        dishes = order.getDishes();
                                 } else {
-                                        // TODO no idea what to do
-                                        // Several (but not ALL) identical dishes of Order have already been prepared
-                                        // Loop over those NOT prepared dishes
-                                        // Loop over ingredients of those not yet prepared dishes of an order
+                                        dishes = order.getNotPreparedDishes();
                                 }
+                                // For each NOT PREPARED order's dish get map of ingredients
+                                if (!validateDishes(stock, dishes)) return false;
                         }
                 }
+                System.out.println("Updated stock:");
+                stockService.printStockState(stock);
+                return true;
+        }
+
+        private boolean validateDishes(Map<Ingredient, Double> stock, Map<Dish, Integer> dishes) {
+                for (Map.Entry<Dish, Integer> entry : dishes.entrySet()) {
+                        Dish nextDish = entry.getKey();
+                        Integer nextQuantity = entry.getValue();
+                        Map<Ingredient, Double> ingredients = nextDish.getIngredients();
+                        for (Map.Entry<Ingredient, Double> ingredient : ingredients.entrySet()) {
+                                if (!validateIngredients(stock, ingredient, nextQuantity)) return false;
+                        }
+                }
+                return true;
+        }
+
+        private boolean validateIngredients(Map<Ingredient, Double> stock,
+                                            Map.Entry<Ingredient, Double> ingredient, Integer nextQuantity) {
+                Double stockQuantity = stock.get(ingredient.getKey()).doubleValue();
+                Double requiredQuantity = ingredient.getValue() * nextQuantity;
+                // Detract the total value of ingredient required from stock
+                // if we get negative quantity - return false
+                // at the end return true
+                if (stockQuantity - requiredQuantity < 0) {
+                        return false;
+                }
+                stock.put(ingredient.getKey(), (stockQuantity - requiredQuantity));
                 return true;
         }
 

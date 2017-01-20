@@ -41,4 +41,10 @@ public class StockService {
                 }
                 return stock;
         }
+
+        public void printStockState(Map<Ingredient, Double> stock) {
+                for (Map.Entry<Ingredient, Double> ingredient : stock.entrySet()) {
+                        System.out.println("Ingredient: "+ingredient.getKey().getName()+" : "+ingredient.getValue());
+                }
+        }
 }

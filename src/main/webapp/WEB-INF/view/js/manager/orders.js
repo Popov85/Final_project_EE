@@ -13,7 +13,7 @@ $(document).ready(function () {
             { "data": "closedTimeStamp", "name": "closedTimeStamp", "title": "closedTimeStamp"},
             { "data": "table", "name": "table", "title": "table"},
             { "data": "dishesQuantity", "title": "dishes", "sortable": false, "searchable": false},
-            { "data": "total", "title": "total", "sortable": false},
+            { "data": "totalSum", "title": "total", "sortable": false},
             { "data": "waiterName", "name": "waiter", "title": "waiter"},
 
             { "data": null, "sortable": false, "render": function(data){

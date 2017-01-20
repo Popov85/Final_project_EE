@@ -60,9 +60,9 @@ public class StoreHouse implements Serializable {
 
         @Override
         public String toString() {
-                return "StoreHouse{" +
-                        "ingredient=" + ingredient +
-                        ", quantity='" + quantity + '\'' +
+                return "\n StoreHouse{" +
+                        "ingredient=" + ingredient.getName() +"\n" +
+                        "quantity='" + quantity + "\n" +
                         '}';
         }
 }

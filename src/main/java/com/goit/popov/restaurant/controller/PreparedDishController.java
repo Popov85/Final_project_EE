@@ -14,7 +14,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,15 +45,13 @@ public class PreparedDishController {
 
         @GetMapping("/get_all_orders_with_prepared_dishes")
         @ResponseBody
-        public Order getAllWithPreparedDishes() {
-                logger.info("Count orders: "+orderService.count());
+        public List<Order> getAllWithPreparedDishes() {
                 Order order = orderService.getById(1);
                 logger.info("Order #1 : "+order);
-                logger.info("Order #1 isFulfilled : "+order.isFulfilled());
-                logger.info("Order #1 dishes : "+order.getDishesQuantity()+ " preparedDishes: "+order.getPreparedDishes().size());
-                /*logger.info("PreparedDish # for Order #1 : "+preparedDishService.getAllPreparedDish(1).size());
-                logger.info("List: "+orderService.getAllWithPreparedDishes().size());*/
-                return null;
+                logger.info("validateOrder: "+orderService.validateOrder(order));
+                /*List<Order> orders = orderService.getAll();
+                logger.info("Orders: "+orders);*/
+                return orderService.getAll();
         }
 
         @PostMapping("/chef/get_orders_today")

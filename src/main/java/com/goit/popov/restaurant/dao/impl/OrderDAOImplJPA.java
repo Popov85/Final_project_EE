@@ -94,7 +94,7 @@ public class OrderDAOImplJPA implements OrderDAO {
 
         @Override
         public List<Order> getAllOpened() {
-                Query query = sessionFactory.getCurrentSession().createQuery("select o from Order o" +
+                Query query = sessionFactory.getCurrentSession().createQuery("select o from Order o " +
                         "where o.isOpened = true");
                 return query.list();
         }
@@ -113,7 +113,7 @@ public class OrderDAOImplJPA implements OrderDAO {
 
         @Override
         public List<Order> getAll() {
-                return sessionFactory.getCurrentSession().createQuery("select distinct o from Order o").list();
+                return sessionFactory.getCurrentSession().createQuery("select distinct o from Order o order by o.id").list();
         }
 
 
