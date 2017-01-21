@@ -88,6 +88,7 @@ public class Order {
         public Waiter getWaiter() {
                 return waiter;
         }
+
         public String getWaiterName() {
                 return waiter.getName();
         }
@@ -167,9 +168,11 @@ public class Order {
                 return total;
         }
 
+        @JsonIgnore
         public Map<Dish, Integer> getNotPreparedDishes() {
                 Map<Dish, Integer> notPreparedDishes = new HashMap<>();
                 if (isFulfilled()) return notPreparedDishes;
+                if (!hasPreparedDishes()) return dishes;
                 for (Map.Entry<Dish, Integer> dish : dishes.entrySet()){
                         Dish nextDish = dish.getKey();
                         Integer nextQuantity = dish.getValue();
@@ -234,12 +237,12 @@ public class Order {
                         "openedTimeStamp=" + openedTimeStamp +"\n"+
                         "closedTimeStamp=" + closedTimeStamp +"\n"+
                         "table=" + table +"\n"+
-                        "waiter=" + waiter.getName() +"\n"+
+                        "waiter=" + ((waiter!=null) ? waiter.getName() : null) +"\n"+
                         "dishes=" + getDishesQuantity() +"\n"+
-                        "preparedDishes=" + preparedDishes.size() +"\n"+
+                        "preparedDishes=" + ((preparedDishes!=null) ? preparedDishes.size() : null) +"\n"+
                         "isFulfilled=" + isFulfilled() +"\n"+
                         "notPrepared=" + getQuantityOutOfMap(getNotPreparedDishes()) +"\n"+
-                        "readiness=" + preparedDishes.size() / (float) getQuantityOutOfMap(getDishes())*100+" %" +"\n"+
+                        "readiness=" + ((preparedDishes!=null) ? preparedDishes.size() / (float) getQuantityOutOfMap(dishes)*100+" %" : "0 %")+"\n"+
                         '}';
         }
 }

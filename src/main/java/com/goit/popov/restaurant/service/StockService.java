@@ -27,7 +27,7 @@ public class StockService {
                 Double quantityLeft = actualQuantity - quantityRequired;
                 storeHouse.setQuantity(quantityLeft);
                 storeHouseDAO.update(storeHouse);
-                logger.info("Ingredient: "+ingredient.getName()+"/ quantity left: "+quantityLeft);
+                logger.info("Decreased Ingredient: "+ingredient.getName()+"/ quantity left: "+quantityLeft);
         }
 
         public List<StoreHouse> getAll() {
@@ -42,9 +42,9 @@ public class StockService {
                 return stock;
         }
 
-        public void printStockState(Map<Ingredient, Double> stock) {
+        public void toStringStock(Map<Ingredient, Double> stock) {
                 for (Map.Entry<Ingredient, Double> ingredient : stock.entrySet()) {
-                        System.out.println("Ingredient: "+ingredient.getKey().getName()+" : "+ingredient.getValue());
+                        logger.info("Ingredient: "+ingredient.getKey().getName()+" : "+ingredient.getValue());
                 }
         }
 }

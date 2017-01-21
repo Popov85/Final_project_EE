@@ -46,7 +46,7 @@ public class DataTablesInputExtendedDTOHandlerMethodArgumentResolver implements 
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
-        logger.info("Map size is: "+columnSearch.size());
+        logger.info("Column search Map size is: "+columnSearch.size());
         DataTablesInputExtendedDTO dto = new DataTablesInputExtendedDTO();
         dto.setDraw(draw);
         dto.setStart(start);

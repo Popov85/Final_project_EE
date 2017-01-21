@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
     <title>Edit Order</title>
@@ -13,7 +13,12 @@
     <script src ="/js/edit_order.js"/>
 </head>
 <body>
-<h3 class="form-signin-heading" align="center">Edit Order</h3>
+<div th:if="${#authorization.expression('hasRole(''ROLE_WAITER'')')}">
+    <h3 class="form-signin-heading" align="center">Edit Order</h3>
+</div>
+<div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+    <h3 class="form-signin-heading" align="center">Order's details</h3>
+</div>
 <div class="container">
     <form id="newOrderForm" action="/edit_order" method="post"
           style="max-width: 500px; margin: 0 auto; font-size: larger;" onsubmit="return false;">
@@ -45,11 +50,18 @@
         </div>
         <div class="form-group">
             <br/>
-            <a href="/waiter/orders/today">
-                <input type="button" class="btn btn-default" value="Back>>"/>
-            </a>
-            <button class="btn btn-default" type="button" data-toggle="modal" data-target="#myModal">Add Dish</button>
-            <button class="btn btn-primary" type="submit">Confirm</button>
+            <div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+                <a href="/admin/orders">
+                    <input type="button" class="btn btn-default" value="Back>>"/>
+                </a>
+            </div>
+            <div sec:authorize="hasRole('ROLE_WAITER')">
+                <a href="/waiter/orders/today">
+                    <input type="button" class="btn btn-default" value="Back>>"/>
+                </a>
+                <button class="btn btn-default" type="button" data-toggle="modal" data-target="#myModal">Add Dish</button>
+                <button class="btn btn-primary" type="submit">Confirm</button>.
+            </div>
         </div>
 
         <div id = "feedback"></div>

@@ -45,7 +45,6 @@ public class StoreHouse implements Serializable {
 
                 if (Double.compare(that.quantity, quantity) != 0) return false;
                 return ingredient.equals(that.ingredient);
-
         }
 
         @Override

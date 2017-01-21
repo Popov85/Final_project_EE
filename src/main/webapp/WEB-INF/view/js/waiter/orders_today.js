@@ -12,7 +12,8 @@ $(document).ready(function () {
             { "data": "closedTimeStamp", "name": "closedTimeStamp", "title": "closedTimeStamp"},
             { "data": "table", "name": "table", "title": "table"},
             { "data": "dishesQuantity", "title": "dishes", "sortable": false},
-            { "data": "total", "title": "total", "sortable": false},
+            { "data": "totalSum", "title": "total", "sortable": false},
+            { "data": "fulfilled", "name": "fulfilled", "title": "isFulfilled"},
 
             { "data": null, "sortable": false, "render": function(data){
                 return '<a href="/edit_order?id=' + data.id + '"><input type="button" class="btn btn-default" value="Edit"/></a>';
@@ -25,7 +26,12 @@ $(document).ready(function () {
             },
 
             { "data": null, "sortable": false, "render": function(data){
-                return '<a href="/close_order?id=' + data.id + '"><input type="button" class="btn btn-default" value="Close"/></a>';
+                if (!data.fulfilled) {
+                    return '<input type="button" class="btn btn-default" disabled="true" value="Close"/>';
+                } else {
+                    return '<a href="/close_order?id=' + data.id + '"><input type="button" class="btn btn-default" value="Close"/></a>';
+                }
+
             }
             }
         ]

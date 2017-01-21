@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.goit.popov.restaurant.dao.entity.OrderDAO;
-import com.goit.popov.restaurant.dao.entity.StoreHouseDAO;
 import com.goit.popov.restaurant.model.*;
 import com.goit.popov.restaurant.service.dataTables.*;
+import org.hibernate.*;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,16 +25,10 @@ public class OrderService implements OrderServiceInterface,
         private static final Logger logger = (Logger) LoggerFactory.getLogger(OrderService.class);
 
         @Autowired
+        private SessionFactory sessionFactory;
+
+        @Autowired
         private OrderDAO orderDAO;
-
-        @Autowired
-        private DishService dishService;
-
-        @Autowired
-        private StoreHouseDAO storeHouseDAO;
-
-        @Autowired
-        private PreparedDishService preparedDishService;
 
         @Autowired
         private StockService stockService;
@@ -91,17 +85,6 @@ public class OrderService implements OrderServiceInterface,
                 return Order.TABLE_SET;
         }
 
-        @Transactional
-        @Override
-        public void closeOrder(int orderId) {
-                Order order = getById(orderId);
-                order.setOpened(false);
-                order.setClosedTimeStamp(new Date());
-                update(order);
-        }
-
-        @Transactional
-        @Override
         public long count() {
                 return orderDAO.count();
         }
@@ -110,60 +93,54 @@ public class OrderService implements OrderServiceInterface,
                 return orderDAO.countWaiter(waiter);
         }
 
-        @Transactional
         @Override
-        public Map<Dish, Integer> getDishes(int orderId) {
-                Order order = orderDAO.getById(orderId);
-                return order.getDishes();
+        public void closeOrder(int orderId) {
+                Order order = getById(orderId);
+                order.setOpened(false);
+                order.setClosedTimeStamp(new Date());
+                update(order);
         }
 
-
-        // TODO include orders that have not ben fulfilled yet.
-        @Deprecated
-        @Transactional
+        /**
+         * Algorithm:
+         * 1. Get Map copy of Stock state
+         * 2. Get all opened orders
+         * 3. Add them to the list
+         * 4. For each OPENED and NOT FULFILLED Order get map of dishes
+         * 5. Take into account partially done Orders
+         * 6. For each NOT PREPARED order's dish get map of ingredients
+         * 7. Detract the total value of ingredient required from stock
+         *    if we get negative quantity somewhere - return false
+         *    at the end return true
+         * @param o Order to be validated
+         * @return true if there is enough ingredients in stock, false - otherwise
+         */
         @Override
-        public boolean validateIngredients(Map<Dish, Integer> dishes) {
-                for (Map.Entry<Dish, Integer> entry : dishes.entrySet()) {
-                        Dish dish = entry.getKey();
-                        Integer quantityOrdered = entry.getValue();
-                        if (!this.dishService.validateIngredients(dish.getId(), quantityOrdered)) {
-                                return false;
-                        }
-                }
+        public synchronized boolean validateOrder(Order o) {
+                List<Order> orders = new ArrayList<>();
+                orders.add(o);
+                Map<Ingredient, Double> stock = stockService.convertStockToMap(stockService.getAll());
+                logger.info("Current stock:");
+                stockService.toStringStock(stock);
+                orders.addAll(1, getAllOpened());
+                if (!validateOrders(orders, stock)) return false;
+                logger.info("Updated stock:");
+                stockService.toStringStock(stock);
                 return true;
         }
 
-        @Transactional
-        public boolean validateOrder(Order o) {
-
-                List<Order> orders = new ArrayList<>();
-                orders.add(o);
-                // 0. Get Map of Stock state
-                Map<Ingredient, Double> stock = stockService.convertStockToMap(stockService.getAll());
-                System.out.println("Current stock:");
-                stockService.printStockState(stock);
-                // 1. Get all opened orders
-                // 2. Add them to the list
-                orders.addAll(1, getAllOpened());
-                System.out.println("orders size: "+orders.size());
-                // Get all opened orders
+        private boolean validateOrders(List<Order> orders, Map<Ingredient, Double> stock) {
                 for (Order order : orders) {
-                        // For each OPENED (NOT FULFILLED !!!) Order get map of dishes
                         if (!order.isFulfilled()) {
-                                // 1. 0 preparedDishes
-                                // 2. Some preparedDishes
                                 Map<Dish, Integer> dishes;
                                 if (!order.hasPreparedDishes()) {
                                         dishes = order.getDishes();
                                 } else {
                                         dishes = order.getNotPreparedDishes();
                                 }
-                                // For each NOT PREPARED order's dish get map of ingredients
                                 if (!validateDishes(stock, dishes)) return false;
                         }
                 }
-                System.out.println("Updated stock:");
-                stockService.printStockState(stock);
                 return true;
         }
 
@@ -183,32 +160,9 @@ public class OrderService implements OrderServiceInterface,
                                             Map.Entry<Ingredient, Double> ingredient, Integer nextQuantity) {
                 Double stockQuantity = stock.get(ingredient.getKey()).doubleValue();
                 Double requiredQuantity = ingredient.getValue() * nextQuantity;
-                // Detract the total value of ingredient required from stock
-                // if we get negative quantity - return false
-                // at the end return true
-                if (stockQuantity - requiredQuantity < 0) {
-                        return false;
-                }
+                if (stockQuantity - requiredQuantity < 0) return false;
                 stock.put(ingredient.getKey(), (stockQuantity - requiredQuantity));
                 return true;
-        }
-
-        // TODO it is done in another place
-        @Deprecated
-        @Transactional
-        @Override
-        public void updateStock(Order order) {
-                Map<Dish, Integer> dishes = order.getDishes();
-                for (Map.Entry<Dish, Integer> entry : dishes.entrySet()) {
-                        Dish dish = entry.getKey();
-                        Integer quantityOrdered = entry.getValue();
-                        Map<Ingredient, Double> ingredients = dish.getIngredients();
-                        for (Map.Entry<Ingredient, Double> ing : ingredients.entrySet()) {
-                                Ingredient ingredient = ing.getKey();
-                                Double quantityRequired = ing.getValue();
-                                stockService.decreaseQuantity(ingredient, quantityRequired * quantityOrdered);
-                        }
-                }
         }
 
         @Override

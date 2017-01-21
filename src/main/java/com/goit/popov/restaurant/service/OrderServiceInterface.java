@@ -10,9 +10,6 @@ import java.util.Map;
  */
 public interface OrderServiceInterface {
 
-        void updateStock(Order order);
-        Map<Dish, Integer> getDishes(int orderId);
-        boolean validateIngredients(Map<Dish, Integer> dishes);
         void closeOrder(int orderId);
-        long count();
+        boolean validateOrder(Order o);
 }

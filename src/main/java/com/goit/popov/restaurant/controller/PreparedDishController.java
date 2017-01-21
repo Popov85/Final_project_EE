@@ -49,8 +49,6 @@ public class PreparedDishController {
                 Order order = orderService.getById(1);
                 logger.info("Order #1 : "+order);
                 logger.info("validateOrder: "+orderService.validateOrder(order));
-                /*List<Order> orders = orderService.getAll();
-                logger.info("Orders: "+orders);*/
                 return orderService.getAll();
         }
 

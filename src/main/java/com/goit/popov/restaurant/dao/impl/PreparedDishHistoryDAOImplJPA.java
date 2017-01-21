@@ -120,6 +120,10 @@ public class PreparedDishHistoryDAOImplJPA implements PreparedDishHistoryDAO {
                         .list();
         }
 
+        /**
+         * @see "http://docs.jboss.org/hibernate/orm/3.5/javadocs/org/hibernate/Session.html"
+         * @param preparedDishes
+         */
         @Override
         public void confirmDishPrepared(Set<PreparedDish> preparedDishes){
                 Session session = sessionFactory.openSession();
@@ -133,6 +137,25 @@ public class PreparedDishHistoryDAOImplJPA implements PreparedDishHistoryDAO {
                 }
                 tx.commit();
                 session.close();
+
+                /*try {
+                        tx = session.beginTransaction();
+                        for (PreparedDish preparedDish : preparedDishes) {
+                                session.save(preparedDish);
+                                // Decrease ingredients in stock
+                                decreaseQuantity(preparedDish
+                                        .getDish()
+                                        .getIngredients());
+                        }
+                        tx.commit();
+                }
+                catch (Exception e) {
+                        if (tx!=null) tx.rollback();
+                        throw e;
+                }
+                finally {
+                        session.close();
+                }*/
         }
 
         private void decreaseQuantity(Map<Ingredient, Double> ingredients) {

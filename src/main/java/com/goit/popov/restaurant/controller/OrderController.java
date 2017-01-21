@@ -55,9 +55,9 @@ public class OrderController {
         @ResponseBody
         public DataTablesOutputDTOCollectionWrapper getOrdersDishes(@RequestParam Integer orderId) throws JsonProcessingException {
                 DataTablesOutputDTOCollectionWrapper data = new DataTablesOutputDTOCollectionWrapper();
-                data.setData(orderService.toJSON(orderService.getDishes(orderId)));
-                ObjectMapper mapper = new ObjectMapper();
-                logger.info("Dishes of this Order : "+mapper.writeValueAsString(data));
+                data.setData(orderService.toJSON(orderService.getById(orderId).getDishes()));
+                /*ObjectMapper mapper = new ObjectMapper();
+                logger.info("Dishes of this Order : "+mapper.writeValueAsString(data));*/
                 return data;
         }
 
@@ -103,10 +103,10 @@ public class OrderController {
         @PostMapping(value = "/get_orders")
         @ResponseBody
         public DataTablesOutputDTOUniversal<Order> getOrders(DataTablesInputExtendedDTO input) throws JsonProcessingException {
-            logger.info("Input: " + input);
+            //logger.info("Input: " + input);
             DataTablesOutputDTOUniversal<Order> data = orderService.getAll(input);
             ObjectMapper mapper = new ObjectMapper();
-            logger.info("Output: " + mapper.writeValueAsString(data));
+            //logger.info("Output: " + mapper.writeValueAsString(data));
             return data;
         }
 
@@ -127,10 +127,10 @@ public class OrderController {
         @ResponseBody
         public DataTablesOutputDTOUniversal<Order> getWaiterOrdersArchive(@RequestParam int waiterId,
                                                                           DataTablesInputExtendedDTO input) throws JsonProcessingException {
-                logger.info("Input: " + input);
+                //logger.info("Input: " + input);
                 DataTablesOutputDTOUniversal<Order> data = orderService.getAllWaiterArchive(input, waiterId);
-                ObjectMapper mapper = new ObjectMapper();
-                logger.info("Output: " + mapper.writeValueAsString(data));
+                //ObjectMapper mapper = new ObjectMapper();
+                //logger.info("Output: " + mapper.writeValueAsString(data));
                 return data;
         }
 
@@ -139,14 +139,13 @@ public class OrderController {
         public ModelAndView editOrder(@RequestParam int id) {
                 ModelAndView modelAndView = new ModelAndView("th/edit_order");
                 modelAndView.addObject("id", id);
-                logger.info("Edit Order, id= "+id);
                 return modelAndView;
         }
 
         // Create Or Update (Action)
         @PostMapping(value="/edit_order")
         public ResponseEntity createOrUpdateOrder(@RequestBody Order order) {
-                logger.info("id= "+order.getId());
+                logger.info("Edit order #: "+order.getId());
                 // 1. If dish array is empty, return - Error
                 if (order.getDishes().isEmpty()) {
                         logger.error("Error: no dishes!");
@@ -154,7 +153,7 @@ public class OrderController {
                                 HttpStatus.EXPECTATION_FAILED);
                 }
                 // 2. Check if there is enough ingredients to fulfill an order
-                if (!orderService.validateIngredients(order.getDishes())) {
+                if (!orderService.validateOrder(order)) {
                         logger.error("Error: not enough ingredients!");
                         return new ResponseEntity("Not enough ingredients to fulfill the order",
                                 HttpStatus.EXPECTATION_FAILED);
@@ -162,10 +161,10 @@ public class OrderController {
                 try {
                         if (order.getId()==0) {
                                 orderService.insert(order);
-                                logger.info("New Order inserted: "+order);
+                                logger.info("Inserted Order: "+order);
                         } else {
                                 orderService.update(order);
-                                logger.info("Existing Order updated: "+order);
+                                logger.info("Updated Order: "+order);
                         }
                 } catch (Exception e) {
                         logger.error("Error: failed to save the Order into DB! Order: "+order);
@@ -182,7 +181,7 @@ public class OrderController {
                 try {
                         url = new URL(request.getHeader("referer"));
                         orderService.delete(id);
-                        logger.info("Deleted Order, id= "+id);
+                        logger.info("Deleted Order #: "+id);
                 } catch (MalformedURLException e) {
                         setErrorMessages(id, ra,
                                 HttpStatus.BAD_REQUEST.toString(),
@@ -206,18 +205,18 @@ public class OrderController {
                 try {
                         url = new URL(request.getHeader("referer"));
                         orderService.closeOrder(id);
-                        logger.info("Order (id= : "+id + ") closed");
+                        logger.info("Closed Order #: "+id);
                 } catch (MalformedURLException e) {
                         setErrorMessages(id, ra,
                                 HttpStatus.BAD_REQUEST.toString(),
                                 FORBIDDEN_ACTION_MESSAGE,
-                                "Failed to close the order: id = "+id);
+                                "Failed to close the Order #: "+id);
                         return "redirect:/error";
                 } catch (Throwable e) {
                         setErrorMessages(id, ra,
                                 HttpStatus.FORBIDDEN.toString(),
                                 e.getMessage(),
-                                "Unexpected error closing the order: id = "+id);
+                                "Unexpected error closing the Order #: "+id);
                         return "redirect:/error";
                 }
                 return "redirect:"+url.getPath();
