@@ -8,8 +8,12 @@ $(document).ready(function () {
         columns: [
             { "data": "id", "name": "id",  "title": "id", "visible": true},
             { "data": "opened", "name": "isOpened", "title": "isOpened"},
-            { "data": "openedTimeStamp", "name": "openedTimeStamp", "title": "opened time"},
-            { "data": "closedTimeStamp", "name": "closedTimeStamp", "title": "closedTimeStamp"},
+            { "data": null, "name": "openedTimeStamp", "title": "opened time", "render": function(data){
+                var time = new Date(data.openedTimeStamp);
+                return time.toLocaleTimeString();
+            }
+            },
+            { "data": "closedTimeStamp", "name": "closedTimeStamp", "title": "closed time"},
             { "data": "table", "name": "table", "title": "table"},
             { "data": "dishesQuantity", "title": "dishes", "sortable": false},
             { "data": "totalSum", "title": "total", "sortable": false},

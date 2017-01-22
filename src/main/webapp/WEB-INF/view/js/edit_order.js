@@ -22,8 +22,7 @@ $(document).ready(function () {
         url: '/get_orders_table',
         dataType: 'json',
         success: function(json) {
-            console.log("table= "+json);
-            var $el = $("#table");
+            //var $el = $("#table");
             $("#table").val(json);
         }
     });
@@ -92,23 +91,34 @@ $(document).ready(function () {
     });
 });
 
-// Submits data to the server
+// Gets the Order object from server
 $(document).ready(function () {
+    var currentOrder;
+    $.ajax({
+        url: "/get_order?orderId="+$("#id").val(),
+        type: "POST",
+        dataType: "json",
+        success: function (order) {
+            currentOrder = order;
+        }
+    });
+
     $('#newOrderForm').submit(function (event) {
-        var json = new Object();
-        json.id = parseInt($("#id").val());
-        json.isOpened = true;
-        json.openedTimeStamp = new Date();
-        json.closedTimeStamp = null;
-        json.table = $('#table').val();
-        json.waiter = parseInt($('#waiterId').val());
-        json.dishes = getDishes();
+        //console.log("openedTimeStamp: "+currentOrder.openedTimeStamp);
+        var updatedOrder = new Object();
+        updatedOrder.id = parseInt($("#id").val());
+        updatedOrder.isOpened = true;
+        updatedOrder.openedTimeStamp = currentOrder.openedTimeStamp;
+        updatedOrder.closedTimeStamp = null;
+        updatedOrder.table = $('#table').val();
+        updatedOrder.waiter = parseInt($('#waiterId').val());
+        updatedOrder.dishes = getDishes();
         $.ajax({
             url: $("#newOrderForm").attr( "action"),
             dataType: 'json',
             type: "POST",
             contentType: "application/json",
-            data: JSON.stringify(json),
+            data: JSON.stringify(updatedOrder),
             success: function (data) {
                 console.log("Success");
                 location.href='/waiter/orders/today';

@@ -14,10 +14,10 @@
 </head>
 <body>
 <div th:if="${#authorization.expression('hasRole(''ROLE_WAITER'')')}">
-    <h3 class="form-signin-heading" align="center">Edit Order</h3>
+    <h3 class="form-signin-heading" align="center">Edit Order #<span th:text="${id}"/></h3>
 </div>
 <div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
-    <h3 class="form-signin-heading" align="center">Order's details</h3>
+    <h3 class="form-signin-heading" align="center">Order's # <span th:text="${id}"/> details </h3>
 </div>
 <div class="container">
     <form id="newOrderForm" action="/edit_order" method="post"

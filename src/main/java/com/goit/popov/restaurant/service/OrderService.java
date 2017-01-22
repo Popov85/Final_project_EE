@@ -25,9 +25,6 @@ public class OrderService implements OrderServiceInterface,
         private static final Logger logger = (Logger) LoggerFactory.getLogger(OrderService.class);
 
         @Autowired
-        private SessionFactory sessionFactory;
-
-        @Autowired
         private OrderDAO orderDAO;
 
         @Autowired
@@ -104,7 +101,7 @@ public class OrderService implements OrderServiceInterface,
         /**
          * Algorithm:
          * 1. Get Map copy of Stock state
-         * 2. Get all opened orders
+         * 2. Get all opened Orders
          * 3. Add them to the list
          * 4. For each OPENED and NOT FULFILLED Order get map of dishes
          * 5. Take into account partially done Orders
@@ -112,17 +109,23 @@ public class OrderService implements OrderServiceInterface,
          * 7. Detract the total value of ingredient required from stock
          *    if we get negative quantity somewhere - return false
          *    at the end return true
-         * @param o Order to be validated
-         * @return true if there is enough ingredients in stock, false - otherwise
+         * @param order Order to be validated
+         * @return true if there is enough ingredients in stock to fulfill the Order,
+         *         false - otherwise
          */
         @Override
-        public synchronized boolean validateOrder(Order o) {
-                List<Order> orders = new ArrayList<>();
-                orders.add(o);
+        public boolean validateOrder(Order order) {
                 Map<Ingredient, Double> stock = stockService.convertStockToMap(stockService.getAll());
+                List<Order> orders = getAllOpened();
+                if (orders.contains(order)) {
+                        logger.info("Contains: "+order);
+                        orders.set(orders.indexOf(order),order);
+                } else {
+                        logger.info("Does not contain: "+order);
+                        orders.add(order);
+                }
                 logger.info("Current stock:");
                 stockService.toStringStock(stock);
-                orders.addAll(1, getAllOpened());
                 if (!validateOrders(orders, stock)) return false;
                 logger.info("Updated stock:");
                 stockService.toStringStock(stock);

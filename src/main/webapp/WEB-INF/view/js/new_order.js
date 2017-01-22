@@ -1,5 +1,7 @@
 // Set up an empty Order table
 $(document).ready(function () {
+    console.log("Current date is: "+Date());
+    console.log("Current date (new) is: "+JSON.stringify(new Date()));
     var t = $('#odTable').DataTable({
         bLengthChange: false,
         columnDefs: [
@@ -67,20 +69,20 @@ $(document).ready(function () {
 // Submits data to the server
 $(document).ready(function () {
     $('#newOrderForm').submit(function (event) {
-        var json = new Object();
-        json.id = 0;
-        json.isOpened = true;
-        json.openedTimeStamp = new Date();
-        json.closedTimeStamp = null;
-        json.table = $('#table').val();
-        json.waiter = parseInt($('#waiterId').val());
-        json.dishes = getDishes();
+        var order = new Object();
+        order.id = 0;
+        order.isOpened = true;
+        order.openedTimeStamp = new Date();
+        order.closedTimeStamp = null;
+        order.table = $('#table').val();
+        order.waiter = parseInt($('#waiterId').val());
+        order.dishes = getDishes();
         $.ajax({
             url: $("#newOrderForm").attr("action"),
             dataType: 'json',
             type: "POST",
             contentType: "application/json",
-            data: JSON.stringify(json),
+            data: JSON.stringify(order),
             success: function (data) {
                 console.log("Success");
                 location.href = '/waiter/orders/today';
@@ -127,7 +129,7 @@ $(document).ready(function () {
 
     // Displays the server's feedback on the page
     function display(data) {
-        var json = "<h4>Error</h4><pre>"//+JSON.stringify(data, null, 4)
+        var json = "<h4>Error</h4><pre>"
             + data.responseText + "</pre>";
         $('#feedback').html(json);
     }

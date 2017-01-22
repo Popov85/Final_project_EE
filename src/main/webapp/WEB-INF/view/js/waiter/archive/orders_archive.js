@@ -12,7 +12,7 @@ $(document).ready(function () {
             { "data": "closedTimeStamp", "name": "closedTimeStamp", "title": "closedTimeStamp"},
             { "data": "table", "name": "table", "title": "table"},
             { "data": "dishesQuantity", "title": "dishes", "sortable": false},
-            { "data": "totalSum", "title": "total", "sortable": false},
+            { "data": "totalSum", "title": "total, $", "sortable": false},
 
             { "data": null, "sortable": false, "render": function(data){
                 return '<a href="/edit_order?id=' + data.id + '"><input type="button" class="btn btn-default" value="Edit"/></a>';

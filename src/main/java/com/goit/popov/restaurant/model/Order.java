@@ -7,6 +7,7 @@ import com.goit.popov.restaurant.controller.converters.OrderDeserializer;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.*;
@@ -34,11 +35,13 @@ public class Order {
         private boolean isOpened;
 
         @Column(name = "OPEN_DATE")
-        @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm")
+        @Temporal(TemporalType.TIMESTAMP)
+        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
+        @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss.SSS", timezone="EET")
         private Date openedTimeStamp;
 
         @Column(name = "CLOSE_DATE")
-        @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm")
+        @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone="EET")
         private Date closedTimeStamp;
 
         @Column(name = "TABLE_NUMBER")
@@ -204,6 +207,7 @@ public class Order {
                 return total;
         }
 
+
         @Override
         public boolean equals(Object o) {
                 if (this == o) return true;
@@ -212,12 +216,8 @@ public class Order {
                 Order order = (Order) o;
 
                 if (isOpened != order.isOpened) return false;
-                if (table != order.table) return false;
                 if (!openedTimeStamp.equals(order.openedTimeStamp)) return false;
-                if (closedTimeStamp != null ? !closedTimeStamp.equals(order.closedTimeStamp) : order.closedTimeStamp != null)
-                        return false;
-                if (!waiter.equals(order.waiter)) return false;
-                return dishes.equals(order.dishes);
+                return table.equals(order.table);
 
         }
 

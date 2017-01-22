@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
+ * @see "http://www.baeldung.com/jackson-deserialization"
  * Created by Andrey on 06.12.2016.
  */
 public class OrderDeserializer extends JsonDeserializer<Order> {
@@ -30,12 +31,6 @@ public class OrderDeserializer extends JsonDeserializer<Order> {
         @Autowired
         private DishService dishService;
 
-        /**
-         * @See http://www.baeldung.com/jackson-deserialization
-         * @param p
-         * @param ctxt
-         * @return
-         */
         @Override
         public Order deserialize(JsonParser p, DeserializationContext ctxt) throws JsonMappingException {
                 JsonNode node = null;
@@ -80,17 +75,6 @@ public class OrderDeserializer extends JsonDeserializer<Order> {
                 return order;
         }
 
-        /**
-         * Creates an Order object based on params from JSON file
-         * @param id
-         * @param isOpened
-         * @param openedTimeStamp
-         * @param closedTimeStamp
-         * @param waiterId
-         * @param table
-         * @param dishesInMap
-         * @return
-         */
         private Order getOrder(int id, boolean isOpened, Date openedTimeStamp, Date closedTimeStamp,
                                int waiterId, String table, Map<Dish, Integer> dishesInMap) {
                 Order order = new Order();
@@ -104,25 +88,22 @@ public class OrderDeserializer extends JsonDeserializer<Order> {
                 return order;
         }
 
-        /**
-         * Converts Date in String to Java Date format
-         * @param dateInString
-         * @return
-         * @throws ParseException
-         */
         private Date convertStringToData(String dateInString) throws ParseException {
-                SimpleDateFormat format = new SimpleDateFormat(
-                        "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+                // Format for new Order
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
                 format.setTimeZone(TimeZone.getTimeZone("UTC"));
-                Date date = format.parse(dateInString);
+                //format.setTimeZone(TimeZone.getTimeZone("Europe/Budapest"));
+                Date date = null;
+                try {
+                        date = format.parse(dateInString);
+                } catch (ParseException e) {
+                        // Format for existing Order
+                        format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+                        date = format.parse(dateInString);
+                }
                 return date;
         }
 
-        /**
-         * Converts ArrayNode (which in fact is JSON string representing array of objects to Map<Dish, Integer>
-         * @param arrayNode
-         * @return
-         */
         private Map<Dish, Integer> convertJSONToMap(ArrayNode arrayNode) {
                 ObjectMapper mapper = new ObjectMapper();
                 Map<Dish, Integer> map = new HashMap<>();
@@ -130,7 +111,7 @@ public class OrderDeserializer extends JsonDeserializer<Order> {
                         for (JsonNode jsonNode : arrayNode) {
                                 Dish dish = dishService.getById((Integer) jsonNode.get("dishId").numberValue()); ;
                                 Integer quantity = (Integer) jsonNode.get("quantity").numberValue();
-                                if (quantity < 0) throw new RuntimeException("Quantity cannot be negative!");
+                                if (quantity <= 0) throw new RuntimeException("Quantity cannot be negative!");
                                 map.put(dish, quantity);
                         }
                 } catch (Exception e) {
