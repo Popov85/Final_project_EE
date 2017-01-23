@@ -66,20 +66,6 @@ public class OrderDAOImplJPA implements OrderDAO {
         }
 
         @Override
-        public void addDish(Order order, Dish dish, int quantity) {
-                Map<Dish, Integer> dishes = order.getDishes();
-                dishes.put(dish, quantity);
-                update(order);
-        }
-
-        @Override
-        public void deleteDish(Order order, Dish dish, int quantity) {
-                Map<Dish, Integer> dishes = order.getDishes();
-                dishes.remove(dish, quantity);
-                update(order);
-        }
-
-        @Override
         public void close(Order order) {
                 order.setOpened(false);
                 update(order);
@@ -116,13 +102,12 @@ public class OrderDAOImplJPA implements OrderDAO {
                 return sessionFactory.getCurrentSession().createQuery("select distinct o from Order o order by o.id").list();
         }
 
-
-        // TODO not working
         @Override
         public List<PreparedDish> getAllWithPreparedDishes() {
                 return sessionFactory.getCurrentSession().createQuery("select o.preparedDishes from Order o").list();
         }
 
+        @Override
         public List<Order> getAllWaiterToday(int waiterId) {
                 Waiter waiter = new Waiter();
                 waiter.setId(waiterId);
@@ -149,6 +134,7 @@ public class OrderDAOImplJPA implements OrderDAO {
                         .list();
         }
 
+        @Override
         public List<Order> getAllWaiterArchive(int waiterId, DataTablesInputExtendedDTO dt) {
             List<Order> resultOrders = new ArrayList<>();
             try {
@@ -180,7 +166,8 @@ public class OrderDAOImplJPA implements OrderDAO {
                 return criteriaQuery;
         }
 
-        public List<Order> getAll(DataTablesInputExtendedDTO dt) {
+        @Override
+        public List<Order> getAllOrders(DataTablesInputExtendedDTO dt) {
                 List<Order> resultOrders = new ArrayList<>();
                 try {
                         CriteriaBuilder builder = em.getCriteriaBuilder();

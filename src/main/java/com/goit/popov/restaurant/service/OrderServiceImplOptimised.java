@@ -7,9 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.goit.popov.restaurant.dao.entity.OrderDAO;
 import com.goit.popov.restaurant.model.*;
 import com.goit.popov.restaurant.service.dataTables.DataTablesInputExtendedDTO;
-import com.goit.popov.restaurant.service.dataTables.DataTablesMapToJSONConvertible;
 import com.goit.popov.restaurant.service.dataTables.DataTablesOutputDTOUniversal;
-import com.goit.popov.restaurant.service.dataTables.DataTablesSearchableParam;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Date;
@@ -21,10 +19,9 @@ import java.util.Map;
  * Created by Andrey on 23.01.2017.
  */
 
-public class OrderServiceOptimised implements OrderServiceInterface,
-        DataTablesMapToJSONConvertible<Dish, Integer>, DataTablesSearchableParam<Order> {
+public class OrderServiceImplOptimised implements OrderService {
 
-        private static final Logger logger = (Logger) LoggerFactory.getLogger(OrderServiceOptimised.class);
+        private static final Logger logger = (Logger) LoggerFactory.getLogger(OrderServiceImplOptimised.class);
 
         @Autowired
         private OrderDAO orderDAO;
@@ -32,62 +29,87 @@ public class OrderServiceOptimised implements OrderServiceInterface,
         @Autowired
         private StockService stockService;
 
+        @Override
         public List<Order> getAll() {
                 return orderDAO.getAll();
         }
 
-        public void insert(Order order) {
-                orderDAO.insert(order);
+        @Override
+        public int insert(Order order) {
+                return orderDAO.insert(order);
         }
 
+        @Override
         public void update(Order order) {
                 orderDAO.update(order);
         }
 
+        @Override
         public Order getById(int id) {
                 return orderDAO.getById(id);
         }
 
+        @Override
         public void delete(Order order) {
                 orderDAO.delete(order);
         }
 
+        @Override
         public void delete(int orderId) {
                 orderDAO.delete(orderId);
         }
 
+        @Override
         public void close(Order order) {
                 orderDAO.close(order);
         }
 
+        @Override
         public List<Order> getAllClosed() {
                 return orderDAO.getAllClosed();
         }
 
+        @Override
         public List<Order> getAllOpened() {
                 return orderDAO.getAllOpened();
         }
 
+        @Override
         public List<Order> getAllWaiterToday(int waiterId) {
                 return orderDAO.getAllWaiterToday(waiterId);
         }
 
+        @Override
+        public List<Order> getAllOrders(DataTablesInputExtendedDTO dt) {
+                return orderDAO.getAllOrders(dt);
+        }
+
+        @Override
+        public List<Order> getAllWaiterArchive(int waiterId, DataTablesInputExtendedDTO dt) {
+                return orderDAO.getAllWaiterArchive(waiterId, dt);
+        }
+
+        @Override
         public List<Order> getAllToday() {
                 return orderDAO.getAllToday();
         }
 
+        @Override
         public List<PreparedDish> getAllWithPreparedDishes() {
                 return orderDAO.getAllWithPreparedDishes();
         }
 
+        @Override
         public Integer[] getTables() {
                 return Order.TABLE_SET;
         }
 
+        @Override
         public long count() {
                 return orderDAO.count();
         }
 
+        @Override
         public long countWaiter(Waiter waiter) {
                 return orderDAO.countWaiter(waiter);
         }
@@ -205,7 +227,7 @@ public class OrderServiceOptimised implements OrderServiceInterface,
         public DataTablesOutputDTOUniversal<Order> getAll(DataTablesInputExtendedDTO dt) {
                 long recordsTotal = count();
                 long recordsFiltered;
-                List<Order> data = orderDAO.getAll(dt);
+                List<Order> data = orderDAO.getAllOrders(dt);
                 if (!dt.getColumnSearch().isEmpty()) {
                         recordsFiltered = data.size();
                 } else {
@@ -219,9 +241,9 @@ public class OrderServiceOptimised implements OrderServiceInterface,
         }
 
 
-        public DataTablesOutputDTOUniversal<Order> getAllWaiterArchive(DataTablesInputExtendedDTO dt, int waiterId) {
+        /*public DataTablesOutputDTOUniversal<Order> getAllWaiterArchive(DataTablesInputExtendedDTO dt, int waiterId) {
                 return getAll(dt, waiterId);
-        }
+        }*/
 
         @Override
         public DataTablesOutputDTOUniversal<Order> getAll(DataTablesInputExtendedDTO dt, int waiterId) {

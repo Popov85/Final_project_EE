@@ -68,7 +68,7 @@ public class IngredientController {
         /*@RequestMapping(value = "/ingredients", method = RequestMethod.GET)
         @ModelAttribute("ingredients")
         public List<Ingredient> ingredients() {
-                return ingredientService.getAll();
+                return ingredientService.getAllOrders();
         }*/
 
         // Create

@@ -4,9 +4,9 @@ import ch.qos.logback.classic.Logger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Order;
+import com.goit.popov.restaurant.service.OrderService;
 import com.goit.popov.restaurant.service.dataTables.*;
 import com.goit.popov.restaurant.service.DishService;
-import com.goit.popov.restaurant.service.OrderService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -123,7 +123,7 @@ public class OrderController {
         @ResponseBody
         public DataTablesOutputDTOUniversal<Order> getWaiterOrdersArchive(@RequestParam int waiterId,
                                                                           DataTablesInputExtendedDTO input) {
-                DataTablesOutputDTOUniversal<Order> data = orderService.getAllWaiterArchive(input, waiterId);
+                DataTablesOutputDTOUniversal<Order> data = orderService.getAll(input, waiterId);
                 return data;
         }
 
