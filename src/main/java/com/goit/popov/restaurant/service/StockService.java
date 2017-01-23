@@ -30,6 +30,10 @@ public class StockService {
                 logger.info("Decreased Ingredient: "+ingredient.getName()+"/ quantity left: "+quantityLeft);
         }
 
+        public Double getQuantityByIngredient(Ingredient ingredient) {
+              return storeHouseDAO.getQuantityByIngredient(ingredient);
+        }
+
         public List<StoreHouse> getAll() {
                 return storeHouseDAO.getAll();
         }

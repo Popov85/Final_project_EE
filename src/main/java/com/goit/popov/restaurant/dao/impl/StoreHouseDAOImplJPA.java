@@ -61,4 +61,12 @@ public class StoreHouseDAOImplJPA implements StoreHouseDAO {
                 return (StoreHouse) query.uniqueResult();
         }
 
+
+        @Override
+        public Double getQuantityByIngredient(Ingredient ingredient) {
+                Query query = sessionFactory.getCurrentSession().createQuery("select s.quantity from StoreHouse s " +
+                        "where s.ingredient = :ingredient");
+                query.setParameter("ingredient", ingredient);
+                return (Double) query.uniqueResult();
+        }
 }

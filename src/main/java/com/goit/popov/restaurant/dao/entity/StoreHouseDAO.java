@@ -20,4 +20,6 @@ public interface StoreHouseDAO extends GenericDAO<StoreHouse> {
 
         StoreHouse getByIngredient(Ingredient ingredient);
 
+        Double getQuantityByIngredient(Ingredient ingredient);
+
 }
