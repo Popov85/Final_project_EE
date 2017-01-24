@@ -219,11 +219,6 @@ public class OrderServiceImpl implements OrderService {
                         .setData(data);
         }
 
-
-        /*public DataTablesOutputDTOUniversal<Order> getAllWaiterArchive(DataTablesInputExtendedDTO dt, int waiterId) {
-                return getAll(dt, waiterId);
-        }*/
-
         @Override
         public DataTablesOutputDTOUniversal<Order> getAll(DataTablesInputExtendedDTO dt, int waiterId) {
                 Waiter waiter = new Waiter();

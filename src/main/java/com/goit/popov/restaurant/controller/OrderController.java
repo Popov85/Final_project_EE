@@ -147,18 +147,21 @@ public class OrderController {
                 }
                 synchronized (this) {
                         // 2. Check if there is enough ingredients to fulfill the order
+                        long startTime = System.currentTimeMillis();
                         if (!orderService.validateOrder(order)) {
                                 logger.error("Error: not enough ingredients!");
                                 return new ResponseEntity("Not enough ingredients to fulfill the order",
                                         HttpStatus.EXPECTATION_FAILED);
                         }
+                        long endTime   = System.currentTimeMillis();
+                        logger.info("VALIDATION RUNTIME: "+(endTime - startTime)+" ms");
                         try {
                                 if (order.getId() == 0) {
-                                        orderService.insert(order);
-                                        logger.info("Inserted Order: " + order);
+                                        //orderService.insert(order);
+                                        logger.info("Inserted Order #: " + order.getId());
                                 } else {
-                                        orderService.update(order);
-                                        logger.info("Updated Order: " + order);
+                                        //orderService.update(order);
+                                        logger.info("Updated Order #: " + order.getId());
                                 }
                         } catch (Exception e) {
                                 logger.error("Error: failed to save the Order into DB! Order: " + order);

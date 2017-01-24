@@ -152,12 +152,12 @@ public class OrderServiceImplOptimised implements OrderService {
                 }
                 Map<Ingredient, Double> pendingIngredients = new HashMap<>();
                 processOrders(orders, pendingIngredients);
-                // 2.
+                // 2-3.
                 if (compareStock(pendingIngredients)) return true;
                 return false;
         }
 
-        private boolean processOrders(List<Order> orders, Map<Ingredient, Double> pendingIngredients) {
+        private void processOrders(List<Order> orders, Map<Ingredient, Double> pendingIngredients) {
                 for (Order order : orders) {
                         if (!order.isFulfilled()) {
                                 Map<Dish, Integer> dishes;
@@ -169,14 +169,13 @@ public class OrderServiceImplOptimised implements OrderService {
                                 processDishes(dishes, pendingIngredients);
                         }
                 }
-                return true;
         }
 
         private boolean compareStock(Map<Ingredient, Double> pendingIngredients) {
                 for (Map.Entry<Ingredient, Double> ingredient : pendingIngredients.entrySet()) {
                         Double stockQuantity = stockService.getQuantityByIngredient(ingredient.getKey());
                         Double pendingQuantity = ingredient.getValue();
-                        logger.info("Ingredient:"+ ingredient.getKey().getName()+
+                        logger.info("Ingredient in Stock: "+ ingredient.getKey().getName()+
                                 "Stock: "+stockQuantity+
                                 " / Required: "+pendingQuantity);
                         if (stockQuantity < pendingQuantity)
@@ -239,11 +238,6 @@ public class OrderServiceImplOptimised implements OrderService {
                         .setRecordsFiltered(recordsFiltered)
                         .setData(data);
         }
-
-
-        /*public DataTablesOutputDTOUniversal<Order> getAllWaiterArchive(DataTablesInputExtendedDTO dt, int waiterId) {
-                return getAll(dt, waiterId);
-        }*/
 
         @Override
         public DataTablesOutputDTOUniversal<Order> getAll(DataTablesInputExtendedDTO dt, int waiterId) {
