@@ -34,6 +34,8 @@
     <bean id = "storeHouseDAO" class="com.goit.popov.restaurant.dao.impl.StoreHouseDAOImplJPA"/>
     <bean id = "stockService" class="com.goit.popov.restaurant.service.StockService"/>
 
+    <bean id = "service" class="com.goit.popov.restaurant.service.Service"/>
+
     <bean id = "Waiter" class = "com.goit.popov.restaurant.service.WaiterService"/>
     <bean id = "Chef" class = "com.goit.popov.restaurant.service.ChefService"/>
     <bean id = "Manager" class = "com.goit.popov.restaurant.service.ManagerService"/>

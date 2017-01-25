@@ -148,7 +148,7 @@ public class PreparedDishHistoryDAOImplJPA implements PreparedDishHistoryDAO {
                 for (Map.Entry<Ingredient, Double> entry : ingredients.entrySet()) {
                         Ingredient ingredient = entry.getKey();
                         Double quantityRequired = entry.getValue();
-                        stockService.decreaseQuantity(ingredient, quantityRequired);
+                        stockService.decreaseIngredient(ingredient, quantityRequired);
                 }
         }
 }

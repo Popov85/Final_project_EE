@@ -21,13 +21,36 @@ public class StockService {
         @Autowired
         private StoreHouseDAO storeHouseDAO;
 
-        public void decreaseQuantity(Ingredient ingredient, Double quantityRequired) {
+        public void decreaseIngredient(Ingredient ingredient, Double quantityRequired) {
                 StoreHouse storeHouse = storeHouseDAO.getByIngredient(ingredient);
                 Double actualQuantity = storeHouse.getQuantity();
                 Double quantityLeft = actualQuantity - quantityRequired;
                 storeHouse.setQuantity(quantityLeft);
                 storeHouseDAO.update(storeHouse);
-                logger.info("Decreased Ingredient: "+ingredient.getName()+"/ quantity left: "+quantityLeft);
+                logger.info("Decreased Ingredient: "+ingredient.getName()+
+                        "/ quantity left: "+quantityLeft);
+        }
+
+        public void increaseIngredient(Ingredient ingredient, Double quantityRequired) {
+                StoreHouse storeHouse = storeHouseDAO.getByIngredient(ingredient);
+                Double actualQuantity = storeHouse.getQuantity();
+                Double quantityLeft = actualQuantity + quantityRequired;
+                storeHouse.setQuantity(quantityLeft);
+                storeHouseDAO.update(storeHouse);
+                logger.info("Increased Ingredient: "+ingredient.getName()+
+                        "/ quantity left: "+quantityLeft);
+        }
+
+        public void decreaseIngredients(Map<Ingredient, Double> ingredientsRequired) {
+                for (Map.Entry<Ingredient, Double> ingredient : ingredientsRequired.entrySet()) {
+                       decreaseIngredient(ingredient.getKey(), ingredient.getValue());
+                }
+        }
+
+        public void increaseIngredients(Map<Ingredient, Double> ingredients) {
+                for (Map.Entry<Ingredient, Double> ingredient : ingredients.entrySet()) {
+                        increaseIngredient(ingredient.getKey(), ingredient.getValue());
+                }
         }
 
         public Double getQuantityByIngredient(Ingredient ingredient) {

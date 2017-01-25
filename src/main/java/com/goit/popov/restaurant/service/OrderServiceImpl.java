@@ -240,7 +240,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         @Override
-        public void validateAndDeduct(Order order) throws NotEnoughIngredientsException {
+        public void processOrder(Order order) throws NotEnoughIngredientsException {
 
         }
 }

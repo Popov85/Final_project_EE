@@ -16,6 +16,6 @@ public interface OrderService extends OrderDAO, DataTablesMapToJSONConvertible<D
         void closeOrder(int orderId);
         @Deprecated
         boolean validateOrder(Order o);
-        void validateAndDeduct(Order order) throws NotEnoughIngredientsException;
+        void processOrder(Order order) throws NotEnoughIngredientsException;
         Integer[] getTables();
 }

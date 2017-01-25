@@ -14,8 +14,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -35,6 +33,9 @@ public class OrderServiceImplFast implements OrderService {
 
         @Autowired
         private StockService stockService;
+
+        @Autowired
+        private Service service;
 
         private SessionFactory sessionFactory;
 
@@ -145,7 +146,7 @@ public class OrderServiceImplFast implements OrderService {
          * @param order Order to be validated
          */
         @Override
-        public void validateAndDeduct(Order order) throws NotEnoughIngredientsException {
+        public void processOrder(Order order) throws NotEnoughIngredientsException {
                 Session session = sessionFactory.openSession();
                 Transaction tx = null;
                 try {
@@ -179,7 +180,7 @@ public class OrderServiceImplFast implements OrderService {
 
         private void deduct(Map<Ingredient, Double> requiredIngredients) {
                 for (Map.Entry<Ingredient, Double> ingredient : requiredIngredients.entrySet()) {
-                        stockService.decreaseQuantity(ingredient.getKey(), ingredient.getValue());
+                        stockService.decreaseIngredient(ingredient.getKey(), ingredient.getValue());
                 }
         }
 
@@ -196,10 +197,8 @@ public class OrderServiceImplFast implements OrderService {
                 if (order.getId()!=0) {
                         // Return ingredients of the old order
                         Order oldOrder = getById(order.getId());
-                        /* TODO
-                        Map<Ingredient, Double> ingredients = getIngredients(oldOrder);
-                        returnIngredients(ingredients);
-                        */
+                        Map<Ingredient, Double> ingredients = service.getIngredients(oldOrder.getDishes());
+                        stockService.increaseIngredients(ingredients);
                 }
                 processDishes(order.getDishes(), requiredIngredients);
                 if (compareStock(requiredIngredients)) return true;

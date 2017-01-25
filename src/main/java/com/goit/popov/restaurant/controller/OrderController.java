@@ -148,7 +148,7 @@ public class OrderController {
                 }
                 long startTime = System.currentTimeMillis();
                 try {
-                        orderService.validateAndDeduct(order);
+                        orderService.processOrder(order);
                 } catch (NotEnoughIngredientsException e) {
                         logger.error("Error: not enough ingredients!");
                         return new ResponseEntity("Not enough ingredients to fulfill the order!",
