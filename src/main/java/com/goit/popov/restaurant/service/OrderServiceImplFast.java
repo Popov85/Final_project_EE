@@ -6,26 +6,41 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.goit.popov.restaurant.dao.entity.OrderDAO;
 import com.goit.popov.restaurant.model.*;
-import com.goit.popov.restaurant.service.dataTables.*;
+import com.goit.popov.restaurant.service.dataTables.DataTablesInputExtendedDTO;
+import com.goit.popov.restaurant.service.dataTables.DataTablesOutputDTOUniversal;
 import com.goit.popov.restaurant.service.exceptions.NotEnoughIngredientsException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Andrey on 12/3/2016.
+ * Created by Andrey on 25.01.2017.
  */
-public class OrderServiceImpl implements OrderService {
 
-        private static final Logger logger = (Logger) LoggerFactory.getLogger(OrderServiceImpl.class);
+public class OrderServiceImplFast implements OrderService {
+
+        private static final Logger logger = (Logger) LoggerFactory.getLogger(OrderServiceImplOptimised.class);
 
         @Autowired
         private OrderDAO orderDAO;
 
         @Autowired
         private StockService stockService;
+
+        private SessionFactory sessionFactory;
+
+        public void setSessionFactory(SessionFactory sessionFactory) {
+                this.sessionFactory = sessionFactory;
+        }
 
         @Override
         public List<Order> getAll() {
@@ -67,6 +82,7 @@ public class OrderServiceImpl implements OrderService {
                 return orderDAO.getAllClosed();
         }
 
+        @Override
         public List<Order> getAllOpened() {
                 return orderDAO.getAllOpened();
         }
@@ -74,6 +90,11 @@ public class OrderServiceImpl implements OrderService {
         @Override
         public List<Order> getAllWaiterToday(int waiterId) {
                 return orderDAO.getAllWaiterToday(waiterId);
+        }
+
+        @Override
+        public List<Order> getAllOrders(DataTablesInputExtendedDTO dt) {
+                return orderDAO.getAllOrders(dt);
         }
 
         @Override
@@ -96,6 +117,7 @@ public class OrderServiceImpl implements OrderService {
                 return Order.TABLE_SET;
         }
 
+        @Override
         public long count() {
                 return orderDAO.count();
         }
@@ -103,11 +125,6 @@ public class OrderServiceImpl implements OrderService {
         @Override
         public long countWaiter(Waiter waiter) {
                 return orderDAO.countWaiter(waiter);
-        }
-
-        @Override
-        public List<Order> getAllOrders(DataTablesInputExtendedDTO dt) {
-                return orderDAO.getAllOrders(dt);
         }
 
         @Override
@@ -120,72 +137,109 @@ public class OrderServiceImpl implements OrderService {
 
         /**
          * Algorithm:
-         * 1. Get Map copy of Stock state
-         * 2. Get all opened Orders
-         * 3. Add them to the list
-         * 4. For each OPENED and NOT FULFILLED Order get map of dishes
-         * 5. Take into account partially done Orders
-         * 6. For each NOT PREPARED order's dish get map of ingredients
-         * 7. Detract the total value of ingredient required from stock
-         *    if we get negative quantity somewhere - return false
-         *    at the end return true
+         * 1. Create a Map<Ingredient, Double> of ingredients needed to fulfill the current Order;
+         * 2. For each Ingredient get its quantity from the DB;
+         * 3. Compare the quantity with the corresponding value in the map;
+         *      If the value in the map is greater - return false and do rollback transaction,
+         *      at the end - return true, insert of update Order and decrease the quantity from Stock
          * @param order Order to be validated
-         * @return true if there is enough ingredients in stock to fulfill the Order,
-         *         false - otherwise
          */
         @Override
-        public boolean validateOrder(Order order) {
-                Map<Ingredient, Double> stock = stockService.convertStockToMap(stockService.getAll());
-                List<Order> orders = getAllOpened();
-                if (orders.contains(order)) {
-                        logger.info("Contains: "+order);
-                        orders.set(orders.indexOf(order),order);
+        public void validateAndDeduct(Order order) throws NotEnoughIngredientsException {
+                Session session = sessionFactory.openSession();
+                Transaction tx = null;
+                try {
+                        tx = session.beginTransaction();
+                                Map<Ingredient, Double> requiredIngredients = new HashMap<>();
+                                validateAndInsert(order, requiredIngredients);
+                                deduct(requiredIngredients);
+                        tx.commit();
+                } catch (NotEnoughIngredientsException e) {
+                        if (tx != null) tx.rollback();
+                        throw e;
+                } catch (Exception e) {
+                        if (tx != null) tx.rollback();
+                        throw e;
+                } finally {
+                        session.close();
+                }
+        }
+
+        private void validateAndInsert(Order order,
+                                       Map<Ingredient, Double> requiredIngredients) throws NotEnoughIngredientsException {
+                if (!validateOrder(order, requiredIngredients)) throw new NotEnoughIngredientsException();
+                if (order.getId() == 0) {
+                        insert(order);
+                        logger.info("Inserted Order #: " + order.getId());
                 } else {
-                        logger.info("Does not contain: "+order);
-                        orders.add(order);
+                        update(order);
+                        logger.info("Updated Order #: " + order.getId());
                 }
-                logger.info("Current stock:");
-                stockService.toStringStock(stock);
-                if (!validateOrders(orders, stock)) return false;
-                logger.info("Updated stock:");
-                stockService.toStringStock(stock);
+        }
+
+        private void deduct(Map<Ingredient, Double> requiredIngredients) {
+                for (Map.Entry<Ingredient, Double> ingredient : requiredIngredients.entrySet()) {
+                        stockService.decreaseQuantity(ingredient.getKey(), ingredient.getValue());
+                }
+        }
+
+        @Deprecated
+        @Override
+        public boolean validateOrder(Order order) {
+                Map<Ingredient, Double> requiredIngredients = new HashMap<>();
+                processDishes(order.getDishes(), requiredIngredients);
+                if (compareStock(requiredIngredients)) return true;
+                return false;
+        }
+
+        private boolean validateOrder(Order order, Map<Ingredient, Double> requiredIngredients) {
+                if (order.getId()!=0) {
+                        // Return ingredients of the old order
+                        Order oldOrder = getById(order.getId());
+                        /* TODO
+                        Map<Ingredient, Double> ingredients = getIngredients(oldOrder);
+                        returnIngredients(ingredients);
+                        */
+                }
+                processDishes(order.getDishes(), requiredIngredients);
+                if (compareStock(requiredIngredients)) return true;
+                return false;
+        }
+
+        private boolean compareStock(Map<Ingredient, Double> pendingIngredients) {
+                for (Map.Entry<Ingredient, Double> ingredient : pendingIngredients.entrySet()) {
+                        Double stockQuantity = stockService.getQuantityByIngredient(ingredient.getKey());
+                        Double pendingQuantity = ingredient.getValue();
+                        logger.info("Ingredient in Stock: "+ ingredient.getKey().getName()+
+                                "Stock: "+stockQuantity+
+                                " / Required: "+pendingQuantity);
+                        if (stockQuantity < pendingQuantity)
+                                return false;
+                }
                 return true;
         }
 
-        private boolean validateOrders(List<Order> orders, Map<Ingredient, Double> stock) {
-                for (Order order : orders) {
-                        if (!order.isFulfilled()) {
-                                Map<Dish, Integer> dishes;
-                                if (!order.hasPreparedDishes()) {
-                                        dishes = order.getDishes();
-                                } else {
-                                        dishes = order.getNotPreparedDishes();
-                                }
-                                if (!validateDishes(stock, dishes)) return false;
-                        }
-                }
-                return true;
-        }
-
-        private boolean validateDishes(Map<Ingredient, Double> stock, Map<Dish, Integer> dishes) {
+        private void processDishes(Map<Dish, Integer> dishes, Map<Ingredient, Double> pendingIngredients) {
                 for (Map.Entry<Dish, Integer> entry : dishes.entrySet()) {
                         Dish nextDish = entry.getKey();
                         Integer nextQuantity = entry.getValue();
                         Map<Ingredient, Double> ingredients = nextDish.getIngredients();
                         for (Map.Entry<Ingredient, Double> ingredient : ingredients.entrySet()) {
-                                if (!validateIngredients(stock, ingredient, nextQuantity)) return false;
+                                processIngredients(ingredient, nextQuantity, pendingIngredients);
                         }
                 }
-                return true;
         }
 
-        private boolean validateIngredients(Map<Ingredient, Double> stock,
-                                            Map.Entry<Ingredient, Double> ingredient, Integer nextQuantity) {
-                Double stockQuantity = stock.get(ingredient.getKey()).doubleValue();
+        private void processIngredients(Map.Entry<Ingredient, Double> ingredient, Integer nextQuantity,
+                                        Map<Ingredient, Double> pendingIngredients) {
                 Double requiredQuantity = ingredient.getValue() * nextQuantity;
-                if (stockQuantity - requiredQuantity < 0) return false;
-                stock.put(ingredient.getKey(), (stockQuantity - requiredQuantity));
-                return true;
+                if (pendingIngredients.containsKey(ingredient.getKey())) {
+                        Double oldValue = pendingIngredients.get(ingredient.getKey()).doubleValue();
+                        Double newValue = requiredQuantity+oldValue;
+                        pendingIngredients.put(ingredient.getKey(), newValue);
+                } else {
+                        pendingIngredients.put(ingredient.getKey(), requiredQuantity);
+                }
         }
 
         @Override
@@ -238,9 +292,5 @@ public class OrderServiceImpl implements OrderService {
                         .setRecordsFiltered(recordsFiltered)
                         .setData(data);
         }
-
-        @Override
-        public void validateAndDeduct(Order order) throws NotEnoughIngredientsException {
-
-        }
 }
+

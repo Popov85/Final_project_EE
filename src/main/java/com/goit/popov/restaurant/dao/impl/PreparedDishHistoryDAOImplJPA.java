@@ -127,25 +127,11 @@ public class PreparedDishHistoryDAOImplJPA implements PreparedDishHistoryDAO {
         @Override
         public void confirmDishPrepared(Set<PreparedDish> preparedDishes){
                 Session session = sessionFactory.openSession();
-                Transaction tx = session.beginTransaction();
-                for (PreparedDish preparedDish : preparedDishes) {
-                        session.save(preparedDish);
-                        // Decrease ingredients in stock
-                        decreaseQuantity(preparedDish
-                                .getDish()
-                                .getIngredients());
-                }
-                tx.commit();
-                session.close();
-
-                /*try {
+                Transaction tx = null;
+                try {
                         tx = session.beginTransaction();
                         for (PreparedDish preparedDish : preparedDishes) {
                                 session.save(preparedDish);
-                                // Decrease ingredients in stock
-                                decreaseQuantity(preparedDish
-                                        .getDish()
-                                        .getIngredients());
                         }
                         tx.commit();
                 }
@@ -155,7 +141,7 @@ public class PreparedDishHistoryDAOImplJPA implements PreparedDishHistoryDAO {
                 }
                 finally {
                         session.close();
-                }*/
+                }
         }
 
         private void decreaseQuantity(Map<Ingredient, Double> ingredients) {

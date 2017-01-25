@@ -7,6 +7,7 @@ import com.goit.popov.restaurant.model.Order;
 import com.goit.popov.restaurant.service.OrderService;
 import com.goit.popov.restaurant.service.dataTables.*;
 import com.goit.popov.restaurant.service.DishService;
+import com.goit.popov.restaurant.service.exceptions.NotEnoughIngredientsException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -143,32 +144,22 @@ public class OrderController {
                 if (order.getDishes().isEmpty()) {
                         logger.error("Error: no dishes!");
                         return new ResponseEntity("Order must contain dishes!",
-                                HttpStatus.EXPECTATION_FAILED);
+                                HttpStatus.FORBIDDEN);
                 }
-                synchronized (this) {
-                        // 2. Check if there is enough ingredients to fulfill the order
-                        long startTime = System.currentTimeMillis();
-                        if (!orderService.validateOrder(order)) {
-                                logger.error("Error: not enough ingredients!");
-                                return new ResponseEntity("Not enough ingredients to fulfill the order",
-                                        HttpStatus.EXPECTATION_FAILED);
-                        }
-                        long endTime   = System.currentTimeMillis();
-                        logger.info("VALIDATION RUNTIME: "+(endTime - startTime)+" ms");
-                        try {
-                                if (order.getId() == 0) {
-                                        //orderService.insert(order);
-                                        logger.info("Inserted Order #: " + order.getId());
-                                } else {
-                                        //orderService.update(order);
-                                        logger.info("Updated Order #: " + order.getId());
-                                }
-                        } catch (Exception e) {
-                                logger.error("Error: failed to save the Order into DB! Order: " + order);
-                                return new ResponseEntity("Error: failed to save the Order into DB!",
-                                        HttpStatus.EXPECTATION_FAILED);
-                        }
+                long startTime = System.currentTimeMillis();
+                try {
+                        orderService.validateAndDeduct(order);
+                } catch (NotEnoughIngredientsException e) {
+                        logger.error("Error: not enough ingredients!");
+                        return new ResponseEntity("Not enough ingredients to fulfill the order!",
+                                HttpStatus.FORBIDDEN);
+                } catch (Exception e) {
+                        return new ResponseEntity("Error: Unexpected error happened.",
+                                HttpStatus.FORBIDDEN);
                 }
+                long endTime   = System.currentTimeMillis();
+                logger.info("VALIDATION RUNTIME: "+(endTime - startTime)+" ms");
+
                 return new ResponseEntity("{\"Result\": \"Success\"}", HttpStatus.OK);
         }
 
@@ -215,6 +206,7 @@ public class OrderController {
                 ra.addFlashAttribute("message", messages[2]);
         }
 
+        // TODO delete after all
         @GetMapping("/get_order_by_id")
         @ResponseBody
         public Order getOrderById(@RequestParam int id) {

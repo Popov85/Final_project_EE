@@ -8,6 +8,7 @@ import com.goit.popov.restaurant.dao.entity.OrderDAO;
 import com.goit.popov.restaurant.model.*;
 import com.goit.popov.restaurant.service.dataTables.DataTablesInputExtendedDTO;
 import com.goit.popov.restaurant.service.dataTables.DataTablesOutputDTOUniversal;
+import com.goit.popov.restaurant.service.exceptions.NotEnoughIngredientsException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Date;
@@ -256,5 +257,10 @@ public class OrderServiceImplOptimised implements OrderService {
                         .setRecordsTotal(recordsTotal)
                         .setRecordsFiltered(recordsFiltered)
                         .setData(data);
+        }
+
+        @Override
+        public void validateAndDeduct(Order order) throws NotEnoughIngredientsException {
+
         }
 }

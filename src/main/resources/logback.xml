@@ -8,16 +8,24 @@
         </layout>
     </appender>
 
-    <!--<logger name="org.springframework.web" level="debug"/>-->
+    <logger name="org.springframework" level="ERROR"/>
 
-    <logger name="org.springframework" level="debug" additivity="false">
-        <appender-ref ref="STDOUT" />
-    </logger>
+    <!--<logger name="org.springframework.web.client.RestTemplate" level="OFF" />
+    <logger name="org.springframework.web.servlet" level="OFF" />
+    <logger name="org.springframework.beans" level="OFF" />
+    <logger name="org.springframework.core" level="OFF" />
+    <logger name="org.springframework.context" level="OFF" />
+    <logger name="org.springframework.ui" level="OFF" />
+    <logger name="org.springframework.web.context" level="OFF" />
+    <logger name="org.springframework.aop" level="OFF" />
+    <logger name="org.springframework.cache" level="OFF" />
+    <logger name="org.springframework.jndi" level="OFF" />-->
 
-   <!-- <logger name="org.hibernate.type" level="ALL" />
-    <logger name="org.hibernate" level="DEBUG" />-->
+    <logger name = "org.hibernate.SQL" level="DEBUG"/>
 
-    <root level = "info">
+    <!--<statusListener class="ch.qos.logback.core.status.NopStatusListener" />-->
+
+    <root level = "INFO">
         <appender-ref ref = "STDOUT"/>
     </root>
 

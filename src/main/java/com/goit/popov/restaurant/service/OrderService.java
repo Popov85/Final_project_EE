@@ -5,6 +5,7 @@ import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Order;
 import com.goit.popov.restaurant.service.dataTables.DataTablesMapToJSONConvertible;
 import com.goit.popov.restaurant.service.dataTables.DataTablesSearchableParam;
+import com.goit.popov.restaurant.service.exceptions.NotEnoughIngredientsException;
 
 /**
  * Created by Andrey on 1/23/2017.
@@ -13,6 +14,8 @@ public interface OrderService extends OrderDAO, DataTablesMapToJSONConvertible<D
         DataTablesSearchableParam<Order> {
 
         void closeOrder(int orderId);
+        @Deprecated
         boolean validateOrder(Order o);
+        void validateAndDeduct(Order order) throws NotEnoughIngredientsException;
         Integer[] getTables();
 }
