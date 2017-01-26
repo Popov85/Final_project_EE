@@ -21,7 +21,7 @@
     <logger name="org.springframework.cache" level="OFF" />
     <logger name="org.springframework.jndi" level="OFF" />-->
 
-    <logger name = "org.hibernate.SQL" level="DEBUG"/>
+    <logger name = "org.hibernate.SQL" level="INFO"/>
 
     <!--<statusListener class="ch.qos.logback.core.status.NopStatusListener" />-->
 

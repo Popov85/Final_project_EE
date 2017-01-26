@@ -3,10 +3,7 @@ package com.goit.popov.restaurant.dao.impl;
 import ch.qos.logback.classic.Logger;
 import com.goit.popov.restaurant.dao.entity.PreparedDishHistoryDAO;
 import com.goit.popov.restaurant.model.*;
-import com.goit.popov.restaurant.service.StockService;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,14 +18,8 @@ public class PreparedDishHistoryDAOImplJPA implements PreparedDishHistoryDAO {
 
         private static final Logger logger = (Logger) LoggerFactory.getLogger(PreparedDishHistoryDAOImplJPA.class);
 
-        private SessionFactory sessionFactory;
-
-        public void setSessionFactory(SessionFactory sessionFactory) {
-                this.sessionFactory = sessionFactory;
-        }
-
         @Autowired
-        private StockService stockService;
+        private SessionFactory sessionFactory;
 
         @Override
         public int insert(PreparedDish preparedDish) {
@@ -120,35 +111,11 @@ public class PreparedDishHistoryDAOImplJPA implements PreparedDishHistoryDAO {
                         .list();
         }
 
-        /**
-         * @see "http://docs.jboss.org/hibernate/orm/3.5/javadocs/org/hibernate/Session.html"
-         * @param preparedDishes
-         */
         @Override
-        public void confirmDishPrepared(Set<PreparedDish> preparedDishes){
-                Session session = sessionFactory.openSession();
-                Transaction tx = null;
-                try {
-                        tx = session.beginTransaction();
-                        for (PreparedDish preparedDish : preparedDishes) {
-                                session.save(preparedDish);
-                        }
-                        tx.commit();
-                }
-                catch (Exception e) {
-                        if (tx!=null) tx.rollback();
-                        throw e;
-                }
-                finally {
-                        session.close();
-                }
-        }
-
-        private void decreaseQuantity(Map<Ingredient, Double> ingredients) {
-                for (Map.Entry<Ingredient, Double> entry : ingredients.entrySet()) {
-                        Ingredient ingredient = entry.getKey();
-                        Double quantityRequired = entry.getValue();
-                        stockService.decreaseIngredient(ingredient, quantityRequired);
+        public void confirmDishesPrepared(Set<PreparedDish> preparedDishes) {
+                for (PreparedDish preparedDish : preparedDishes) {
+                        insert(preparedDish);
+                        logger.info("PreparedDish saved: "+preparedDish);
                 }
         }
 }

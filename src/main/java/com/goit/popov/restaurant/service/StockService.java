@@ -6,7 +6,6 @@ import com.goit.popov.restaurant.model.Ingredient;
 import com.goit.popov.restaurant.model.StoreHouse;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,8 +46,8 @@ public class StockService {
                 }
         }
 
-        public void increaseIngredients(Map<Ingredient, Double> ingredients) {
-                for (Map.Entry<Ingredient, Double> ingredient : ingredients.entrySet()) {
+        public void increaseIngredients(Map<Ingredient, Double> ingredientsReturned) {
+                for (Map.Entry<Ingredient, Double> ingredient : ingredientsReturned.entrySet()) {
                         increaseIngredient(ingredient.getKey(), ingredient.getValue());
                 }
         }

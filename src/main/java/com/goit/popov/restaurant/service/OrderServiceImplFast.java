@@ -9,14 +9,12 @@ import com.goit.popov.restaurant.model.*;
 import com.goit.popov.restaurant.service.dataTables.DataTablesInputExtendedDTO;
 import com.goit.popov.restaurant.service.dataTables.DataTablesOutputDTOUniversal;
 import com.goit.popov.restaurant.service.exceptions.NotEnoughIngredientsException;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -145,100 +143,51 @@ public class OrderServiceImplFast implements OrderService {
          *      at the end - return true, insert of update Order and decrease the quantity from Stock
          * @param order Order to be validated
          */
+        @Transactional
         @Override
         public void processOrder(Order order) throws NotEnoughIngredientsException {
-                Session session = sessionFactory.openSession();
-                Transaction tx = null;
-                try {
-                        tx = session.beginTransaction();
-                                Map<Ingredient, Double> requiredIngredients = new HashMap<>();
-                                validateAndInsert(order, requiredIngredients);
-                                deduct(requiredIngredients);
-                        tx.commit();
-                } catch (NotEnoughIngredientsException e) {
-                        if (tx != null) tx.rollback();
-                        throw e;
-                } catch (Exception e) {
-                        if (tx != null) tx.rollback();
-                        throw e;
-                } finally {
-                        session.close();
+                // Check if the order can be modified (has preparedDishes or isClosed/isCancelled)
+                if (!order.isOpened() || order.hasPreparedDishes())
+                        throw new UnsupportedOperationException();
+                // Check if is a new Order or an existing One
+                final int orderId = order.getId();
+                if (orderId != 0) {
+                        returnIngredients(orderId);
                 }
-        }
-
-        private void validateAndInsert(Order order,
-                                       Map<Ingredient, Double> requiredIngredients) throws NotEnoughIngredientsException {
-                if (!validateOrder(order, requiredIngredients)) throw new NotEnoughIngredientsException();
-                if (order.getId() == 0) {
-                        insert(order);
-                        logger.info("Inserted Order #: " + order.getId());
-                } else {
+                Map<Dish, Integer> orderedDishes = order.getDishes();
+                Map<Ingredient, Double> requiredIngredients = service.getIngredients(orderedDishes);
+                if (!validateIngredients(requiredIngredients))
+                        throw new NotEnoughIngredientsException();
+                if (orderId != 0) {
                         update(order);
-                        logger.info("Updated Order #: " + order.getId());
+                } else {
+                        insert(order);
                 }
+                stockService.decreaseIngredients(requiredIngredients);
         }
 
-        private void deduct(Map<Ingredient, Double> requiredIngredients) {
-                for (Map.Entry<Ingredient, Double> ingredient : requiredIngredients.entrySet()) {
-                        stockService.decreaseIngredient(ingredient.getKey(), ingredient.getValue());
-                }
+        private void returnIngredients(int orderId) {
+                Order existingOrder = getById(orderId);
+                stockService.increaseIngredients(service.getIngredients(existingOrder.getDishes()));
         }
 
         @Deprecated
         @Override
         public boolean validateOrder(Order order) {
-                Map<Ingredient, Double> requiredIngredients = new HashMap<>();
-                processDishes(order.getDishes(), requiredIngredients);
-                if (compareStock(requiredIngredients)) return true;
                 return false;
         }
 
-        private boolean validateOrder(Order order, Map<Ingredient, Double> requiredIngredients) {
-                if (order.getId()!=0) {
-                        // Return ingredients of the old order
-                        Order oldOrder = getById(order.getId());
-                        Map<Ingredient, Double> ingredients = service.getIngredients(oldOrder.getDishes());
-                        stockService.increaseIngredients(ingredients);
-                }
-                processDishes(order.getDishes(), requiredIngredients);
-                if (compareStock(requiredIngredients)) return true;
-                return false;
-        }
-
-        private boolean compareStock(Map<Ingredient, Double> pendingIngredients) {
-                for (Map.Entry<Ingredient, Double> ingredient : pendingIngredients.entrySet()) {
+        private boolean validateIngredients(Map<Ingredient, Double> requiredIngredients) {
+                for (Map.Entry<Ingredient, Double> ingredient : requiredIngredients.entrySet()) {
                         Double stockQuantity = stockService.getQuantityByIngredient(ingredient.getKey());
-                        Double pendingQuantity = ingredient.getValue();
+                        Double requiredQuantity = ingredient.getValue();
                         logger.info("Ingredient in Stock: "+ ingredient.getKey().getName()+
-                                "Stock: "+stockQuantity+
-                                " / Required: "+pendingQuantity);
-                        if (stockQuantity < pendingQuantity)
+                                " In Stock: "+stockQuantity+
+                                " Required: "+requiredQuantity);
+                        if (stockQuantity < requiredQuantity)
                                 return false;
                 }
                 return true;
-        }
-
-        private void processDishes(Map<Dish, Integer> dishes, Map<Ingredient, Double> pendingIngredients) {
-                for (Map.Entry<Dish, Integer> entry : dishes.entrySet()) {
-                        Dish nextDish = entry.getKey();
-                        Integer nextQuantity = entry.getValue();
-                        Map<Ingredient, Double> ingredients = nextDish.getIngredients();
-                        for (Map.Entry<Ingredient, Double> ingredient : ingredients.entrySet()) {
-                                processIngredients(ingredient, nextQuantity, pendingIngredients);
-                        }
-                }
-        }
-
-        private void processIngredients(Map.Entry<Ingredient, Double> ingredient, Integer nextQuantity,
-                                        Map<Ingredient, Double> pendingIngredients) {
-                Double requiredQuantity = ingredient.getValue() * nextQuantity;
-                if (pendingIngredients.containsKey(ingredient.getKey())) {
-                        Double oldValue = pendingIngredients.get(ingredient.getKey()).doubleValue();
-                        Double newValue = requiredQuantity+oldValue;
-                        pendingIngredients.put(ingredient.getKey(), newValue);
-                } else {
-                        pendingIngredients.put(ingredient.getKey(), requiredQuantity);
-                }
         }
 
         @Override

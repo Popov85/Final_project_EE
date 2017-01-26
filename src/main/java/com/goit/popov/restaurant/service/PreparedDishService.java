@@ -113,6 +113,6 @@ public class PreparedDishService implements DataTablesListToJSONConvertible<Orde
                         preparedDish.setWhenPrepared(new Date());
                         preparedDishes.add(preparedDish);
                 }
-                preparedDishDAO.confirmDishPrepared(preparedDishes);
+                preparedDishDAO.confirmDishesPrepared(preparedDishes);
         }
 }
