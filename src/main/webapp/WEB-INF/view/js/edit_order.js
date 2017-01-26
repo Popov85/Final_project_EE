@@ -103,15 +103,11 @@ $(document).ready(function () {
         }
     });
 
+    // Only table and dishes can be changed!!
     $('#newOrderForm').submit(function (event) {
-        //console.log("openedTimeStamp: "+currentOrder.openedTimeStamp);
         var updatedOrder = new Object();
-        updatedOrder.id = parseInt($("#id").val());
-        updatedOrder.isOpened = true;
-        updatedOrder.openedTimeStamp = currentOrder.openedTimeStamp;
-        updatedOrder.closedTimeStamp = null;
+        updatedOrder.id = currentOrder.id;
         updatedOrder.table = $('#table').val();
-        updatedOrder.waiter = parseInt($('#waiterId').val());
         updatedOrder.dishes = getDishes();
         $.ajax({
             url: $("#newOrderForm").attr( "action"),
@@ -165,7 +161,7 @@ $(document).ready(function () {
 
     // Displays the server's feedback on the page
     function display(data) {
-        var json = "<h4>Error</h4><pre>"//+JSON.stringify(data, null, 4)
+        var json = "<h4>Error</h4><pre>"
             + data.responseText+ "</pre>";
         $('#feedback').html(json);
     }

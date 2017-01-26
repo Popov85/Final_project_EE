@@ -29,8 +29,8 @@ public class OrderController {
 
         private static final Logger logger = (Logger) LoggerFactory.getLogger(OrderController.class);
 
-        private static final String DELETION_FAILURE_MESSAGE = "Failed to delete the order: id =";
         private static final String FORBIDDEN_ACTION_MESSAGE = "This action is forbidden!";
+        private static final String INGREDIENTS_SHORTAGE_MESSAGE = "Not enough ingredients to fulfill the order!";
 
         @Autowired
         private DishService dishService;
@@ -140,7 +140,6 @@ public class OrderController {
         @PostMapping(value="/edit_order")
         public ResponseEntity createOrUpdateOrder(@RequestBody Order order) {
                 logger.info("Create/Edit order #: "+order.getId());
-                // 1. If the dish map is empty, return - Error
                 if (order.getDishes().isEmpty()) {
                         logger.error("Error: no dishes!");
                         return new ResponseEntity("Order must contain dishes!",
@@ -149,11 +148,16 @@ public class OrderController {
                 long startTime = System.currentTimeMillis();
                 try {
                         orderService.processOrder(order);
+                } catch (UnsupportedOperationException e) {
+                        logger.error("Error:"+ FORBIDDEN_ACTION_MESSAGE);
+                        return new ResponseEntity(FORBIDDEN_ACTION_MESSAGE,
+                                HttpStatus.FORBIDDEN);
                 } catch (NotEnoughIngredientsException e) {
-                        logger.error("Error: not enough ingredients!");
-                        return new ResponseEntity("Not enough ingredients to fulfill the order!",
+                        logger.error("Error: "+INGREDIENTS_SHORTAGE_MESSAGE);
+                        return new ResponseEntity(INGREDIENTS_SHORTAGE_MESSAGE,
                                 HttpStatus.FORBIDDEN);
                 } catch (Exception e) {
+                        logger.error("ERROR: "+e.getMessage()+" cause: "+e.getCause()+" class: "+e.getClass());
                         return new ResponseEntity("Error: Unexpected error happened.",
                                 HttpStatus.FORBIDDEN);
                 }
@@ -175,7 +179,7 @@ public class OrderController {
                         setErrorMessages(id, ra,
                                 HttpStatus.FORBIDDEN.toString(),
                                 e.getMessage(),
-                                DELETION_FAILURE_MESSAGE +id);
+                                "" +id);
                         return "redirect:/error";
                 }
                 return "redirect:"+url.getPath();

@@ -6,6 +6,7 @@ import com.goit.popov.restaurant.model.Ingredient;
 import com.goit.popov.restaurant.model.StoreHouse;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,22 +31,24 @@ public class StockService {
                         "/ quantity left: "+quantityLeft);
         }
 
-        public void increaseIngredient(Ingredient ingredient, Double quantityRequired) {
+        public void increaseIngredient(Ingredient ingredient, Double quantityReturned) {
                 StoreHouse storeHouse = storeHouseDAO.getByIngredient(ingredient);
                 Double actualQuantity = storeHouse.getQuantity();
-                Double quantityLeft = actualQuantity + quantityRequired;
-                storeHouse.setQuantity(quantityLeft);
+                Double quantityIncreased = actualQuantity + quantityReturned;
+                storeHouse.setQuantity(quantityIncreased);
                 storeHouseDAO.update(storeHouse);
                 logger.info("Increased Ingredient: "+ingredient.getName()+
-                        "/ quantity left: "+quantityLeft);
+                        "/ quantity left: "+quantityIncreased);
         }
 
+        @Transactional
         public void decreaseIngredients(Map<Ingredient, Double> ingredientsRequired) {
                 for (Map.Entry<Ingredient, Double> ingredient : ingredientsRequired.entrySet()) {
                        decreaseIngredient(ingredient.getKey(), ingredient.getValue());
                 }
         }
 
+        @Transactional
         public void increaseIngredients(Map<Ingredient, Double> ingredientsReturned) {
                 for (Map.Entry<Ingredient, Double> ingredient : ingredientsReturned.entrySet()) {
                         increaseIngredient(ingredient.getKey(), ingredient.getValue());

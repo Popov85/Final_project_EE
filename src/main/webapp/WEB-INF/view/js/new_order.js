@@ -71,9 +71,7 @@ $(document).ready(function () {
     $('#newOrderForm').submit(function (event) {
         var order = new Object();
         order.id = 0;
-        order.isOpened = true;
         order.openedTimeStamp = new Date();
-        order.closedTimeStamp = null;
         order.table = $('#table').val();
         order.waiter = parseInt($('#waiterId').val());
         order.dishes = getDishes();

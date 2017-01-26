@@ -24,7 +24,7 @@ import java.util.Map;
 
 public class OrderServiceImplFast implements OrderService {
 
-        private static final Logger logger = (Logger) LoggerFactory.getLogger(OrderServiceImplOptimised.class);
+        private static final Logger logger = (Logger) LoggerFactory.getLogger(OrderServiceImplFast.class);
 
         @Autowired
         private OrderDAO orderDAO;
@@ -34,12 +34,6 @@ public class OrderServiceImplFast implements OrderService {
 
         @Autowired
         private Service service;
-
-        private SessionFactory sessionFactory;
-
-        public void setSessionFactory(SessionFactory sessionFactory) {
-                this.sessionFactory = sessionFactory;
-        }
 
         @Override
         public List<Order> getAll() {
@@ -135,7 +129,7 @@ public class OrderServiceImplFast implements OrderService {
         }
 
         /**
-         * Algorithm:
+         * Validation Algorithm:
          * 1. Create a Map<Ingredient, Double> of ingredients needed to fulfill the current Order;
          * 2. For each Ingredient get its quantity from the DB;
          * 3. Compare the quantity with the corresponding value in the map;
@@ -146,14 +140,10 @@ public class OrderServiceImplFast implements OrderService {
         @Transactional
         @Override
         public void processOrder(Order order) throws NotEnoughIngredientsException {
-                // Check if the order can be modified (has preparedDishes or isClosed/isCancelled)
                 if (!order.isOpened() || order.hasPreparedDishes())
                         throw new UnsupportedOperationException();
-                // Check if is a new Order or an existing One
                 final int orderId = order.getId();
-                if (orderId != 0) {
-                        returnIngredients(orderId);
-                }
+                if (orderId != 0) returnIngredients(order);
                 Map<Dish, Integer> orderedDishes = order.getDishes();
                 Map<Ingredient, Double> requiredIngredients = service.getIngredients(orderedDishes);
                 if (!validateIngredients(requiredIngredients))
@@ -166,15 +156,8 @@ public class OrderServiceImplFast implements OrderService {
                 stockService.decreaseIngredients(requiredIngredients);
         }
 
-        private void returnIngredients(int orderId) {
-                Order existingOrder = getById(orderId);
-                stockService.increaseIngredients(service.getIngredients(existingOrder.getDishes()));
-        }
-
-        @Deprecated
-        @Override
-        public boolean validateOrder(Order order) {
-                return false;
+        private void returnIngredients(Order order) {
+                stockService.increaseIngredients(service.getIngredients(order.getPreviousDishes()));
         }
 
         private boolean validateIngredients(Map<Ingredient, Double> requiredIngredients) {

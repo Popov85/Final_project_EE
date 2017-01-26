@@ -8,10 +8,10 @@ import com.fasterxml.jackson.databind.node.IntNode;
 import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Order;
 import com.goit.popov.restaurant.service.DishService;
+import com.goit.popov.restaurant.service.OrderService;
 import com.goit.popov.restaurant.service.WaiterService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -31,8 +31,11 @@ public class OrderDeserializer extends JsonDeserializer<Order> {
         @Autowired
         private DishService dishService;
 
+        @Autowired
+        private OrderService orderService;
+
         @Override
-        public Order deserialize(JsonParser p, DeserializationContext ctxt) throws JsonMappingException {
+        public Order deserialize(JsonParser p, DeserializationContext ctxt) {
                 JsonNode node = null;
                 try {
                         node = p.getCodec().readTree(p);
@@ -50,20 +53,21 @@ public class OrderDeserializer extends JsonDeserializer<Order> {
                 String table = "";
                 ArrayNode dishes;
                 Map<Dish, Integer> dishesInMap = null;
+                Order order = null;
                 try {
                         id = (Integer) ((IntNode) node.get("id")).numberValue();
-                        isOpened = node.get("isOpened").booleanValue();
-                        openedTS = node.get("openedTimeStamp").asText();
-                        openedTimeStamp = convertStringToData(openedTS);
-                        if (!node.get("closedTimeStamp").isNull()) {
-                                closedTS = node.get("closedTimeStamp").asText();
-                                closedTimeStamp = convertStringToData(closedTS);
-                        }
-                        tableInString = node.get("table").asText();
-                        table = tableInString;
-                        waiterId = (Integer) ((IntNode) node.get("waiter")).numberValue();
+                        table = node.get("table").asText();
                         dishes = ((ArrayNode) node.get("dishes"));
                         dishesInMap = convertJSONToMap(dishes);
+                        if (id==0 ) {
+                                waiterId = (Integer) ((IntNode) node.get("waiter")).numberValue();
+                                isOpened = true;
+                                openedTimeStamp = convertStringToData(node.get("openedTimeStamp").asText());
+                                order = createOrder(id, isOpened, openedTimeStamp, closedTimeStamp,
+                                        waiterId, table, dishesInMap);
+                        } else {
+                                order = updateOrder(id, table, dishesInMap);
+                        }
                 } catch (ParseException e) {
                         logger.info("Error while parsing JSON: " + e.getMessage());
                         throw new RuntimeJsonMappingException("Parsing error");
@@ -71,12 +75,19 @@ public class OrderDeserializer extends JsonDeserializer<Order> {
                         logger.info("Error while processing JSON: " + e.getMessage());
                         throw new RuntimeJsonMappingException("Processing error");
                 }
-                Order order = getOrder(id, isOpened, openedTimeStamp, closedTimeStamp, waiterId, table, dishesInMap);
                 return order;
         }
 
-        private Order getOrder(int id, boolean isOpened, Date openedTimeStamp, Date closedTimeStamp,
-                               int waiterId, String table, Map<Dish, Integer> dishesInMap) {
+        private Order updateOrder(int orderId, String table, Map<Dish, Integer> dishes) {
+                Order order = orderService.getById(orderId);
+                order.setTable(table);
+                order.setPreviousDishes(order.getDishes());
+                order.setDishes(dishes);
+                return order;
+        }
+
+        private Order createOrder(int id, boolean isOpened, Date openedTimeStamp, Date closedTimeStamp,
+                                  int waiterId, String table, Map<Dish, Integer> dishesInMap) {
                 Order order = new Order();
                 order.setId(id);
                 order.setOpened(isOpened);

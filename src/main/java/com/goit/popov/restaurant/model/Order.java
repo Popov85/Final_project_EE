@@ -60,6 +60,17 @@ public class Order {
         @Column(name = "quantity")
         Map<Dish, Integer> dishes;
 
+        @Transient
+        Map<Dish, Integer> previousDishes = null;
+
+        public Map<Dish, Integer> getPreviousDishes() {
+                return previousDishes;
+        }
+
+        public void setPreviousDishes(Map<Dish, Integer> previousDishes) {
+                this.previousDishes = previousDishes;
+        }
+
         @JsonIgnore
         @OneToMany(fetch = FetchType.EAGER, mappedBy = "order")
         @Fetch(FetchMode.SELECT)
