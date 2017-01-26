@@ -34,6 +34,9 @@ public class Order {
         @Column(name = "IS_OPENED")
         private boolean isOpened;
 
+        @Column(name = "IS_CANCELLED")
+        private boolean isCancelled;
+
         @Column(name = "OPEN_DATE")
         @Temporal(TemporalType.TIMESTAMP)
         @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
@@ -95,6 +98,10 @@ public class Order {
                 return isOpened;
         }
 
+        public boolean isCancelled() {
+                return isCancelled;
+        }
+
         public String getTable() {
                 return table;
         }
@@ -117,6 +124,10 @@ public class Order {
 
         public void setOpened(boolean opened) {
                 isOpened = opened;
+        }
+
+        public void setCancelled(boolean cancelled) {
+                isCancelled = cancelled;
         }
 
         public void setTable(String table) {

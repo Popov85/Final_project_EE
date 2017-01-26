@@ -18,6 +18,7 @@ $(document).ready(function () {
             { "data": "dishesQuantity", "title": "dishes", "sortable": false},
             { "data": "totalSum", "title": "total", "sortable": false},
             { "data": "fulfilled", "name": "fulfilled", "title": "isFulfilled"},
+            { "data": "cancelled", "name": "cancelled", "title": "isCancelled"},
 
             { "data": null, "sortable": false, "render": function(data){
                 return '<a href="/edit_order?id=' + data.id + '"><input type="button" class="btn btn-default" value="Edit"/></a>';
@@ -25,7 +26,7 @@ $(document).ready(function () {
             },
 
             { "data": null, "sortable": false, "render": function(data){
-                return '<a href="/delete_order?id=' + data.id + '"><input type="button" class="btn btn-default" value="Delete"/></a>';
+                return '<a href="/cancel_order?id=' + data.id + '"><input type="button" class="btn btn-default" value="Cancel"/></a>';
             }
             },
 

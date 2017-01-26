@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,9 +32,6 @@ public class OrderServiceImplFast implements OrderService {
 
         @Autowired
         private StockService stockService;
-
-        @Autowired
-        private Service service;
 
         @Override
         public List<Order> getAll() {
@@ -111,6 +109,13 @@ public class OrderServiceImplFast implements OrderService {
         }
 
         @Override
+        public void cancelOrder(int id) {
+                Order order = getById(id);
+                order.setCancelled(true);
+                update(order);
+        }
+
+        @Override
         public long count() {
                 return orderDAO.count();
         }
@@ -145,7 +150,7 @@ public class OrderServiceImplFast implements OrderService {
                 final int orderId = order.getId();
                 if (orderId != 0) returnIngredients(order);
                 Map<Dish, Integer> orderedDishes = order.getDishes();
-                Map<Ingredient, Double> requiredIngredients = service.getIngredients(orderedDishes);
+                Map<Ingredient, Double> requiredIngredients = getIngredients(orderedDishes);
                 if (!validateIngredients(requiredIngredients))
                         throw new NotEnoughIngredientsException();
                 if (orderId != 0) {
@@ -157,7 +162,28 @@ public class OrderServiceImplFast implements OrderService {
         }
 
         private void returnIngredients(Order order) {
-                stockService.increaseIngredients(service.getIngredients(order.getPreviousDishes()));
+                stockService.increaseIngredients(getIngredients(order.getPreviousDishes()));
+        }
+
+        private Map<Ingredient, Double> getIngredients(Map<Dish, Integer> dishes) {
+                Map<Ingredient, Double> ingredients = new HashMap<>();
+                for (Map.Entry<Dish, Integer> dish : dishes.entrySet()) {
+                        Map<Ingredient, Double> dishIngredients = dish.getKey().getIngredients();
+                        Integer requiredQuantity = dish.getValue();
+                        for (Map.Entry<Ingredient, Double> dishIngredient : dishIngredients.entrySet()) {
+                                Ingredient nextIngredient = dishIngredient.getKey();
+                                if (!ingredients.containsKey(nextIngredient)) {
+                                        ingredients.put(nextIngredient,
+                                                dishIngredient.getValue()*requiredQuantity);
+                                } else {
+                                        Double currentValue = ingredients.get(nextIngredient).doubleValue();
+                                        Double newValue = currentValue + dishIngredient.getValue()*requiredQuantity;
+                                        ingredients.put(nextIngredient,
+                                                dishIngredient.getValue()*requiredQuantity);
+                                }
+                        }
+                }
+                return ingredients;
         }
 
         private boolean validateIngredients(Map<Ingredient, Double> requiredIngredients) {

@@ -95,8 +95,8 @@ public class PreparedDishService implements DataTablesListToJSONConvertible<Orde
         }
 
         private boolean isPrepared(Dish dish, Order order) {
-                logger.info("Order #: "+order.getId()+ "/ Dish #: "+dish.getId()+
-                        "Expected: "+order.getDishesQuantity(dish)+" - "+preparedDishDAO.getPreparedDishesQuantity(dish, order)+" :Actual");
+                /*logger.info("Order #: "+order.getId()+ "/ Dish #: "+dish.getId()+
+                        "Expected: "+order.getDishesQuantity(dish)+" - "+preparedDishDAO.getPreparedDishesQuantity(dish, order)+" :Actual");*/
                 return order.getDishesQuantity(dish)==preparedDishDAO.getPreparedDishesQuantity(dish, order);
         }
 

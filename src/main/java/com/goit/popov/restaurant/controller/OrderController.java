@@ -29,8 +29,10 @@ public class OrderController {
 
         private static final Logger logger = (Logger) LoggerFactory.getLogger(OrderController.class);
 
+        private static final String NO_DISHES_MESSAGE = "Order must contain dishes!";
         private static final String FORBIDDEN_ACTION_MESSAGE = "This action is forbidden!";
         private static final String INGREDIENTS_SHORTAGE_MESSAGE = "Not enough ingredients to fulfill the order!";
+        private static final String UNEXPECTED_ERROR_MESSAGE ="Unexpected error happened";
 
         @Autowired
         private DishService dishService;
@@ -141,15 +143,15 @@ public class OrderController {
         public ResponseEntity createOrUpdateOrder(@RequestBody Order order) {
                 logger.info("Create/Edit order #: "+order.getId());
                 if (order.getDishes().isEmpty()) {
-                        logger.error("Error: no dishes!");
-                        return new ResponseEntity("Order must contain dishes!",
+                        logger.error("Error: "+NO_DISHES_MESSAGE);
+                        return new ResponseEntity(NO_DISHES_MESSAGE,
                                 HttpStatus.FORBIDDEN);
                 }
                 long startTime = System.currentTimeMillis();
                 try {
                         orderService.processOrder(order);
                 } catch (UnsupportedOperationException e) {
-                        logger.error("Error:"+ FORBIDDEN_ACTION_MESSAGE);
+                        logger.error("Error: "+ FORBIDDEN_ACTION_MESSAGE);
                         return new ResponseEntity(FORBIDDEN_ACTION_MESSAGE,
                                 HttpStatus.FORBIDDEN);
                 } catch (NotEnoughIngredientsException e) {
@@ -157,13 +159,13 @@ public class OrderController {
                         return new ResponseEntity(INGREDIENTS_SHORTAGE_MESSAGE,
                                 HttpStatus.FORBIDDEN);
                 } catch (Exception e) {
-                        logger.error("ERROR: "+e.getMessage()+" cause: "+e.getCause()+" class: "+e.getClass());
-                        return new ResponseEntity("Error: Unexpected error happened.",
+                        logger.error("Error: "+e.getMessage()+
+                                     "Cause: "+e.getCause()+ "Class: "+e.getClass());
+                        return new ResponseEntity("Error: "+UNEXPECTED_ERROR_MESSAGE,
                                 HttpStatus.FORBIDDEN);
                 }
                 long endTime   = System.currentTimeMillis();
                 logger.info("VALIDATION RUNTIME: "+(endTime - startTime)+" ms");
-
                 return new ResponseEntity("{\"Result\": \"Success\"}", HttpStatus.OK);
         }
 
@@ -197,7 +199,26 @@ public class OrderController {
                         setErrorMessages(id, ra,
                                 HttpStatus.FORBIDDEN.toString(),
                                 FORBIDDEN_ACTION_MESSAGE,
-                                "Failed to close the Order #: "+id);
+                                "Error: Failed to close the Order #: "+id);
+                        return "redirect:/error";
+                }
+                return "redirect:"+url.getPath();
+        }
+
+        // Cancel (Action)
+        @GetMapping("/cancel_order")
+        public String cancelOrder(@RequestParam int id, HttpServletRequest request, RedirectAttributes ra) {
+                URL url=null;
+                try {
+                        url = new URL(request.getHeader("referer"));
+                        orderService.cancelOrder(id);
+                        // TODO dispose of prepared dishes!
+                        logger.info("Cancelled Order #: "+id);
+                } catch (Exception e) {
+                        setErrorMessages(id, ra,
+                                HttpStatus.FORBIDDEN.toString(),
+                                FORBIDDEN_ACTION_MESSAGE,
+                                "Error: Failed to cancel the Order #: "+id);
                         return "redirect:/error";
                 }
                 return "redirect:"+url.getPath();

@@ -16,4 +16,5 @@ public interface OrderService extends OrderDAO, DataTablesMapToJSONConvertible<D
         void closeOrder(int orderId);
         void processOrder(Order order) throws NotEnoughIngredientsException;
         Integer[] getTables();
+        void cancelOrder(int id);
 }
