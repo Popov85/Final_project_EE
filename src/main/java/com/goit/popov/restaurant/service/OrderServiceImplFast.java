@@ -9,11 +9,9 @@ import com.goit.popov.restaurant.model.*;
 import com.goit.popov.restaurant.service.dataTables.DataTablesInputExtendedDTO;
 import com.goit.popov.restaurant.service.dataTables.DataTablesOutputDTOUniversal;
 import com.goit.popov.restaurant.service.exceptions.NotEnoughIngredientsException;
-import org.hibernate.SessionFactory;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -128,6 +126,10 @@ public class OrderServiceImplFast implements OrderService {
         @Override
         public void closeOrder(int orderId) {
                 Order order = getById(orderId);
+                if (order.isCancelled()) throw
+                        new UnsupportedOperationException("You cannot close a cancelled order!");
+                if (!order.isOpened()) throw
+                        new IllegalStateException("This order has already been closed!");
                 order.setOpened(false);
                 order.setClosedTimeStamp(new Date());
                 update(order);

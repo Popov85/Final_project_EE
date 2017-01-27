@@ -69,10 +69,11 @@ public class PreparedDishService implements DataTablesListToJSONConvertible<Orde
                         ObjectNode a = mapper.createObjectNode();
                         a.put("id", order.getId());
                         a.put("waiter", order.getWaiter().getName());
-                        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                        SimpleDateFormat sdfDate = new SimpleDateFormat("HH:mm");
                         a.put("openedTimeStamp", sdfDate.format(order.getOpenedTimeStamp()));
                         a.put("dishes", order.getDishesQuantity());
                         a.put("isFulfilled", order.isFulfilled());
+                        a.put("isCancelled", order.isCancelled());
                         ana.add(a);
                 }
                 return ana;

@@ -229,6 +229,15 @@ public class Order {
                 return total;
         }
 
+        public String getReadiness() {
+                return ((preparedDishes!=null) ? Order.round(preparedDishes.size() / (float) getQuantityOutOfMap(dishes)*100, 1)+" %" : "0 %");
+        }
+
+        private static double round (double value, int precision) {
+                int scale = (int) Math.pow(10, precision);
+                return (double) Math.round(value * scale) / scale;
+        }
+
 
         @Override
         public boolean equals(Object o) {

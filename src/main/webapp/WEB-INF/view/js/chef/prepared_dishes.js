@@ -20,6 +20,7 @@ $(document).ready(function () {
             {"data": "openedTimeStamp", "name": "openedTimeStamp", "title": "opened time"},
             {"data": "dishes", "name": "dishes quantity", "title": "dishes quantity"},
             {"data": "isFulfilled", "name": "isFulfilled", "title": "isFulfilled"},
+            {"data": "isCancelled", "name": "isCancelled", "title": "isCancelled"},
 
             {
                 "data": null, "sortable": false, "render": function () {

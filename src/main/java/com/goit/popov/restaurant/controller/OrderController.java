@@ -212,7 +212,6 @@ public class OrderController {
                 try {
                         url = new URL(request.getHeader("referer"));
                         orderService.cancelOrder(id);
-                        // TODO dispose of prepared dishes!
                         logger.info("Cancelled Order #: "+id);
                 } catch (Exception e) {
                         setErrorMessages(id, ra,
