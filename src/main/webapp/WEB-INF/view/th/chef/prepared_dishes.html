@@ -11,39 +11,49 @@
     <script src ="/js/lib/jquery.dataTables-1.10.12.min.js"/>
     <script src ="/js/chef/prepared_dishes.js"/>
     <script type="text/javascript">
-        function prepare(params, isCancelled) {
-            console.log("isCancelled: "+isCancelled);
-            var url = "/chef/confirm_dishes_prepared?"+params;
-            if (isCancelled=="true") {
-                if (confirm('The Order was cancelled! Do you want to return ingredients?')) {
-                    var url = "/chef/confirm_dishes_cancelled?"+params;
-                }
-            }
-            console.log("url: "+url);
-            //var url = "/chef/check_order";
+        function prepare(params) {
+            var url = "/chef/check_order?"+params;
             $.ajax({
              type: 'POST',
              url: url,
              contentType: 'application/json;',
              dataType: 'json',
-             success: handleData,
+             success: checkOrder,
              error: function(xhr, textStatus, errorThrown) {
                 console.log('error');
              }
              });
         }
 
-        function handleData(data) {
+        function checkOrder(data) {
             // Reload Dishes table
-            /*if (data.isCancelled=="true") {
+            var params = data.params; // 'dishId=' + data.dishId + '&amp;quantity=' + data.quantity + '&amp;orderId=' + data.orderId;
+            console.log(params);
+            console.log(data.isCancelled);
+            var url = "/chef/confirm_dishes_prepared?"+params;//?dishId=' + data.dishId + '&amp;quantity=' + data.quantity + '&amp;orderId=' + data.orderId;
+            if (data.isCancelled) {
+                // Order was cancelled
                 if (confirm('The Order was cancelled! Do you want to return ingredients?')) {
-                    var url = "/chef/confirm_dishes_cancelled?"+params;
+                    url = '/chef/confirm_dishes_cancelled?'+params;
                 }
-            }*/
+            }
+            $.ajax({
+                type: 'GET',
+                url: url,
+                contentType: 'application/json;',
+                dataType: 'json',
+                success: reloadDishesTable,
+                error: function(xhr, textStatus, errorThrown) {
+                    console.log('error');
+                }
+            });
+        }
+
+        function reloadDishesTable(data) {
             $('#dishesTable').DataTable()
                     .ajax.url(
                     "/chef/get_orders_prepared_dishes?orderId="
-                    + encodeURIComponent(data.id)
+                    + encodeURIComponent(data.orderId)
             ).load()
         }
     </script>

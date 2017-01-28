@@ -75,7 +75,7 @@ $(document).ready(function () {
                 } else {
                     var params = 'dishId=' + data.id+'&quantity='+data.quantity +'&orderId='+$('#orderId').text();
                     var status = $('#status').text();
-                    return '<a href="javascript:prepare(\'' + params + '\',\'' + status + '\')">' +
+                    return '<a href="javascript:prepare(\'' + params + '\')">' +
                                 '<input type="button" class="btn btn-default" value="Confirm"/>' +
                             '</a>';
                 }

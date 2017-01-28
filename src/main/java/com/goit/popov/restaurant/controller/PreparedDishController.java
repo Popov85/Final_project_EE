@@ -1,6 +1,8 @@
 package com.goit.popov.restaurant.controller;
 
 import ch.qos.logback.classic.Logger;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.goit.popov.restaurant.model.Order;
 import com.goit.popov.restaurant.model.PreparedDish;
 import com.goit.popov.restaurant.service.OrderService;
@@ -84,14 +86,23 @@ public class PreparedDishController {
         @PostMapping("/chef/check_order")
         public ResponseEntity checkOrder(@RequestParam int dishId, @RequestParam int quantity, @RequestParam int orderId) {
                 Order order = orderService.getById(orderId);
+                ObjectMapper mapper = new ObjectMapper();
+                ObjectNode node = mapper.createObjectNode();
+                node.put("dishId", dishId);
+                node.put("quantity", quantity);
+                node.put("orderId", orderId);
+                String params = "dishId="+dishId+"&quantity="+quantity+"&orderId="+orderId;
+                node.put("params",params);
                 if (order.isCancelled()) {
-                        return new ResponseEntity("{\"isCancelled\":" +true+"}", HttpStatus.OK);
+                        node.put("isCancelled", true);
+                        return new ResponseEntity(node, HttpStatus.OK);
+                } else {
+                        node.put("isCancelled", false);
+                        return new ResponseEntity(node, HttpStatus.OK);
                 }
-                confirmDishPrepared(dishId, quantity, orderId);
-                return new ResponseEntity("{\"id\":" +orderId+"}", HttpStatus.OK);
         }
 
-        @PostMapping("/chef/confirm_dishes_prepared")
+        @GetMapping("/chef/confirm_dishes_prepared")
         public ResponseEntity confirmDishPrepared(@RequestParam int dishId, @RequestParam int quantity, @RequestParam int orderId) {
                 int chefId;
                 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -105,10 +116,10 @@ public class PreparedDishController {
                 logger.info("Proceeds... after possible exception caught: chefId= "+chefId);
                 // check if the order was cancelled, if so - propose to cancel dishes
                 preparedDishService.confirmDishesPrepared(dishId, quantity, orderId, chefId);
-                return new ResponseEntity("{\"id\":" +orderId+"}", HttpStatus.OK);
+                return new ResponseEntity("{\"orderId\":" +orderId+"}", HttpStatus.OK);
         }
 
-        @PostMapping("/chef/confirm_dishes_cancelled")
+        @GetMapping("/chef/confirm_dishes_cancelled")
         public ResponseEntity confirmDishCancelled(@RequestParam int dishId, @RequestParam int quantity, @RequestParam int orderId) {
                 int chefId;
                 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -121,6 +132,6 @@ public class PreparedDishController {
                 }
                 logger.info("Proceeds... after possible exception caught: chefId= "+chefId);
                 preparedDishService.confirmDishesCancelled(dishId, quantity, orderId, chefId);
-                return new ResponseEntity("{\"id\":" +orderId+"}", HttpStatus.OK);
+                return new ResponseEntity("{\"orderId\":" +orderId+"}", HttpStatus.OK);
         }
 }
