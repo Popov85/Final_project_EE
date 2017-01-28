@@ -90,7 +90,16 @@ public class PreparedDishHistoryDAOImplJPA implements PreparedDishHistoryDAO {
         @Override
         public long getPreparedDishesQuantity(Dish dish, Order order) {
                 return (long) sessionFactory.getCurrentSession().createQuery("select distinct count(pd) from PreparedDish pd " +
-                        "where pd.order=:order and pd.dish=:dish")
+                        "where pd.order=:order and pd.dish=:dish and pd.isCancelled=false")
+                        .setParameter("dish", dish)
+                        .setParameter("order", order)
+                        .getSingleResult();
+        }
+
+        @Override
+        public long getCancelledDishesQuantity(Dish dish, Order order) {
+                return (long) sessionFactory.getCurrentSession().createQuery("select distinct count(pd) from PreparedDish pd " +
+                        "where pd.order=:order and pd.dish=:dish and pd.isCancelled=true")
                         .setParameter("dish", dish)
                         .setParameter("order", order)
                         .getSingleResult();
@@ -112,7 +121,7 @@ public class PreparedDishHistoryDAOImplJPA implements PreparedDishHistoryDAO {
         }
 
         @Override
-        public void confirmDishesPrepared(Set<PreparedDish> preparedDishes) {
+        public void savePreparedDishes(Set<PreparedDish> preparedDishes) {
                 for (PreparedDish preparedDish : preparedDishes) {
                         insert(preparedDish);
                         logger.info("PreparedDish saved: "+preparedDish);

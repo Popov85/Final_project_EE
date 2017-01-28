@@ -2,6 +2,16 @@
  * Created by Andrey on 1/16/2017.
  */
 $(document).ready(function () {
+
+    function prepare(url) {
+        console.log("URL: ");
+        console.log("success function: ");
+        return 3;
+    }
+
+});
+
+$(document).ready(function () {
     var table = $('#ordsTable').DataTable({
         "ajax": {
             "url": "/chef/get_orders_today",
@@ -34,6 +44,8 @@ $(document).ready(function () {
     $('#ordsTable tbody').on('click', 'button', function () {
         var data = table.row($(this).parents('tr')).data();
         $('#orderId').text(data.id);
+        $('#status').text(data.isCancelled);
+        //console.log(data.isCancelled);
         var table2 = $('#dishesTable').DataTable()
             .ajax.url(
                 "/chef/get_orders_prepared_dishes?orderId="
@@ -54,17 +66,23 @@ $(document).ready(function () {
             {"data": "dish", "name": "dish", "title": "dish"},
             {"data": "quantity", "name": "quantity", "title": "quantity"},
             {"data": "isPrepared", "name": "isPrepared", "title": "isPrepared"},
+            {"data": "isReturned", "name": "isReturned", "title": "isReturned"},
 
             {
                 "data": null, "sortable": false, "render": function (data) {
-                if (data.isPrepared) {
+                if (data.isPrepared || data.isReturned) {
                     return '<input type="button" class="btn btn-default" disabled="true" value="Confirm"/>';
                 } else {
-                    return '<a href="/chef/confirm_dish_prepared?dishId=' + data.id+'&quantity='+data.quantity +'&orderId='+$('#orderId').text()+ '">' +
-                        '<input type="button" class="btn btn-default" value="Confirm"/></a>';
+                    var params = 'dishId=' + data.id+'&quantity='+data.quantity +'&orderId='+$('#orderId').text();
+                    var status = $('#status').text();
+                    return '<a href="javascript:prepare(\'' + params + '\',\'' + status + '\')">' +
+                                '<input type="button" class="btn btn-default" value="Confirm"/>' +
+                            '</a>';
                 }
             }
             }
         ]
     });
+
+
 });

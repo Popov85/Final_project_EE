@@ -10,6 +10,43 @@
     <script src ="/js/lib/bootstrap-3.3.7.min.js"/>
     <script src ="/js/lib/jquery.dataTables-1.10.12.min.js"/>
     <script src ="/js/chef/prepared_dishes.js"/>
+    <script type="text/javascript">
+        function prepare(params, isCancelled) {
+            console.log("isCancelled: "+isCancelled);
+            var url = "/chef/confirm_dishes_prepared?"+params;
+            if (isCancelled=="true") {
+                if (confirm('The Order was cancelled! Do you want to return ingredients?')) {
+                    var url = "/chef/confirm_dishes_cancelled?"+params;
+                }
+            }
+            console.log("url: "+url);
+            //var url = "/chef/check_order";
+            $.ajax({
+             type: 'POST',
+             url: url,
+             contentType: 'application/json;',
+             dataType: 'json',
+             success: handleData,
+             error: function(xhr, textStatus, errorThrown) {
+                console.log('error');
+             }
+             });
+        }
+
+        function handleData(data) {
+            // Reload Dishes table
+            /*if (data.isCancelled=="true") {
+                if (confirm('The Order was cancelled! Do you want to return ingredients?')) {
+                    var url = "/chef/confirm_dishes_cancelled?"+params;
+                }
+            }*/
+            $('#dishesTable').DataTable()
+                    .ajax.url(
+                    "/chef/get_orders_prepared_dishes?orderId="
+                    + encodeURIComponent(data.id)
+            ).load()
+        }
+    </script>
 </head>
 <body>
 <h3 class="form-signin-heading" align="center">Prepared dishes</h3>
@@ -19,7 +56,10 @@
         <div class="col-md-6">
             <div th:replace="/th/header :: header"/>
             <h3 class="form-signin-heading" align="center">Dishes</h3>
-            <h5 class="form-signin-heading" align="center">(of Order #)<div id="orderId" name="orderId"></div></h5>
+            <h5 class="form-signin-heading" align="center">(of Order #)
+                <div id="orderId" name="orderId"></div>
+                <div id="status" name="status"></div>
+            </h5>
             <table id="dishesTable" name="dishesTable" class="display" cellspacing="0" width="110%" style="overflow-x:auto">
                 <thead>
                 <tr>
@@ -27,6 +67,7 @@
                     <th>Dish</th>
                     <th>Quantity</th>
                     <th>IsPrepared</th>
+                    <th>IsReturned</th>
 
                     <th>Confirm</th>
                 </tr>

@@ -9,6 +9,8 @@ import com.goit.popov.restaurant.service.authentification.Employee;
 import com.goit.popov.restaurant.service.dataTables.DataTablesOutputDTOCollectionWrapper;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -78,8 +80,19 @@ public class PreparedDishController {
                 return data;
         }
 
-        @GetMapping("/chef/confirm_dish_prepared")
-        public String confirmDishPrepared(@RequestParam int dishId, @RequestParam int quantity, @RequestParam int orderId) {
+
+        @PostMapping("/chef/check_order")
+        public ResponseEntity checkOrder(@RequestParam int dishId, @RequestParam int quantity, @RequestParam int orderId) {
+                Order order = orderService.getById(orderId);
+                if (order.isCancelled()) {
+                        return new ResponseEntity("{\"isCancelled\":" +true+"}", HttpStatus.OK);
+                }
+                confirmDishPrepared(dishId, quantity, orderId);
+                return new ResponseEntity("{\"id\":" +orderId+"}", HttpStatus.OK);
+        }
+
+        @PostMapping("/chef/confirm_dishes_prepared")
+        public ResponseEntity confirmDishPrepared(@RequestParam int dishId, @RequestParam int quantity, @RequestParam int orderId) {
                 int chefId;
                 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
                 try {
@@ -90,7 +103,24 @@ public class PreparedDishController {
                         chefId = 1;
                 }
                 logger.info("Proceeds... after possible exception caught: chefId= "+chefId);
-                preparedDishService.confirmDishPrepared(dishId, quantity, orderId, chefId);
-                return "redirect:/chef/prepared_dishes";
+                // check if the order was cancelled, if so - propose to cancel dishes
+                preparedDishService.confirmDishesPrepared(dishId, quantity, orderId, chefId);
+                return new ResponseEntity("{\"id\":" +orderId+"}", HttpStatus.OK);
+        }
+
+        @PostMapping("/chef/confirm_dishes_cancelled")
+        public ResponseEntity confirmDishCancelled(@RequestParam int dishId, @RequestParam int quantity, @RequestParam int orderId) {
+                int chefId;
+                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                try {
+                        Employee userDetails = (Employee) auth.getPrincipal();
+                        chefId = userDetails.getId();
+                } catch (Exception e) {
+                        logger.error("ERROR: "+e.getMessage());
+                        chefId = 1;
+                }
+                logger.info("Proceeds... after possible exception caught: chefId= "+chefId);
+                preparedDishService.confirmDishesCancelled(dishId, quantity, orderId, chefId);
+                return new ResponseEntity("{\"id\":" +orderId+"}", HttpStatus.OK);
         }
 }

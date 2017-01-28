@@ -17,7 +17,8 @@ public interface PreparedDishHistoryDAO extends GenericDAO<PreparedDish>  {
         List<PreparedDish> getAllChefToday(int chefId);
         long getPreparedDishesQuantity(Order order);
         long getPreparedDishesQuantity(Dish dish, Order order);
+        long getCancelledDishesQuantity(Dish dish, Order order);
         List<Order> getAllOrderForChef();
-        void confirmDishesPrepared(Set<PreparedDish> preparedDishes);
+        void savePreparedDishes(Set<PreparedDish> preparedDishes);
         long count();
 }

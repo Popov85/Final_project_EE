@@ -10,6 +10,8 @@ import com.goit.popov.restaurant.service.dataTables.DataTablesListToJSONConverti
 import com.goit.popov.restaurant.service.dataTables.DataTablesObjectToJSONConvertible;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -31,6 +33,12 @@ public class PreparedDishService implements DataTablesListToJSONConvertible<Orde
 
         @Autowired
         private ChefService chefService;
+
+        @Autowired
+        private Service service;
+
+        @Autowired
+        private StockService stockService;
 
         public List<PreparedDish> getAll() {
                 return preparedDishDAO.getAll();
@@ -86,22 +94,47 @@ public class PreparedDishService implements DataTablesListToJSONConvertible<Orde
                 ArrayNode ana = mapper.createArrayNode();
                 for (Map.Entry<Dish, Integer> dish : dishes.entrySet()) {
                         ObjectNode a = mapper.createObjectNode();
-                        a.put("id", dish.getKey().getId());
-                        a.put("dish", dish.getKey().getName());
+                        Dish nextDish = dish.getKey();
+                        a.put("id", nextDish.getId());
+                        a.put("dish", nextDish.getName());
                         a.put("quantity", dish.getValue());
-                        a.put("isPrepared", isPrepared(dish.getKey(), order));
+                        a.put("isPrepared", isPrepared(nextDish, order));
+                        // Decide if the Dish was rejected from getting prepared and ingredients returned to Stock
+                        a.put("isReturned", isCancelled(nextDish, order));
                         ana.add(a);
                 }
                 return ana;
         }
 
+        private boolean isCancelled(Dish dish, Order order) {
+                if (preparedDishDAO.getCancelledDishesQuantity(dish, order)!=0) return true;
+                return false;
+        }
+
         private boolean isPrepared(Dish dish, Order order) {
-                /*logger.info("Order #: "+order.getId()+ "/ Dish #: "+dish.getId()+
-                        "Expected: "+order.getDishesQuantity(dish)+" - "+preparedDishDAO.getPreparedDishesQuantity(dish, order)+" :Actual");*/
                 return order.getDishesQuantity(dish)==preparedDishDAO.getPreparedDishesQuantity(dish, order);
         }
 
-        public void confirmDishPrepared(int dishId, int quantity, int orderId, int chefId) {
+        public void confirmDishesPrepared(int dishId, int quantity, int orderId, int chefId) {
+                Set<PreparedDish> preparedDishes = createPreparedDishes(dishId, quantity, orderId, chefId, false);
+                preparedDishDAO.savePreparedDishes(preparedDishes);
+        }
+
+        @Transactional
+        public void confirmDishesCancelled(int dishId, int quantity, int orderId, int chefId) {
+                Set<PreparedDish> preparedDishes = createPreparedDishes(dishId, quantity, orderId, chefId, true);
+                preparedDishDAO.savePreparedDishes(preparedDishes);
+                returnIngredients(dishId, quantity);
+        }
+
+        private void returnIngredients(int dishId, int quantity) {
+                Dish dish = dishService.getById(dishId);
+                Map<Dish, Integer> dishes = new HashMap<>();
+                dishes.put(dish, quantity);
+                stockService.increaseIngredients(service.getIngredients(dishes));
+        }
+
+        private Set<PreparedDish> createPreparedDishes(int dishId, int quantity, int orderId, int chefId, boolean isCancelled) {
                 Dish dish = dishService.getById(dishId);
                 Order order = orderService.getById(orderId);
                 Chef chef = (Chef) chefService.getEmployeeById(chefId);
@@ -112,8 +145,9 @@ public class PreparedDishService implements DataTablesListToJSONConvertible<Orde
                         preparedDish.setDish(dish);
                         preparedDish.setOrder(order);
                         preparedDish.setWhenPrepared(new Date());
+                        preparedDish.setCancelled(isCancelled);
                         preparedDishes.add(preparedDish);
                 }
-                preparedDishDAO.confirmDishesPrepared(preparedDishes);
+                return preparedDishes;
         }
 }

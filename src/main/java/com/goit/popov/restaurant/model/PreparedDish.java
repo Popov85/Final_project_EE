@@ -39,6 +39,9 @@ public class PreparedDish {
         @JoinColumn(name = "ORD_ID")
         private Order order;
 
+        @Column(name = "IS_CANCELLED")
+        private boolean isCancelled;
+
         public int getId() {
                 return id;
         }
@@ -75,9 +78,16 @@ public class PreparedDish {
                 this.chef = chef;
         }
 
-
         public void setOrder(Order order) {
                 this.order = order;
+        }
+
+        public boolean isCancelled() {
+                return isCancelled;
+        }
+
+        public void setCancelled(boolean cancelled) {
+                isCancelled = cancelled;
         }
 
         public boolean contains(Dish dish) {

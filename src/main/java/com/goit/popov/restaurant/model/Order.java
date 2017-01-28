@@ -238,7 +238,6 @@ public class Order {
                 return (double) Math.round(value * scale) / scale;
         }
 
-
         @Override
         public boolean equals(Object o) {
                 if (this == o) return true;

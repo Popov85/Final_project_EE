@@ -30,8 +30,8 @@ public class OrderController {
         private static final Logger logger = (Logger) LoggerFactory.getLogger(OrderController.class);
 
         private static final String NO_DISHES_MESSAGE = "Order must contain dishes!";
-        private static final String FORBIDDEN_ACTION_MESSAGE = "This action is forbidden!";
         private static final String INGREDIENTS_SHORTAGE_MESSAGE = "Not enough ingredients to fulfill the order!";
+        private static final String FORBIDDEN_ACTION_MESSAGE = "This action is forbidden!";
         private static final String UNEXPECTED_ERROR_MESSAGE ="Unexpected error happened";
 
         @Autowired
