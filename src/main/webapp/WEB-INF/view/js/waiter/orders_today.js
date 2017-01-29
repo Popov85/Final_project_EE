@@ -7,19 +7,19 @@ $(document).ready(function () {
         serverSide: false,
         sSortDataType: "dom-checkbox",
         columns: [
-            { "data": "id", "name": "id",  "title": "id", "visible": true},
+            { "data": "id", "name": "id",  "title": "#", "visible": true},
             { "data": "opened", "name": "isOpened", "title": "isOpened", "visible":false},
             { "data": null, "name": "openedTimeStamp", "title": "opened time", "render": function(data){
-                var time = new Date(data.openedTimeStamp);
-                return time.toLocaleTimeString();
+                var dateTime = new Date(data.openedTimeStamp);
+                return dateTime.format("HH:MM");
             }
             },
             { "data": null, "name": "closedTimeStamp", "title": "closed time", "render": function(data){
                 if (data.closedTimeStamp==null) {
                     return "-";
                 } else {
-                    var time = new Date(data.closedTimeStamp);
-                    return time.toLocaleTimeString();
+                    var dateTime = new Date(data.closedTimeStamp);
+                    return dateTime.format("HH:MM");
                 }
             }
             },
@@ -40,7 +40,10 @@ $(document).ready(function () {
                 if (data.cancelled || !data.opened || data.readiness!="0.0 %") {
                     return '<input type="button" class="btn btn-default" disabled="true" title="Operation is forbidden! &#013; Partially fulfilled orders cannot be edited in this version of software!" value="Edit"/>';
                 } else {
-                    return '<a href="/edit_order?id=' + data.id + '"><input type="button" class="btn btn-default" value="Edit"/></a>';
+                    var param = 'orderId='+data.id;
+                    return '<a href="javascript:checkOrderStatus(\'' + param + '\',\'' + 'editOrder' + '\')">' +
+                                '<input type="button" class="btn btn-default" value="Edit"/>' +
+                            '</a>';
                 }
             }
             },
@@ -55,10 +58,13 @@ $(document).ready(function () {
             },
 
             { "data": null, "sortable": false, "render": function(data){
-                if (!data.fulfilled || data.cancelled || !data.opened) {
+                if (data.cancelled || !data.opened) {
                     return '<input type="button" class="btn btn-default" disabled="true" title="Operation is forbidden!" value="Close"/>';
                 } else {
-                    return '<a href="/close_order?id=' + data.id + '"><input type="button" class="btn btn-default" value="Close"/></a>';
+                    var param = 'orderId='+data.id;
+                    return '<a href="javascript:checkOrderStatus(\'' + param + '\',\'' + 'closeOrder' + '\')">' +
+                             '<input type="button" class="btn btn-default" value="Close"/>' +
+                            '</a>';
                 }
 
             }
@@ -66,3 +72,41 @@ $(document).ready(function () {
         ]
     });
 });
+
+function checkOrderStatus(param, callBackFunction) {
+    var url = "/waiter/check_order?"+param;
+    $.ajax({
+        type: 'POST',
+        url: url,
+        contentType: 'application/json;',
+        dataType: 'json',
+        success: window[callBackFunction],
+        error: function(xhr, textStatus, errorThrown) {
+            console.log('error');
+        }
+    });
+}
+
+function editOrder(data) {
+    var param = 'id=' + data.orderId;
+    var url = "/edit_order?"+param;
+    if (data.hasPrepared) {
+        alert("This Order is already partially fulfilled! Further editing is limited in this version of software!");
+        location.reload(true);
+    } else {
+        window.location.replace(url);
+    }
+}
+
+function closeOrder(data) {
+    var param = 'id=' + data.orderId;
+    console.log(data.hasPrepared);
+    var url = "/close_order?"+param;
+    if (!data.isFulfilled) {
+        alert("This Order is not fulfilled yet!");
+    } else if (data.isCancelled) {
+        alert("Cancelled Orders cannot be closed!");
+    } else {
+        window.location.replace(url);
+    }
+}

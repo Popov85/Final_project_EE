@@ -82,6 +82,7 @@ public class Order {
         public boolean isFulfilled() {
                 if (!hasPreparedDishes()) return false;
                 if (getDishesQuantity()!=preparedDishes.size()) return false;
+                if (getDishesQuantity()!=getPreparedDishesQuantity()) return false;
                 return true;
         }
 
@@ -193,44 +194,16 @@ public class Order {
                 return total;
         }
 
-        @JsonIgnore
-        public Map<Dish, Integer> getNotPreparedDishes() {
-                Map<Dish, Integer> notPreparedDishes = new HashMap<>();
-                if (isFulfilled()) return notPreparedDishes;
-                if (!hasPreparedDishes()) return dishes;
-                for (Map.Entry<Dish, Integer> dish : dishes.entrySet()){
-                        Dish nextDish = dish.getKey();
-                        Integer nextQuantity = dish.getValue();
-                        if (!contains(preparedDishes, nextDish)) {
-                                notPreparedDishes.put(nextDish, nextQuantity);
-                        } else {// Count down how many such Dishes (has not been prepared yet)
-                                int counter = nextQuantity;
-                                for (PreparedDish preparedDish : preparedDishes) {
-                                        if (preparedDish.contains(nextDish)) counter--;
-                                }
-                                if (counter!=0) notPreparedDishes.put(nextDish, counter);
-                        }
-                }
-                return notPreparedDishes;
-        }
-
-        private boolean contains(Set<PreparedDish> preparedDishes, Dish dish) {
-                for (PreparedDish preparedDish : preparedDishes) {
-                        if (preparedDish.contains(dish)) return true;
-                }
-                return false;
-        }
-
-        public int getQuantityOutOfMap(Map<?, Integer> items) {
+        public int getPreparedDishesQuantity() {
                 int total = 0;
-                for (Integer value : items.values()) {
-                        total+=value;
+                for (PreparedDish preparedDish : preparedDishes) {
+                        if (!preparedDish.isCancelled()) total++;
                 }
                 return total;
         }
 
         public String getReadiness() {
-                return ((preparedDishes!=null) ? Order.round(preparedDishes.size() / (float) getQuantityOutOfMap(dishes)*100, 1)+" %" : "0 %");
+                return ((preparedDishes!=null) ? Order.round((double) getPreparedDishesQuantity()/getDishesQuantity()*100, 1)+" %" : "0 %");
         }
 
         private static double round (double value, int precision) {
@@ -271,8 +244,8 @@ public class Order {
                         "dishes=" + getDishesQuantity() +"\n"+
                         "preparedDishes=" + ((preparedDishes!=null) ? preparedDishes.size() : null) +"\n"+
                         "isFulfilled=" + isFulfilled() +"\n"+
-                        "notPrepared=" + getQuantityOutOfMap(getNotPreparedDishes()) +"\n"+
-                        "readiness=" + ((preparedDishes!=null) ? preparedDishes.size() / (float) getQuantityOutOfMap(dishes)*100+" %" : "0 %")+"\n"+
+                        "notPrepared=" + getPreparedDishesQuantity() +"\n"+
+                        "readiness=" + getReadiness()+"\n"+
                         '}';
         }
 }

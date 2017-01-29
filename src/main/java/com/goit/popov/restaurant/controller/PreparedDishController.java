@@ -17,7 +17,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 /**
@@ -39,37 +38,18 @@ public class PreparedDishController {
                 return "th/chef/prepared_dishes";
         }
 
-        @GetMapping("/chef/archive/get_prepared_dishes")
+        @GetMapping("/admin/archive/get_prepared_dishes")
         @ResponseBody
         public List<PreparedDish> getPreparedDishes() {
-                logger.info("Count: "+preparedDishService.count());
-                logger.info("List: "+preparedDishService.getAll());
                 return preparedDishService.getAll();
-        }
-
-        @GetMapping("/get_all_orders_with_prepared_dishes")
-        @ResponseBody
-        public List<Order> getAllWithPreparedDishes() {
-                Order order = orderService.getById(1);
-                logger.info("Order #1 : "+order);
-                //logger.info("validateOrder: "+orderService.validateOrder(order));
-                return orderService.getAll();
         }
 
         @PostMapping("/chef/get_orders_today")
         @ResponseBody
-        public DataTablesOutputDTOCollectionWrapper getOrdersForChef() {
+        public DataTablesOutputDTOCollectionWrapper getTodayOrdersForChef() {
                 DataTablesOutputDTOCollectionWrapper data = new DataTablesOutputDTOCollectionWrapper();
-                data.setData(preparedDishService.toJSON(preparedDishService.getAllOrdersForChef()));
-                logger.info("Orders for chef view: "+data);
+                data.setData(preparedDishService.toJSON(orderService.getAllToday()));
                 return data;
-        }
-
-        @GetMapping("/today/get_prepared_dishes")
-        @ResponseBody
-        public List<PreparedDish> getAllChefToday(@RequestParam int chefId) {
-                logger.info("List: "+preparedDishService.getAllChefToday(chefId));
-                return preparedDishService.getAllChefToday(chefId);
         }
 
         @GetMapping("/chef/get_orders_prepared_dishes")
@@ -78,10 +58,8 @@ public class PreparedDishController {
                 DataTablesOutputDTOCollectionWrapper data = new DataTablesOutputDTOCollectionWrapper();
                 Order order = orderService.getById(orderId);
                 data.setData(preparedDishService.toJSON(order));
-                logger.info("Order's prepared dishes: "+data);
                 return data;
         }
-
 
         @PostMapping("/chef/check_order")
         public ResponseEntity checkOrder(@RequestParam int dishId, @RequestParam int quantity, @RequestParam int orderId) {
@@ -91,36 +69,29 @@ public class PreparedDishController {
                 node.put("dishId", dishId);
                 node.put("quantity", quantity);
                 node.put("orderId", orderId);
-                String params = "dishId="+dishId+"&quantity="+quantity+"&orderId="+orderId;
-                node.put("params",params);
                 if (order.isCancelled()) {
                         node.put("isCancelled", true);
-                        return new ResponseEntity(node, HttpStatus.OK);
                 } else {
                         node.put("isCancelled", false);
-                        return new ResponseEntity(node, HttpStatus.OK);
                 }
+                return new ResponseEntity(node, HttpStatus.OK);
         }
 
         @GetMapping("/chef/confirm_dishes_prepared")
         public ResponseEntity confirmDishPrepared(@RequestParam int dishId, @RequestParam int quantity, @RequestParam int orderId) {
-                int chefId;
-                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-                try {
-                        Employee userDetails = (Employee) auth.getPrincipal();
-                        chefId = userDetails.getId();
-                } catch (Exception e) {
-                        logger.error("ERROR: "+e.getMessage());
-                        chefId = 1;
-                }
-                logger.info("Proceeds... after possible exception caught: chefId= "+chefId);
-                // check if the order was cancelled, if so - propose to cancel dishes
+                int chefId = getChef();
                 preparedDishService.confirmDishesPrepared(dishId, quantity, orderId, chefId);
                 return new ResponseEntity("{\"orderId\":" +orderId+"}", HttpStatus.OK);
         }
 
         @GetMapping("/chef/confirm_dishes_cancelled")
         public ResponseEntity confirmDishCancelled(@RequestParam int dishId, @RequestParam int quantity, @RequestParam int orderId) {
+                int chefId = getChef();
+                preparedDishService.confirmDishesCancelled(dishId, quantity, orderId, chefId);
+                return new ResponseEntity("{\"orderId\":" +orderId+"}", HttpStatus.OK);
+        }
+
+        private int getChef() {
                 int chefId;
                 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
                 try {
@@ -128,10 +99,9 @@ public class PreparedDishController {
                         chefId = userDetails.getId();
                 } catch (Exception e) {
                         logger.error("ERROR: "+e.getMessage());
-                        chefId = 1;
+                        // TODO throw an appropriate exception!
+                        return 1;
                 }
-                logger.info("Proceeds... after possible exception caught: chefId= "+chefId);
-                preparedDishService.confirmDishesCancelled(dishId, quantity, orderId, chefId);
-                return new ResponseEntity("{\"orderId\":" +orderId+"}", HttpStatus.OK);
+                return chefId;
         }
 }

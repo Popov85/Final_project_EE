@@ -90,7 +90,6 @@ public class OrderDAOImplJPA implements OrderDAO {
               return ((long) sessionFactory.getCurrentSession().createQuery("select count(*) from Order").uniqueResult());
         }
 
-
         public long countWaiter(Waiter waiter) {
             return ((long) sessionFactory.getCurrentSession().createQuery("select count(*) from Order o where o.waiter=:waiter")
                     .setParameter("waiter", waiter)

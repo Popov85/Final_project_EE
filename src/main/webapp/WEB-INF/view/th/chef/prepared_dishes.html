@@ -10,53 +10,6 @@
     <script src ="/js/lib/bootstrap-3.3.7.min.js"/>
     <script src ="/js/lib/jquery.dataTables-1.10.12.min.js"/>
     <script src ="/js/chef/prepared_dishes.js"/>
-    <script type="text/javascript">
-        function prepare(params) {
-            var url = "/chef/check_order?"+params;
-            $.ajax({
-             type: 'POST',
-             url: url,
-             contentType: 'application/json;',
-             dataType: 'json',
-             success: checkOrder,
-             error: function(xhr, textStatus, errorThrown) {
-                console.log('error');
-             }
-             });
-        }
-
-        function checkOrder(data) {
-            // Reload Dishes table
-            var params = data.params; // 'dishId=' + data.dishId + '&amp;quantity=' + data.quantity + '&amp;orderId=' + data.orderId;
-            console.log(params);
-            console.log(data.isCancelled);
-            var url = "/chef/confirm_dishes_prepared?"+params;//?dishId=' + data.dishId + '&amp;quantity=' + data.quantity + '&amp;orderId=' + data.orderId;
-            if (data.isCancelled) {
-                // Order was cancelled
-                if (confirm('The Order was cancelled! Do you want to return ingredients?')) {
-                    url = '/chef/confirm_dishes_cancelled?'+params;
-                }
-            }
-            $.ajax({
-                type: 'GET',
-                url: url,
-                contentType: 'application/json;',
-                dataType: 'json',
-                success: reloadDishesTable,
-                error: function(xhr, textStatus, errorThrown) {
-                    console.log('error');
-                }
-            });
-        }
-
-        function reloadDishesTable(data) {
-            $('#dishesTable').DataTable()
-                    .ajax.url(
-                    "/chef/get_orders_prepared_dishes?orderId="
-                    + encodeURIComponent(data.orderId)
-            ).load()
-        }
-    </script>
 </head>
 <body>
 <h3 class="form-signin-heading" align="center">Prepared dishes</h3>
@@ -66,9 +19,8 @@
         <div class="col-md-6">
             <div th:replace="/th/header :: header"/>
             <h3 class="form-signin-heading" align="center">Dishes</h3>
-            <h5 class="form-signin-heading" align="center">(of Order #)
+            <h5 class="form-signin-heading" align="center">of Order #
                 <div id="orderId" name="orderId"></div>
-                <div id="status" name="status"></div>
             </h5>
             <table id="dishesTable" name="dishesTable" class="display" cellspacing="0" width="110%" style="overflow-x:auto">
                 <thead>

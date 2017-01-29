@@ -7,7 +7,6 @@ import org.hibernate.SessionFactory;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.TemporalType;
 import java.util.*;
 
 /**
@@ -51,34 +50,6 @@ public class PreparedDishHistoryDAOImplJPA implements PreparedDishHistoryDAO {
                 return (long) sessionFactory.getCurrentSession().createQuery("select count(pd) from PreparedDish pd").uniqueResult();
         }
 
-
-        @Override
-        public int addPreparedDish(PreparedDish dish) {
-                return (int) sessionFactory.getCurrentSession().save(dish);
-        }
-
-        @Override
-        public List<Dish> getAll(Order order) {
-                return sessionFactory.getCurrentSession().createQuery("select distinct pd.dish from PreparedDish pd " +
-                        "where pd.order=:order")
-                        .setParameter("order", order)
-                        .list();
-        }
-
-        @Override
-        public List<PreparedDish> getAllPreparedDish(Order order) {
-                return sessionFactory.getCurrentSession().createQuery("select pd from PreparedDish pd " +
-                        "where pd.order=:order")
-                        .setParameter("order", order)
-                        .list();
-        }
-
-        @Override
-        public List<Order> getAllOrderForChef() {
-                return sessionFactory.getCurrentSession().createQuery("select o from Order o")
-                        .list();
-        }
-
         @Override
         public long getPreparedDishesQuantity(Order order) {
                 return (long) sessionFactory.getCurrentSession().createQuery("select distinct count(pd) from PreparedDish pd " +
@@ -105,7 +76,7 @@ public class PreparedDishHistoryDAOImplJPA implements PreparedDishHistoryDAO {
                         .getSingleResult();
         }
 
-        @Override
+        /*@Override
         public List<PreparedDish> getAllChefToday(int chefId) {
                 Chef chef = new Chef();
                 chef.setId(chefId);
@@ -118,13 +89,6 @@ public class PreparedDishHistoryDAOImplJPA implements PreparedDishHistoryDAO {
                         .setParameter("chef", chef)
                         .setParameter("today", today, TemporalType.DATE)
                         .list();
-        }
+        }*/
 
-        @Override
-        public void savePreparedDishes(Set<PreparedDish> preparedDishes) {
-                for (PreparedDish preparedDish : preparedDishes) {
-                        insert(preparedDish);
-                        logger.info("PreparedDish saved: "+preparedDish);
-                }
-        }
 }

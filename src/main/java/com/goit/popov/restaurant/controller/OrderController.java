@@ -1,7 +1,9 @@
 package com.goit.popov.restaurant.controller;
 
 import ch.qos.logback.classic.Logger;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Order;
 import com.goit.popov.restaurant.service.OrderService;
@@ -101,7 +103,6 @@ public class OrderController {
         @ResponseBody
         public DataTablesOutputDTOUniversal<Order> getOrders(DataTablesInputExtendedDTO input) {
             DataTablesOutputDTOUniversal<Order> data = orderService.getAll(input);
-            ObjectMapper mapper = new ObjectMapper();
             return data;
         }
 
@@ -112,7 +113,6 @@ public class OrderController {
                 return orderService.getById(orderId);
         }
 
-
         @PostMapping(value = "/waiter/get_orders")
         @ResponseBody
         public DataTablesOutputDTOListWrapper<Order> getWaiterOrders(@RequestParam int waiterId) {
@@ -121,11 +121,10 @@ public class OrderController {
                 return data;
         }
 
-
         @PostMapping(value = "/waiter/get_archive")
         @ResponseBody
         public DataTablesOutputDTOUniversal<Order> getWaiterOrdersArchive(@RequestParam int waiterId,
-                                                                          DataTablesInputExtendedDTO input) {
+                                                                          DataTablesInputExtendedDTO input) throws JsonProcessingException {
                 DataTablesOutputDTOUniversal<Order> data = orderService.getAll(input, waiterId);
                 return data;
         }
@@ -136,6 +135,35 @@ public class OrderController {
                 ModelAndView modelAndView = new ModelAndView("th/edit_order");
                 modelAndView.addObject("id", id);
                 return modelAndView;
+        }
+
+        @PostMapping("/waiter/check_order")
+        public ResponseEntity checkOrder(@RequestParam int orderId) {
+                Order order = orderService.getById(orderId);
+                ObjectMapper mapper = new ObjectMapper();
+                ObjectNode node = mapper.createObjectNode();
+                node.put("orderId", orderId);
+                if (order.hasPreparedDishes()) {
+                        node.put("hasPrepared", true);
+                } else {
+                        node.put("hasPrepared", false);
+                }
+                if (order.isCancelled()) {
+                        node.put("isCancelled", true);
+                } else {
+                        node.put("isCancelled", false);
+                }
+                if (order.getClosedTimeStamp()!=null) {
+                        node.put("isClosed", true);
+                } else {
+                        node.put("isClosed", false);
+                }
+                if (order.isFulfilled()) {
+                        node.put("isFulfilled", true);
+                } else {
+                        node.put("isFulfilled", false);
+                }
+                return new ResponseEntity(node, HttpStatus.OK);
         }
 
         // Create Or Update (Action)
@@ -181,7 +209,7 @@ public class OrderController {
                         setErrorMessages(id, ra,
                                 HttpStatus.FORBIDDEN.toString(),
                                 e.getMessage(),
-                                "" +id);
+                                "Error: Failed to delete the Order #: " +id);
                         return "redirect:/error";
                 }
                 return "redirect:"+url.getPath();
@@ -228,14 +256,5 @@ public class OrderController {
                 ra.addFlashAttribute("status", messages[0]);
                 ra.addFlashAttribute("error", messages[1]);
                 ra.addFlashAttribute("message", messages[2]);
-        }
-
-        // TODO delete after all
-        @GetMapping("/get_order_by_id")
-        @ResponseBody
-        public Order getOrderById(@RequestParam int id) {
-                Order order = orderService.getById(id);
-                logger.info("Order #: "+id+order);
-                return orderService.getById(id);
         }
 }

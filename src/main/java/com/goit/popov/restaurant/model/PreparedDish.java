@@ -23,16 +23,13 @@ public class PreparedDish {
         @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm")
         private Date whenPrepared;
 
-
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "D_ID")
         private Dish dish;
 
-
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "CHEF_ID")
         private Chef chef;
-
 
         @JsonIgnore
         @ManyToOne(fetch = FetchType.EAGER)
@@ -88,11 +85,6 @@ public class PreparedDish {
 
         public void setCancelled(boolean cancelled) {
                 isCancelled = cancelled;
-        }
-
-        public boolean contains(Dish dish) {
-             if (this.dish.equals(dish)) return true;
-                return false;
         }
 
         @Override

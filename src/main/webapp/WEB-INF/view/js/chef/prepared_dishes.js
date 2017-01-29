@@ -2,16 +2,6 @@
  * Created by Andrey on 1/16/2017.
  */
 $(document).ready(function () {
-
-    function prepare(url) {
-        console.log("URL: ");
-        console.log("success function: ");
-        return 3;
-    }
-
-});
-
-$(document).ready(function () {
     var table = $('#ordsTable').DataTable({
         "ajax": {
             "url": "/chef/get_orders_today",
@@ -29,8 +19,20 @@ $(document).ready(function () {
             {"data": "waiter", "name": "waiter", "title": "waiter"},
             {"data": "openedTimeStamp", "name": "openedTimeStamp", "title": "opened time"},
             {"data": "dishes", "name": "dishes quantity", "title": "dishes quantity"},
-            {"data": "isFulfilled", "name": "isFulfilled", "title": "isFulfilled"},
-            {"data": "isCancelled", "name": "isCancelled", "title": "isCancelled"},
+                {"data": null, "name": "isFulfilled", "title": "isFulfilled", "render": function(data){
+                if (data.isFulfilled) {
+                    return '<p hidden="true">true</p><input type="checkbox" disabled="true" checked/>';
+                } else {
+                    return '<p hidden="true">false</p><input type="checkbox" disabled="true"/>';
+                }
+            }},
+            {"data": null, "name": "isCancelled", "title": "isCancelled", "render": function(data){
+                if (data.isCancelled) {
+                    return '<p hidden="true">true</p><input type="checkbox" disabled="true" checked/>';
+                } else {
+                    return '<p hidden="true">false</p><input type="checkbox" disabled="true"/>';
+                }
+            }},
 
             {
                 "data": null, "sortable": false, "render": function () {
@@ -40,12 +42,10 @@ $(document).ready(function () {
         ]
     });
 
-    // Onclick on a table row
+    // Onclick on a table row to show an Order's dishes
     $('#ordsTable tbody').on('click', 'button', function () {
         var data = table.row($(this).parents('tr')).data();
         $('#orderId').text(data.id);
-        $('#status').text(data.isCancelled);
-        //console.log(data.isCancelled);
         var table2 = $('#dishesTable').DataTable()
             .ajax.url(
                 "/chef/get_orders_prepared_dishes?orderId="
@@ -65,8 +65,20 @@ $(document).ready(function () {
             {"data": "id", "name": "id", "title": "id", "visible": true},
             {"data": "dish", "name": "dish", "title": "dish"},
             {"data": "quantity", "name": "quantity", "title": "quantity"},
-            {"data": "isPrepared", "name": "isPrepared", "title": "isPrepared"},
-            {"data": "isReturned", "name": "isReturned", "title": "isReturned"},
+            {"data": null, "name": "isPrepared", "title": "isPrepared", "render": function(data){
+                if (data.isPrepared) {
+                    return '<p hidden="true">true</p><input type="checkbox" disabled="true" checked/>';
+                } else {
+                    return '<p hidden="true">false</p><input type="checkbox" disabled="true"/>';
+                }
+            }},
+            {"data": null, "name": "isReturned", "title": "isReturned", "render": function(data){
+                if (data.isReturned) {
+                    return '<p hidden="true">true</p><input type="checkbox" disabled="true" checked/>';
+                } else {
+                    return '<p hidden="true">false</p><input type="checkbox" disabled="true"/>';
+                }
+            }},
 
             {
                 "data": null, "sortable": false, "render": function (data) {
@@ -74,7 +86,6 @@ $(document).ready(function () {
                     return '<input type="button" class="btn btn-default" disabled="true" value="Confirm"/>';
                 } else {
                     var params = 'dishId=' + data.id+'&quantity='+data.quantity +'&orderId='+$('#orderId').text();
-                    var status = $('#status').text();
                     return '<a href="javascript:prepare(\'' + params + '\')">' +
                                 '<input type="button" class="btn btn-default" value="Confirm"/>' +
                             '</a>';
@@ -83,6 +94,50 @@ $(document).ready(function () {
             }
         ]
     });
-
-
 });
+
+function prepare(params) {
+    var url = "/chef/check_order?"+params;
+    $.ajax({
+        type: 'POST',
+        url: url,
+        contentType: 'application/json;',
+        dataType: 'json',
+        success: checkOrder,
+        error: function(xhr, textStatus, errorThrown) {
+            console.log('error');
+        }
+    });
+}
+
+function checkOrder(data) {
+    // Reload Dishes table
+    var params = 'dishId=' + data.dishId + '&quantity=' + data.quantity + '&orderId=' + data.orderId;
+    console.log(params);
+    console.log(data.isCancelled);
+    var url = "/chef/confirm_dishes_prepared?"+params;
+    if (data.isCancelled) {
+        // Order was cancelled
+        if (confirm('The Order was cancelled! Do you want to return ingredients?')) {
+            url = '/chef/confirm_dishes_cancelled?'+params;
+        }
+    }
+    $.ajax({
+        type: 'GET',
+        url: url,
+        contentType: 'application/json;',
+        dataType: 'json',
+        success: reloadDishesTable,
+        error: function(xhr, textStatus, errorThrown) {
+            console.log('error');
+        }
+    });
+}
+
+function reloadDishesTable(data) {
+    $('#dishesTable').DataTable()
+        .ajax.url(
+        "/chef/get_orders_prepared_dishes?orderId="
+        + encodeURIComponent(data.orderId)
+    ).load()
+}
