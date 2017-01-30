@@ -2,6 +2,7 @@ package com.goit.popov.restaurant.service;
 
 import com.goit.popov.restaurant.dao.entity.IngredientDAO;
 import com.goit.popov.restaurant.model.Ingredient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -11,11 +12,10 @@ import java.util.List;
  */
 @Transactional
 public class IngredientService {
+
+        @Autowired
         IngredientDAO ingredientDAO;
 
-        public void setIngredientDAO(IngredientDAO ingredientDAO) {
-                this.ingredientDAO = ingredientDAO;
-        }
 
         public void save(Ingredient ingredient) {
                 ingredientDAO.insert(ingredient);

@@ -66,7 +66,6 @@ $(document).ready(function () {
                              '<input type="button" class="btn btn-default" value="Close"/>' +
                             '</a>';
                 }
-
             }
             }
         ]

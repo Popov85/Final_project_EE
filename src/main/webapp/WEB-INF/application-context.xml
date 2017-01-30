@@ -32,7 +32,7 @@
     <bean id="preparedDishService" class="com.goit.popov.restaurant.service.PreparedDishServiceImpl"/>
 
     <bean id = "storeHouseDAO" class="com.goit.popov.restaurant.dao.impl.StoreHouseDAOImplJPA"/>
-    <bean id = "stockService" class="com.goit.popov.restaurant.service.StockService"/>
+    <bean id = "stockService" class="com.goit.popov.restaurant.service.StockServiceImpl"/>
 
     <bean id = "service" class="com.goit.popov.restaurant.service.Service"/>
 

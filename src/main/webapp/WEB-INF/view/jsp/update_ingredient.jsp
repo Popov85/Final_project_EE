@@ -9,33 +9,45 @@
 </head>
 <body>
 <div class="container">
-    <form:form action="${pageContext.request.contextPath}/update_ingredient/${ingredient.id}" method="post"
-               commandName="ingredient" style="max-width: 320px; margin: 0 auto; font-size: larger;">
+    <form:form action="${pageContext.request.contextPath}/admin/update_ingredient/${ingredient.id}" method="post"
+               commandName="ingredient" style="max-width: 250px; margin: 0 auto; font-size: larger;">
         <h3 class="form-signin-heading" align="center">Edit Ingredient</h3>
         <div class="form-group">
-            <form:input path="id" readonly="true" title="id" size="10"/>
+            <form:hidden path="id" readonly="true" title="id" size="10"/>
         </div>
         <div class="form-group">
             <label for="name">Name</label>
-            <form:input path="name" title="name" cssClass="form-control"/>
+            <form:input path="name" title="name" cssClass="form-control" size="15"/>
+            <p><form:errors path="name" class="label label-danger"/></p>
         </div>
 
         <div class="form-group">
             <label for="unit">Unit</label>
-            <form:input path="unit" title="unit" cssClass="form-control"/>
+            <br>
+            <form:select path="unit" value="${ingredient.unit}" >
+                <form:options items="${units}" />
+            </form:select>
+            <p><form:errors path="unit" class="label label-danger"/></p>
         </div>
 
-        <div class="form-group">
-            <button class="btn btn-primary btn-block" type="submit">Save</button>
+        <div class="btn-group btn-group-justified">
+            <div class="btn-group">
+                <button type="submit" class="btn btn-primary ">Save</button>
+            </div>
+            <div class="btn-group">
+                <a href="/admin/ingredients">
+                    <input type="button" class="btn btn-default" value="Cancel"/>
+                </a>
+            </div>
         </div>
 
         <div class="form-group">
             <div class="row">
                 <div class="col-md-6">
-                    <a class="hyperlink" href="/employees">See all</a>
+                    <a class="hyperlink" href="/admin/ingredients">See all</a>
                 </div>
                 <div class="col-md-6" align="right">
-                    <a class="hyperlink" href="/index.jsp">Home</a>
+                    <a class="hyperlink" href="/admin">Home</a>
                 </div>
             </div>
         </div>

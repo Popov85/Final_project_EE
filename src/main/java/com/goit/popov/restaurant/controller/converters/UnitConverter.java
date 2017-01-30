@@ -18,7 +18,7 @@ public class UnitConverter implements Converter<String, Unit> {
         }
 
         @Override
-        public Unit convert(String source) {
-                return this.unitService.getById(Integer.parseInt(source));
+        public Unit convert(String unitId) {
+                return unitService.getById(Integer.valueOf(unitId));
         }
 }

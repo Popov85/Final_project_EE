@@ -23,7 +23,6 @@ public class UnitService {
         }
 
         public Unit getById(int id) {
-                System.out.println("Unit service in use!");
                 return unitDAO.getById(id);
         }
 }

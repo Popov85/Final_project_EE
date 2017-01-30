@@ -61,7 +61,7 @@ public class EmployeeController {
         public Map<String, String> populatePositions() {
                 List<Position> positions = positionService.getAll();
                 Map<String, String> positionsList = new HashMap<>();
-                positionsList.put("Unknown", "Select Position");
+                positionsList.put("Unknown", "--Select--");
                 for (Position position : positions) {
                         positionsList.put(position.getName(), position.getName());
                 }
@@ -95,7 +95,7 @@ public class EmployeeController {
         public String saveEmployee(@Valid @ModelAttribute("employee") Employee employee, BindingResult result, Model model,
                                    @RequestParam("position") String position, @RequestParam("photo") MultipartFile photo){
                 if (result.hasErrors()) {
-                        logger.info("# of errors is: "+result.getFieldErrorCount());
+                        logger.error("# of errors is: "+result.getFieldErrorCount());
                         return "jsp/new_employee";
                 }
                 EmployeeService employeeService;
@@ -109,12 +109,12 @@ public class EmployeeController {
                         employeeService.save(employee);
                 } catch (DataIntegrityViolationException e) {
                         model.addAttribute("constraintViolationError", NON_UNIQUE_CONSTRAINT_MESSAGE);
-                        logger.info("Constraint violation exception inserting employee: "+e.getMessage()+
+                        logger.error("Constraint violation exception inserting employee: "+e.getMessage()+
                                 " exception name is: "+ e.getClass());
                         return "jsp/new_employee";
                 } catch (Throwable e) {
                         model.addAttribute("unexpectedError", e.getMessage());
-                        logger.info("Another error inserting employee: "+e.getMessage()+
+                        logger.error("Another error inserting employee: "+e.getMessage()+
                                 "/ exception name is: "+ e.getClass());
                         return "jsp/new_employee";
                 }
@@ -140,7 +140,7 @@ public class EmployeeController {
                                      @RequestParam("position") String newPosition, HttpSession session, Model model,
                                      @RequestParam("photo") MultipartFile photo){
                 if (result.hasErrors()) {
-                        logger.info("# of errors is: "+result.getFieldErrorCount());
+                        logger.error("# of errors is: "+result.getFieldErrorCount());
                         return "jsp/update_employee";
                 }
                 String previousPosition = (String) session.getAttribute("position");
@@ -162,17 +162,17 @@ public class EmployeeController {
                         }
                 } catch (DataIntegrityViolationException e) {
                         model.addAttribute("constraintViolationError", NON_UNIQUE_CONSTRAINT_MESSAGE);
-                        logger.info("Constraint violation exception updating employee: "+e.getMessage()+
+                        logger.error("Constraint violation exception updating employee: "+e.getMessage()+
                                 "/ exception name is: "+ e.getClass());
                         return "jsp/update_employee";
                 } catch (PersistenceException e) {
                         model.addAttribute("integrityViolationError", e.getMessage());
-                        logger.info("Data integrity exception updating employee: "+e.getMessage()+
+                        logger.error("Data integrity exception updating employee: "+e.getMessage()+
                                 "/ exception name is: "+ e.getClass());
                         return "jsp/update_employee";
                 } catch (Throwable e) {
                         model.addAttribute("unexpectedError", e.getMessage());
-                        logger.info("Another error updating employee: "+e.getMessage()+
+                        logger.error("Another error updating employee: "+e.getMessage()+
                                 "/ exception name is: "+ e.getClass());
                         return "jsp/update_employee";
                 }
@@ -189,14 +189,14 @@ public class EmployeeController {
                         ra.addFlashAttribute("status", HttpStatus.FORBIDDEN);
                         ra.addFlashAttribute("error", "Constraint violation exception deleting employee!");
                         ra.addFlashAttribute("message", DELETION_FAILURE_MESSAGE +id);
-                        logger.info("Constraint violation exception deleting employee: "+e.getMessage()+
+                        logger.error("Constraint violation exception deleting employee: "+e.getMessage()+
                                 "/ exception name is: "+ e.getClass());
                         return "redirect:/error";
                 } catch (Throwable e) {
                         ra.addFlashAttribute("status", HttpStatus.FORBIDDEN);
                         ra.addFlashAttribute("error", e.getMessage());
                         ra.addFlashAttribute("message", DELETION_FAILURE_MESSAGE +id);
-                        logger.info("Unexpected exception deleting employee: "+e.getMessage()+
+                        logger.error("Unexpected exception deleting employee: "+e.getMessage()+
                                 "/ exception name is: "+ e.getClass());
                         return "redirect:/error";
                 }

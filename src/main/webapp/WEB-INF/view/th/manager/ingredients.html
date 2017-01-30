@@ -1,0 +1,68 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Ingredients</title>
+    <link rel="stylesheet" type="text/css" href="/css/lib/bootstrap-3.3.7.min.css"/>
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/filterDisabled.css"/>
+    <script src="/js/lib/jquery-1.12.1.js"/>
+    <script src="/js/lib/bootstrap-3.3.7.min.js"/>
+    <script src="/js/lib/jquery.dataTables-1.10.12.min.js"/>
+    <script type="text/javascript" th:inline="javascript">
+        $(document).ready(function () {
+            var t = $('#ingredients').DataTable({
+                columnDefs: [
+                    {targets: [0], visible: false},
+                    {targets: '_all', visible: true}
+                ]
+            })
+        });
+    </script>
+</head>
+<body>
+<h3 class="form-signin-heading" align="center">Ingredients:</h3>
+<div th:if="${not #lists.isEmpty(ingredients)}" style="max-width: 800px; margin: 0 auto; font-size: larger;">
+    <div class="row">
+        <div class="col-md-3"/>
+        <div class="col-md-6">
+            <div th:replace="/th/header :: header"/>
+            <table id="ingredients" name="ingredients" class="display" align="center">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Unit</th>
+
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <tr th:each="ingredient : ${ingredients}">
+                    <td th:text="${ingredient.id}" hidden="true"/>
+                    <td th:text="${ingredient.name}"/>
+                    <td th:text="${ingredient.unit.name}"/>
+                    <td>
+                        <a th:href="@{'/admin/edit_ingredient/'+${ingredient.id}}">
+                            <input type="button" class="btn btn-default" value="Edit"/>
+                        </a>
+                    </td>
+
+                    <td>
+                        <a th:href="@{'/admin/delete_ingredient/'+${ingredient.id}}">
+                            <input type="button" class="btn btn-default" value="Delete"/>
+                        </a>
+
+                    </td>
+
+                </tr>
+                </tbody>
+            </table>
+            <font color="red"><p th:text="${constraintViolationError}"/></font>
+            <font color="red"><p th:text="${unexpectedError}"/></font>
+        </div>
+        <div class="col-md-3"/>
+    </div>
+</div>
+</body>
+</html>

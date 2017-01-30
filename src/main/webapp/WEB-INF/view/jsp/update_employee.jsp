@@ -99,7 +99,7 @@
                                 <a class="hyperlink" href="/admin/employees">See all</a>
                         </div>
                         <div class="col-md-6" align="right">
-                                <a class="hyperlink" href="/">Home</a>
+                                <a class="hyperlink" href="/admin">Home</a>
                         </div>
                 </div>
         </div>

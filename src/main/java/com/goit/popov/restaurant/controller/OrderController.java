@@ -143,26 +143,10 @@ public class OrderController {
                 ObjectMapper mapper = new ObjectMapper();
                 ObjectNode node = mapper.createObjectNode();
                 node.put("orderId", orderId);
-                if (order.hasPreparedDishes()) {
-                        node.put("hasPrepared", true);
-                } else {
-                        node.put("hasPrepared", false);
-                }
-                if (order.isCancelled()) {
-                        node.put("isCancelled", true);
-                } else {
-                        node.put("isCancelled", false);
-                }
-                if (order.getClosedTimeStamp()!=null) {
-                        node.put("isClosed", true);
-                } else {
-                        node.put("isClosed", false);
-                }
-                if (order.isFulfilled()) {
-                        node.put("isFulfilled", true);
-                } else {
-                        node.put("isFulfilled", false);
-                }
+                node.put("hasPrepared", order.hasPreparedDishes());
+                node.put("isCancelled", order.isCancelled());
+                node.put("isClosed", !order.isOpened());
+                node.put("isFulfilled", order.isFulfilled());
                 return new ResponseEntity(node, HttpStatus.OK);
         }
 

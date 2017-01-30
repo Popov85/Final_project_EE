@@ -28,7 +28,7 @@ $(document).ready(function () {
                     return '<p hidden="true">false</p><input type="checkbox" disabled="true"/>';
                 }
             }},
-            { "data": null, "name": "isCancelled", "title": "isCancelled", "render": function(data){
+            { "data": null, "name": "cancelled", "title": "isCancelled", "render": function(data){
                 if (data.cancelled) {
                     return '<p hidden="true">true</p><input type="checkbox" disabled="true" checked/>';
                 } else {

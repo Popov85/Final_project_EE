@@ -173,9 +173,9 @@ public class OrderServiceImplFast implements OrderService {
                 for (Map.Entry<Ingredient, Double> ingredient : requiredIngredients.entrySet()) {
                         Double stockQuantity = stockService.getQuantityByIngredient(ingredient.getKey());
                         Double requiredQuantity = ingredient.getValue();
-                        logger.info("Ingredient in Stock: "+ ingredient.getKey().getName()+
+                        /*logger.info("Ingredient in Stock: "+ ingredient.getKey().getName()+
                                 " In Stock: "+stockQuantity+
-                                " Required: "+requiredQuantity);
+                                " Required: "+requiredQuantity);*/
                         if (stockQuantity < requiredQuantity)
                                 return false;
                 }
@@ -201,7 +201,7 @@ public class OrderServiceImplFast implements OrderService {
         public DataTablesOutputDTOUniversal<Order> getAll(DataTablesInputExtendedDTO dt) {
                 long recordsTotal = count();
                 long recordsFiltered;
-                List<Order> data = orderDAO.getAllOrders(dt);
+                List<Order> data = getAllOrders(dt);
                 if (!dt.getColumnSearch().isEmpty()) {
                         recordsFiltered = data.size();
                 } else {
@@ -220,7 +220,7 @@ public class OrderServiceImplFast implements OrderService {
                 waiter.setId(waiterId);
                 long recordsTotal = countWaiter(waiter);
                 long recordsFiltered;
-                List<Order> data = orderDAO.getAllWaiterArchive(waiterId, dt);
+                List<Order> data = getAllWaiterArchive(waiterId, dt);
                 if (!dt.getColumnSearch().isEmpty()) {
                         recordsFiltered = data.size();
                 } else {

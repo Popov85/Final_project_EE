@@ -154,7 +154,7 @@ public class Employee {
                 }
         }
 
-        @Override
+        /*@Override
         public boolean equals(Object o) {
                 if (this == o) return true;
                 if (o == null || getClass() != o.getClass()) return false;
@@ -182,7 +182,7 @@ public class Employee {
                 result = 31 * result + ((position == null) ? 0 : position.hashCode());
                 result = 31 * result + salary.hashCode();
                 return result;
-        }
+        }*/
 
         @Override
         public String toString() {
