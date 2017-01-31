@@ -9,7 +9,13 @@
     <script src="/js/lib/jquery-1.12.1.js"/>
     <script src="/js/lib/bootstrap-3.3.7.min.js"/>
     <script src="/js/lib/jquery.dataTables-1.10.12.min.js"/>
+    <script src ="/js/lib/jquery-ui-1.12.1.js"/>
     <script src="/js/manager/stock.js"/>
+    <style media="screen" type="text/css">
+        .modal {
+            opacity:0.85 !important;
+        }
+    </style>
 </head>
 <body>
 <h3 class="form-signin-heading" align="center">Stock</h3>
@@ -33,6 +39,44 @@
         </table>
     </div>
     <div class="col-md-3"/>
+</div>
+<!-- Modal window-->
+<div class="modal fade" id="myModal" name="myModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="title" name="title"/>
+            </div>
+            <div class="modal-body">
+                <form action="/admin/update_stock" method="post"
+                      style="max-width: 150px; margin: 0 auto; font-size: larger;">
+
+                    <div class="form-group">
+                        <input type="hidden" id="id" name="id"/>
+                    </div>
+
+                    <div class="form-group">
+                        <p><label for="quantity">Quantity</label></p>
+                        <input type="text" id="quantity" name="quantity" size="5"/>
+                        <span id="unit" name="unit" value=""/>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="btn-group btn-group-justified">
+                            <div class="btn-group">
+                                <input type="submit" title="You are going to refill the ingredient!" class="btn btn-primary" value="Confirm"/>
+                            </div>
+                            <div class="btn-group">
+                                <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel"/>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

@@ -17,7 +17,15 @@ $(document).ready(function () {
             { "data": "ingredient.unit.name", "name": "ingredient", "title": "unit", "visible": true},
 
             { "data": null, "sortable": false, "render": function(data){
-                return '<a href="/refill_ingredient?id=' + data.ingredient.id + '"><input type="button" class="btn btn-default" value="Refill"/></a>';
+                var ing = new Object();
+                    ing.id=data.ingredient.id;
+                    ing.name=data.ingredient.name;
+                    ing.unit=data.ingredient.unit.name;
+                console.log("data: "+JSON.stringify(data, null, 4));
+                console.log("ing: "+JSON.stringify(ing, null, 4));
+                return '<a href="javascript:openModal(\'' + ing.id +'\',\'' + ing.name +'\',\''+ing.unit+ '\')">' +
+                            '<input type="button" class="btn btn-default" value="Refill"/>' +
+                        '</a>';
             }
             }
         ]
@@ -44,3 +52,16 @@ $(document).ready(function() {
         } );
     } );
 } );
+
+$(document).ready(function () {
+    $("#myModal").draggable({
+        handle: ".modal-header"
+    })
+});
+
+function openModal(id, name, unit) {
+    $('#title').text(name);
+    $('#id').val(id);
+    $('#unit').text(unit);
+    $("#myModal").modal();
+}

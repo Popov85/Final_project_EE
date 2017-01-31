@@ -37,7 +37,7 @@ $(document).ready(function() {
     // Setup - add a text input to each footer cell
     $('#dish tfoot th.search').each( function () {
         var title = $(this).text();
-        $(this).html( '<input type="text" size="10" placeholder="Search '+title+'" />' );
+        $(this).html( '<input type="text" size="8" placeholder="'+title+'" />' );
     } );
 
     // DataTable

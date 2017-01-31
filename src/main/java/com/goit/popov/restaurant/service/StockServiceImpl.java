@@ -39,6 +39,7 @@ public class StockServiceImpl implements StockService {
 
         @Override
         public StoreHouse getById(int id) {
+                // TODO check if throe UnsupportedOperationException
                 return storeHouseDAO.getById(id);
         }
 
@@ -111,7 +112,7 @@ public class StockServiceImpl implements StockService {
         }
 
         @Override
-        public DataTablesOutputDTOUniversal getAll(DataTablesInputExtendedDTO dt) {
+        public DataTablesOutputDTOUniversal<StoreHouse> getAll(DataTablesInputExtendedDTO dt) {
                 long recordsTotal = count();
                 long recordsFiltered;
                 List<StoreHouse> data = getAllIngredients(dt);
