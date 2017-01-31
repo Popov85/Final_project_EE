@@ -13,7 +13,7 @@ import java.io.Serializable;
 public class StoreHouse implements Serializable {
 
         @Id
-        @OneToOne
+        @OneToOne(fetch = FetchType.EAGER)
         @JoinColumn(name="ING_ID", unique=true, nullable=false, updatable=false)
         private Ingredient ingredient;
 

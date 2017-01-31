@@ -8,7 +8,6 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -29,27 +28,27 @@ public class Employee {
         protected int id;
 
         @NotEmpty(message = "Login is a required field")
-        @Size(min=4, max=25, message = "Login has from 4 to 25 characters")
+        @Size(min=4, max=25, message = "Login must have from 4 to 25 characters!")
         @Column(name = "EMP_LOGIN", unique=true)
         protected String login;
 
         @JsonIgnore
         @NotEmpty(message = "Password is a required field")
-        @Size(min=8, max=60, message = "Password must have from 8 to 16 characters")
+        @Size(min=8, max=60, message = "Password must have from 8 to 16 characters!")
         @Column(name = "EMP_PASSWORD", unique=true)
         protected String password;
 
-        @NotEmpty(message = "Please, provide name for an employee")
+        @NotEmpty(message = "Please, provide name for an employee!")
         @Size(min=5, max=50)
         @Column(name = "EMP_NAME")
         protected String name;
 
-        @NotNull(message = "DOB field mustn't be empty")
+        @NotNull(message = "DOB field must not be empty!")
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         @Column(name = "DOB")
         protected Date dob;
 
-        @NotEmpty(message = "Phone field mustn't be empty")
+        @NotEmpty(message = "Phone field must not be empty")
         @Column(name = "PHONE", unique=true)
         protected String phone;
 
@@ -153,36 +152,6 @@ public class Employee {
                         return 0;
                 }
         }
-
-        /*@Override
-        public boolean equals(Object o) {
-                if (this == o) return true;
-                if (o == null || getClass() != o.getClass()) return false;
-
-                Employee employee = (Employee) o;
-
-                if (!login.equals(employee.login)) return false;
-                if (!password.equals(employee.password)) return false;
-                if (!name.equals(employee.name)) return false;
-                if (!dob.equals(employee.dob)) return false;
-                if (!phone.equals(employee.phone)) return false;
-                if (!position.equals(employee.position)) return false;
-                if (!salary.equals(employee.salary)) return false;
-                return Arrays.equals(photo, employee.photo);
-
-        }
-
-        @Override
-        public int hashCode() {
-                int result = login.hashCode();
-                result = 31 * result + password.hashCode();
-                result = 31 * result + name.hashCode();
-                result = 31 * result + ((dob == null) ? 0 : dob.hashCode());
-                result = 31 * result + phone.hashCode();
-                result = 31 * result + ((position == null) ? 0 : position.hashCode());
-                result = 31 * result + salary.hashCode();
-                return result;
-        }*/
 
         @Override
         public String toString() {

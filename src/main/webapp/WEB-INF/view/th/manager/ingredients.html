@@ -7,14 +7,28 @@
     <script src="/js/lib/jquery-1.12.1.js"/>
     <script src="/js/lib/bootstrap-3.3.7.min.js"/>
     <script src="/js/lib/jquery.dataTables-1.10.12.min.js"/>
+
     <script type="text/javascript" th:inline="javascript">
         $(document).ready(function () {
-            var t = $('#ingredients').DataTable({
+            var table = $('#ingredients').DataTable({
                 columnDefs: [
                     {targets: [0], visible: false},
                     {targets: '_all', visible: true}
                 ]
             })
+            $('#ingredients thead th.search').each(function () {
+                var title = $(this).text();
+                $(this).html('<input type="text" size="6" placeholder="Name" />');
+            });
+            table.columns().every(function () {
+                var that = this;
+                $('input', this.header()).on('keyup change', function () {
+                    if (that.search() !== this.value) {
+                        that.search(this.value)
+                                .draw();
+                    }
+                });
+            });
         });
     </script>
 </head>
@@ -29,7 +43,7 @@
                 <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Name</th>
+                    <th class="search">Name</th>
                     <th>Unit</th>
 
                     <th>Edit</th>
@@ -37,7 +51,6 @@
                 </tr>
                 </thead>
                 <tbody>
-
                 <tr th:each="ingredient : ${ingredients}">
                     <td th:text="${ingredient.id}" hidden="true"/>
                     <td th:text="${ingredient.name}"/>
@@ -47,14 +60,11 @@
                             <input type="button" class="btn btn-default" value="Edit"/>
                         </a>
                     </td>
-
                     <td>
                         <a th:href="@{'/admin/delete_ingredient/'+${ingredient.id}}">
                             <input type="button" class="btn btn-default" value="Delete"/>
                         </a>
-
                     </td>
-
                 </tr>
                 </tbody>
             </table>

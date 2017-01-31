@@ -1,10 +1,12 @@
 package com.goit.popov.restaurant.dao.impl;
 
 import com.goit.popov.restaurant.dao.entity.IngredientDAO;
+import com.goit.popov.restaurant.dao.entity.StoreHouseDAO;
 import com.goit.popov.restaurant.model.Ingredient;
+import com.goit.popov.restaurant.model.StoreHouse;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 /**
@@ -12,16 +14,22 @@ import java.util.List;
  */
 public class IngredientDAOImplJPA implements IngredientDAO {
 
+        @Autowired
         private SessionFactory sessionFactory;
 
-        public void setSessionFactory(SessionFactory sessionFactory) {
-                this.sessionFactory = sessionFactory;
-        }
+        @Autowired
+        private StoreHouseDAO storeHouseDAO;
 
         @Transactional
         @Override
         public int insert(Ingredient ingredient) {
-                return (int) sessionFactory.getCurrentSession().save(ingredient);
+                int key = (int) sessionFactory.getCurrentSession().save(ingredient);
+                // Insert a new StoreHouse entry as well
+                StoreHouse stock = new StoreHouse();
+                stock.setIngredient(ingredient);
+                stock.setQuantity(0);
+                sessionFactory.getCurrentSession().save(stock);
+                return key;
         }
 
         @Transactional
@@ -45,6 +53,8 @@ public class IngredientDAOImplJPA implements IngredientDAO {
         @Transactional
         @Override
         public void delete(Ingredient ingredient) {
+                StoreHouse storeHouse = storeHouseDAO.getByIngredient(ingredient);
+                sessionFactory.getCurrentSession().delete(storeHouse);
                 sessionFactory.getCurrentSession().delete(ingredient);
         }
 }

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Stock</title>
+    <link rel="stylesheet" type="text/css" href="/css/lib/bootstrap-3.3.7.min.css"/>
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/filterDisabled.css"/>
+    <script src="/js/lib/jquery-1.12.1.js"/>
+    <script src="/js/lib/bootstrap-3.3.7.min.js"/>
+    <script src="/js/lib/jquery.dataTables-1.10.12.min.js"/>
+    <script src="/js/manager/stock.js"/>
+</head>
+<body>
+<h3 class="form-signin-heading" align="center">Stock</h3>
+<div class="row">
+    <div class="col-md-3"/>
+    <div class="col-md-6">
+        <div th:replace="/th/header :: header"/>
+        <table id="stock" name="stock" class="display" align="center">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th class="select-filter">Ingredient</th>
+                <th>Quantity</th>
+                <th>Unit</th>
+
+                <th>Refill</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-3"/>
+</div>
+</body>
+</html>

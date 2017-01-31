@@ -4,6 +4,8 @@ import ch.qos.logback.classic.Logger;
 import com.goit.popov.restaurant.dao.entity.StoreHouseDAO;
 import com.goit.popov.restaurant.model.Ingredient;
 import com.goit.popov.restaurant.model.StoreHouse;
+import com.goit.popov.restaurant.service.dataTables.DataTablesInputExtendedDTO;
+import com.goit.popov.restaurant.service.dataTables.DataTablesOutputDTOUniversal;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,6 +63,11 @@ public class StockServiceImpl implements StockService {
         }
 
         @Override
+        public long count() {
+                return storeHouseDAO.count();
+        }
+
+        @Override
         public void decreaseIngredient(Ingredient ingredient, Double quantityRequired) {
                 StoreHouse storeHouse = getByIngredient(ingredient);
                 Double actualQuantity = storeHouse.getQuantity();
@@ -96,5 +103,27 @@ public class StockServiceImpl implements StockService {
                 for (Map.Entry<Ingredient, Double> ingredient : ingredientsReturned.entrySet()) {
                         increaseIngredient(ingredient.getKey(), ingredient.getValue());
                 }
+        }
+
+        @Override
+        public List<StoreHouse> getAllIngredients(DataTablesInputExtendedDTO dt) {
+                return storeHouseDAO.getAllIngredients(dt);
+        }
+
+        @Override
+        public DataTablesOutputDTOUniversal getAll(DataTablesInputExtendedDTO dt) {
+                long recordsTotal = count();
+                long recordsFiltered;
+                List<StoreHouse> data = getAllIngredients(dt);
+                if (!dt.getColumnSearch().isEmpty()) {
+                        recordsFiltered = data.size();
+                } else {
+                        recordsFiltered=recordsTotal;
+                }
+                return new DataTablesOutputDTOUniversal<StoreHouse>()
+                        .setDraw(dt.getDraw())
+                        .setRecordsTotal(recordsTotal)
+                        .setRecordsFiltered(recordsFiltered)
+                        .setData(data);
         }
 }

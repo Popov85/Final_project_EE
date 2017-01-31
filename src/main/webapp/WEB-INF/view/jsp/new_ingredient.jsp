@@ -17,7 +17,6 @@
         <form:hidden path="id" readonly="true" title="id" size="10"/>
     </div>
 
-
     <spring:bind path="name">
     <div class="form-group ${status.error ? 'has-error has-feedback' : ''}">
         <label>Name</label>
@@ -26,15 +25,13 @@
     </div>
     </spring:bind>
 
-
     <spring:bind path="unit">
     <div class="form-group ${status.error ? 'has-error has-feedback' : ''}">
         <label>Unit</label>
-        <form:select path="unit" items="${units}" id="unitInput" class="form-control"/>
+        <form:select path="unit" items="${units}" id="unitInput" class="form-control" width="120" style="width: 120px"/>
         <label class="control-label" for="unitInput">${status.error ? status.errorMessage : ''}</label>
     </div>
     </spring:bind>
-
 
     <div class="form-group">
         <div class="btn-group btn-group-justified">

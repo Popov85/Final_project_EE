@@ -21,11 +21,11 @@ public class Ingredient {
         @Column(name = "ING_ID")
         private int id;
 
-        @NotEmpty(message = "Ingredient must have a name")
+        @NotEmpty(message = "Ingredient must have a name!")
         @Column(name = "ING_NAME")
         private String name;
 
-        @NotNull(message = "Unit mustn't be empty")
+        @NotNull(message = "Unit must not be empty!")
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "UNIT_ID")
         private Unit unit;
