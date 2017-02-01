@@ -12,11 +12,7 @@ import java.util.List;
  * @version 1.0
  */
 public interface StoreHouseDAO extends GenericDAO<StoreHouse> {
-        /*
-        Obtains all the ingredients that are present in stock
-        in very small quantities (less than a predefined threshold
-        value, say 10 kg/L)
-         */
+
         List<StoreHouse> getAllRunOut(double threshold);
 
         StoreHouse getByIngredient(Ingredient ingredient);

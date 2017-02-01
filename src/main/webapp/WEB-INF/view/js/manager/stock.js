@@ -4,7 +4,7 @@
 $(document).ready(function () {
     var table = $('#stock').DataTable({
         "ajax" : {
-            "url": "/adm/get_stock_state",
+            "url": "/admin/get_stock_state",
             "type": "POST"
         },
         serverSide: true,
@@ -22,7 +22,6 @@ $(document).ready(function () {
                     ing.name=data.ingredient.name;
                     ing.unit=data.ingredient.unit.name;
                 console.log("data: "+JSON.stringify(data, null, 4));
-                console.log("ing: "+JSON.stringify(ing, null, 4));
                 return '<a href="javascript:openModal(\'' + ing.id +'\',\'' + ing.name +'\',\''+ing.unit+ '\')">' +
                             '<input type="button" class="btn btn-default" value="Refill"/>' +
                         '</a>';
@@ -64,4 +63,9 @@ function openModal(id, name, unit) {
     $('#id').val(id);
     $('#unit').text(unit);
     $("#myModal").modal();
+}
+
+function submitIncrease() {
+    var url = "/admin/update_stock?ingId="+$('#id').val()+"&quantity="+$('#quantity').val();
+    window.location.href = url;
 }

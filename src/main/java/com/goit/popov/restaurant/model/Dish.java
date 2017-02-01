@@ -1,6 +1,9 @@
 package com.goit.popov.restaurant.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.goit.popov.restaurant.controller.converters.ListToStringSerializer;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -34,17 +37,10 @@ public class Dish {
         @Column(name = "WEIGHT")
         private double weight;
 
-        @JsonIgnore
+        //@JsonSerialize(using = ToStringSerializer.class)
+        @JsonSerialize(using = ListToStringSerializer.class)
         @ManyToMany(fetch = FetchType.EAGER, mappedBy="dishes")
         private List<Menu> menus;
-
-        public List<Menu> getMenus() {
-                return menus;
-        }
-
-        public void setMenus(List<Menu> menus) {
-                this.menus = menus;
-        }
 
         @JsonIgnore
         @ElementCollection(fetch = FetchType.EAGER)
@@ -94,6 +90,14 @@ public class Dish {
                 this.weight = weight;
         }
 
+        public List<Menu> getMenus() {
+                return menus;
+        }
+
+        public void setMenus(List<Menu> menus) {
+                this.menus = menus;
+        }
+
         public Map<Ingredient, Double> getIngredients() {
                 return ingredients;
         }
@@ -138,6 +142,7 @@ public class Dish {
                         ", category='" + category + '\'' +
                         ", price=" + price +
                         ", weight=" + weight +
+                        ", menus=" + (menus!=null ? menus.size():"no menus") +
                         '}';
         }
 

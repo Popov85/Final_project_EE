@@ -1,7 +1,12 @@
 package com.goit.popov.restaurant.controller;
 
-import com.goit.popov.restaurant.service.DishService;
+import ch.qos.logback.classic.Logger;
+import com.goit.popov.restaurant.model.Dish;
+import com.goit.popov.restaurant.service.DishServiceImpl;
+import com.goit.popov.restaurant.service.dataTables.DataTablesInputExtendedDTO;
 import com.goit.popov.restaurant.service.dataTables.DataTablesOutputDTOCollectionWrapper;
+import com.goit.popov.restaurant.service.dataTables.DataTablesOutputDTOUniversal;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,14 +21,16 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class DishController {
 
-    @Autowired
-    private DishService dishService;
+    private static final Logger logger = (Logger) LoggerFactory.getLogger(DishController.class);
 
-    @PostMapping("/get_all_dishes")
+    @Autowired
+    private DishServiceImpl dishService;
+
+    @PostMapping(value = "/get_all_dishes")
     @ResponseBody
-    public DataTablesOutputDTOCollectionWrapper getDishes() {
-        DataTablesOutputDTOCollectionWrapper data = new DataTablesOutputDTOCollectionWrapper();
-        data.setData(dishService.toJSON(dishService.getAll()));
+    public DataTablesOutputDTOUniversal<Dish> getDishes(DataTablesInputExtendedDTO input) {
+        DataTablesOutputDTOUniversal<Dish> data = dishService.getAll(input);
+        logger.info("data: "+data);
         return data;
     }
 

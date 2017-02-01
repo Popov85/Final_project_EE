@@ -9,6 +9,7 @@ import com.goit.popov.restaurant.service.dataTables.DataTablesInputExtendedDTO;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -29,11 +30,8 @@ public class StoreHouseDAOImplJPA implements StoreHouseDAO {
 
         private static final Logger logger = (Logger) LoggerFactory.getLogger(StoreHouseDAOImplJPA.class);
 
+        @Autowired
         private SessionFactory sessionFactory;
-
-        public void setSessionFactory(SessionFactory sessionFactory) {
-                this.sessionFactory = sessionFactory;
-        }
 
         @PersistenceContext(unitName = "entityManagerFactory")
         private EntityManager em;
@@ -99,11 +97,11 @@ public class StoreHouseDAOImplJPA implements StoreHouseDAO {
                 try {
                         CriteriaBuilder builder = em.getCriteriaBuilder();
                         CriteriaQuery<StoreHouse> criteriaQuery = builder.createQuery(StoreHouse.class);
-                        Root<StoreHouse> orderRoot = criteriaQuery.from(StoreHouse.class);
-                        criteriaQuery.select(orderRoot);
+                        Root<StoreHouse> shRoot = criteriaQuery.from(StoreHouse.class);
+                        criteriaQuery.select(shRoot);
                         criteriaQuery.distinct(true);
-                        criteriaQuery = toFilter(dt, builder, criteriaQuery, orderRoot);
-                        criteriaQuery = toSort(dt, builder, criteriaQuery, orderRoot);
+                        criteriaQuery = toFilter(dt, builder, criteriaQuery, shRoot);
+                        criteriaQuery = toSort(dt, builder, criteriaQuery, shRoot);
                         resultOrders = toPage(dt, criteriaQuery).getResultList();
                 } catch (Exception e) {
                         logger.error("ERROR: " + e.getMessage());
@@ -112,12 +110,12 @@ public class StoreHouseDAOImplJPA implements StoreHouseDAO {
         }
 
         private CriteriaQuery<StoreHouse> toFilter(DataTablesInputExtendedDTO dt, CriteriaBuilder builder,
-                                              CriteriaQuery<StoreHouse> criteriaQuery, Root<StoreHouse> orderRoot) {
+                                              CriteriaQuery<StoreHouse> criteriaQuery, Root<StoreHouse> shRoot) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
                 if (!dt.getColumnSearch().isEmpty()) {
                         if (dt.getColumnSearch().containsKey("ingredient")) {
                                 String ingredient = dt.getColumnSearch().get("ingredient");
-                                predicates.add(builder.like(orderRoot.<String>get("ingredient").get("name"), ingredient + "%"));
+                                predicates.add(builder.like(shRoot.<String>get("ingredient").get("name"), ingredient + "%"));
                         }
                 }
                 criteriaQuery.where(predicates.toArray(new Predicate[]{}));
@@ -125,11 +123,11 @@ public class StoreHouseDAOImplJPA implements StoreHouseDAO {
         }
 
         private CriteriaQuery<StoreHouse> toSort(DataTablesInputExtendedDTO dt, CriteriaBuilder builder,
-                                            CriteriaQuery<StoreHouse> criteriaQuery, Root<StoreHouse> orderRoot) {
+                                            CriteriaQuery<StoreHouse> criteriaQuery, Root<StoreHouse> shRoot) {
                 if (dt.getDir().equals("asc")) {
-                        criteriaQuery.orderBy(builder.asc(orderRoot.get(dt.getColumnName())));
+                        criteriaQuery.orderBy(builder.asc(shRoot.get(dt.getColumnName())));
                 } else {
-                        criteriaQuery.orderBy(builder.desc(orderRoot.get(dt.getColumnName())));
+                        criteriaQuery.orderBy(builder.desc(shRoot.get(dt.getColumnName())));
                 }
                 return criteriaQuery;
         }

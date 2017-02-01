@@ -10,6 +10,7 @@ $(document).ready(function () {
             "url": "/get_all_dishes",
             "type": "POST"
         },
+        serverSide:true,
         "columnDefs": [
             { "width": "5%", "targets": 0 },
             { "width": "50%", "targets": 1 },
@@ -20,10 +21,10 @@ $(document).ready(function () {
         ],
         columns: [
             { "data": "id", "name": "id",  "title": "id", "visible": true},
-            { "data": "name", "name": "name", "title": "dish"},
-            { "data": "category", "name": "category", "title": "category"},
-            { "data": "weight", "name": "weight, g", "title": "weight, g"},
-            { "data": "price", "name": "price, $", "title": "price, $"},
+            { "data": "name", "name": "name", "title": "Dish"},
+            { "data": "category", "name": "category", "title": "Category"},
+            { "data": "weight", "name": "weight", "title": "weight, g"},
+            { "data": "price", "name": "price", "title": "price, $"},
             { "data": "menus", "name": "menus", "title": "menus"},
             { "data": null, "sortable": false, "render": function(data){
                 return '<a href="/show_ingredients?id=' + data.id + '"><input type="button" class="btn btn-default" value="Show"/></a>';
@@ -35,7 +36,7 @@ $(document).ready(function () {
 
 $(document).ready(function() {
     // Setup - add a text input to each footer cell
-    $('#dish tfoot th.search').each( function () {
+    $('#dish thead th.search').each( function () {
         var title = $(this).text();
         $(this).html( '<input type="text" size="8" placeholder="'+title+'" />' );
     } );
@@ -47,7 +48,7 @@ $(document).ready(function() {
     table.columns().every( function () {
         var that = this;
 
-        $( 'input', this.footer() ).on( 'keyup change', function () {
+        $( 'input', this.header() ).on( 'keyup change', function () {
             if ( that.search() !== this.value ) {
                 that
                     .search( this.value )

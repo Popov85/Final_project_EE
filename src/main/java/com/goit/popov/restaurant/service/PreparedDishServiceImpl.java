@@ -26,7 +26,7 @@ public class PreparedDishServiceImpl implements PreparedDishService {
         private OrderService orderService;
 
         @Autowired
-        private DishService dishService;
+        private DishServiceImpl dishService;
 
         @Autowired
         private ChefService chefService;

@@ -25,6 +25,8 @@
     </div>
     </spring:bind>
 
+    <p class="label label-danger"><c:out value="${constraintViolationError}"/></p>
+
     <spring:bind path="unit">
     <div class="form-group ${status.error ? 'has-error has-feedback' : ''}">
         <label>Unit</label>
@@ -32,6 +34,8 @@
         <label class="control-label" for="unitInput">${status.error ? status.errorMessage : ''}</label>
     </div>
     </spring:bind>
+
+    <p class="label label-danger"><c:out value="${unexpectedError}"/></p>
 
     <div class="form-group">
         <div class="btn-group btn-group-justified">

@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -25,6 +27,8 @@ import java.util.Map;
 public class IngredientController {
 
         static Logger logger = (Logger) LoggerFactory.getLogger(IngredientController.class);
+
+        private static final String CONSTRAINT_VIOLATION_MESSAGE="Constraint violation error!";
 
         @Autowired
         private IngredientService ingredientService;
@@ -56,28 +60,40 @@ public class IngredientController {
         }
 
         @RequestMapping(value = "/admin/save_ingredient", method = RequestMethod.POST)
-        public String saveIngredient(@Valid @ModelAttribute("ingredient") Ingredient ingredient, BindingResult result) {
+        public String saveIngredient(@Valid @ModelAttribute("ingredient") Ingredient ingredient, BindingResult result, Model model) {
                 if (result.hasErrors()) {
                         logger.error("Errors(" + result.getErrorCount() + "): during creating!");
                         return "jsp/new_ingredient";
                 }
-                ingredientService.save(ingredient);
+                try {
+                        ingredientService.insert(ingredient);
+                } catch (Exception e) {
+                        logger.error("ERROR: "+e.getCause());
+                        model.addAttribute("constraintViolationError",CONSTRAINT_VIOLATION_MESSAGE);
+                        return "jsp/new_ingredient";
+                }
                 return "redirect:/admin/ingredients";
         }
 
         @RequestMapping(value = "/admin/edit_ingredient/{id}", method = RequestMethod.GET)
         public ModelAndView edit(@PathVariable int id) {
-                Ingredient ing = ingredientService.getIngredientById(id);
+                Ingredient ing = ingredientService.getById(id);
                 return new ModelAndView("jsp/update_ingredient", "ingredient", ing);
         }
 
         @RequestMapping(value = "/admin/update_ingredient", method = RequestMethod.POST)
-        public String editSave(@Valid @ModelAttribute Ingredient ingredient, BindingResult result) {
+        public String editSave(@Valid @ModelAttribute Ingredient ingredient, BindingResult result, Model model) {
                 if (result.hasErrors()) {
                         logger.error("Errors(" + result.getErrorCount() + "): during updating!");
                         return "jsp/update_ingredient";
                 }
-                ingredientService.update(ingredient);
+                try {
+                        ingredientService.update(ingredient);
+                } catch (Exception e) {
+                        logger.error("ERROR: "+e.getCause());
+                        model.addAttribute("constraintViolationError", CONSTRAINT_VIOLATION_MESSAGE);
+                        return "jsp/update_ingredient";
+                }
                 return "redirect:/admin/ingredients";
         }
 
@@ -87,7 +103,7 @@ public class IngredientController {
                         ingredientService.deleteById(id);
                 } catch (Exception e) {
                         ra.addFlashAttribute("status", HttpStatus.FORBIDDEN);
-                        ra.addFlashAttribute("error", "Constraint violation exception deleting ingredient!");
+                        ra.addFlashAttribute("error", CONSTRAINT_VIOLATION_MESSAGE);
                         ra.addFlashAttribute("message", "Error: failed to delete the ingredient #" + id);
                         return "redirect:/error";
                 }

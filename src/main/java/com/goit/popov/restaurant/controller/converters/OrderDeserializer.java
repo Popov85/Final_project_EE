@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.IntNode;
 import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Order;
-import com.goit.popov.restaurant.service.DishService;
+import com.goit.popov.restaurant.service.DishServiceImpl;
 import com.goit.popov.restaurant.service.OrderService;
 import com.goit.popov.restaurant.service.WaiterService;
 import org.slf4j.LoggerFactory;
@@ -29,7 +29,7 @@ public class OrderDeserializer extends JsonDeserializer<Order> {
         private WaiterService Waiter;
 
         @Autowired
-        private DishService dishService;
+        private DishServiceImpl dishService;
 
         @Autowired
         private OrderService orderService;

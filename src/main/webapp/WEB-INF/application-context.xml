@@ -20,7 +20,7 @@
     <bean id="orderService" class="com.goit.popov.restaurant.service.OrderServiceImplFast"/>
 
     <bean id="dishDAO" class="com.goit.popov.restaurant.dao.impl.DishDAOImplJPA"/>
-    <bean id="dishService" class="com.goit.popov.restaurant.service.DishService"/>
+    <bean id="dishService" class="com.goit.popov.restaurant.service.DishServiceImpl"/>
 
     <bean id="ingredientDAO" class="com.goit.popov.restaurant.dao.impl.IngredientDAOImplJPA"/>
     <bean id="ingredientService" class="com.goit.popov.restaurant.service.IngredientService"/>

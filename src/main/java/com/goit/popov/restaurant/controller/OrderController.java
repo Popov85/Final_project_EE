@@ -8,7 +8,7 @@ import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Order;
 import com.goit.popov.restaurant.service.OrderService;
 import com.goit.popov.restaurant.service.dataTables.*;
-import com.goit.popov.restaurant.service.DishService;
+import com.goit.popov.restaurant.service.DishServiceImpl;
 import com.goit.popov.restaurant.service.exceptions.NotEnoughIngredientsException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class OrderController {
         private static final String UNEXPECTED_ERROR_MESSAGE ="Unexpected error happened";
 
         @Autowired
-        private DishService dishService;
+        private DishServiceImpl dishService;
 
         @Autowired
         private OrderService orderService;

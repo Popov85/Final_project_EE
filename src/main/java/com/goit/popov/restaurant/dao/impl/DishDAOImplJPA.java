@@ -1,9 +1,21 @@
 package com.goit.popov.restaurant.dao.impl;
 
+import ch.qos.logback.classic.Logger;
 import com.goit.popov.restaurant.dao.entity.DishDAO;
 import com.goit.popov.restaurant.model.Dish;
+import com.goit.popov.restaurant.service.dataTables.DataTablesInputExtendedDTO;
 import org.hibernate.SessionFactory;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,11 +24,13 @@ import java.util.List;
 @Transactional
 public class DishDAOImplJPA implements DishDAO {
 
+        private static final Logger logger = (Logger) LoggerFactory.getLogger(DishDAOImplJPA.class);
+
+        @Autowired
         private SessionFactory sessionFactory;
 
-        public void setSessionFactory(SessionFactory sessionFactory) {
-                this.sessionFactory = sessionFactory;
-        }
+        @PersistenceContext(unitName = "entityManagerFactory")
+        private EntityManager em;
 
         @Override
         public int insert(Dish dish) {
@@ -41,5 +55,66 @@ public class DishDAOImplJPA implements DishDAO {
         @Override
         public void delete(Dish dish) {
                 sessionFactory.getCurrentSession().delete(dish);
+        }
+
+        @Override
+        public long count() {
+                return (long) sessionFactory.getCurrentSession().createQuery("select count(*) from Dish").uniqueResult();
+        }
+
+        @Override
+        public List<Dish> getAllDishes(DataTablesInputExtendedDTO dt) {
+                List<Dish> resultOrders = new ArrayList<>();
+                try {
+                        CriteriaBuilder builder = em.getCriteriaBuilder();
+                        CriteriaQuery<Dish> criteriaQuery = builder.createQuery(Dish.class);
+                        Root<Dish> dishRoot = criteriaQuery.from(Dish.class);
+                        criteriaQuery.select(dishRoot);
+                        criteriaQuery.distinct(true);
+                        criteriaQuery = toFilter(dt, builder, criteriaQuery, dishRoot);
+                        criteriaQuery = toSort(dt, builder, criteriaQuery, dishRoot);
+                        resultOrders = toPage(dt, criteriaQuery).getResultList();
+                } catch (Exception e) {
+                        logger.error("ERROR: " + e.getMessage());
+                }
+                return resultOrders;
+        }
+
+        private CriteriaQuery<Dish> toFilter(DataTablesInputExtendedDTO dt, CriteriaBuilder builder,
+                                                   CriteriaQuery<Dish> criteriaQuery, Root<Dish> dishRoot) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (!dt.getColumnSearch().isEmpty()) {
+                        if (dt.getColumnSearch().containsKey("name")) {
+                                String ingredient = dt.getColumnSearch().get("name");
+                                predicates.add(builder.like(dishRoot.<String>get("name"), ingredient + "%"));
+                        }
+                        if (dt.getColumnSearch().containsKey("category")) {
+                                String ingredient = dt.getColumnSearch().get("category");
+                                predicates.add(builder.like(dishRoot.<String>get("category"), ingredient + "%"));
+                        }
+                        // TODO more selects
+                }
+
+                criteriaQuery.where(predicates.toArray(new Predicate[]{}));
+                return criteriaQuery;
+        }
+
+        private CriteriaQuery<Dish> toSort(DataTablesInputExtendedDTO dt, CriteriaBuilder builder,
+                                                 CriteriaQuery<Dish> criteriaQuery, Root<Dish> dishRoot) {
+                if (dt.getDir().equals("asc")) {
+                        criteriaQuery.orderBy(builder.asc(dishRoot.get(dt.getColumnName())));
+                } else {
+                        criteriaQuery.orderBy(builder.desc(dishRoot.get(dt.getColumnName())));
+                }
+                return criteriaQuery;
+        }
+
+        private TypedQuery<Dish> toPage(DataTablesInputExtendedDTO dt,
+                                              CriteriaQuery<Dish> criteriaQuery) {
+                final TypedQuery<Dish> typedQuery = em.createQuery(criteriaQuery);
+                typedQuery
+                        .setFirstResult(dt.getStart())
+                        .setMaxResults(dt.getLength());
+                return typedQuery;
         }
 }
