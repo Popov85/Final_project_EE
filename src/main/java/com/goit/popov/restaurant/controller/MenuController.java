@@ -39,8 +39,8 @@ public class MenuController {
 
     @GetMapping("/show_dishes")
     public ModelAndView getDishes(@RequestParam int id, ModelAndView modelAndView) {
-        modelAndView.addObject("id",menuService.getById(id).getId());
-        modelAndView.addObject("menu",menuService.getById(id).getName());
+        modelAndView.addObject("id", menuService.getById(id).getId());
+        modelAndView.addObject("menu", menuService.getById(id).getName());
         modelAndView.setViewName("th/menus_dishes");
         return modelAndView;
     }

@@ -14,5 +14,5 @@ import java.util.Map;
  */
 public interface DishDAO extends GenericDAO<Dish> {
         long count();
-        List<Dish> getAllDishes(DataTablesInputExtendedDTO dt);
+        List<Dish> getAllItems(DataTablesInputExtendedDTO dt);
 }

@@ -2,11 +2,12 @@ package com.goit.popov.restaurant.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.goit.popov.restaurant.controller.converters.ListToStringSerializer;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -25,15 +26,23 @@ public class Dish {
         @Column(name = "D_ID")
         private int id;
 
+        @NotEmpty(message = "Dish must have a name!")
+        @Size(min=2, max=30)
         @Column(name = "DISH_NAME")
         private String name;
 
+        @NotEmpty(message = "Dish must have a category!")
+        @Size(min=2, max=30)
         @Column(name = "CATEGORY")
         private String category;
 
+        @NotNull(message = "Specify the price of dish!")
         @Column(name = "PRICE")
         private BigDecimal price;
 
+        @NotNull(message = "Specify the weight of dish!")
+        @DecimalMin(value = "5.00", message = "Minimal weight is 5 g")
+        @DecimalMax(value = "1000", message = "Max weight is 100 kg")
         @Column(name = "WEIGHT")
         private double weight;
 
@@ -104,34 +113,6 @@ public class Dish {
 
         public void setIngredients(Map<Ingredient, Double> ingredients) {
                 this.ingredients = ingredients;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-                if (this == o) return true;
-                if (o == null || getClass() != o.getClass()) return false;
-
-                Dish dish = (Dish) o;
-
-                if (id != dish.id) return false;
-                if (Double.compare(dish.weight, weight) != 0) return false;
-                if (!name.equals(dish.name)) return false;
-                if (!category.equals(dish.category)) return false;
-                return price.equals(dish.price);
-
-        }
-
-        @Override
-        public int hashCode() {
-                int result;
-                long temp;
-                result = id;
-                result = 31 * result + name.hashCode();
-                result = 31 * result + category.hashCode();
-                result = 31 * result + price.hashCode();
-                temp = Double.doubleToLongBits(weight);
-                result = 31 * result + (int) (temp ^ (temp >>> 32));
-                return result;
         }
 
         @Override

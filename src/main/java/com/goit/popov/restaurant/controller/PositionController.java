@@ -53,7 +53,6 @@ public class PositionController {
                 }
                 positionService.save(position);
                 return "redirect:/admin/positions";
-
         }
 
         // Read (update form)

@@ -15,10 +15,10 @@
             <input type="hidden" th:id="id" id="id" th:field="*{id}"/>
         </div>
 
-        <div class="form-group">
-            <label class="control-label" for="name">Name</label>
+        <div th:class="${#fields.hasErrors('name') ? 'form-group has-error has-feedback' : 'form-group has success'}">
+            <label for="name">Name</label>
             <input type="text" th:id="name" id="name" th:field="*{name}" size="22" class="form-control"/>
-            <label th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="label label-danger"/>
+            <label class="control-label" for="name" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Incorrect data</label>
         </div>
 
         <div class="form-group">

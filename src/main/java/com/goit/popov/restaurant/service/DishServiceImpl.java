@@ -6,9 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.goit.popov.restaurant.dao.entity.DishDAO;
 import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Ingredient;
-import com.goit.popov.restaurant.model.Menu;
 import com.goit.popov.restaurant.service.dataTables.DataTablesInputExtendedDTO;
-import com.goit.popov.restaurant.service.dataTables.DataTablesOutputDTOUniversal;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +14,7 @@ import java.util.Map;
 /**
  * Created by Andrey on 02.12.2016.
  */
-public class DishServiceImpl implements DishService {
+public class DishServiceImpl extends DishService {
 
         @Autowired
         private DishDAO dishDAO;
@@ -66,24 +64,8 @@ public class DishServiceImpl implements DishService {
         }
 
         @Override
-        public List<Dish> getAllDishes(DataTablesInputExtendedDTO dt) {
-                return dishDAO.getAllDishes(dt);
+        public List<Dish> getAllItems(DataTablesInputExtendedDTO dt) {
+                return dishDAO.getAllItems(dt);
         }
 
-        @Override
-        public DataTablesOutputDTOUniversal<Dish> getAll(DataTablesInputExtendedDTO dt) {
-                long recordsTotal = count();
-                long recordsFiltered;
-                List<Dish> data = getAllDishes(dt);
-                if (!dt.getColumnSearch().isEmpty()) {
-                        recordsFiltered = data.size();
-                } else {
-                        recordsFiltered=recordsTotal;
-                }
-                return new DataTablesOutputDTOUniversal<Dish>()
-                        .setDraw(dt.getDraw())
-                        .setRecordsTotal(recordsTotal)
-                        .setRecordsFiltered(recordsFiltered)
-                        .setData(data);
-        }
 }

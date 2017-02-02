@@ -42,13 +42,30 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Dishes and Menus</a>
+                        </h4>
+                    </div>
+                    <div id="collapse3" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <p> <a th:href="@{/admin/dishes/}" title="Here you can manage dishes">Dishes</a></p>
+                            <p> <a th:href="@{/admin/new_dish/}" title="Here you can add a new dish">New Dish</a></p>
+                            <p> <a th:href="@{/admin/menus/}" title="Here you can manage menus">Menus</a></p>
+                            <p> <a th:href="@{/admin/new_menu/}" title="Here you can add a new menu">New Menu</a></p>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Stock</a>
                         </h4>
                     </div>
-                    <div id="collapse3" class="panel-collapse collapse">
+                    <div id="collapse4" class="panel-collapse collapse">
                         <div class="panel-body">
                             <p><a th:href="@{/admin/stock_state/}" title="Here you can manage stock">Stock</a></p>
                             <p><a th:href="@{/admin/ingredients/}" title="Here you can manage ingredients">Ingredients</a></p>
@@ -63,7 +80,7 @@
                             <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">More...</a>
                         </h4>
                     </div>
-                    <div id="collapse4" class="panel-collapse collapse">
+                    <div id="collapse5" class="panel-collapse collapse">
                         <div class="panel-body">
 
                         </div>

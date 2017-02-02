@@ -3,6 +3,7 @@ package com.goit.popov.restaurant.dao.impl;
 import ch.qos.logback.classic.Logger;
 import com.goit.popov.restaurant.dao.entity.DishDAO;
 import com.goit.popov.restaurant.model.Dish;
+import com.goit.popov.restaurant.service.dataTables.DataTablesDAOServerSideSearch;
 import com.goit.popov.restaurant.service.dataTables.DataTablesInputExtendedDTO;
 import org.hibernate.SessionFactory;
 import org.slf4j.LoggerFactory;
@@ -22,15 +23,15 @@ import java.util.List;
  * Created by Andrey on 28.10.2016.
  */
 @Transactional
-public class DishDAOImplJPA implements DishDAO {
+public class DishDAOImplJPA extends DataTablesDAOServerSideSearch<Dish> implements DishDAO {
 
         private static final Logger logger = (Logger) LoggerFactory.getLogger(DishDAOImplJPA.class);
 
         @Autowired
         private SessionFactory sessionFactory;
 
-        @PersistenceContext(unitName = "entityManagerFactory")
-        private EntityManager em;
+        /*@PersistenceContext(unitName = "entityManagerFactory")
+        private EntityManager em;*/
 
         @Override
         public int insert(Dish dish) {
@@ -62,8 +63,8 @@ public class DishDAOImplJPA implements DishDAO {
                 return (long) sessionFactory.getCurrentSession().createQuery("select count(*) from Dish").uniqueResult();
         }
 
-        @Override
-        public List<Dish> getAllDishes(DataTablesInputExtendedDTO dt) {
+        /*@Override
+        public List<Dish> getAllItems(DataTablesInputExtendedDTO dt) {
                 List<Dish> resultOrders = new ArrayList<>();
                 try {
                         CriteriaBuilder builder = em.getCriteriaBuilder();
@@ -78,9 +79,10 @@ public class DishDAOImplJPA implements DishDAO {
                         logger.error("ERROR: " + e.getMessage());
                 }
                 return resultOrders;
-        }
+        }*/
 
-        private CriteriaQuery<Dish> toFilter(DataTablesInputExtendedDTO dt, CriteriaBuilder builder,
+        @Override
+        protected CriteriaQuery<Dish> toFilter(DataTablesInputExtendedDTO dt, CriteriaBuilder builder,
                                                    CriteriaQuery<Dish> criteriaQuery, Root<Dish> dishRoot) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
                 if (!dt.getColumnSearch().isEmpty()) {
@@ -94,12 +96,11 @@ public class DishDAOImplJPA implements DishDAO {
                         }
                         // TODO more selects
                 }
-
                 criteriaQuery.where(predicates.toArray(new Predicate[]{}));
                 return criteriaQuery;
         }
 
-        private CriteriaQuery<Dish> toSort(DataTablesInputExtendedDTO dt, CriteriaBuilder builder,
+        /*private CriteriaQuery<Dish> toSort(DataTablesInputExtendedDTO dt, CriteriaBuilder builder,
                                                  CriteriaQuery<Dish> criteriaQuery, Root<Dish> dishRoot) {
                 if (dt.getDir().equals("asc")) {
                         criteriaQuery.orderBy(builder.asc(dishRoot.get(dt.getColumnName())));
@@ -116,5 +117,5 @@ public class DishDAOImplJPA implements DishDAO {
                         .setFirstResult(dt.getStart())
                         .setMaxResults(dt.getLength());
                 return typedQuery;
-        }
+        }*/
 }

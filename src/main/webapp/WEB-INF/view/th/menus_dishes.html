@@ -50,9 +50,15 @@
                 </thead>
             </table>
             <br/>
-            <a th:href="@{/show_menus}">
-                <input type="button" class="btn btn-default" value="Back"/>
-            </a>
+            <div class="btn-group">
+                <a th:href="@{/}">
+                    <input type="button" class="btn btn-default" value="Home"/>
+                </a>
+                <a th:href="@{/show_menus}">
+                    <input type="button" class="btn btn-default" value="More menus"/>
+                </a>
+            </div>
+
         </div>
         <div class="col-md-3"></div>
     </div>

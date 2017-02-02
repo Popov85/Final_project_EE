@@ -6,7 +6,6 @@
     <link rel="stylesheet" type="text/css" href="/css/lib/bootstrap-3.3.7.min.css"/>
 </head>
 <body>
-
 <div class="container">
     <form action="#" th:action="@{/admin/save_position}" th:object="${position}" method="post"
           style="max-width: 220px; margin: 0 auto; font-size: larger;">
@@ -16,10 +15,11 @@
             <input type="hidden" th:id="id" id="id" th:field="*{id}"/>
         </div>
 
-        <div class="form-group">
+        <div th:class="${#fields.hasErrors('name') ? 'form-group has-error has-feedback' : 'form-group has success'}">
             <label for="name">Name</label>
-            <input type="text" th:id="name" id="name" th:field="*{name}" size="22"/>
-            <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="label label-danger">Incorrect data</p>
+            <input type="text" th:id="name" id="name" th:field="*{name}" size="22" class="form-control"/>
+            <label class="control-label" for="name" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Incorrect
+                data</label>
         </div>
 
         <div class="form-group">
@@ -34,20 +34,19 @@
                 </div>
             </div>
 
-        <div class="form-group">
-            <div class="row">
-                <div class="col-md-6">
-                    <a class="hyperlink" href="/admin/positions">See all</a>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <a class="hyperlink" href="/admin/positions">See all</a>
+                    </div>
+                    <div class="col-md-6" align="right">
+                        <a class="hyperlink" href="/">Home</a>
+                    </div>
                 </div>
-                <div class="col-md-6" align="right">
-                    <a class="hyperlink" href="/">Home</a>
-                </div>
-            </div>
 
             </div>
         </div>
-        </form>
-    </div>
-
+    </form>
+</div>
 </body>
 </html>

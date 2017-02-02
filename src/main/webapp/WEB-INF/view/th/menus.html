@@ -6,37 +6,7 @@
     <script src ="/js/lib/jquery-1.12.1.js"/>
     <script src ="/js/lib/bootstrap-3.3.7.min.js"/>
     <script src ="/js/lib/jquery.dataTables-1.10.12.min.js"/>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            var table = $('#menu').DataTable({
-                "bFilter":false,
-                "bLengthChange": false,
-                "bAutoWidth": false,
-                "ajax" : {
-                    "url": "/get_menus",
-                    "type": "POST"
-                },
-                "columnDefs": [
-                    { "width": "15%", "targets": 0 },
-                    { "width": "40%", "targets": 1 },
-                    { "width": "15%", "targets": 2 },
-                    { "width": "15%", "targets": 3 },
-                    { "width": "15%", "targets": 4 }
-                ],
-                columns: [
-                    { "data": "id", "name": "id",  "title": "id", "visible": false},
-                    { "data": "name", "name": "name", "title": "menu"},
-                    { "data": "price", "name": "price, $", "title": "price, $"},
-                    { "data": "dishes", "name": "dishes", "title": "dishes"},
-                    { "data": null, "sortable": false, "render": function(data){
-                        return '<a href="/show_dishes?id=' + data.id + '"><input type="button" class="btn btn-default" value="Show"/></a>';
-                    }
-                    }
-                ]
-            });
-        });
-
-    </script>
+    <script src ="/js/menus.js"/>
 </head>
 <body>
 <div class="container">
@@ -55,6 +25,11 @@
                 </tr>
                 </thead>
             </table>
+            <div class="btn-group">
+                <a href="/">
+                    <input type="button" class="btn btn-default" value="Home"/>
+                </a>
+            </div>
         </div>
         <div class="col-md-3"></div>
     </div>

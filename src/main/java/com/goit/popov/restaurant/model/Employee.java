@@ -6,6 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -45,6 +46,7 @@ public class Employee {
 
         @NotNull(message = "DOB field must not be empty!")
         @DateTimeFormat(pattern = "yyyy-MM-dd")
+        @Past(message = "DOB must be a date in the past!")
         @Column(name = "DOB")
         protected Date dob;
 
