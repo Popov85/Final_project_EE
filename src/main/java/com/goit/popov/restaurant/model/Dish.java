@@ -1,11 +1,13 @@
 package com.goit.popov.restaurant.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.goit.popov.restaurant.controller.converters.DishDeserializer;
 import com.goit.popov.restaurant.controller.converters.ListToStringSerializer;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.NotEmpty;
-
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
@@ -19,6 +21,7 @@ import java.util.Map;
  */
 @Entity
 @Table(name = "dish")
+@JsonDeserialize(using = DishDeserializer.class)
 public class Dish {
         @Id
         @GeneratedValue(generator = "increment")
@@ -46,12 +49,14 @@ public class Dish {
         @Column(name = "WEIGHT")
         private double weight;
 
-        //@JsonSerialize(using = ToStringSerializer.class)
+
         @JsonSerialize(using = ListToStringSerializer.class)
         @ManyToMany(fetch = FetchType.EAGER, mappedBy="dishes")
         private List<Menu> menus;
 
         @JsonIgnore
+        // TODO Consider custom field serializer
+        //@JsonSerialize(using = ToStringSerializer.class)
         @ElementCollection(fetch = FetchType.EAGER)
         @CollectionTable(name = "dish_ingredient",
                 joinColumns = @JoinColumn(name = "D_ID"))

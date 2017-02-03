@@ -45,17 +45,8 @@ public class DishServiceImpl extends DishService {
         }
 
         @Override
-        public ArrayNode toJSON(Map<Ingredient, Double> ingredients) {
-                ObjectMapper mapper = new ObjectMapper();
-                ArrayNode ana = mapper.createArrayNode();
-                for (Map.Entry<Ingredient, Double> ingredient : ingredients.entrySet()) {
-                        ObjectNode a = mapper.createObjectNode();
-                        a.put("id", ingredient.getKey().getId());
-                        a.put("name", ingredient.getKey().getName());
-                        a.put("quantity", ingredient.getValue());
-                        ana.add(a);
-                }
-                return ana;
+        public void deleteById(int id) {
+                dishDAO.deleteById(id);
         }
 
         @Override
@@ -68,4 +59,17 @@ public class DishServiceImpl extends DishService {
                 return dishDAO.getAllItems(dt);
         }
 
+        @Override
+        public ArrayNode toJSON(Map<Ingredient, Double> ingredients) {
+                ObjectMapper mapper = new ObjectMapper();
+                ArrayNode ana = mapper.createArrayNode();
+                for (Map.Entry<Ingredient, Double> ingredient : ingredients.entrySet()) {
+                        ObjectNode a = mapper.createObjectNode();
+                        a.put("id", ingredient.getKey().getId());
+                        a.put("name", ingredient.getKey().getName());
+                        a.put("quantity", ingredient.getValue());
+                        ana.add(a);
+                }
+                return ana;
+        }
 }

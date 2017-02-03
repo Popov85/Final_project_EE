@@ -34,7 +34,7 @@ $(document).ready(function () {
             }
             },
             { "data": null, "sortable": false, "render": function(data){
-                return '<a href="/admin/edit_dish_ingredients?id=' + data.id + '"><input type="button" class="btn btn-default" value="Edit Ing."/></a>';
+                return '<a href="/admin/edit_dishs_ingredients?dishId=' + data.id + '"><input type="button" class="btn btn-default" value="Edit Ing."/></a>';
             }
             }
         ]

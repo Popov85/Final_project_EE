@@ -23,7 +23,7 @@ import java.util.*;
  */
 public class OrderDeserializer extends JsonDeserializer<Order> {
 
-        static Logger logger = (Logger) LoggerFactory.getLogger(OrderDeserializer.class);
+        private static Logger logger = (Logger) LoggerFactory.getLogger(OrderDeserializer.class);
 
         @Autowired
         private WaiterService Waiter;

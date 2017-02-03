@@ -40,7 +40,7 @@
         <div th:class="${#fields.hasErrors('price') ? 'form-group has-error has-feedback' : 'form-group has success'}">
             <label for="name">Price</label>
             <input type="text" name="price" id="price" th:field="*{price}"
-                                                    style="width: 100px;" class="form-control"/><span>($)</span>
+                   style="width: 100px;" class="form-control"/><span>($)</span>
             <label class="control-label" for="price" th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Incorrect
                 data</label>
         </div>

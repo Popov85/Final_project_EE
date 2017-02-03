@@ -12,21 +12,21 @@ $(document).ready(function () {
         },
         serverSide:true,
         "columnDefs": [
-            { "width": "5%", "targets": 0 },
-            { "width": "50%", "targets": 1 },
-            { "width": "15%", "targets": 2 },
-            { "width": "10%", "targets": 3 },
-            { "width": "10%", "targets": 4 },
+            { "width": "0%", "targets": 0 },
+            { "width": "30%", "targets": 1 },
+            { "width": "30%", "targets": 2 },
+            { "width": "15%", "targets": 3 },
+            { "width": "15%", "targets": 4 },
             { "width": "10%", "targets": 5 }
         ],
         columns: [
-            { "data": "id", "name": "id",  "title": "id", "visible": true},
+            { "data": "id", "name": "id",  "title": "id", "visible": false},
             { "data": "name", "name": "name", "title": "Dish"},
             { "data": "category", "name": "category", "title": "Category"},
-            { "data": "weight", "name": "weight", "title": "weight, g"},
-            { "data": "price", "name": "price", "title": "price, $"},
-            { "data": "menus", "name": "menus", "title": "menus"},
-            { "data": null, "sortable": false, "render": function(data){
+            { "data": "weight", "name": "weight", "title": "Weight(g)"},
+            { "data": "price", "name": "price", "title": "Price($)"},
+            { "data": "menus", "name": "menus", "title": "Menus"},
+            { "data": null, "title": "Details", "sortable": false, "render": function(data){
                 return '<a href="/show_ingredients?id=' + data.id + '"><input type="button" class="btn btn-default" value="Show"/></a>';
             }
             }
@@ -38,7 +38,7 @@ $(document).ready(function() {
     // Setup - add a text input to each footer cell
     $('#dish thead th.search').each( function () {
         var title = $(this).text();
-        $(this).html( '<input type="text" size="8" placeholder="'+title+'" />' );
+        $(this).html( '<input type="text" size="12" placeholder="'+title+'" />' );
     } );
 
     // DataTable

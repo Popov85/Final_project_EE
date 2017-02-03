@@ -8,14 +8,14 @@ import com.goit.popov.restaurant.service.dataTables.DataTablesOutputDTOCollectio
 import com.goit.popov.restaurant.service.dataTables.DataTablesOutputDTOUniversal;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * Created by Andrey on 1/4/2017.
@@ -24,6 +24,8 @@ import java.util.List;
 public class DishController {
 
     private static final Logger logger = (Logger) LoggerFactory.getLogger(DishController.class);
+
+    private static final String CONSTRAINT_VIOLATION_MESSAGE="Constraint violation error!";
 
     @Autowired
     private DishService dishService;
@@ -36,8 +38,13 @@ public class DishController {
     @GetMapping(value = "/admin/new_dish")
     public ModelAndView showDishForm(){
         Dish dish = new Dish();
-        //position.setName("");
         return new ModelAndView("th/manager/new_dish", "dish", dish);
+    }
+
+    @PostMapping("/admin/get_dish")
+    @ResponseBody
+    public Dish getDish(@RequestParam int dishId) {
+        return dishService.getById(dishId);
     }
 
     @PostMapping(value = "/get_all_dishes")
@@ -58,21 +65,27 @@ public class DishController {
 
     @PostMapping("/get_dishs_ingredients")
     @ResponseBody
-    public DataTablesOutputDTOCollectionWrapper getDishIngredients(@RequestParam int id) {
+    public DataTablesOutputDTOCollectionWrapper getDishIngredients(@RequestParam int dishId) {
         DataTablesOutputDTOCollectionWrapper data = new DataTablesOutputDTOCollectionWrapper();
-        data.setData(dishService.toJSON(dishService.getById(id).getIngredients()));
+        data.setData(dishService.toJSON(dishService.getById(dishId).getIngredients()));
         return data;
     }
 
     @PostMapping(value="/admin/save_dish")
-    public String saveDish(@Valid @ModelAttribute("dish") Dish dish, BindingResult result){
+    public String saveDish(@Valid @ModelAttribute("dish") Dish dish, BindingResult result, RedirectAttributes ra){
         if (result.hasErrors()) {
             logger.info("Errors number while saving new dish: "+
                     result.getFieldErrorCount());
-            logger.info("Weight error value is: "+result.getFieldError("weight").getRejectedValue());
             return "th/manager/new_dish";
         }
-        dishService.insert(dish);
+        try {
+            dishService.insert(dish);
+        } catch (Exception e) {
+            ra.addFlashAttribute("status", HttpStatus.FORBIDDEN);
+            ra.addFlashAttribute("error", CONSTRAINT_VIOLATION_MESSAGE);
+            ra.addFlashAttribute("message", "Error: failed to insert a dish #" + dish);
+            return "redirect:/error";
+        }
         return "redirect:/admin/dishes";
     }
 
@@ -83,22 +96,50 @@ public class DishController {
         return "th/manager/edit_dish";
     }
 
+    @GetMapping(value = "/admin/edit_dishs_ingredients")
+    public String showDishsIngredientsEditForm(@RequestParam("dishId") int dishId, ModelMap map){
+        map.addAttribute("dishId", dishId);
+        return "th/manager/edit_dishs_ingredients";
+    }
+
     @PostMapping(value="/admin/update_dish")
-    public String updateDish(@Valid @ModelAttribute("dish") Dish dish, BindingResult result){
+    public String updateDish(@Valid @ModelAttribute("dish") Dish dish, BindingResult result, RedirectAttributes ra){
         if (result.hasErrors()) {
             logger.info("Errors number while updating dish: "+
                     result.getFieldErrorCount());
             return "th/manager/edit_dish";
-        } else {
-            dishService.update(dish);
-            return "redirect:/admin/dishes";
         }
+        try {
+            dishService.update(dish);
+        } catch (Exception e) {
+            ra.addFlashAttribute("status", HttpStatus.FORBIDDEN);
+            ra.addFlashAttribute("error", CONSTRAINT_VIOLATION_MESSAGE);
+            ra.addFlashAttribute("message", "Error: failed to update the dish #" + dish);
+            return "redirect:/error";
+        }
+        return "redirect:/admin/dishes";
     }
 
-    @GetMapping(value = "/get_all_dishes2")
-    @ResponseBody
-    public List<Dish> getDishes() {
-        logger.info("Dishes: "+dishService.getAll());
-        return dishService.getAll();
+    @PostMapping(value="/admin/update_dishs_ingredients")
+    public String updateDishsIngredients(@RequestBody Dish dish){
+        try {
+            dishService.update(dish);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "redirect:/admin/dishes";
+    }
+
+    @RequestMapping(value = "/admin/delete_dish/{id}", method = RequestMethod.GET)
+    public String deleteDish(@PathVariable int id, RedirectAttributes ra) {
+        try {
+            dishService.deleteById(id);
+        } catch (Exception e) {
+            ra.addFlashAttribute("status", HttpStatus.FORBIDDEN);
+            ra.addFlashAttribute("error", CONSTRAINT_VIOLATION_MESSAGE);
+            ra.addFlashAttribute("message", "Error: failed to delete the dish #" + id);
+            return "redirect:/error";
+        }
+        return "redirect:/admin/dishes";
     }
 }

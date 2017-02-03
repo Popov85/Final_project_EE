@@ -113,8 +113,6 @@ function prepare(params) {
 function checkOrder(data) {
     // Reload Dishes table
     var params = 'dishId=' + data.dishId + '&quantity=' + data.quantity + '&orderId=' + data.orderId;
-    console.log(params);
-    console.log(data.isCancelled);
     var url = "/chef/confirm_dishes_prepared?"+params;
     if (data.isCancelled) {
         // Order was cancelled

@@ -59,6 +59,11 @@ public class DishDAOImplJPA extends DataTablesDAOServerSideSearch<Dish> implemen
         }
 
         @Override
+        public void deleteById(int id) {
+                delete(getById(id));
+        }
+
+        @Override
         public long count() {
                 return (long) sessionFactory.getCurrentSession().createQuery("select count(*) from Dish").uniqueResult();
         }

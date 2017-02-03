@@ -5,12 +5,12 @@ import com.goit.popov.restaurant.model.Ingredient;
 import com.goit.popov.restaurant.model.Unit;
 import com.goit.popov.restaurant.service.IngredientService;
 import com.goit.popov.restaurant.service.UnitService;
+import com.goit.popov.restaurant.service.dataTables.DataTablesOutputDTOListWrapper;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -28,7 +28,7 @@ public class IngredientController {
 
         static Logger logger = (Logger) LoggerFactory.getLogger(IngredientController.class);
 
-        private static final String CONSTRAINT_VIOLATION_MESSAGE="Constraint violation error!";
+        private static final String CONSTRAINT_VIOLATION_MESSAGE = "Constraint violation error!";
 
         @Autowired
         private IngredientService ingredientService;
@@ -48,7 +48,7 @@ public class IngredientController {
                 return unitsList;
         }
 
-        @RequestMapping("/admin/new_ingredient")
+        @GetMapping("/admin/new_ingredient")
         public ModelAndView showIngredientForm() {
                 return new ModelAndView("jsp/new_ingredient", "ingredient", new Ingredient());
         }
@@ -57,6 +57,14 @@ public class IngredientController {
         public String ingredients(Map<String, Object> model) {
                 model.put("ingredients", ingredientService.getAll());
                 return "th/manager/ingredients";
+        }
+
+        @PostMapping("/admin/get_all_ingredients")
+        @ResponseBody
+        public DataTablesOutputDTOListWrapper<Ingredient> getAllIngredients() {
+                DataTablesOutputDTOListWrapper<Ingredient> ingredients = new DataTablesOutputDTOListWrapper<>();
+                ingredients.setData(ingredientService.getAll());
+                return ingredients;
         }
 
         @RequestMapping(value = "/admin/save_ingredient", method = RequestMethod.POST)
