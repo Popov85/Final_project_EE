@@ -3,7 +3,6 @@ package com.goit.popov.restaurant.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.goit.popov.restaurant.controller.converters.DishDeserializer;
 import com.goit.popov.restaurant.controller.converters.ListToStringSerializer;
 import org.hibernate.annotations.GenericGenerator;
@@ -40,14 +39,15 @@ public class Dish {
         private String category;
 
         @NotNull(message = "Specify the price of dish!")
+        @DecimalMin(value = "0.01", message = "Minimal price is 0.01 $")
         @Column(name = "PRICE")
         private BigDecimal price;
 
         @NotNull(message = "Specify the weight of dish!")
         @DecimalMin(value = "5.00", message = "Minimal weight is 5 g")
-        @DecimalMax(value = "1000", message = "Max weight is 100 kg")
+        @DecimalMax(value = "100000", message = "Max weight is 100 kg")
         @Column(name = "WEIGHT")
-        private double weight;
+        private Double weight;
 
 
         @JsonSerialize(using = ListToStringSerializer.class)
@@ -55,8 +55,6 @@ public class Dish {
         private List<Menu> menus;
 
         @JsonIgnore
-        // TODO Consider custom field serializer
-        //@JsonSerialize(using = ToStringSerializer.class)
         @ElementCollection(fetch = FetchType.EAGER)
         @CollectionTable(name = "dish_ingredient",
                 joinColumns = @JoinColumn(name = "D_ID"))
@@ -80,7 +78,7 @@ public class Dish {
                 return price;
         }
 
-        public double getWeight() {
+        public Double getWeight() {
                 return weight;
         }
 
@@ -100,7 +98,7 @@ public class Dish {
                 this.price = price;
         }
 
-        public void setWeight(double weight) {
+        public void setWeight(Double weight) {
                 this.weight = weight;
         }
 

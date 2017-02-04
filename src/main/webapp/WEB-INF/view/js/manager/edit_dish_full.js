@@ -1,12 +1,35 @@
 /**
- * Created by Andrey on 2/4/2017.
+ * Created by Andrey on 03.02.2017.
  */
+
 $(document).ready(function () {
-    var dishId = $.url().param("dishId");
+    var dishId = $.url().param("id");
+    var url = "/admin/get_dish?dishId="+parseInt(dishId);
+    $.ajax({
+        type: 'POST',
+        url: url,
+        contentType: 'application/json;',
+        dataType: 'json',
+        success: displayDish,
+        error: function(e) {
+            display(e);
+        }
+    });
+});
+
+function displayDish(dish) {
+    console.log("Dish: "+JSON.stringify(dish));
+    $('#id').val(dish.id);
+    $('#name').val(dish.name);
+    $('#category').val(dish.category);
+    $('#weight').val(dish.weight);
+    $('#price').val(dish.price);
+    $('#ingredients').val(dish.ingredients);
+    $('#menus').val(dish.menus);
     var dishsIngredientsTable = $('#dishsIngredientsTable').DataTable({
         "bLengthChange": false,
         "ajax": {
-            url: "/get_dishs_ingredients?dishId=" + parseInt(dishId),
+            url: "/get_dishs_ingredients?dishId=" + dish.id,
             "type": "POST",
             "dataType": "json"
         },
@@ -29,8 +52,7 @@ $(document).ready(function () {
         dishsIngredientsTable.row($(this).parents('tr')).remove().draw();
     });
 
-});
-
+}
 
 $(document).ready(function () {
     var ingredientsTable = $('#ingredientsTable').DataTable({
@@ -48,7 +70,6 @@ $(document).ready(function () {
         ]
     });
 
-    //Adds a selected dish to the order
     $('#ingredientsTable tbody').on('click', 'button', function () {
         var data = ingredientsTable.row($(this).parents('tr')).data();
         var t = $('#dishsIngredientsTable').DataTable();
@@ -66,8 +87,12 @@ $(document).ready(function () {
     $('#editIngredientsForm').submit(function (event) {
         var updatedDish = new Object();
         updatedDish.dishId = parseInt($.url().param("dishId"));
+        updatedDish.name=$('#name').val();
+        updatedDish.category=$('#category').val();
+        updatedDish.weight=parseFloat($('#weight').val());
+        updatedDish.price=parseFloat($('#price').val());
         updatedDish.ingredients = getIngredients();
-        // updatedDish.menus = $('#menus').val();
+        updatedDish.menus = $('#menus').val();
         $.ajax({
             url: "/admin/update_dishs_ingredients",
             dataType: 'json',
@@ -116,16 +141,15 @@ $(document).ready(function () {
     }
 });
 
-// Makes the modal window draggable
-$(document).ready(function () {
-    $("#myModal").draggable({
-        handle: ".modal-header"
-    })
-});
-
 
 function display(data) {
     var json = "<h4>Error</h4><pre>"
         + data.responseText+ "</pre>";
     $('#feedback').html(json);
 }
+
+$(document).ready(function () {
+    $("#myModal").draggable({
+        handle: ".modal-header"
+    })
+});

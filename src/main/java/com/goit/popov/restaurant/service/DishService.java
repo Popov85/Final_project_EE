@@ -11,4 +11,8 @@ import com.goit.popov.restaurant.service.dataTables.DataTablesServiceServerSideS
  */
 public abstract class DishService extends DataTablesServiceServerSideSearch<Dish> implements DishDAO,
         DataTablesMapToJSONConvertible<Ingredient, Double>{
+
+        public abstract void updateDishWithoutIngredients(Dish dish);
+
+        public abstract void updateDishsIngredients(Dish dish);
 }

@@ -9,6 +9,7 @@ import com.goit.popov.restaurant.service.dataTables.DataTablesOutputDTOUniversal
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -26,6 +27,7 @@ public class DishController {
     private static final Logger logger = (Logger) LoggerFactory.getLogger(DishController.class);
 
     private static final String CONSTRAINT_VIOLATION_MESSAGE="Constraint violation error!";
+    private static final String FORBIDDEN_ACTION_MESSAGE = "This action is forbidden!";
 
     @Autowired
     private DishService dishService;
@@ -90,17 +92,33 @@ public class DishController {
     }
 
     @GetMapping(value = "/admin/edit_dish")
-    public String showDishEditForm(@RequestParam("id") int id, ModelMap map){
-        Dish dish = dishService.getById(id);
+    public String showDishEditForm(@RequestParam("dishId") int dishId, ModelMap map){
+        Dish dish = dishService.getById(dishId);
         map.addAttribute("dish", dish);
         return "th/manager/edit_dish";
     }
 
     @GetMapping(value = "/admin/edit_dishs_ingredients")
-    public String showDishsIngredientsEditForm(@RequestParam("dishId") int dishId, ModelMap map){
-        map.addAttribute("dishId", dishId);
+    public String showDishsIngredientsEditForm(@RequestParam("dishId") int dishId){
         return "th/manager/edit_dishs_ingredients";
     }
+
+
+    /*@PostMapping(value="/admin/update_dish_full")
+    public ResponseEntity updateDish(@RequestBody Dish dish){
+        try {
+            dishService.update(dish);
+        } catch (Exception e) {
+            logger.error("Error: failure updating Dish!");
+            return new ResponseEntity("Failure updating Dish!",
+                    HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity("{\"Result\": \"Success\"}", HttpStatus.OK);
+    }*/
+
+
+
+
 
     @PostMapping(value="/admin/update_dish")
     public String updateDish(@Valid @ModelAttribute("dish") Dish dish, BindingResult result, RedirectAttributes ra){
@@ -110,7 +128,7 @@ public class DishController {
             return "th/manager/edit_dish";
         }
         try {
-            dishService.update(dish);
+            dishService.updateDishWithoutIngredients(dish);
         } catch (Exception e) {
             ra.addFlashAttribute("status", HttpStatus.FORBIDDEN);
             ra.addFlashAttribute("error", CONSTRAINT_VIOLATION_MESSAGE);
@@ -121,14 +139,21 @@ public class DishController {
     }
 
     @PostMapping(value="/admin/update_dishs_ingredients")
-    public String updateDishsIngredients(@RequestBody Dish dish){
+    public ResponseEntity updateDishsIngredients(@RequestBody Dish dish){
         try {
-            dishService.update(dish);
+            dishService.updateDishsIngredients(dish);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error: failure updating Dish!");
+            return new ResponseEntity("Failure updating Dish!",
+                    HttpStatus.FORBIDDEN);
         }
-        return "redirect:/admin/dishes";
+        return new ResponseEntity("{\"Result\": \"Success\"}", HttpStatus.OK);
     }
+
+
+
+
+
 
     @RequestMapping(value = "/admin/delete_dish/{id}", method = RequestMethod.GET)
     public String deleteDish(@PathVariable int id, RedirectAttributes ra) {

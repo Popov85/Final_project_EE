@@ -18,8 +18,7 @@ $(document).ready(function () {
             { "width": "30%", "targets": 2 },
             { "width": "10%", "targets": 3 },
             { "width": "10%", "targets": 4 },
-            { "width": "5%", "targets": 5 },
-            { "width": "10%", "targets": 6 }
+            { "width": "15%", "targets": 5 }
         ],
         columns: [
             { "data": "id", "name": "id",  "title": "id", "visible": true},
@@ -30,7 +29,7 @@ $(document).ready(function () {
 
 
             { "data": null, "sortable": false, "render": function(data){
-                return '<a href="/admin/edit_dish?id=' + data.id + '"><input type="button" class="btn btn-default" value="Edit"/></a>';
+                return '<a href="/admin/edit_dish?dishId=' + data.id + '"><input type="button" class="btn btn-default" value="Edit"/></a>';
             }
             },
             { "data": null, "sortable": false, "render": function(data){

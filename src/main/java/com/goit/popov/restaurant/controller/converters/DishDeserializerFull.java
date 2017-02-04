@@ -16,13 +16,14 @@ import com.goit.popov.restaurant.service.IngredientService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by Andrey on 03.02.2017.
  */
-public class DishDeserializer extends JsonDeserializer<Dish> {
+public class DishDeserializerFull extends JsonDeserializer<Dish> {
 
         private static Logger logger = (Logger) LoggerFactory.getLogger(DishDeserializerFull.class);
 
@@ -44,6 +45,14 @@ public class DishDeserializer extends JsonDeserializer<Dish> {
                 try {
                         int dishId = (Integer) ((IntNode) node.get("dishId")).numberValue();
                         dish = dishService.getById(dishId);
+                        String name = node.get("name").asText();
+                        dish.setName(name);
+                        String category = node.get("category").asText();
+                        dish.setName(category);
+                        Double weight = (Double) node.get("weight").doubleValue();
+                        dish.setWeight(weight);
+                        BigDecimal price = new BigDecimal(node.get("price").asText());
+                        dish.setPrice(price);
                         ArrayNode ingredients = ((ArrayNode) node.get("ingredients"));
                         Map<Ingredient, Double> ingredientsInMap = convertJSONToMap(ingredients);
                         dish.setIngredients(ingredientsInMap);

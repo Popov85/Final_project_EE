@@ -60,6 +60,23 @@ public class DishServiceImpl extends DishService {
         }
 
         @Override
+        public void updateDishWithoutIngredients(Dish dish) {
+                Dish updatedDish = getById(dish.getId());
+                updatedDish.setName(dish.getName());
+                updatedDish.setCategory(dish.getCategory());
+                updatedDish.setWeight(dish.getWeight());
+                updatedDish.setPrice(dish.getPrice());
+                update(updatedDish);
+        }
+
+        @Override
+        public void updateDishsIngredients(Dish dish) {
+                Dish updatedDish = getById(dish.getId());
+                updatedDish.setIngredients(dish.getIngredients());
+                update(updatedDish);
+        }
+
+        @Override
         public ArrayNode toJSON(Map<Ingredient, Double> ingredients) {
                 ObjectMapper mapper = new ObjectMapper();
                 ArrayNode ana = mapper.createArrayNode();
@@ -68,8 +85,11 @@ public class DishServiceImpl extends DishService {
                         a.put("id", ingredient.getKey().getId());
                         a.put("name", ingredient.getKey().getName());
                         a.put("quantity", ingredient.getValue());
+                        a.put("unit", ingredient.getKey().getUnit().getName());
                         ana.add(a);
                 }
                 return ana;
         }
+
+
 }
