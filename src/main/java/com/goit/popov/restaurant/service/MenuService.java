@@ -30,7 +30,6 @@ public class MenuService implements DataTablesListToJSONConvertible<Menu> {
                 return menuDAO.getById(id);
         }
 
-
         @Override
         public ArrayNode toJSON(List<Menu> menus) {
                 ObjectMapper mapper = new ObjectMapper();

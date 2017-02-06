@@ -24,7 +24,7 @@ import java.util.Map;
  */
 public class DishDeserializer extends JsonDeserializer<Dish> {
 
-        private static Logger logger = (Logger) LoggerFactory.getLogger(DishDeserializerFull.class);
+        private static Logger logger = (Logger) LoggerFactory.getLogger(DishDeserializer.class);
 
         @Autowired
         private DishService dishService;

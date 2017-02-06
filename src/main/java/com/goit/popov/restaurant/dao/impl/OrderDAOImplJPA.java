@@ -5,10 +5,13 @@ import com.goit.popov.restaurant.dao.entity.OrderDAO;
 import com.goit.popov.restaurant.model.*;
 import com.goit.popov.restaurant.model.Order;
 import com.goit.popov.restaurant.service.dataTables.DataTablesInputExtendedDTO;
+import com.goit.popov.restaurant.service.dataTables.dao.OrderByWaiterServerSideDAOProcessing;
+import com.goit.popov.restaurant.service.dataTables.dao.OrderServerSideDAOProcessing;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,11 +30,14 @@ public class OrderDAOImplJPA implements OrderDAO {
 
         private static final Logger logger = (Logger) LoggerFactory.getLogger(OrderDAOImplJPA.class);
 
+        @Autowired
         private SessionFactory sessionFactory;
 
-        public void setSessionFactory(SessionFactory sessionFactory) {
-                this.sessionFactory = sessionFactory;
-        }
+        @Autowired
+        private OrderServerSideDAOProcessing orderServerSideDAOProcessing;
+
+        @Autowired
+        private OrderByWaiterServerSideDAOProcessing orderByWaiterServerSideDAOProcessing;
 
         @PersistenceContext(unitName = "entityManagerFactory")
         private EntityManager em;
@@ -134,112 +140,13 @@ public class OrderDAOImplJPA implements OrderDAO {
         }
 
         @Override
-        public List<Order> getAllWaiterArchive(int waiterId, DataTablesInputExtendedDTO dt) {
-            List<Order> resultOrders = new ArrayList<>();
-            try {
-                    CriteriaBuilder builder = em.getCriteriaBuilder();
-                    CriteriaQuery<Order> criteriaQuery = builder.createQuery(Order.class);
-                    Root<Order> orderRoot = criteriaQuery.from(Order.class);
-                    criteriaQuery.select(orderRoot);
-                    criteriaQuery.distinct(true);
-                    criteriaQuery = toFilterWaiter(waiterId, dt, builder, criteriaQuery, orderRoot);
-                    criteriaQuery = toSort(dt, builder, criteriaQuery, orderRoot);
-                    resultOrders = toPage(dt, criteriaQuery).getResultList();
-            } catch (Exception e) {
-                    logger.error("ERROR: " + e.getMessage());
-            }
-            return resultOrders;
-        }
-
-        private CriteriaQuery<Order> toFilterWaiter(int waiterId, DataTablesInputExtendedDTO dt, CriteriaBuilder builder,
-                                              CriteriaQuery<Order> criteriaQuery, Root<Order> orderRoot) {
-                Path<Integer> w = orderRoot.get("waiter").<Integer>get("id");
-                Predicate waiter = builder.equal(w, waiterId);
-                List<Predicate> predicates = new ArrayList<Predicate>();
-                predicates.add(waiter);
-                if (!dt.getColumnSearch().isEmpty()) {
-                        filterDate(dt, builder, orderRoot, predicates);
-                        filterTable(dt, builder, orderRoot, predicates);
-                }
-                criteriaQuery.where(predicates.toArray(new Predicate[]{}));
-                return criteriaQuery;
+        public List<Order> getAll(DataTablesInputExtendedDTO dt) {
+                return orderServerSideDAOProcessing.getAllItems(dt);
         }
 
         @Override
-        public List<Order> getAllOrders(DataTablesInputExtendedDTO dt) {
-                List<Order> resultOrders = new ArrayList<>();
-                try {
-                        CriteriaBuilder builder = em.getCriteriaBuilder();
-                        CriteriaQuery<Order> criteriaQuery = builder.createQuery(Order.class);
-                        Root<Order> orderRoot = criteriaQuery.from(Order.class);
-                        criteriaQuery.select(orderRoot);
-                        criteriaQuery.distinct(true);
-                        criteriaQuery = toFilter(dt, builder, criteriaQuery, orderRoot);
-                        criteriaQuery = toSort(dt, builder, criteriaQuery, orderRoot);
-                        resultOrders = toPage(dt, criteriaQuery).getResultList();
-                } catch (Exception e) {
-                        logger.error("ERROR: " + e.getMessage());
-                }
-                return resultOrders;
+        public List<Order> getAllOrdersByWaiter(DataTablesInputExtendedDTO dt, String[] params) {
+                return orderByWaiterServerSideDAOProcessing.getAllItems(dt, params);
         }
 
-        private CriteriaQuery<Order> toFilter(DataTablesInputExtendedDTO dt, CriteriaBuilder builder,
-                                              CriteriaQuery<Order> criteriaQuery, Root<Order> orderRoot) {
-                List<Predicate> predicates = new ArrayList<Predicate>();
-                if (!dt.getColumnSearch().isEmpty()) {
-                        filterDate(dt, builder, orderRoot, predicates);
-                        filterTable(dt, builder, orderRoot, predicates);
-                        if (dt.getColumnSearch().containsKey("waiter")) {
-                                String waiter = dt.getColumnSearch().get("waiter");
-                                predicates.add(builder.like(orderRoot.<String>get("waiter").get("name"), waiter + "%"));
-                        }
-                }
-                criteriaQuery.where(predicates.toArray(new Predicate[]{}));
-                return criteriaQuery;
-        }
-
-        private List<Predicate> filterTable(DataTablesInputExtendedDTO dt, CriteriaBuilder builder,
-                                            Root<Order> orderRoot, List<Predicate> predicates) {
-            if (dt.getColumnSearch().containsKey("table")) {
-                    String table = dt.getColumnSearch().get("table");
-                    Path<String> t = orderRoot.get("table");
-                    predicates.add(builder.equal(t, table));
-            }
-            return predicates;
-        }
-
-        private List<Predicate> filterDate(DataTablesInputExtendedDTO dt, CriteriaBuilder builder,
-                                           Root<Order> orderRoot, List<Predicate> predicates) {
-                if (dt.getColumnSearch().containsKey("openedTimeStamp")) {
-                        String openDate = dt.getColumnSearch().get("openedTimeStamp");
-                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                        Date date = null;
-                        try {
-                                date = formatter.parse(openDate);
-                        } catch (ParseException e) {
-                                logger.error("ERROR" + e.getMessage());
-                        }
-                        predicates.add(builder.greaterThanOrEqualTo(orderRoot.<Date>get("openedTimeStamp"), date));
-                }
-                return predicates;
-        }
-
-        private CriteriaQuery<Order> toSort(DataTablesInputExtendedDTO dt, CriteriaBuilder builder,
-                                            CriteriaQuery<Order> criteriaQuery, Root<Order> orderRoot) {
-                if (dt.getDir().equals("asc")) {
-                        criteriaQuery.orderBy(builder.asc(orderRoot.get(dt.getColumnName())));
-                } else {
-                        criteriaQuery.orderBy(builder.desc(orderRoot.get(dt.getColumnName())));
-                }
-                return criteriaQuery;
-        }
-
-        private TypedQuery<Order> toPage(DataTablesInputExtendedDTO dt,
-                                         CriteriaQuery<Order> criteriaQuery) {
-                final TypedQuery<Order> typedQuery = em.createQuery(criteriaQuery);
-                typedQuery
-                        .setFirstResult(dt.getStart())
-                        .setMaxResults(dt.getLength());
-                return typedQuery;
-        }
 }

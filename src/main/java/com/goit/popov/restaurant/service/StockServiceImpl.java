@@ -6,6 +6,7 @@ import com.goit.popov.restaurant.model.Ingredient;
 import com.goit.popov.restaurant.model.StoreHouse;
 import com.goit.popov.restaurant.service.dataTables.DataTablesInputExtendedDTO;
 import com.goit.popov.restaurant.service.dataTables.DataTablesOutputDTOUniversal;
+import com.goit.popov.restaurant.service.dataTables.service.StockServerSideProcessing;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,9 @@ public class StockServiceImpl implements StockService {
 
         @Autowired
         private StoreHouseDAO storeHouseDAO;
+
+        @Autowired
+        private StockServerSideProcessing stockServerSideProcessing;
 
         @Override
         public int insert(StoreHouse storeHouse) {
@@ -69,6 +73,11 @@ public class StockServiceImpl implements StockService {
         }
 
         @Override
+        public List<StoreHouse> getAllItems(DataTablesInputExtendedDTO dt) {
+                return storeHouseDAO.getAllItems(dt);
+        }
+
+        @Override
         public void decreaseIngredient(Ingredient ingredient, Double quantityRequired) {
                 StoreHouse storeHouse = getByIngredient(ingredient);
                 Double actualQuantity = storeHouse.getQuantity();
@@ -107,24 +116,7 @@ public class StockServiceImpl implements StockService {
         }
 
         @Override
-        public List<StoreHouse> getAllIngredients(DataTablesInputExtendedDTO dt) {
-                return storeHouseDAO.getAllIngredients(dt);
-        }
-
-        @Override
         public DataTablesOutputDTOUniversal<StoreHouse> getAll(DataTablesInputExtendedDTO dt) {
-                long recordsTotal = count();
-                long recordsFiltered;
-                List<StoreHouse> data = getAllIngredients(dt);
-                if (!dt.getColumnSearch().isEmpty()) {
-                        recordsFiltered = data.size();
-                } else {
-                        recordsFiltered=recordsTotal;
-                }
-                return new DataTablesOutputDTOUniversal<StoreHouse>()
-                        .setDraw(dt.getDraw())
-                        .setRecordsTotal(recordsTotal)
-                        .setRecordsFiltered(recordsFiltered)
-                        .setData(data);
+                return stockServerSideProcessing.getAll(dt);
         }
 }

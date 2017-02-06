@@ -7,6 +7,8 @@ import com.goit.popov.restaurant.dao.entity.DishDAO;
 import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Ingredient;
 import com.goit.popov.restaurant.service.dataTables.DataTablesInputExtendedDTO;
+import com.goit.popov.restaurant.service.dataTables.DataTablesOutputDTOUniversal;
+import com.goit.popov.restaurant.service.dataTables.service.DishServerSideProcessing;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Map;
@@ -14,10 +16,13 @@ import java.util.Map;
 /**
  * Created by Andrey on 02.12.2016.
  */
-public class DishServiceImpl extends DishService {
+public class DishServiceImpl implements DishService {
 
         @Autowired
         private DishDAO dishDAO;
+
+        @Autowired
+        private DishServerSideProcessing dishServerSideProcessing;
 
         @Override
         public int insert(Dish dish) {
@@ -91,5 +96,8 @@ public class DishServiceImpl extends DishService {
                 return ana;
         }
 
-
+        @Override
+        public DataTablesOutputDTOUniversal<Dish> getAll(DataTablesInputExtendedDTO dt) {
+                return dishServerSideProcessing.getAll(dt);
+        }
 }

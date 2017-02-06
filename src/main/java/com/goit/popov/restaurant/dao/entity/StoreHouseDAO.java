@@ -21,6 +21,6 @@ public interface StoreHouseDAO extends GenericDAO<StoreHouse> {
 
         long count();
 
-        List<StoreHouse> getAllIngredients(DataTablesInputExtendedDTO dt);
+        List<StoreHouse> getAllItems(DataTablesInputExtendedDTO dt);
 
 }

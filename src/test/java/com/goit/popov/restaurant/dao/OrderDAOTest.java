@@ -25,7 +25,7 @@ public class OrderDAOTest extends AbstractDAOTest {
         private static final Logger logger = (Logger) LoggerFactory.getLogger(OrderDAOTest.class);
 
         private static final boolean ORDER_OPENED_UPD = false;
-        private static final int ORDER_TAB_UPD = 12;
+        private static final String ORDER_TAB_UPD = "12";
         private static final String ORDER_OP_TIME_UPD = "2010-01-03 10:11:11";
         private static final String ORDER_CL_TIME_UPD = "2010-01-03 12:33:03";
 

@@ -41,4 +41,16 @@
     <bean id = "Manager" class = "com.goit.popov.restaurant.service.ManagerService"/>
     <bean id = "Employee" class = "com.goit.popov.restaurant.service.EmployeeService"/>
 
+    <bean id = "DishServerSideProcessing" class = "com.goit.popov.restaurant.service.dataTables.service.DishServerSideProcessing"/>
+    <bean id = "DishServerSideDAOProcessing" class = "com.goit.popov.restaurant.service.dataTables.dao.DishServerSideDAOProcessing"/>
+
+    <bean id = "StockServerSideProcessing" class = "com.goit.popov.restaurant.service.dataTables.service.StockServerSideProcessing"/>
+    <bean id = "StockServerSideDAOProcessing" class = "com.goit.popov.restaurant.service.dataTables.dao.StockServerSideDAOProcessing"/>
+
+    <bean id = "OrderServerSideProcessing" class = "com.goit.popov.restaurant.service.dataTables.service.OrderServerSideProcessing"/>
+    <bean id = "OrderServerSideDAOProcessing" class = "com.goit.popov.restaurant.service.dataTables.dao.OrderServerSideDAOProcessing"/>
+
+    <bean id = "OrderByWaiterServerSideProcessing" class = "com.goit.popov.restaurant.service.dataTables.service.OrderByWaiterServerSideProcessing"/>
+    <bean id = "OrderByWaiterServerSideDAOProcessing" class = "com.goit.popov.restaurant.service.dataTables.dao.OrderByWaiterServerSideDAOProcessing"/>
+
 </beans>

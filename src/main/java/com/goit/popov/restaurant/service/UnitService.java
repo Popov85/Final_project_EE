@@ -14,10 +14,6 @@ public class UnitService {
         @Autowired
         private UnitDAO unitDAO;
 
-        public void setUnitDAO(UnitDAO unitDAO) {
-                this.unitDAO = unitDAO;
-        }
-
         public List<Unit> getAll() {
                 return unitDAO.getAll();
         }

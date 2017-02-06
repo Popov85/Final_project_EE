@@ -8,6 +8,8 @@ import com.goit.popov.restaurant.dao.entity.OrderDAO;
 import com.goit.popov.restaurant.model.*;
 import com.goit.popov.restaurant.service.dataTables.DataTablesInputExtendedDTO;
 import com.goit.popov.restaurant.service.dataTables.DataTablesOutputDTOUniversal;
+import com.goit.popov.restaurant.service.dataTables.service.OrderByWaiterServerSideProcessing;
+import com.goit.popov.restaurant.service.dataTables.service.OrderServerSideProcessing;
 import com.goit.popov.restaurant.service.exceptions.NotEnoughIngredientsException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,12 @@ public class OrderServiceImplFast implements OrderService {
 
         @Autowired
         private Service service;
+
+        @Autowired
+        private OrderServerSideProcessing orderServerSideProcessing;
+
+        @Autowired
+        private OrderByWaiterServerSideProcessing orderByWaiterServerSideProcessing;
 
         @Override
         public List<Order> getAll() {
@@ -84,13 +92,8 @@ public class OrderServiceImplFast implements OrderService {
         }
 
         @Override
-        public List<Order> getAllOrders(DataTablesInputExtendedDTO dt) {
-                return orderDAO.getAllOrders(dt);
-        }
-
-        @Override
-        public List<Order> getAllWaiterArchive(int waiterId, DataTablesInputExtendedDTO dt) {
-                return orderDAO.getAllWaiterArchive(waiterId, dt);
+        public List<Order> getAll(DataTablesInputExtendedDTO dt) {
+                return orderDAO.getAll(dt);
         }
 
         @Override
@@ -173,13 +176,15 @@ public class OrderServiceImplFast implements OrderService {
                 for (Map.Entry<Ingredient, Double> ingredient : requiredIngredients.entrySet()) {
                         Double stockQuantity = stockService.getQuantityByIngredient(ingredient.getKey());
                         Double requiredQuantity = ingredient.getValue();
-                        /*logger.info("Ingredient in Stock: "+ ingredient.getKey().getName()+
-                                " In Stock: "+stockQuantity+
-                                " Required: "+requiredQuantity);*/
                         if (stockQuantity < requiredQuantity)
                                 return false;
                 }
                 return true;
+        }
+
+        @Override
+        public List<Order> getAllOrdersByWaiter(DataTablesInputExtendedDTO dt, String[] params) {
+                return orderDAO.getAllOrdersByWaiter(dt, params);
         }
 
         @Override
@@ -198,39 +203,16 @@ public class OrderServiceImplFast implements OrderService {
         }
 
         @Override
-        public DataTablesOutputDTOUniversal<Order> getAll(DataTablesInputExtendedDTO dt) {
-                long recordsTotal = count();
-                long recordsFiltered;
-                List<Order> data = getAllOrders(dt);
-                if (!dt.getColumnSearch().isEmpty()) {
-                        recordsFiltered = data.size();
-                } else {
-                        recordsFiltered=recordsTotal;
-                }
-                return new DataTablesOutputDTOUniversal<Order>()
-                        .setDraw(dt.getDraw())
-                        .setRecordsTotal(recordsTotal)
-                        .setRecordsFiltered(recordsFiltered)
-                        .setData(data);
+        public DataTablesOutputDTOUniversal<Order> getAllOrders(DataTablesInputExtendedDTO dt) {
+                return orderServerSideProcessing.getAll(dt);
         }
 
         @Override
-        public DataTablesOutputDTOUniversal<Order> getAll(DataTablesInputExtendedDTO dt, int waiterId) {
-                Waiter waiter = new Waiter();
-                waiter.setId(waiterId);
-                long recordsTotal = countWaiter(waiter);
-                long recordsFiltered;
-                List<Order> data = getAllWaiterArchive(waiterId, dt);
-                if (!dt.getColumnSearch().isEmpty()) {
-                        recordsFiltered = data.size();
-                } else {
-                        recordsFiltered=recordsTotal;
-                }
-                return new DataTablesOutputDTOUniversal<Order>()
-                        .setDraw(dt.getDraw())
-                        .setRecordsTotal(recordsTotal)
-                        .setRecordsFiltered(recordsFiltered)
-                        .setData(data);
+        public DataTablesOutputDTOUniversal<Order> getAllOrdersByWaiter(DataTablesInputExtendedDTO dt, int waiterId) {
+                String[] params = new String[1];
+                params[0] = waiterId+"";
+                return orderByWaiterServerSideProcessing.getAll(dt, params);
         }
+
 }
 

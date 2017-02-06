@@ -20,7 +20,6 @@ public class ListToStringSerializer extends JsonSerializer<List<Object>> {
 
         @Override
         public void serialize(List<Object> value, JsonGenerator gen, SerializerProvider serializers) throws IOException, JsonProcessingException {
-                //gen.writeObject(value.size());
                 try {
                         if (!value.isEmpty()) {
                                 for (Object o : value) {

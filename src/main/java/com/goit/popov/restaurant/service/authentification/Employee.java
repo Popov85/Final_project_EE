@@ -2,7 +2,6 @@ package com.goit.popov.restaurant.service.authentification;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-
 import java.util.Collection;
 
 /**

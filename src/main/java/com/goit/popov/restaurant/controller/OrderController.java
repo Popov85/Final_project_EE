@@ -102,8 +102,8 @@ public class OrderController {
         @PostMapping(value = "/get_orders")
         @ResponseBody
         public DataTablesOutputDTOUniversal<Order> getOrders(DataTablesInputExtendedDTO input) {
-            DataTablesOutputDTOUniversal<Order> data = orderService.getAll(input);
-            return data;
+                DataTablesOutputDTOUniversal<Order> data = orderService.getAllOrders(input);
+                return data;
         }
 
         @PostMapping(value = "/get_order")
@@ -125,7 +125,7 @@ public class OrderController {
         @ResponseBody
         public DataTablesOutputDTOUniversal<Order> getWaiterOrdersArchive(@RequestParam int waiterId,
                                                                           DataTablesInputExtendedDTO input) throws JsonProcessingException {
-                DataTablesOutputDTOUniversal<Order> data = orderService.getAll(input, waiterId);
+                DataTablesOutputDTOUniversal<Order> data = orderService.getAllOrdersByWaiter(input, waiterId);
                 return data;
         }
 

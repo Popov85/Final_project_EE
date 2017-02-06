@@ -16,13 +16,14 @@
         <div class="col-md-4">
             <label th:for="name">Dish name:</label>
             <th:block id="name" th:text="${dish}" title="Dish name"/>
-            <p><label for="ingredients">Ingredients:</label></p>
+            <h4>Ingredients</h4>
             <table id="ingredients" name="ingredients" class="display" align="center" width="100%" border="0">
                 <thead>
                 <tr>
                     <th>Id</th>
                     <th>Ingredient</th>
-                    <th>Quantity, g</th>
+                    <th>Quantity</th>
+                    <th>Unit</th>
                 </tr>
                 </thead>
             </table>
