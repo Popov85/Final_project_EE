@@ -77,6 +77,7 @@ public class MainDispatcher implements AuthenticationSuccessHandler {
                         logger.info("ROLE_EMPLOYEE identified!");
                         return "/";
                 } else {
+                        logger.error("No ROLE identified!");
                         throw new IllegalStateException();
                 }
         }

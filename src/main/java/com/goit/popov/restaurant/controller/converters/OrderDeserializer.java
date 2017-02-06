@@ -94,7 +94,7 @@ public class OrderDeserializer extends JsonDeserializer<Order> {
                 order.setOpenedTimeStamp(openedTimeStamp);
                 order.setClosedTimeStamp(closedTimeStamp);
                 order.setTable(table);
-                order.setWaiter(Waiter.getEmployeeById(waiterId));
+                order.setWaiter(Waiter.getById(waiterId));
                 order.setDishes(dishesInMap);
                 return order;
         }

@@ -3,6 +3,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -19,8 +22,23 @@ import java.util.Date;
 @Entity
 @Table(name = "employee")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-//@DiscriminatorColumn(name="POS_ID", discriminatorType=DiscriminatorType.INTEGER)
 public class Employee {
+
+        public Employee() {}
+
+        public Employee(int id, String login, String password, String name,
+                        Date dob, String phone, Position position, BigDecimal salary, byte[] photo) {
+                PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                this.id = id;
+                this.login = login;
+                this.password = (password.length()>=60 ? password : passwordEncoder.encode(password));
+                this.name = name;
+                this.dob=dob;
+                this.phone=phone;
+                this.position = position;
+                this.salary=salary;
+                this.photo = photo;
+        }
 
         @Id
         @GeneratedValue(generator = "increment")

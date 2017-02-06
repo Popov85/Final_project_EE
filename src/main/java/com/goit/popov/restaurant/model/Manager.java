@@ -8,8 +8,13 @@ import javax.persistence.Transient;
  * Created by Andrey on 11/5/2016.
  */
 @Entity
-//@DiscriminatorValue("1")
 public class Manager extends Employee {
+
+        public Manager() {}
+
+        public Manager(Employee e) {
+                super(e.id, e.login, e.password, e.name, e.dob, e.phone, e.position, e.salary, e.photo);
+        }
 
         @Transient
         private String role = "ROLE_ADMIN";

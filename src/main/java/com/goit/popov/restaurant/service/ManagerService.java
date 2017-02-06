@@ -1,6 +1,8 @@
 package com.goit.popov.restaurant.service;
 import ch.qos.logback.classic.Logger;
+import com.goit.popov.restaurant.dao.entity.ChefDAO;
 import com.goit.popov.restaurant.dao.entity.ManagerDAO;
+import com.goit.popov.restaurant.model.Chef;
 import com.goit.popov.restaurant.model.Employee;
 import com.goit.popov.restaurant.model.Manager;
 import org.slf4j.LoggerFactory;
@@ -10,67 +12,59 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.PersistenceException;
+import java.util.List;
 
 
 /**
  * Created by Andrey on 11/13/2016.
  */
-public class ManagerService extends EmployeeService {
+public class ManagerService implements StaffService<Manager> {
 
         private static final Logger logger = (Logger) LoggerFactory.getLogger(ManagerService.class);
 
-        private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
         @Autowired
-        protected ManagerDAO managerDAO;
+        private ManagerDAO managerDAO;
 
-        public void setManagerDAO(ManagerDAO managerDAO) {
-                this.managerDAO = managerDAO;
-        }
         @Override
-        @Transactional
-        public void save(Employee employee) {
-                Manager manager = transform(employee);
-                employeeDAO.insert(manager);
-                logger.info("Saved manager: "+manager);
+        public long insert(Employee employee) {
+                return managerDAO.insert(new Manager(employee));
         }
+
         @Override
-        @Transactional
         public void update(Employee employee) {
-                Manager manager =transform(employee);
-                employeeDAO.update(manager);
-                logger.info("Updated manager: "+manager);
+                managerDAO.update(new Manager(employee));
         }
+
         @Override
-        @Transactional
-        public void update(Employee employee, boolean rewrite) throws PersistenceException {
-                Manager manager = transform(employee);
-                if (rewrite) {
-                        try {
-                                employeeDAO.delete(employee);
-                        } catch (PersistenceException e) {
-                                throw new PersistenceException("Cannot change the position to manager," +
-                                        " the employee has references!");
-                        }
-                        employeeDAO.insert(manager);
-                        logger.info("Re-inserted manager: "+manager);
-                } else {
-                        update(manager);
+        public void updateThroughDelete(Employee employee) throws PersistenceException {
+                Manager manager = new Manager(employee);
+                try {
+                        delete(manager);
+                } catch (PersistenceException e) {
+                        throw new PersistenceException("Cannot change the position to manager," +
+                                " the employee has references!");
                 }
+                managerDAO.insert(manager);
+                logger.info("Re-inserted manager: "+manager);
         }
 
-        private Manager transform(Employee employee) {
-                Manager manager = new Manager();
-                manager.setId(employee.getId());
-                manager.setLogin(employee.getLogin());
-                manager.setPassword(passwordEncoder.encode(employee.getPassword()));
-                manager.setName(employee.getName());
-                manager.setDob(employee.getDob());
-                manager.setPhone(employee.getPhone());
-                manager.setPosition(employee.getPosition());
-                manager.setSalary(employee.getSalary());
-                manager.setPhoto(employee.getPhoto());
-                return manager;
+        @Override
+        public void delete(Manager employee) {
+                managerDAO.delete(employee);
         }
 
+        @Override
+        public void deleteById(int id) {
+                managerDAO.delete(getById(id));
+        }
+
+        @Override
+        public Manager getById(int id) {
+                return managerDAO.getById(id);
+        }
+
+        @Override
+        public List<Manager> getAll() {
+                return managerDAO.getAll();
+        }
 }

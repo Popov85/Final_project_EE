@@ -1,67 +1,64 @@
 package com.goit.popov.restaurant.service;
 
 import ch.qos.logback.classic.Logger;
+import com.goit.popov.restaurant.dao.entity.ChefDAO;
 import com.goit.popov.restaurant.model.Chef;
 import com.goit.popov.restaurant.model.Employee;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.PersistenceException;
+import java.util.List;
 
 /**
  * Created by Andrey on 11/13/2016.
  */
-public class ChefService extends EmployeeService {
+public class ChefService implements StaffService<Chef> {
 
         private static final Logger logger = (Logger) LoggerFactory.getLogger(ChefService.class);
 
-        private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        @Autowired
+        private ChefDAO chefDAO;
 
         @Override
-        @Transactional
-        public void save(Employee employee) {
-                Chef chef = transform(employee);
-                employeeDAO.insert(chef);
-                logger.info("Saved chef: "+chef);
+        public long insert(Employee employee) {
+                return chefDAO.insert(new Chef(employee));
         }
+
         @Override
-        @Transactional
         public void update(Employee employee) {
-                Chef chef = transform(employee);
-                employeeDAO.update(chef);
-                logger.info("Updated chef: "+chef);
-        }
-        @Override
-        @Transactional
-        public void update(Employee employee, boolean rewrite) throws PersistenceException {
-                Chef chef = transform(employee);
-                if (rewrite) {
-                        try {
-                                employeeDAO.delete(employee);
-                        } catch (PersistenceException e) {
-                                throw new PersistenceException("Cannot change the position to chef," +
-                                        " the employee has references!");
-                        }
-                        employeeDAO.insert(chef);
-                        logger.info("Re-inserted chef: "+chef);
-                } else {
-                        update(chef);
-                }
+                chefDAO.update(new Chef(employee));
         }
 
-        private Chef transform(Employee employee) {
-                Chef chef = new Chef();
-                chef.setId(employee.getId());
-                chef.setLogin(employee.getLogin());
-                chef.setPassword(passwordEncoder.encode(employee.getPassword()));
-                chef.setName(employee.getName());
-                chef.setDob(employee.getDob());
-                chef.setPhone(employee.getPhone());
-                chef.setPosition(employee.getPosition());
-                chef.setSalary(employee.getSalary());
-                chef.setPhoto(employee.getPhoto());
-                return chef;
+        @Override
+        public void updateThroughDelete(Employee employee) throws PersistenceException {
+                Chef chef = new Chef(employee);
+                try {
+                        delete(chef);
+                } catch (PersistenceException e) {
+                        throw new PersistenceException("Cannot change the position to chef," +
+                                " the employee has references!");
+                }
+                chefDAO.insert(chef);
+                logger.info("Re-inserted chef: "+chef);
+        }
+
+        @Override
+        public void delete(Chef employee) {
+                chefDAO.delete(employee);
+        }
+
+        @Override
+        public void deleteById(int id) {
+                chefDAO.delete(getById(id));
+        }
+
+        @Override
+        public Chef getById(int id) {
+                return chefDAO.getById(id);
+        }
+
+        @Override
+        public List<Chef> getAll() {
+                return chefDAO.getAll();
         }
 }

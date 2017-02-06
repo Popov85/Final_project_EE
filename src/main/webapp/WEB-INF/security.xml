@@ -18,7 +18,7 @@
                     password-parameter="password"
                     login-processing-url="/perform_login"
                     authentication-success-handler-ref="dispatcher"
-                    authentication-failure-url="/access_denied" />
+                    authentication-failure-url="/access_denied"/>
         <logout logout-success-url="/"
                 logout-url="/perform_logout"/>
         <csrf disabled="true"/>

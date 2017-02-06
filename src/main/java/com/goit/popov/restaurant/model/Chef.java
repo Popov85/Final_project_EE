@@ -13,6 +13,12 @@ import java.util.List;
 @Entity
 public class Chef extends Employee {
 
+        public Chef() {}
+
+        public Chef(Employee e) {
+                super(e.id, e.login, e.password, e.name, e.dob, e.phone, e.position, e.salary, e.photo);
+        }
+
         @JsonIgnore
         @OneToMany(mappedBy="chef")
         List<PreparedDish> preparedDishes;

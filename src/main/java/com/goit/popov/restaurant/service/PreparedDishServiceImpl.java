@@ -113,7 +113,7 @@ public class PreparedDishServiceImpl implements PreparedDishService {
         private Set<PreparedDish> createPreparedDishes(int dishId, int quantity, int orderId, int chefId, boolean isCancelled) {
                 Dish dish = dishService.getById(dishId);
                 Order order = orderService.getById(orderId);
-                Chef chef = (Chef) chefService.getEmployeeById(chefId);
+                Chef chef = (Chef) chefService.getById(chefId);
                 Set<PreparedDish> preparedDishes = new HashSet<>();
                 for (int i=0; i<quantity; i++) {
                         PreparedDish preparedDish = new PreparedDish();

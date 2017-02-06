@@ -3,6 +3,7 @@ package com.goit.popov.restaurant.controller;
 import ch.qos.logback.classic.Logger;
 import com.goit.popov.restaurant.model.*;
 import com.goit.popov.restaurant.service.EmployeeService;
+import com.goit.popov.restaurant.service.StaffService;
 import com.goit.popov.restaurant.service.PositionService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +62,7 @@ public class EmployeeController {
         public Map<String, String> populatePositions() {
                 List<Position> positions = positionService.getAll();
                 Map<String, String> positionsList = new HashMap<>();
-                positionsList.put("Unknown", "--Select--");
+                positionsList.put("0", "--Select--");
                 for (Position position : positions) {
                         positionsList.put(position.getName(), position.getName());
                 }
@@ -80,7 +81,7 @@ public class EmployeeController {
         // Read All
         @GetMapping(value = "/admin/employees")
         public String employeesTh(Map<String, Object> model) {
-                model.put("employees", employeeService.getEmployees());
+                model.put("employees", employeeService.getAll());
                 return "th/manager/employees";
         }
 
@@ -98,15 +99,16 @@ public class EmployeeController {
                         logger.error("# of errors is: "+result.getFieldErrorCount());
                         return "jsp/new_employee";
                 }
-                EmployeeService employeeService;
+                logger.info("I am about to get the bean in controller");
+                StaffService staffService;
                 if ((position.equals("Waiter")) || (position.equals("Chef"))
                         || (position.equals("Manager"))) {
-                        employeeService = (EmployeeService) applicationContext.getBean(position);
+                        staffService = (StaffService) applicationContext.getBean(position);
                 } else {
-                        employeeService = (EmployeeService) applicationContext.getBean("Employee");
+                        staffService = (StaffService) applicationContext.getBean("Employee");
                 }
                 try {
-                        employeeService.save(employee);
+                        staffService.insert(employee);
                 } catch (DataIntegrityViolationException e) {
                         model.addAttribute("constraintViolationError", NON_UNIQUE_CONSTRAINT_MESSAGE);
                         logger.error("Constraint violation exception inserting employee: "+e.getMessage()+
@@ -125,7 +127,8 @@ public class EmployeeController {
         // Read (update form)
         @RequestMapping(value = "/admin/edit_employee/{id}", method = RequestMethod.GET)
         public String showEmployeeEditForm(@PathVariable("id") int id, ModelMap map, HttpSession session){
-                Employee employee = employeeService.getEmployeeById(id);
+                Employee employee = employeeService.getById(id);
+                logger.info("Updating class: "+employee.getClass()+" employee: "+employee);
                 map.addAttribute("employee", employee);
                 map.addAttribute("positions", populatePositions());
                 map.addAttribute("position", employee.getPosition().getName());
@@ -139,26 +142,27 @@ public class EmployeeController {
         public String updateEmployee(@Valid @ModelAttribute("employee") Employee employee, BindingResult result,
                                      @RequestParam("position") String newPosition, HttpSession session, Model model,
                                      @RequestParam("photo") MultipartFile photo){
+                logger.info("Updating controller: "+employee.getClass());
                 if (result.hasErrors()) {
                         logger.error("# of errors is: "+result.getFieldErrorCount());
                         return "jsp/update_employee";
                 }
                 String previousPosition = (String) session.getAttribute("position");
-                EmployeeService employeeService;
+                StaffService staffService;
                 if ((newPosition.equals("Waiter")) || (newPosition.equals("Chef"))
                         || (newPosition.equals("Manager"))) {
-                        employeeService = (EmployeeService) applicationContext.getBean(newPosition);
+                        staffService = (StaffService) applicationContext.getBean(newPosition);
                 } else {
-                        employeeService = (EmployeeService) applicationContext.getBean("Employee");
+                        staffService = (StaffService) applicationContext.getBean("Employee");
                 }
                 if (photo.isEmpty()) employee.setPhoto((byte[]) session.getAttribute("file"));
                 try {
                         if (!previousPosition.equals(newPosition)) {
                                 logger.info("Position changed! Previous was: "+previousPosition+
                                                 "/ new position is: "+newPosition);
-                                employeeService.update(employee, true);
+                                staffService.updateThroughDelete(employee);
                         } else {
-                                employeeService.update(employee);
+                                staffService.update(employee);
                         }
                 } catch (DataIntegrityViolationException e) {
                         model.addAttribute("constraintViolationError", NON_UNIQUE_CONSTRAINT_MESSAGE);

@@ -28,7 +28,7 @@ public class ImageController {
         @RequestMapping(value = "/photo", method = RequestMethod.GET)
         public void showPhoto(@RequestParam("id") int id,
                               HttpServletResponse response, HttpServletRequest request) throws IOException {
-                Employee employee = employeeService.getEmployeeById(id);
+                Employee employee = employeeService.getById(id);
                 response.setContentType("image/jpeg, image/jpg, image/png, image/gif");
                 response.getOutputStream().write(employee.getPhoto());
                 response.getOutputStream().close();
