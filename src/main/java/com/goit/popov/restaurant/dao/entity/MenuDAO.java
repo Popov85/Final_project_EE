@@ -9,9 +9,4 @@ import com.goit.popov.restaurant.model.Menu;
  * @version 1.0
  */
 public interface MenuDAO extends GenericDAO<Menu> {
-
-        void addDish(Menu menu, Dish dish);
-
-        void deleteDish(Menu menu, Dish dish);
-
 }

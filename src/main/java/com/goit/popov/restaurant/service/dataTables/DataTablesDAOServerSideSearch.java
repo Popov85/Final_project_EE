@@ -39,7 +39,7 @@ public abstract class DataTablesDAOServerSideSearch<T>{
                         criteriaQuery = toSort(dt, builder, criteriaQuery, root);
                         result = toPage(dt, criteriaQuery).getResultList();
                 } catch (Exception e) {
-                        logger.error("ERROR: " + e.getMessage());
+                        logger.error("ERROR: " + e.getMessage()+" class: "+e.getClass());
                 }
                 return result;
         }

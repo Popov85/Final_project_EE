@@ -1,10 +1,13 @@
 package com.goit.popov.restaurant.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.goit.popov.restaurant.controller.converters.MenuDeserializer;
 import org.hibernate.annotations.GenericGenerator;
-
+import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Menu class. A restaurant menu consists of a number of Dishes
@@ -13,6 +16,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "menu")
+@JsonDeserialize(using = MenuDeserializer.class)
 public class Menu {
 
         @Id
@@ -21,6 +25,8 @@ public class Menu {
         @Column(name = "M_ID")
         private int id;
 
+        @NotEmpty(message = "Menu name is a required field")
+        @Size(min=2, max=25, message = "Menu must have from 2 to 25 characters!")
         @Column(name = "MENU_NAME")
         private String name;
 
@@ -29,7 +35,7 @@ public class Menu {
                 joinColumns = @JoinColumn(name = "M_ID"),
                 inverseJoinColumns = @JoinColumn(name = "D_ID")
         )
-        private List<Dish> dishes;
+        private Set<Dish> dishes;
 
         public int getId() {
                 return id;
@@ -39,7 +45,7 @@ public class Menu {
                 return name;
         }
 
-        public List<Dish> getDishes() {
+        public Set<Dish> getDishes() {
                 return dishes;
         }
 
@@ -51,28 +57,8 @@ public class Menu {
                 this.name = name;
         }
 
-        public void setDishes(List<Dish> dishes) {
+        public void setDishes(Set<Dish> dishes) {
                 this.dishes = dishes;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-                if (this == o) return true;
-                if (o == null || getClass() != o.getClass()) return false;
-
-                Menu menu = (Menu) o;
-
-                if (id != menu.id) return false;
-                if (!name.equals(menu.name)) return false;
-                return dishes.equals(menu.dishes);
-        }
-
-        @Override
-        public int hashCode() {
-                int result = id;
-                result = 31 * result + name.hashCode();
-                result = 31 * result + dishes.hashCode();
-                return result;
         }
 
         @Override

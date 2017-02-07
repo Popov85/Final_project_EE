@@ -8,7 +8,6 @@ import java.util.List;
  * Created by Andrey on 11/4/2016.
  */
 @Entity
-//@DiscriminatorValue("3")
 public class Waiter extends Employee {
 
         public Waiter() {}
@@ -47,6 +46,4 @@ public class Waiter extends Employee {
                         ", role=" + role +
                         '}';
         }
-
-
 }

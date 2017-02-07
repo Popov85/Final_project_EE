@@ -1,19 +1,19 @@
 package com.goit.popov.restaurant.service.dataTables;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * Created by Andrey on 12/22/2016.
  */
 public class DataTablesOutputDTOListWrapper<T> {
 
-    private List<T> data;
+    private Collection<T> data;
 
-    public List<T> getData() {
+    public Collection<T> getData() {
         return data;
     }
 
-    public void setData(List<T> data) {
+    public void setData(Collection<T> data) {
         this.data = data;
     }
 }

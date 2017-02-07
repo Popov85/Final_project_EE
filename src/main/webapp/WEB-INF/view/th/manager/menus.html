@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Menus</title>
+    <link rel="stylesheet" type="text/css" href="/css/lib/bootstrap-3.3.7.min.css"/>
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/filterDisabled.css"/>
+    <script src="/js/lib/jquery-1.12.1.js"/>
+    <script src ="/js/lib/jquery.dataTables-1.10.12.min.js"/>
+    <script src="/js/lib/bootstrap-3.3.7.min.js"/>
+    <script src="/js/manager/menus.js"/>
+</head>
+<body>
+<h3 class="form-signin-heading" align="center">Menus</h3>
+<div class="container">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div th:replace="/th/header :: header"/>
+            <table id="menu" name="menu" class="display" align="center" width="100%" border="0">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th class="search">Menu</th>
+                    <th>Dishes, #</th>
+                    <th>Price, $</th>
+
+                    <th>Edit</th>
+                    <th>Edit Dishes</th>
+                    <th>Delete</th>
+                </tr>
+                </thead>
+            </table>
+            <a href="/admin/new_menu/">
+                <input type="button" class="btn btn-default" value="Add>>"/>
+            </a>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>
+</body>
+</html>

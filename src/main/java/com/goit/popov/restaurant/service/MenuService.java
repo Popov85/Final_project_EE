@@ -6,28 +6,39 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.goit.popov.restaurant.dao.entity.MenuDAO;
 import com.goit.popov.restaurant.model.Menu;
 import com.goit.popov.restaurant.service.dataTables.DataTablesListToJSONConvertible;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
-
 
 /**
  * Created by Andrey on 08.11.2016.
  */
 public class MenuService implements DataTablesListToJSONConvertible<Menu> {
 
+        @Autowired
         private MenuDAO menuDAO;
 
-        public void setMenuDAO(MenuDAO menuDAO) {
-                this.menuDAO = menuDAO;
-        }
-
-        @Transactional
         public List<Menu> getAll() {
                 return menuDAO.getAll();
         }
 
         public Menu getById(int id) {
                 return menuDAO.getById(id);
+        }
+
+        public int insert(Menu menu) {
+                return menuDAO.insert(menu);
+        }
+
+        public void updateMenuWithoutDishes(Menu menu) {
+                Menu updatedMenu = getById(menu.getId());
+                updatedMenu.setName(menu.getName());
+                menuDAO.update(updatedMenu);
+        }
+
+        public void updateMenusDishes(Menu menu) {
+                Menu updatedMenu = getById(menu.getId());
+                updatedMenu.setDishes(menu.getDishes());
+                menuDAO.update(updatedMenu);
         }
 
         @Override
