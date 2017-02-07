@@ -7,7 +7,7 @@ $(document).ready(function () {
         "bLengthChange": false,
         "bAutoWidth": false,
         "ajax" : {
-            "url": "/get_menus",
+            "url": "/all/get_menus",
             "type": "POST"
         },
         "columnDefs": [
@@ -23,7 +23,7 @@ $(document).ready(function () {
             { "data": "price", "name": "price, $", "title": "price, $"},
             { "data": "dishes", "name": "dishes", "title": "dishes"},
             { "data": null, "sortable": false, "render": function(data){
-                return '<a href="/show_dishes?id=' + data.id + '"><input type="button" class="btn btn-default" value="Show"/></a>';
+                return '<a href="/all/show_dishes?id=' + data.id + '"><input type="button" class="btn btn-default" value="Show"/></a>';
             }
             }
         ]

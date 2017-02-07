@@ -49,23 +49,23 @@ public class DishController {
                 return dishService.getById(dishId);
         }
 
-        @PostMapping(value = "/get_all_dishes")
+        @PostMapping(value = "/all/get_all_dishes")
         @ResponseBody
         public DataTablesOutputDTOUniversal<Dish> getDishes(DataTablesInputExtendedDTO input) {
                 DataTablesOutputDTOUniversal<Dish> data = dishService.getAll(input);
                 return data;
         }
 
-        @GetMapping("/show_ingredients")
+        @GetMapping("/all/show_ingredients")
         @ResponseBody
         public ModelAndView getDishes(@RequestParam int id, ModelAndView modelAndView) {
                 modelAndView.addObject("id", dishService.getById(id).getId());
                 modelAndView.addObject("dish", dishService.getById(id).getName());
-                modelAndView.setViewName("th/dishs_ingredients");
+                modelAndView.setViewName("th/all/dishs_ingredients");
                 return modelAndView;
         }
 
-        @PostMapping("/get_dishs_ingredients")
+        @PostMapping("/all/get_dishs_ingredients")
         @ResponseBody
         public DataTablesOutputDTOCollectionWrapper getDishIngredients(@RequestParam int dishId) {
                 DataTablesOutputDTOCollectionWrapper data = new DataTablesOutputDTOCollectionWrapper();

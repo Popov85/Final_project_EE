@@ -8,7 +8,6 @@ import com.goit.popov.restaurant.service.dataTables.DataTablesMapToJSONConvertib
 import com.goit.popov.restaurant.service.dataTables.DataTablesOutputDTOUniversal;
 import com.goit.popov.restaurant.service.exceptions.NotEnoughIngredientsException;
 
-
 /**
  * Created by Andrey on 1/23/2017.
  */

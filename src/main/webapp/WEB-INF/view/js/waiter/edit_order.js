@@ -3,7 +3,7 @@ $(document).ready(function () {
     $.ajax({
         type: "POST",
         data: null,
-        url: '/get_tables',
+        url: '/waiter/get_tables',
         dataType: 'json',
         success: function(json) {
             var $el = $("#table");
@@ -19,7 +19,7 @@ $(document).ready(function () {
     $.ajax({
         type: "POST",
         data: {"orderId": $("#id").val()},
-        url: '/get_orders_table',
+        url: '/waiter/get_orders_table',
         dataType: 'json',
         success: function(json) {
             //var $el = $("#table");
@@ -35,7 +35,7 @@ $(document).ready(function () {
         bLengthChange: false,
         "ajax" : {
             "data": {"orderId": $("#id").val()},
-            "url": "/get_orders_dishes",
+            "url": "/waiter/get_orders_dishes",
             "type": "POST",
             "dataType": "json"
         },
@@ -43,7 +43,7 @@ $(document).ready(function () {
             { "data": "id", "visible": false, "searchable": false},
             { "data": "name"},
             { "data": "quantity", "render": function(data) {
-                return '<input type="text" value = "' + data+ '" onchange="alert(\'' + table.row($(this).parents('tr')) + '\')"size = "2" name="input"/>'
+                return '<input type="text" value = "' + data+ '" size = "2" name="input"/>'
             }
             },
             { "data": "price"},
@@ -59,15 +59,16 @@ $(document).ready(function () {
     });
 });
 
-
 // Set up a Dish table in modal window
 $(document).ready(function () {
     var table = $('#dTable').DataTable({
         "ajax" : {
-            "url": "/get_dishes",
+            "url": "/waiter/get_dishes",
             "type": "POST",
             "dataType": "json"
         },
+        // TODO
+        serverSide: false,
         columns: [
             { "data": "id", "visible": false, "searchable": false},
             { "data": "name"},
@@ -95,7 +96,7 @@ $(document).ready(function () {
 $(document).ready(function () {
     var currentOrder;
     $.ajax({
-        url: "/get_order?orderId="+$("#id").val(),
+        url: "/waiter/get_order?orderId="+$("#id").val(),
         type: "POST",
         dataType: "json",
         success: function (order) {
@@ -110,7 +111,7 @@ $(document).ready(function () {
         updatedOrder.table = $('#table').val();
         updatedOrder.dishes = getDishes();
         $.ajax({
-            url: $("#newOrderForm").attr( "action"),
+            url: "/waiter/edit_order",
             dataType: 'json',
             type: "POST",
             contentType: "application/json",

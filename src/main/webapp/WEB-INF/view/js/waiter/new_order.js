@@ -1,7 +1,5 @@
 // Set up an empty Order table
 $(document).ready(function () {
-    console.log("Current date is: "+Date());
-    console.log("Current date (new) is: "+JSON.stringify(new Date()));
     var t = $('#odTable').DataTable({
         bLengthChange: false,
         columnDefs: [
@@ -21,7 +19,7 @@ $(document).ready(function () {
     $.ajax({
         type: "POST",
         data: null,
-        url: '/get_tables',
+        url: '/waiter/get_tables',
         dataType: 'json',
         success: function (json) {
             var $el = $("#table");
@@ -38,10 +36,12 @@ $(document).ready(function () {
 $(document).ready(function () {
     var table = $('#dTable').DataTable({
         "ajax": {
-            "url": "/get_dishes",
+            "url": "/waiter/get_dishes",
             "type": "POST",
             "dataType": "json"
         },
+        // TODO
+        serverSide: false,
         columns: [
             {"data": "id", "visible": false, "searchable": false},
             {"data": "name"},
@@ -76,7 +76,7 @@ $(document).ready(function () {
         order.waiter = parseInt($('#waiterId').val());
         order.dishes = getDishes();
         $.ajax({
-            url: $("#newOrderForm").attr("action"),
+            url: "/waiter/edit_order",
             dataType: 'json',
             type: "POST",
             contentType: "application/json",

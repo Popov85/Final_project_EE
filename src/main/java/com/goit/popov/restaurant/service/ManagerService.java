@@ -1,16 +1,11 @@
 package com.goit.popov.restaurant.service;
+
 import ch.qos.logback.classic.Logger;
-import com.goit.popov.restaurant.dao.entity.ChefDAO;
 import com.goit.popov.restaurant.dao.entity.ManagerDAO;
-import com.goit.popov.restaurant.model.Chef;
 import com.goit.popov.restaurant.model.Employee;
 import com.goit.popov.restaurant.model.Manager;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.PersistenceException;
 import java.util.List;
 

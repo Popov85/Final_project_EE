@@ -43,7 +43,7 @@ public class OrderController {
         private OrderService orderService;
 
         // Auxiliary data source for creating Orders
-        @PostMapping("/get_dishes")
+        @PostMapping("/waiter/get_dishes")
         @ResponseBody
         public DataTablesOutputDTOListWrapper<Dish> getDishes() {
                 DataTablesOutputDTOListWrapper<Dish> data = new DataTablesOutputDTOListWrapper<>();
@@ -52,7 +52,7 @@ public class OrderController {
         }
 
         // Auxiliary data source for fetching Order's existing dishes
-        @PostMapping("/get_orders_dishes")
+        @PostMapping("/waiter/get_orders_dishes")
         @ResponseBody
         public DataTablesOutputDTOCollectionWrapper getOrdersDishes(@RequestParam Integer orderId) {
                 DataTablesOutputDTOCollectionWrapper data = new DataTablesOutputDTOCollectionWrapper();
@@ -61,14 +61,14 @@ public class OrderController {
         }
 
         // Auxiliary data source for fetching all existing tables in the restaurant
-        @PostMapping("/get_tables")
+        @PostMapping("/waiter/get_tables")
         @ResponseBody
         public List<Integer> getTables() {
                 return Arrays.asList(orderService.getTables());
         }
 
         // Auxiliary data source for fetching the Order's table
-        @PostMapping("/get_orders_table")
+        @PostMapping("/waiter/get_orders_table")
         @ResponseBody
         public String getOrdersTable(@RequestParam Integer orderId) {
                 String table = orderService.getById(orderId).getTable();
@@ -78,7 +78,7 @@ public class OrderController {
         // Create (Page)
         @GetMapping("/waiter/new_order")
         public String showOrderForm() {
-                return "th/new_order";
+                return "th/waiter/new_order";
         }
 
         // Read All (Page) Manager view
@@ -99,14 +99,14 @@ public class OrderController {
                 return "th/waiter/archive/orders_archive";
         }
 
-        @PostMapping(value = "/get_orders")
+        @PostMapping(value = "/admin/get_orders")
         @ResponseBody
         public DataTablesOutputDTOUniversal<Order> getOrders(DataTablesInputExtendedDTO input) {
                 DataTablesOutputDTOUniversal<Order> data = orderService.getAllOrders(input);
                 return data;
         }
 
-        @PostMapping(value = "/get_order")
+        @PostMapping(value = "/waiter/get_order")
         @ResponseBody
         public Order getOrder(@RequestParam int orderId) {
                 logger.info("Order: "+orderService.getById(orderId));
@@ -130,9 +130,9 @@ public class OrderController {
         }
 
         // Update (Page)
-        @GetMapping("/edit_order")
+        @GetMapping("/waiter/edit_order")
         public ModelAndView editOrder(@RequestParam int id) {
-                ModelAndView modelAndView = new ModelAndView("th/edit_order");
+                ModelAndView modelAndView = new ModelAndView("th/waiter/edit_order");
                 modelAndView.addObject("id", id);
                 return modelAndView;
         }
@@ -151,7 +151,7 @@ public class OrderController {
         }
 
         // Create Or Update (Action)
-        @PostMapping(value="/edit_order")
+        @PostMapping(value="/waiter/edit_order")
         public ResponseEntity createOrUpdateOrder(@RequestBody Order order) {
                 logger.info("Create/Edit order #: "+order.getId());
                 if (order.getDishes().isEmpty()) {
@@ -182,7 +182,7 @@ public class OrderController {
         }
 
         // Delete (Action)
-        @GetMapping("/delete_order")
+        @GetMapping("/waiter/delete_order")
         public String deleteOrder(@RequestParam int id, HttpServletRequest request, RedirectAttributes ra) {
                 URL url;
                 try {
@@ -200,7 +200,7 @@ public class OrderController {
         }
 
         // Close (Action)
-        @GetMapping("/close_order")
+        @GetMapping("/waiter/close_order")
         public String closeOrder(@RequestParam int id, HttpServletRequest request, RedirectAttributes ra) {
                 URL url=null;
                 try {
@@ -218,7 +218,7 @@ public class OrderController {
         }
 
         // Cancel (Action)
-        @GetMapping("/cancel_order")
+        @GetMapping("/waiter/cancel_order")
         public String cancelOrder(@RequestParam int id, HttpServletRequest request, RedirectAttributes ra) {
                 URL url=null;
                 try {

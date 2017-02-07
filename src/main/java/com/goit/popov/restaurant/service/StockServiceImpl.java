@@ -43,7 +43,7 @@ public class StockServiceImpl implements StockService {
 
         @Override
         public StoreHouse getById(int id) {
-                // TODO check if throe UnsupportedOperationException
+                // TODO check if throw UnsupportedOperationException
                 return storeHouseDAO.getById(id);
         }
 
@@ -84,8 +84,6 @@ public class StockServiceImpl implements StockService {
                 Double quantityLeft = actualQuantity - quantityRequired;
                 storeHouse.setQuantity(quantityLeft);
                 update(storeHouse);
-                logger.info("Decreased Ingredient: "+ingredient.getName()+
-                        "/ quantity left: "+quantityLeft);
         }
 
         @Override
@@ -95,8 +93,6 @@ public class StockServiceImpl implements StockService {
                 Double quantityIncreased = actualQuantity + quantityReturned;
                 storeHouse.setQuantity(quantityIncreased);
                 update(storeHouse);
-                logger.info("Increased Ingredient: "+ingredient.getName()+
-                        "/ quantity left: "+quantityIncreased);
         }
 
         @Override

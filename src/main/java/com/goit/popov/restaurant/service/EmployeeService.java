@@ -7,14 +7,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.PersistenceException;
 import java.util.List;
 
 /**
  * Created by Andrey on 11/13/2016.
  */
-@Transactional
 public class EmployeeService implements StaffService<Employee> {
 
         private static final Logger logger = (Logger) LoggerFactory.getLogger(EmployeeService.class);

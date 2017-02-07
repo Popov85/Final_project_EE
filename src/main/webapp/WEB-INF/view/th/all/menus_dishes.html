@@ -1,6 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Home</title>
+    <title>Menu</title>
     <link rel="stylesheet" type="text/css" href="/css/lib/bootstrap-3.3.7.min.css"/>
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css"/>
     <script src ="/js/lib/jquery-1.12.1.js"/>
@@ -14,7 +14,7 @@
                 "bFilter":false,
                 "bLengthChange": false,
                 "ajax" : {
-                    "url": "/get_menus_dishes?id="+id,
+                    "url": "/all/get_menus_dishes?id="+id,
                     "type": "POST"
                 },
                 columns: [
@@ -54,7 +54,7 @@
                 <a th:href="@{/}">
                     <input type="button" class="btn btn-default" value="Home"/>
                 </a>
-                <a th:href="@{/show_menus}">
+                <a th:href="@{/all/show_menus}">
                     <input type="button" class="btn btn-default" value="More menus"/>
                 </a>
             </div>

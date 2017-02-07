@@ -16,9 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -32,10 +30,9 @@ public class MenuController {
         @Autowired
         private MenuService menuService;
 
-
-        @GetMapping("/show_menus")
+        @GetMapping("/all/show_menus")
         public String showMenus() {
-                return "th/menus";
+                return "th/all/menus";
         }
 
         @GetMapping("/admin/menus")
@@ -61,7 +58,7 @@ public class MenuController {
                 return "th/manager/edit_menus_dishes";
         }
 
-        @PostMapping("/get_menus")
+        @PostMapping("/all/get_menus")
         @ResponseBody
         public DataTablesOutputDTOCollectionWrapper getMenus() {
                 DataTablesOutputDTOCollectionWrapper data = new DataTablesOutputDTOCollectionWrapper();
@@ -69,15 +66,15 @@ public class MenuController {
                 return data;
         }
 
-        @GetMapping("/show_dishes")
+        @GetMapping("/all/show_dishes")
         public ModelAndView getDishes(@RequestParam int id, ModelAndView modelAndView) {
                 modelAndView.addObject("id", menuService.getById(id).getId());
                 modelAndView.addObject("menu", menuService.getById(id).getName());
-                modelAndView.setViewName("th/menus_dishes");
+                modelAndView.setViewName("th/all/menus_dishes");
                 return modelAndView;
         }
 
-        @PostMapping("/get_menus_dishes")
+        @PostMapping("/all/get_menus_dishes")
         @ResponseBody
         public DataTablesOutputDTOListWrapper<Dish> getMenusDishes(@RequestParam int id) {
                 DataTablesOutputDTOListWrapper data = new DataTablesOutputDTOListWrapper<>();

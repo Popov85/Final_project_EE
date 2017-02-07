@@ -2,7 +2,7 @@ $(document).ready(function () {
     var table = $('#ordsTable').DataTable({
         "bFilter":true,
         "ajax" : {
-            "url": "/get_orders",
+            "url": "/admin/get_orders",
             "type": "POST"
         },
         serverSide: true,
@@ -37,9 +37,8 @@ $(document).ready(function () {
                 }
             }},
 
-
             { "data": null, "sortable": false, "render": function(data){
-                return '<a href="/edit_order?id=' + data.id + '">' +
+                return '<a href="/waiter/edit_order?id=' + data.id + '">' +
                             '<input type="button" class="btn btn-default" value="Details"/>' +
                         '</a>';
             }
@@ -49,7 +48,6 @@ $(document).ready(function () {
 });
 
 $(document).ready(function() {
-    // Setup - add a text input to each footer cell
     $('#ordsTable thead tr th.select-filter').each( function () {
         var title = $(this).text();
         $(this).html( '<input type="text" size="14" placeholder="Search '+title+'" />' );
@@ -64,9 +62,8 @@ $(document).ready(function() {
         var title = $(this).text();
         $(this).html( '<input type="text" size="9" placeholder="Search '+title+'" />' );
     } );
-    // DataTable
+
     var table = $('#ordsTable').DataTable();
-    // Apply the search
     table.columns().every( function () {
         var that = this;
 

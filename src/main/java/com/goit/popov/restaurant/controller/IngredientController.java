@@ -50,7 +50,7 @@ public class IngredientController {
 
         @GetMapping("/admin/new_ingredient")
         public ModelAndView showIngredientForm() {
-                return new ModelAndView("jsp/new_ingredient", "ingredient", new Ingredient());
+                return new ModelAndView("jsp/manager/new_ingredient", "ingredient", new Ingredient());
         }
 
         @RequestMapping(value = "/admin/ingredients", method = RequestMethod.GET)
@@ -71,14 +71,14 @@ public class IngredientController {
         public String saveIngredient(@Valid @ModelAttribute("ingredient") Ingredient ingredient, BindingResult result, Model model) {
                 if (result.hasErrors()) {
                         logger.error("Errors(" + result.getErrorCount() + "): during creating!");
-                        return "jsp/new_ingredient";
+                        return "jsp/manager/new_ingredient";
                 }
                 try {
                         ingredientService.insert(ingredient);
                 } catch (Exception e) {
                         logger.error("ERROR: "+e.getCause());
                         model.addAttribute("constraintViolationError",CONSTRAINT_VIOLATION_MESSAGE);
-                        return "jsp/new_ingredient";
+                        return "jsp/manager/new_ingredient";
                 }
                 return "redirect:/admin/ingredients";
         }
@@ -86,14 +86,14 @@ public class IngredientController {
         @RequestMapping(value = "/admin/edit_ingredient/{id}", method = RequestMethod.GET)
         public ModelAndView edit(@PathVariable int id) {
                 Ingredient ing = ingredientService.getById(id);
-                return new ModelAndView("jsp/update_ingredient", "ingredient", ing);
+                return new ModelAndView("jsp/manager/update_ingredient", "ingredient", ing);
         }
 
         @RequestMapping(value = "/admin/update_ingredient", method = RequestMethod.POST)
         public String editSave(@Valid @ModelAttribute Ingredient ingredient, BindingResult result, Model model) {
                 if (result.hasErrors()) {
                         logger.error("Errors(" + result.getErrorCount() + "): during updating!");
-                        return "jsp/update_ingredient";
+                        return "jsp/manager/update_ingredient";
                 }
                 try {
                         ingredientService.update(ingredient);

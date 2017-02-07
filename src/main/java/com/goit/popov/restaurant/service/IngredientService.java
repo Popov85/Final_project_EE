@@ -3,13 +3,11 @@ package com.goit.popov.restaurant.service;
 import com.goit.popov.restaurant.dao.entity.IngredientDAO;
 import com.goit.popov.restaurant.model.Ingredient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
  * Created by Andrey on 09.11.2016.
  */
-@Transactional
 public class IngredientService implements IngredientDAO {
 
         @Autowired

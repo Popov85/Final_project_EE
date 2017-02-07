@@ -88,18 +88,17 @@ public class EmployeeController {
         // New form
         @RequestMapping("/admin/new_employee")
         public ModelAndView showEmployeeForm(){
-                return new ModelAndView("jsp/new_employee","employee",new Employee());
+                return new ModelAndView("jsp/manager/new_employee","employee",new Employee());
         }
 
         // Create
-        @RequestMapping(value="/save_employee",method = RequestMethod.POST)
+        @RequestMapping(value="/admin/save_employee",method = RequestMethod.POST)
         public String saveEmployee(@Valid @ModelAttribute("employee") Employee employee, BindingResult result, Model model,
                                    @RequestParam("position") String position, @RequestParam("photo") MultipartFile photo){
                 if (result.hasErrors()) {
                         logger.error("# of errors is: "+result.getFieldErrorCount());
-                        return "jsp/new_employee";
+                        return "jsp/manager/new_employee";
                 }
-                logger.info("I am about to get the bean in controller");
                 StaffService staffService;
                 if ((position.equals("Waiter")) || (position.equals("Chef"))
                         || (position.equals("Manager"))) {
@@ -113,12 +112,12 @@ public class EmployeeController {
                         model.addAttribute("constraintViolationError", NON_UNIQUE_CONSTRAINT_MESSAGE);
                         logger.error("Constraint violation exception inserting employee: "+e.getMessage()+
                                 " exception name is: "+ e.getClass());
-                        return "jsp/new_employee";
+                        return "jsp/manager/new_employee";
                 } catch (Throwable e) {
                         model.addAttribute("unexpectedError", e.getMessage());
                         logger.error("Another error inserting employee: "+e.getMessage()+
                                 "/ exception name is: "+ e.getClass());
-                        return "jsp/new_employee";
+                        return "jsp/manager/new_employee";
                 }
                 logger.info("Successfully added employee: "+employee);
                 return "redirect:/admin/employees";
@@ -134,18 +133,18 @@ public class EmployeeController {
                 map.addAttribute("position", employee.getPosition().getName());
                 session.setAttribute("position",employee.getPosition().getName());
                 session.setAttribute("file",employee.getPhoto());
-                return "jsp/update_employee";
+                return "jsp/manager/update_employee";
         }
 
         // Update
-        @RequestMapping(value="/update_employee", method = RequestMethod.POST)
+        @RequestMapping(value="/admin/update_employee", method = RequestMethod.POST)
         public String updateEmployee(@Valid @ModelAttribute("employee") Employee employee, BindingResult result,
                                      @RequestParam("position") String newPosition, HttpSession session, Model model,
                                      @RequestParam("photo") MultipartFile photo){
                 logger.info("Updating controller: "+employee.getClass());
                 if (result.hasErrors()) {
                         logger.error("# of errors is: "+result.getFieldErrorCount());
-                        return "jsp/update_employee";
+                        return "jsp/manager/update_employee";
                 }
                 String previousPosition = (String) session.getAttribute("position");
                 StaffService staffService;
@@ -168,24 +167,24 @@ public class EmployeeController {
                         model.addAttribute("constraintViolationError", NON_UNIQUE_CONSTRAINT_MESSAGE);
                         logger.error("Constraint violation exception updating employee: "+e.getMessage()+
                                 "/ exception name is: "+ e.getClass());
-                        return "jsp/update_employee";
+                        return "jsp/manager/update_employee";
                 } catch (PersistenceException e) {
                         model.addAttribute("integrityViolationError", e.getMessage());
                         logger.error("Data integrity exception updating employee: "+e.getMessage()+
                                 "/ exception name is: "+ e.getClass());
-                        return "jsp/update_employee";
+                        return "jsp/manager/update_employee";
                 } catch (Throwable e) {
                         model.addAttribute("unexpectedError", e.getMessage());
                         logger.error("Another error updating employee: "+e.getMessage()+
                                 "/ exception name is: "+ e.getClass());
-                        return "jsp/update_employee";
+                        return "jsp/manager/update_employee";
                 }
                 logger.info("Successfully updated employee: "+employee);
                 return "redirect:/admin/employees";
         }
 
         // Delete
-        @RequestMapping(value="/delete_employee/{id}",method = RequestMethod.GET)
+        @RequestMapping(value="/admin/delete_employee/{id}",method = RequestMethod.GET)
         public String delete(@PathVariable int id, RedirectAttributes ra){
                 try {
                         employeeService.deleteById(id);

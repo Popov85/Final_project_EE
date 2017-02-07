@@ -12,7 +12,7 @@
 <body>
 <div class="container">
     <h3 class="form-signin-heading" align="center">Edit Employee</h3>
-    <form:form id="update_employee" name="update_employee" action="${pageContext.request.contextPath}/update_employee"
+    <form:form id="update_employee" name="update_employee" action="${pageContext.request.contextPath}/admin/update_employee"
                method="post" modelAttribute="employee" enctype="multipart/form-data"
                style="max-width: 250px; margin: 0 auto; font-size: larger;">
 

@@ -6,8 +6,6 @@ import com.goit.popov.restaurant.model.Employee;
 import com.goit.popov.restaurant.model.Waiter;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.PersistenceException;
 import java.util.List;
 
@@ -15,7 +13,6 @@ import java.util.List;
 /**
  * Created by Andrey on 11/13/2016.
  */
-@Transactional
 public class WaiterService implements StaffService<Waiter> {
 
         private static final Logger logger = (Logger) LoggerFactory.getLogger(WaiterService.class);

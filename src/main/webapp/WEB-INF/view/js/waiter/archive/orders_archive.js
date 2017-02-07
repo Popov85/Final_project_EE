@@ -37,7 +37,7 @@ $(document).ready(function () {
             }},
 
             { "data": null, "sortable": false, "render": function(data){
-                return '<a href="/edit_order?id=' + data.id + '"><input type="button" class="btn btn-default" value="Details"/></a>';
+                return '<a href="/waiter/edit_order?id=' + data.id + '"><input type="button" class="btn btn-default" value="Details"/></a>';
             }
             }
         ]

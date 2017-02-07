@@ -2,7 +2,6 @@ package com.goit.popov.restaurant.model;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.NotEmpty;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 

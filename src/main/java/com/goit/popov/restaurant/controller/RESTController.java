@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
+ * Developed for the sake of try!
  * Created by Andrey on 08.11.2016.
  */
 @RestController
@@ -20,7 +21,7 @@ public class RESTController {
         MenuService menuService;
 
         @RequestMapping("/menus")
-        public @ResponseBody String getJSONMenus() throws IOException {
+        public String getJSONMenus() throws IOException {
                 List<Menu> menus = menuService.getAll();
                 StringBuilder json = new StringBuilder();
                 ObjectMapper mapper = new ObjectMapper();

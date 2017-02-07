@@ -2,7 +2,6 @@ package com.goit.popov.restaurant.model;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.NotEmpty;
-
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
@@ -41,21 +40,6 @@ public class Position {
         public Position setName(String name) {
                 this.name = name;
                 return this;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-                if (this == o) return true;
-                if (o == null || getClass() != o.getClass()) return false;
-
-                Position position = (Position) o;
-
-                return name.equals(position.name);
-        }
-
-        @Override
-        public int hashCode() {
-                return name.hashCode();
         }
 
         @Override

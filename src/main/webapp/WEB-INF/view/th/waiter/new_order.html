@@ -10,12 +10,12 @@
     <script src ="/js/lib/jquery-ui-1.12.1.js"/>
     <script src ="/js/lib/bootstrap-3.3.7.min.js"/>
     <script src ="/js/lib/jquery.dataTables-1.10.12.min.js"/>
-    <script src ="/js/new_order.js"/>
+    <script src ="/js/waiter/new_order.js"/>
 </head>
 <body>
 <h3 class="form-signin-heading" align="center">New Order</h3>
 <div class="container">
-    <form id="newOrderForm" action="/edit_order" method="post"
+    <form id="newOrderForm" action="/waiter/edit_order" method="post"
           style="max-width: 500px; margin: 0 auto; font-size: larger;" onsubmit="return false;">
 
         <div th:replace="/th/header :: header"/>

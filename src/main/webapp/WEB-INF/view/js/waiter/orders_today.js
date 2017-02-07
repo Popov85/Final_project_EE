@@ -52,7 +52,7 @@ $(document).ready(function () {
                 if (data.cancelled || !data.opened) {
                     return '<input type="button" class="btn btn-default" disabled="true" title="Operation is forbidden!" value="Cancel"/>';
                 } else {
-                    return '<a href="/cancel_order?id=' + data.id + '"><input type="button" class="btn btn-default" value="Cancel"/></a>';
+                    return '<a href="/waiter/cancel_order?id=' + data.id + '"><input type="button" class="btn btn-default" value="Cancel"/></a>';
                 }
             }
             },
@@ -88,7 +88,7 @@ function checkOrderStatus(param, callBackFunction) {
 
 function editOrder(data) {
     var param = 'id=' + data.orderId;
-    var url = "/edit_order?"+param;
+    var url = "/waiter/edit_order?"+param;
     if (data.hasPrepared) {
         alert("This Order is already partially fulfilled! Further editing is limited in this version of software!");
         location.reload(true);
@@ -100,7 +100,7 @@ function editOrder(data) {
 function closeOrder(data) {
     var param = 'id=' + data.orderId;
     console.log(data.hasPrepared);
-    var url = "/close_order?"+param;
+    var url = "/waiter/close_order?"+param;
     if (!data.isFulfilled) {
         alert("This Order is not fulfilled yet!");
     } else if (data.isCancelled) {

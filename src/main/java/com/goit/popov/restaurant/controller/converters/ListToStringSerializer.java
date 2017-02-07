@@ -25,7 +25,7 @@ public class ListToStringSerializer extends JsonSerializer<List<Object>> {
                                 for (Object o : value) {
                                         int id = ((Menu) o).getId();
                                         String name = ((Menu) o).getName();
-                                        String url = "<a href='/show_dishes?id=" + id + "'>" + name + "</a>";
+                                        String url = "<a href='/all/show_dishes?id=" + id + "'>" + name + "</a>";
                                         gen.writeString(url);
                                         String line = "&para;";
                                         gen.writeString(line);

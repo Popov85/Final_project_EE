@@ -8,7 +8,7 @@ $(document).ready(function () {
         "bFilter":false,
         "bLengthChange": false,
         "ajax" : {
-            "url": "/get_dishs_ingredients?dishId="+dishId,
+            "url": "/all/get_dishs_ingredients?dishId="+dishId,
             "type": "POST"
         },
         "columnDefs": [

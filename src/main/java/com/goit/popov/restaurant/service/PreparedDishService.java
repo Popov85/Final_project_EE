@@ -13,6 +13,4 @@ public interface PreparedDishService extends PreparedDishHistoryDAO,
 
         void confirmDishesPrepared(int dishId, int quantity, int orderId, int chefId);
         void confirmDishesCancelled(int dishId, int quantity, int orderId, int chefId);
-
-
 }

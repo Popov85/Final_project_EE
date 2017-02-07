@@ -7,7 +7,7 @@ $(document).ready(function () {
         "bLengthChange": false,
         "bAutoWidth": false,
         "ajax" : {
-            "url": "/get_all_dishes",
+            "url": "/all/get_all_dishes",
             "type": "POST"
         },
         serverSide:true,
@@ -27,7 +27,7 @@ $(document).ready(function () {
             { "data": "price", "name": "price", "title": "Price($)"},
             { "data": "menus", "name": "menus", "title": "Menus"},
             { "data": null, "title": "Details", "sortable": false, "render": function(data){
-                return '<a href="/show_ingredients?id=' + data.id + '"><input type="button" class="btn btn-default" value="Show"/></a>';
+                return '<a href="/all/show_ingredients?id=' + data.id + '"><input type="button" class="btn btn-default" value="Show"/></a>';
             }
             }
         ]
