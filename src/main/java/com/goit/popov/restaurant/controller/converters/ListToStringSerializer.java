@@ -22,14 +22,15 @@ public class ListToStringSerializer extends JsonSerializer<List<Object>> {
         public void serialize(List<Object> value, JsonGenerator gen, SerializerProvider serializers) throws IOException, JsonProcessingException {
                 try {
                         if (!value.isEmpty()) {
+                                StringBuilder sb = new StringBuilder();
                                 for (Object o : value) {
                                         int id = ((Menu) o).getId();
                                         String name = ((Menu) o).getName();
                                         String url = "<a href='/all/show_dishes?id=" + id + "'>" + name + "</a>";
-                                        gen.writeString(url);
-                                        String line = "&para;";
-                                        gen.writeString(line);
+                                        sb.append(url);
+                                        sb.append("<br>");
                                 }
+                                gen.writeString(sb.toString());
                         } else {
                                 gen.writeString("No");
                         }

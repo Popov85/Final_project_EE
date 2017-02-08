@@ -49,7 +49,6 @@ public class Dish {
         @Column(name = "WEIGHT")
         private Double weight;
 
-
         @JsonSerialize(using = ListToStringSerializer.class)
         @ManyToMany(fetch = FetchType.EAGER, mappedBy="dishes")
         private List<Menu> menus;
