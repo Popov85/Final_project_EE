@@ -75,25 +75,21 @@ public class OrderController {
                 return table;
         }
 
-        // Create (Page)
         @GetMapping("/waiter/new_order")
         public String showOrderForm() {
                 return "th/waiter/new_order";
         }
 
-        // Read All (Page) Manager view
         @GetMapping(value = "/admin/orders")
         public String showOrdersTableManager() {
                 return "th/manager/orders";
         }
 
-        // Read All (Page) Waiter view (today)
         @GetMapping(value = "/waiter/orders/today")
         public String showOrdersTableWaiter() {
                 return "th/waiter/orders_today";
         }
 
-        // Read All (Page) Waiter view (archive)
         @GetMapping(value = "/waiter/orders/archive")
         public String showOrdersTableWaiterArchive() {
                 return "th/waiter/archive/orders_archive";
@@ -150,7 +146,6 @@ public class OrderController {
                 return new ResponseEntity(node, HttpStatus.OK);
         }
 
-        // Create Or Update (Action)
         @PostMapping(value="/waiter/edit_order")
         public ResponseEntity createOrUpdateOrder(@RequestBody Order order) {
                 logger.info("Create/Edit order #: "+order.getId());
@@ -181,7 +176,6 @@ public class OrderController {
                 return new ResponseEntity("{\"Result\": \"Success\"}", HttpStatus.OK);
         }
 
-        // Delete (Action)
         @GetMapping("/waiter/delete_order")
         public String deleteOrder(@RequestParam int id, HttpServletRequest request, RedirectAttributes ra) {
                 URL url;
@@ -199,7 +193,6 @@ public class OrderController {
                 return "redirect:"+url.getPath();
         }
 
-        // Close (Action)
         @GetMapping("/waiter/close_order")
         public String closeOrder(@RequestParam int id, HttpServletRequest request, RedirectAttributes ra) {
                 URL url=null;
@@ -217,7 +210,6 @@ public class OrderController {
                 return "redirect:"+url.getPath();
         }
 
-        // Cancel (Action)
         @GetMapping("/waiter/cancel_order")
         public String cancelOrder(@RequestParam int id, HttpServletRequest request, RedirectAttributes ra) {
                 URL url=null;

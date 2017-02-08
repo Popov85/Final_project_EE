@@ -50,7 +50,6 @@ public class PositionController {
                 return "redirect:/admin/positions";
         }
 
-        // Read (update form)
         @GetMapping(value = "/admin/edit_position/{id}")
         public String showPositionEditForm(@PathVariable("id") int id, ModelMap map){
                 Position position = positionService.getById(id);
@@ -58,7 +57,6 @@ public class PositionController {
                 return "th/manager/update_position";
         }
 
-        // Update
         @PostMapping(value="/admin/update_position")
         public String editSave(@Valid @ModelAttribute("position") Position position, BindingResult result){
                 if (result.hasErrors()) {
@@ -71,7 +69,6 @@ public class PositionController {
                 }
         }
 
-        // Delete
         @RequestMapping(value="/admin/delete_position/{id}",method = RequestMethod.GET)
         public String delete(@PathVariable int id, RedirectAttributes ra){
                 try {

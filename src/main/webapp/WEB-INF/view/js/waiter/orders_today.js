@@ -10,16 +10,14 @@ $(document).ready(function () {
             { "data": "id", "name": "id",  "title": "#", "visible": true},
             { "data": "opened", "name": "isOpened", "title": "isOpened", "visible":false},
             { "data": null, "name": "openedTimeStamp", "title": "opened time", "render": function(data){
-                var dateTime = new Date(data.openedTimeStamp);
-                return dateTime.format("HH:MM");
+                return moment(data.openedTimeStamp).format('HH:mm');
             }
             },
             { "data": null, "name": "closedTimeStamp", "title": "closed time", "render": function(data){
                 if (data.closedTimeStamp==null) {
                     return "-";
                 } else {
-                    var dateTime = new Date(data.closedTimeStamp);
-                    return dateTime.format("HH:MM");
+                    return moment(data.closedTimeStamp).format('HH:mm');
                 }
             }
             },

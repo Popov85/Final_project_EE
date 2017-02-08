@@ -104,9 +104,11 @@
             <spring:bind path="position">
                 <div class="form-group ${status.error ? 'has-error has-feedback' : ''}">
                     <label>Position</label><br/>
-                    <form:select path="position" value="${employee.position}" items="${positions}"
-                                 cssClass="form-control" name="position" id="position"
-                                 width="150" style="width: 150px"/>
+                    <form:select path="position" cssClass="form-control" name="position" id="position"
+                                 width="150" style="width: 150px">
+                        <form:option value="${employee.position.name}" label="${employee.position.name}"/>
+                        <form:options items="${positions}" />
+                    </form:select>
                     <label class="control-label" for="position">${status.error ? status.errorMessage : ''}</label>
                     <p class="label label-danger"><c:out value="${integrityViolationError}"/></p>
                 </div>

@@ -7,7 +7,7 @@ $(document).ready(function () {
     var menusDishesTable = $('#menusDishesTable').DataTable({
         "bLengthChange": false,
         "ajax": {
-            "url": "/get_menus_dishes?id=" + parseInt(menuId),
+            "url": "/all/get_menus_dishes?id=" + parseInt(menuId),
             "type": "POST",
             "dataType": "json"
         },
@@ -34,7 +34,7 @@ $(document).ready(function () {
 $(document).ready(function () {
     var dishesTable = $('#dishesTable').DataTable({
         "ajax" : {
-            "url": "/get_all_dishes",
+            "url": "/all/get_all_dishes",
             "type": "POST"
         },
         serverSide: true,

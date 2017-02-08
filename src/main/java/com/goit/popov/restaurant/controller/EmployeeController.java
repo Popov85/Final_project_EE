@@ -57,7 +57,6 @@ public class EmployeeController {
                 this.employeeService = employeeService;
         }
 
-        // Populate positions
         @ModelAttribute("positions")
         public Map<String, String> populatePositions() {
                 List<Position> positions = positionService.getAll();
@@ -69,7 +68,6 @@ public class EmployeeController {
                 return positionsList;
         }
 
-        // Date settings
         @InitBinder
         public void initBinder(WebDataBinder binder) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -78,20 +76,17 @@ public class EmployeeController {
                 binder.registerCustomEditor(byte[].class, new ByteArrayMultipartFileEditor());
         }
 
-        // Read All
         @GetMapping(value = "/admin/employees")
         public String employeesTh(Map<String, Object> model) {
                 model.put("employees", employeeService.getAll());
                 return "th/manager/employees";
         }
 
-        // New form
         @RequestMapping("/admin/new_employee")
         public ModelAndView showEmployeeForm(){
                 return new ModelAndView("jsp/manager/new_employee","employee",new Employee());
         }
 
-        // Create
         @RequestMapping(value="/admin/save_employee",method = RequestMethod.POST)
         public String saveEmployee(@Valid @ModelAttribute("employee") Employee employee, BindingResult result, Model model,
                                    @RequestParam("position") String position, @RequestParam("photo") MultipartFile photo){
@@ -123,25 +118,22 @@ public class EmployeeController {
                 return "redirect:/admin/employees";
         }
 
-        // Read (update form)
         @RequestMapping(value = "/admin/edit_employee/{id}", method = RequestMethod.GET)
         public String showEmployeeEditForm(@PathVariable("id") int id, ModelMap map, HttpSession session){
                 Employee employee = employeeService.getById(id);
                 logger.info("Updating class: "+employee.getClass()+" employee: "+employee);
                 map.addAttribute("employee", employee);
                 map.addAttribute("positions", populatePositions());
-                map.addAttribute("position", employee.getPosition().getName());
+                // It needs to compare the new and the previous positions
                 session.setAttribute("position",employee.getPosition().getName());
                 session.setAttribute("file",employee.getPhoto());
                 return "jsp/manager/update_employee";
         }
 
-        // Update
         @RequestMapping(value="/admin/update_employee", method = RequestMethod.POST)
         public String updateEmployee(@Valid @ModelAttribute("employee") Employee employee, BindingResult result,
                                      @RequestParam("position") String newPosition, HttpSession session, Model model,
                                      @RequestParam("photo") MultipartFile photo){
-                logger.info("Updating controller: "+employee.getClass());
                 if (result.hasErrors()) {
                         logger.error("# of errors is: "+result.getFieldErrorCount());
                         return "jsp/manager/update_employee";
@@ -183,7 +175,6 @@ public class EmployeeController {
                 return "redirect:/admin/employees";
         }
 
-        // Delete
         @RequestMapping(value="/admin/delete_employee/{id}",method = RequestMethod.GET)
         public String delete(@PathVariable int id, RedirectAttributes ra){
                 try {

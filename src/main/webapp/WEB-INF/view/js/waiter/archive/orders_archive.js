@@ -9,12 +9,10 @@ $(document).ready(function () {
             { "data": "id", "name": "id",  "title": "#", "visible": true},
             { "data": "opened", "name": "isOpened", "visible": false},
             { "data": null, "name": "openedTimeStamp", "title": "opened time", "render": function(data){
-                var dateTime = new Date(data.openedTimeStamp);
-                return dateTime.format("yyyy-mm-dd HH:MM");
+                return moment(data.openedTimeStamp).format('YYYY-MM-DD HH:mm');
             }},
             { "data": null, "name": "closedTimeStamp", "title": "closed time", "render": function(data){
-                var closedTime = new Date(data.closedTimeStamp);
-                if (data.closedTimeStamp!=null) return closedTime.format("yyyy-mm-dd HH:MM");
+                if (data.closedTimeStamp!=null) return moment(data.closedTimeStamp).format('YYYY-MM-DD HH:mm');
                 return null;
 
             }},

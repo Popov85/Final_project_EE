@@ -6,7 +6,7 @@ $(document).ready(function () {
     var dishsIngredientsTable = $('#dishsIngredientsTable').DataTable({
         "bLengthChange": false,
         "ajax": {
-            url: "/get_dishs_ingredients?dishId=" + parseInt(dishId),
+            url: "/all/get_dishs_ingredients?dishId=" + parseInt(dishId),
             "type": "POST",
             "dataType": "json"
         },
@@ -30,7 +30,6 @@ $(document).ready(function () {
     });
 
 });
-
 
 $(document).ready(function () {
     var ingredientsTable = $('#ingredientsTable').DataTable({

@@ -8,7 +8,7 @@ $(document).ready(function () {
         "bLengthChange": false,
         "bAutoWidth": false,
         "ajax" : {
-            "url": "/get_all_dishes",
+            "url": "/all/get_all_dishes",
             "type": "POST"
         },
         serverSide:true,

@@ -24,8 +24,7 @@ public class MainDispatcher implements AuthenticationSuccessHandler {
         private static final Logger logger = (Logger) LoggerFactory.getLogger(MainDispatcher.class);
     
         private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
-    
-    
+
         @Override
         public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, 
                                             Authentication authentication) throws IOException, ServletException {
@@ -69,7 +68,7 @@ public class MainDispatcher implements AuthenticationSuccessHandler {
                         return "/waiter/orders/today";
                 } else if (isChef) {
                         logger.info("ROLE_CHEF identified!");
-                        return "/";
+                        return "/chef/prepared_dishes";
                 } else if (isManager) {
                         logger.info("ROLE_ADMIN identified!");
                         return "/admin";

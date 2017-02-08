@@ -79,29 +79,19 @@ public class PreparedDishController {
 
         @GetMapping("/chef/confirm_dishes_prepared")
         public ResponseEntity confirmDishPrepared(@RequestParam int dishId, @RequestParam int quantity, @RequestParam int orderId) {
-                int chefId = getChef();
+                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                Employee userDetails = (Employee) auth.getPrincipal();
+                int chefId = userDetails.getId();
                 preparedDishService.confirmDishesPrepared(dishId, quantity, orderId, chefId);
                 return new ResponseEntity("{\"orderId\":" +orderId+"}", HttpStatus.OK);
         }
 
         @GetMapping("/chef/confirm_dishes_cancelled")
         public ResponseEntity confirmDishCancelled(@RequestParam int dishId, @RequestParam int quantity, @RequestParam int orderId) {
-                int chefId = getChef();
+                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                Employee userDetails = (Employee) auth.getPrincipal();
+                int chefId = userDetails.getId();
                 preparedDishService.confirmDishesCancelled(dishId, quantity, orderId, chefId);
                 return new ResponseEntity("{\"orderId\":" +orderId+"}", HttpStatus.OK);
-        }
-
-        private int getChef() {
-                int chefId;
-                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-                try {
-                        Employee userDetails = (Employee) auth.getPrincipal();
-                        chefId = userDetails.getId();
-                } catch (Exception e) {
-                        logger.error("ERROR: "+e.getMessage());
-                        // TODO throw an appropriate exception!
-                        return 1;
-                }
-                return chefId;
         }
 }

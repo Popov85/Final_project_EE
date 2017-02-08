@@ -7,7 +7,7 @@ $(document).ready(function () {
         "bLengthChange": false,
         "bAutoWidth": false,
         "ajax" : {
-            "url": "/get_menus",
+            "url": "/all/get_menus",
             "type": "POST"
         },
         "columnDefs": [

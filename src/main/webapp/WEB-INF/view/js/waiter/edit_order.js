@@ -105,7 +105,7 @@ $(document).ready(function () {
     });
 
     // Only table and dishes can be changed!!
-    $('#newOrderForm').submit(function (event) {
+    $('#editOrderForm').submit(function (event) {
         var updatedOrder = new Object();
         updatedOrder.id = currentOrder.id;
         updatedOrder.table = $('#table').val();
