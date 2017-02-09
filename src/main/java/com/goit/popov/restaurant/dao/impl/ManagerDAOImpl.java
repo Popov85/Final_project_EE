@@ -4,11 +4,14 @@ import com.goit.popov.restaurant.dao.entity.ManagerDAO;
 import com.goit.popov.restaurant.model.Manager;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 /**
  * Created by Andrey on 11/20/2016.
  */
+@Transactional
 public class ManagerDAOImpl implements ManagerDAO {
 
         @Autowired

@@ -12,6 +12,7 @@ import java.util.List;
 /**
  * Created by Andrey on 28.10.2016.
  */
+@Transactional
 public class IngredientDAOImplJPA implements IngredientDAO {
 
         @Autowired
@@ -20,7 +21,6 @@ public class IngredientDAOImplJPA implements IngredientDAO {
         @Autowired
         private StoreHouseDAO storeHouseDAO;
 
-        @Transactional
         @Override
         public int insert(Ingredient ingredient) {
                 int key = (int) sessionFactory.getCurrentSession().save(ingredient);
@@ -32,25 +32,21 @@ public class IngredientDAOImplJPA implements IngredientDAO {
                 return key;
         }
 
-        @Transactional
         @Override
         public void update(Ingredient ingredient) {
                 sessionFactory.getCurrentSession().update(ingredient);
         }
 
-        @Transactional
         @Override
         public List<Ingredient> getAll() {
                 return sessionFactory.getCurrentSession().createQuery("select i from Ingredient i").list();
         }
 
-        @Transactional
         @Override
         public Ingredient getById(int id) {
                 return sessionFactory.getCurrentSession().get(Ingredient.class, id);
         }
 
-        @Transactional
         @Override
         public void delete(Ingredient ingredient) {
                 StoreHouse storeHouse = storeHouseDAO.getByIngredient(ingredient);

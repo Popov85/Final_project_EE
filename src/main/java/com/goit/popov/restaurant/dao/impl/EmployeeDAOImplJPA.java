@@ -12,6 +12,7 @@ import java.util.List;
 /**
  * Created by Andrey on 26.10.2016.
  */
+@Transactional
 public class EmployeeDAOImplJPA implements EmployeeDAO {
 
         private SessionFactory sessionFactory;
@@ -20,25 +21,21 @@ public class EmployeeDAOImplJPA implements EmployeeDAO {
                 this.sessionFactory = sessionFactory;
         }
 
-        @Transactional
         @Override
         public int insert(Employee employee) {
                 return (int) sessionFactory.getCurrentSession().save(employee);
         }
 
-        @Transactional
         @Override
         public void update(Employee employee) {
                 sessionFactory.getCurrentSession().update(employee);
         }
 
-        @Transactional
         @Override
         public List<Employee> getAll() {
                 return sessionFactory.getCurrentSession().createQuery("select e from Employee e order by e.id").list();
         }
 
-        @Transactional
         @Override
         public Employee getByName(String name) {
                 Query query = sessionFactory.getCurrentSession().createQuery("select e from Employee e " +
@@ -47,7 +44,6 @@ public class EmployeeDAOImplJPA implements EmployeeDAO {
                 return (Employee) query.uniqueResult();
         }
 
-        @Transactional
         @Override
         public Employee getByLogin(String login) {
                 Query query = sessionFactory.getCurrentSession().createQuery("select e from Employee e " +
@@ -56,7 +52,6 @@ public class EmployeeDAOImplJPA implements EmployeeDAO {
                 return (Employee) query.uniqueResult();
         }
 
-        @Transactional
         @Override
         public Employee getByLoginAndPassword(String login, String password) {
                 Query query = sessionFactory.getCurrentSession().createQuery("select e from Employee e " +
@@ -66,7 +61,6 @@ public class EmployeeDAOImplJPA implements EmployeeDAO {
                 return (Employee) query.uniqueResult();
         }
 
-        @Transactional
         @Override
         public void delete(Employee employee) {
                 sessionFactory.getCurrentSession().delete(employee);

@@ -3,6 +3,7 @@ package com.goit.popov.restaurant.dao.impl;
 import com.goit.popov.restaurant.dao.entity.UnitDAO;
 import com.goit.popov.restaurant.model.Unit;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -13,11 +14,8 @@ import java.util.List;
 @Transactional
 public class UnitDAOImplJPA implements UnitDAO {
 
+        @Autowired
         private SessionFactory sessionFactory;
-
-        public void setSessionFactory(SessionFactory sessionFactory) {
-                this.sessionFactory = sessionFactory;
-        }
 
         @Override
         public List<Unit> getAll() {

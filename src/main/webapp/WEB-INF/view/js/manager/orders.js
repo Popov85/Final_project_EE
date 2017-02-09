@@ -13,6 +13,7 @@ $(document).ready(function () {
                 return moment(data.openedTimeStamp).format('YYYY-MM-DD HH:mm');
             }},
             { "data": null, "name": "closedTimeStamp", "title": "closed time", "render": function(data){
+                if (data.closedTimeStamp==null) return "-";
                 return moment(data.closedTimeStamp).format('YYYY-MM-DD HH:mm');
             }},
             { "data": "table", "name": "table", "title": "table"},

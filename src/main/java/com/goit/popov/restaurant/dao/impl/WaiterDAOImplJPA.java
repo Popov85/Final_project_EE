@@ -4,6 +4,7 @@ import com.goit.popov.restaurant.dao.entity.WaiterDAO;
 import com.goit.popov.restaurant.model.Waiter;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -11,45 +12,37 @@ import java.util.List;
 /**
  * Created by Andrey on 11/5/2016.
  */
+@Transactional
 public class WaiterDAOImplJPA implements WaiterDAO {
 
+        @Autowired
         private SessionFactory sessionFactory;
 
-        public void setSessionFactory(SessionFactory sessionFactory) {
-                this.sessionFactory = sessionFactory;
-        }
-
-        @Transactional
         @Override
         public int insert(Waiter waiter) {
                 return (int) sessionFactory.getCurrentSession().save(waiter);
         }
 
-        @Transactional
         @Override
         public void update(Waiter waiter) {
                 sessionFactory.getCurrentSession().update(waiter);
         }
 
-        @Transactional
         @Override
         public List<Waiter> getAll() {
                 return sessionFactory.getCurrentSession().createQuery("select w from Waiter w").list();
         }
 
-        @Transactional
         @Override
         public Waiter getById(int id) {
                 return sessionFactory.getCurrentSession().get(Waiter.class, id);
         }
 
-        @Transactional
         @Override
         public void delete(Waiter waiter) {
                 sessionFactory.getCurrentSession().delete(waiter);
         }
 
-        @Transactional
         @Override
         public Waiter getByName(String name) {
                 Query query = sessionFactory.getCurrentSession().createQuery("select e from Waiter e " +

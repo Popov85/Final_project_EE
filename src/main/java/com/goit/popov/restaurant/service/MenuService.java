@@ -41,6 +41,10 @@ public class MenuService implements DataTablesListToJSONConvertible<Menu> {
                 menuDAO.update(updatedMenu);
         }
 
+        public void deleteById(int id) {
+                menuDAO.delete(getById(id));
+        }
+
         @Override
         public ArrayNode toJSON(List<Menu> menus) {
                 ObjectMapper mapper = new ObjectMapper();

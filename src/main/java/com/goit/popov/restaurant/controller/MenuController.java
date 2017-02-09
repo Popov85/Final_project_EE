@@ -16,6 +16,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.persistence.PersistenceException;
 import javax.validation.Valid;
 import java.util.Set;
 
@@ -129,5 +131,27 @@ public class MenuController {
                                 HttpStatus.FORBIDDEN);
                 }
                 return new ResponseEntity("{\"Result\": \"Success\"}", HttpStatus.OK);
+        }
+
+        @GetMapping("/admin/delete_menu")
+        public String delete(@RequestParam int menuId, RedirectAttributes ra){
+                try {
+                        menuService.deleteById(menuId);
+                } catch (PersistenceException e) {
+                        ra.addFlashAttribute("status", HttpStatus.FORBIDDEN);
+                        ra.addFlashAttribute("error", "Constraint violation exception deleting menu!");
+                        ra.addFlashAttribute("message", "Constraint violation error!");
+                        logger.error("Constraint violation exception deleting employee: "+e.getMessage()+
+                                "/ exception name is: "+ e.getClass());
+                        return "redirect:/error";
+                } catch (Throwable e) {
+                        ra.addFlashAttribute("status", HttpStatus.FORBIDDEN);
+                        ra.addFlashAttribute("error", e.getMessage());
+                        ra.addFlashAttribute("message", "Cannot delete menu for some reason!");
+                        logger.error("Unexpected exception deleting menu: "+e.getMessage()+
+                                "/ exception name is: "+ e.getClass());
+                        return "redirect:/error";
+                }
+                return "redirect:/admin/menus";
         }
 }

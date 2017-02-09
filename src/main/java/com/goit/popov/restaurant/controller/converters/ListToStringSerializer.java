@@ -22,6 +22,8 @@ public class ListToStringSerializer extends JsonSerializer<List<Object>> {
         public void serialize(List<Object> value, JsonGenerator gen, SerializerProvider serializers) throws IOException, JsonProcessingException {
                 try {
                         if (!value.isEmpty()) {
+                                // TODO {insert a link to a list of menus}
+                                if (value.size()>3) {gen.writeString("Many"); return;}
                                 StringBuilder sb = new StringBuilder();
                                 for (Object o : value) {
                                         int id = ((Menu) o).getId();

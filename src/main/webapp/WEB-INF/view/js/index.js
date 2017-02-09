@@ -26,7 +26,7 @@ $(document).ready(function () {
             { "data": "category", "name": "category", "title": "Category"},
             { "data": "weight", "name": "weight", "title": "Weight(g)"},
             { "data": "price", "name": "price", "title": "Price($)"},
-            { "data": "menus", "name": "menus", "title": "Menus"},
+            { "data": "menus", "name": "menus", "title": "Menus", "sortable": false},
             { "data": null, "title": "Details", "sortable": false, "render": function(data){
                 return '<a href="/all/show_ingredients?id=' + data.id + '"><input type="button" class="btn btn-default" value="Show"/></a>';
             }
