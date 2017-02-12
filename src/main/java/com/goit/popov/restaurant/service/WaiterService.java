@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.PersistenceException;
 import java.util.List;
 
-
 /**
  * Created by Andrey on 11/13/2016.
  */

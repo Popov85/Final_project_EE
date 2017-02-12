@@ -114,14 +114,14 @@ public class EmployeeController {
                                 "/ exception name is: "+ e.getClass());
                         return "jsp/manager/new_employee";
                 }
-                logger.info("Successfully added employee: "+employee);
+                //logger.info("Successfully added employee: "+employee);
                 return "redirect:/admin/employees";
         }
 
         @RequestMapping(value = "/admin/edit_employee/{id}", method = RequestMethod.GET)
         public String showEmployeeEditForm(@PathVariable("id") int id, ModelMap map, HttpSession session){
                 Employee employee = employeeService.getById(id);
-                logger.info("Updating class: "+employee.getClass()+" employee: "+employee);
+                logger.info("Editing class: "+employee.getClass()+" employee: "+employee);
                 map.addAttribute("employee", employee);
                 map.addAttribute("positions", populatePositions());
                 // It needs to compare the new and the previous positions
@@ -134,6 +134,7 @@ public class EmployeeController {
         public String updateEmployee(@Valid @ModelAttribute("employee") Employee employee, BindingResult result,
                                      @RequestParam("position") String newPosition, HttpSession session, Model model,
                                      @RequestParam("photo") MultipartFile photo){
+                logger.info("Updating class: "+employee.getClass()+" employee: "+employee);
                 if (result.hasErrors()) {
                         logger.error("# of errors is: "+result.getFieldErrorCount());
                         return "jsp/manager/update_employee";

@@ -4,8 +4,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
+import javax.annotation.PostConstruct;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -24,11 +23,23 @@ import java.util.Date;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Employee {
 
+        /*@PostConstruct
+        public void init(){
+                //ApplicationContext applicationContext = new ClassPathXmlApplicationContext("security.xml");
+                BCryptPasswordEncoder passwordEncoder =new BCryptPasswordEncoder();//(BCryptPasswordEncoder) applicationContext.getBean("encoder");
+                this.passwordEncoder = passwordEncoder;
+        }
+
+        private BCryptPasswordEncoder passwordEncoder;*/
+
         public Employee() {}
 
         public Employee(int id, String login, String password, String name,
                         Date dob, String phone, Position position, BigDecimal salary, byte[] photo) {
-                PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+                BCryptPasswordEncoder passwordEncoder =new BCryptPasswordEncoder();
+                System.out.println("encoder: "+passwordEncoder);
+
                 this.id = id;
                 this.login = login;
                 this.password = (password.length()>=60 ? password : passwordEncoder.encode(password));

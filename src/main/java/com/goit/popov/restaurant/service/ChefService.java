@@ -39,7 +39,7 @@ public class ChefService implements StaffService<Chef> {
                                 " the employee has references!");
                 }
                 chefDAO.insert(chef);
-                logger.info("Re-inserted chef: "+chef);
+                logger.info("Re-inserted/Updated chef: "+chef);
         }
 
         @Override

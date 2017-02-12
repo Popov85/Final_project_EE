@@ -5,7 +5,6 @@ import com.goit.popov.restaurant.dao.entity.EmployeeDAO;
 import com.goit.popov.restaurant.model.Employee;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.persistence.PersistenceException;
 import java.util.List;
@@ -17,21 +16,22 @@ public class EmployeeService implements StaffService<Employee> {
 
         private static final Logger logger = (Logger) LoggerFactory.getLogger(EmployeeService.class);
 
-        private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        @Autowired
+        private PasswordEncoder encoder;
 
         @Autowired
         protected EmployeeDAO employeeDAO;
 
         @Override
         public long insert(Employee employee) {
-                employee.setPassword(passwordEncoder.encode(employee.getPassword()));
+                employee.setPassword(encoder.encode(employee.getPassword()));
                 return employeeDAO.insert(employee);
         }
 
         @Override
         public void update(Employee employee) {
                 employee.setPassword(employee.getPassword().length()>=60 ? employee.getPassword() :
-                        passwordEncoder.encode(employee.getPassword()));
+                        encoder.encode(employee.getPassword()));
                 employeeDAO.update(employee);
         }
 
@@ -43,8 +43,10 @@ public class EmployeeService implements StaffService<Employee> {
                         throw new PersistenceException("Cannot change the position to employee," +
                                 " the employee has references!");
                 }
+                employee.setPassword(employee.getPassword().length()>=60 ? employee.getPassword() :
+                        encoder.encode(employee.getPassword()));
                 employeeDAO.insert(employee);
-                logger.info("Re-inserted employee: "+employee);
+                logger.info("Updated employee: "+employee);
         }
 
         @Override
