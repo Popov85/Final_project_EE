@@ -1,6 +1,5 @@
-package com.goit.popov.restaurant.dao.entity;
+package com.goit.popov.restaurant.dao;
 
-import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Menu;
 
 /**

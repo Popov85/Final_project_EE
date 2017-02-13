@@ -1,7 +1,6 @@
 package com.goit.popov.restaurant.dao;
 
 import ch.qos.logback.classic.Logger;
-import com.goit.popov.restaurant.dao.entity.PositionDAO;
 import com.goit.popov.restaurant.model.Position;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

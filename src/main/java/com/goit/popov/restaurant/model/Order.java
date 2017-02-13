@@ -53,7 +53,7 @@ public class Order {
         @JsonIgnore
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "EMP_ID")
-        private Waiter waiter;
+        private Employee waiter;
 
         @JsonIgnore
         @ElementCollection(fetch = FetchType.EAGER)
@@ -107,7 +107,7 @@ public class Order {
                 return table;
         }
 
-        public Waiter getWaiter() {
+        public Employee getWaiter() {
                 return waiter;
         }
 
@@ -135,7 +135,7 @@ public class Order {
                 this.table = table;
         }
 
-        public void setWaiter(Waiter waiter) {
+        public void setWaiter(Employee waiter) {
                 this.waiter = waiter;
         }
 

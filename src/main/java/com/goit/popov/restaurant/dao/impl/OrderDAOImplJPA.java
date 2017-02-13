@@ -1,7 +1,7 @@
 package com.goit.popov.restaurant.dao.impl;
 
 import ch.qos.logback.classic.Logger;
-import com.goit.popov.restaurant.dao.entity.OrderDAO;
+import com.goit.popov.restaurant.dao.OrderDAO;
 import com.goit.popov.restaurant.model.*;
 import com.goit.popov.restaurant.model.Order;
 import com.goit.popov.restaurant.service.dataTables.DataTablesInputExtendedDTO;
@@ -16,10 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TemporalType;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -96,7 +92,7 @@ public class OrderDAOImplJPA implements OrderDAO {
               return ((long) sessionFactory.getCurrentSession().createQuery("select count(*) from Order").uniqueResult());
         }
 
-        public long countWaiter(Waiter waiter) {
+        public long countWaiter(Employee waiter) {
             return ((long) sessionFactory.getCurrentSession().createQuery("select count(*) from Order o where o.waiter=:waiter")
                     .setParameter("waiter", waiter)
                     .uniqueResult());
@@ -114,7 +110,7 @@ public class OrderDAOImplJPA implements OrderDAO {
 
         @Override
         public List<Order> getAllWaiterToday(int waiterId) {
-                Waiter waiter = new Waiter();
+                Employee waiter = new Employee();
                 waiter.setId(waiterId);
                 Calendar today = Calendar.getInstance();
                 today.set(Calendar.HOUR_OF_DAY, 0);

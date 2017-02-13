@@ -1,8 +1,8 @@
-package com.goit.popov.restaurant.dao.entity;
+package com.goit.popov.restaurant.dao;
 
+import com.goit.popov.restaurant.model.Employee;
 import com.goit.popov.restaurant.model.Order;
 import com.goit.popov.restaurant.model.PreparedDish;
-import com.goit.popov.restaurant.model.Waiter;
 import com.goit.popov.restaurant.service.dataTables.DataTablesInputExtendedDTO;
 import java.util.List;
 
@@ -16,7 +16,7 @@ public interface OrderDAO extends GenericDAO<Order> {
         List<Order> getAllOpened();
 
         long count();
-        long countWaiter(Waiter waiter);
+        long countWaiter(Employee waiter);
 
         List<Order> getAllToday();
         List<Order> getAllWaiterToday(int waiterId);

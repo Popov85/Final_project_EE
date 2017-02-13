@@ -1,10 +1,9 @@
 package com.goit.popov.restaurant.model;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import javax.annotation.PostConstruct;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -14,162 +13,148 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * Employee class
- * @Author: Andrey P.
- * @version 1.0
+ * Created by Andrey on 2/12/2017.
  */
 @Entity
 @Table(name = "employee")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Employee {
-
-        /*@PostConstruct
-        public void init(){
-                //ApplicationContext applicationContext = new ClassPathXmlApplicationContext("security.xml");
-                BCryptPasswordEncoder passwordEncoder =new BCryptPasswordEncoder();//(BCryptPasswordEncoder) applicationContext.getBean("encoder");
-                this.passwordEncoder = passwordEncoder;
-        }
-
-        private BCryptPasswordEncoder passwordEncoder;*/
-
-        public Employee() {}
-
-        public Employee(int id, String login, String password, String name,
-                        Date dob, String phone, Position position, BigDecimal salary, byte[] photo) {
-
-                BCryptPasswordEncoder passwordEncoder =new BCryptPasswordEncoder();
-                System.out.println("encoder: "+passwordEncoder);
-
-                this.id = id;
-                this.login = login;
-                this.password = (password.length()>=60 ? password : passwordEncoder.encode(password));
-                this.name = name;
-                this.dob=dob;
-                this.phone=phone;
-                this.position = position;
-                this.salary=salary;
-                this.photo = photo;
-        }
 
         @Id
         @GeneratedValue(generator = "increment")
         @GenericGenerator(name = "increment", strategy = "increment")
         @Column(name = "EMP_ID")
-        protected int id;
+        private int id;
 
         @NotEmpty(message = "Login is a required field")
         @Size(min=4, max=25, message = "Login must have from 4 to 25 characters!")
         @Column(name = "EMP_LOGIN", unique=true)
-        protected String login;
+        private String login;
 
         @JsonIgnore
         @NotEmpty(message = "Password is a required field")
         @Size(min=8, max=60, message = "Password must have from 8 to 16 characters!")
-        @Column(name = "EMP_PASSWORD", unique=true)
-        protected String password;
+        @Column(name = "EMP_PASSWORD")
+        private String password;
 
         @NotEmpty(message = "Please, provide name for an employee!")
         @Size(min=5, max=50)
         @Column(name = "EMP_NAME")
-        protected String name;
+        private String name;
 
         @NotNull(message = "DOB field must not be empty!")
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         @Past(message = "DOB must be a date in the past!")
         @Column(name = "DOB")
-        protected Date dob;
+        private Date dob;
 
         @NotEmpty(message = "Phone field must not be empty")
         @Column(name = "PHONE", unique=true)
-        protected String phone;
+        private String phone;
 
         @NotNull(message = "Please, appoint a position for an employee")
         @ManyToOne
         @JoinColumn(name = "POS_ID")
-        protected Position position;
+        private Position position;
 
         @NotNull(message = "Please, provide salary")
         @Min(value = 1000, message = "Minimal salary is $1000")
         @Column(name = "SALARY")
-        protected BigDecimal salary;
+        private BigDecimal salary;
 
         @JsonIgnore
         @Column(name = "PHOTO")
-        protected byte[] photo;
+        private byte[] photo;
 
-        @Transient
-        private String role = "ROLE_EMPLOYEE";
+        /*
+        @OneToMany(fetch = FetchType.LAZY, mappedBy = "waiter")
+        private Set<Order> orders;
 
-        public String getRole() {
-                return role;
+        public Optional getOrders() {
+                return Optional.ofNullable(orders);
         }
+
+        public void setOrders(Set<Order> orders) {
+                this.orders = orders;
+        }
+
+        @OneToMany(fetch = FetchType.LAZY, mappedBy = "chef")
+        private Set<PreparedDish> preparedDishes;
+
+        public Optional getPreparedDishes() {
+                return Optional.ofNullable(preparedDishes);
+        }
+
+        public void setPreparedDishes(Set<PreparedDish> preparedDishes) {
+                this.preparedDishes = preparedDishes;
+        }
+        */
 
         public int getId() {
                 return id;
-        }
-
-        public String getLogin() {
-                return login;
-        }
-
-        public String getPassword() {
-                return password;
-        }
-
-        public String getName() {
-                return name;
-        }
-
-        public Date getDob() {
-                return dob;
-        }
-
-        public String getPhone() {
-                return phone;
-        }
-
-        public Position getPosition() {
-                return position;
-        }
-
-        public BigDecimal getSalary() {
-                return salary;
-        }
-
-        public byte[] getPhoto() {
-                return photo;
         }
 
         public void setId(int id) {
                 this.id = id;
         }
 
-        public void setName(String name) {
-                this.name = name;
+        public String getLogin() {
+                return login;
         }
 
         public void setLogin(String login) {
                 this.login = login;
         }
 
+        public String getPassword() {
+                return password;
+        }
+
         public void setPassword(String password) {
                 this.password = password;
+        }
+
+        public String getName() {
+                return name;
+        }
+
+        public void setName(String name) {
+                this.name = name;
+        }
+
+        public Date getDob() {
+                return dob;
         }
 
         public void setDob(Date dob) {
                 this.dob = dob;
         }
 
+        public String getPhone() {
+                return phone;
+        }
+
         public void setPhone(String phone) {
                 this.phone = phone;
+        }
+
+        public Position getPosition() {
+                return position;
         }
 
         public void setPosition(Position position) {
                 this.position = position;
         }
 
+        public BigDecimal getSalary() {
+                return salary;
+        }
+
         public void setSalary(BigDecimal salary) {
                 this.salary = salary;
+        }
+
+        public byte[] getPhoto() {
+                return photo;
         }
 
         public void setPhoto(byte[] photo) {
@@ -195,7 +180,6 @@ public class Employee {
                         ", phone='" + phone + '\'' +
                         ", position=" + position +
                         ", salary=" + salary +
-                        ", role=" + role +
                         '}';
         }
 }

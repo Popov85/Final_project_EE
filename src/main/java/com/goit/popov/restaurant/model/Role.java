@@ -9,22 +9,18 @@ import javax.validation.constraints.Size;
  * Created by Andrey on 13.02.2017.
  */
 @Entity
-@Table(name = "emp_position")
-public class Position {
+@Table(name = "emp_role")
+public class Role {
         @Id
         @GeneratedValue(generator = "increment")
         @GenericGenerator(name = "increment", strategy = "increment")
-        @Column(name = "POS_ID")
+        @Column(name = "R_ID")
         private int id;
 
-        @NotEmpty(message = "Position cannot be empty!")
-        @Size(min=2, max=30, message = "Position has from 2 to 30 characters")
-        @Column(name = "POS_NAME", unique=true)
+        @NotEmpty(message = "Role cannot be empty!")
+        @Size(min=2, max=30, message = "Role has from 2 to 30 characters")
+        @Column(name = "R_NAME")
         private String name;
-
-        @OneToOne(fetch = FetchType.EAGER)
-        @JoinColumn(name="R_ID", unique=false, nullable=false, updatable=false)
-        private Role role;
 
         public int getId() {
                 return id;
@@ -42,20 +38,11 @@ public class Position {
                 this.name = name;
         }
 
-        public Role getRole() {
-                return role;
-        }
-
-        public void setRole(Role role) {
-                this.role = role;
-        }
-
         @Override
         public String toString() {
-                return "Position{" +
+                return "Role{" +
                         "id=" + id +
                         ", name='" + name + '\'' +
-                        ", role=" + role +
                         '}';
         }
 }

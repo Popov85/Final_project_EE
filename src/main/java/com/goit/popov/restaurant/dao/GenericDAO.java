@@ -1,4 +1,4 @@
-package com.goit.popov.restaurant.dao.entity;
+package com.goit.popov.restaurant.dao;
 
 import java.util.List;
 

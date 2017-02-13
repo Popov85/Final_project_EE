@@ -1,6 +1,6 @@
 package com.goit.popov.restaurant.service;
 
-import com.goit.popov.restaurant.dao.entity.PreparedDishHistoryDAO;
+import com.goit.popov.restaurant.dao.PreparedDishHistoryDAO;
 import com.goit.popov.restaurant.model.Order;
 import com.goit.popov.restaurant.service.dataTables.DataTablesListToJSONConvertible;
 import com.goit.popov.restaurant.service.dataTables.DataTablesObjectToJSONConvertible;

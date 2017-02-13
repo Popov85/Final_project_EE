@@ -29,7 +29,7 @@ public class PreparedDish {
 
         @ManyToOne(fetch = FetchType.EAGER)
         @JoinColumn(name = "CHEF_ID")
-        private Chef chef;
+        private Employee chef;
 
         @JsonIgnore
         @ManyToOne(fetch = FetchType.EAGER)
@@ -71,7 +71,7 @@ public class PreparedDish {
                 this.dish = dish;
         }
 
-        public void setChef(Chef chef) {
+        public void setChef(Employee chef) {
                 this.chef = chef;
         }
 

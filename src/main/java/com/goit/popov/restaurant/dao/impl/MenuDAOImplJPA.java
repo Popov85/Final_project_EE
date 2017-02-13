@@ -1,6 +1,6 @@
 package com.goit.popov.restaurant.dao.impl;
 
-import com.goit.popov.restaurant.dao.entity.MenuDAO;
+import com.goit.popov.restaurant.dao.MenuDAO;
 import com.goit.popov.restaurant.model.Menu;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;

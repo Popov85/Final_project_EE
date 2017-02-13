@@ -67,7 +67,7 @@
         <property name="salary" value = "1000"/>
     </bean>
 
-    <bean id="expectedWaiter" class="com.goit.popov.restaurant.model.Waiter">
+    <bean id="expectedWaiter" class="com.goit.popov.restaurant.model.Employee">
         <property name="login" value="TestLogin"/>
         <property name="password" value="TestPassword"/>
         <property name="name" value="TestWaiter"/>
@@ -79,15 +79,9 @@
         <property name="phone" value="+380630000000"/>
         <property name="position" ref="expectedPosition"/>
         <property name="salary" value = "8000"/>
-        <property name="orders">
-            <list>
-                <ref bean="expectedOrder1"/>
-                <ref bean="expectedOrder2"/>
-            </list>
-        </property>
     </bean>
 
-    <bean id="expectedWaiter1" class="com.goit.popov.restaurant.model.Waiter">
+    <bean id="expectedWaiter1" class="com.goit.popov.restaurant.model.Employee">
         <property name="login" value="TestLogin"/>
         <property name="password" value="TestPassword"/>
         <property name="name" value="TestWaiter"/>
@@ -230,11 +224,8 @@
 
     <bean id="positionDAO" class="com.goit.popov.restaurant.dao.impl.PositionDAOImplJPA"/>
     <bean id="employeeDAO" class="com.goit.popov.restaurant.dao.impl.EmployeeDAOImplJPA"/>
-    <bean id="waiterDAO" class="com.goit.popov.restaurant.dao.impl.WaiterDAOImplJPA"/>
     <bean id="dishDAO" class = "com.goit.popov.restaurant.dao.impl.DishDAOImplJPA"/>
     <bean id="ingredientDAO" class="com.goit.popov.restaurant.dao.impl.IngredientDAOImplJPA"/>
     <bean id="orderDAO" class = "com.goit.popov.restaurant.dao.impl.OrderDAOImplJPA"/>
-
-
 
 </beans>

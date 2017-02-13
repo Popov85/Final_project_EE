@@ -4,7 +4,7 @@ import ch.qos.logback.classic.Logger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.goit.popov.restaurant.dao.entity.PreparedDishHistoryDAO;
+import com.goit.popov.restaurant.dao.PreparedDishHistoryDAO;
 import com.goit.popov.restaurant.model.*;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class PreparedDishServiceImpl implements PreparedDishService {
         private DishServiceImpl dishService;
 
         @Autowired
-        private ChefService chefService;
+        private EmployeeService chefService;
 
         @Autowired
         private Service service;
@@ -112,7 +112,7 @@ public class PreparedDishServiceImpl implements PreparedDishService {
         private Set<PreparedDish> createPreparedDishes(int dishId, int quantity, int orderId, int chefId, boolean isCancelled) {
                 Dish dish = dishService.getById(dishId);
                 Order order = orderService.getById(orderId);
-                Chef chef = chefService.getById(chefId);
+                Employee chef = chefService.getById(chefId);
                 Set<PreparedDish> preparedDishes = new HashSet<>();
                 for (int i=0; i<quantity; i++) {
                         PreparedDish preparedDish = new PreparedDish();

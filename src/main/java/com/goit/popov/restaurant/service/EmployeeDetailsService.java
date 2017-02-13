@@ -28,7 +28,7 @@ public class EmployeeDetailsService implements UserDetailsService {
                 Employee employee = employeeService.getEmployeeByLogin(username);
                 if (employee!=null) {
                         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-                        authorities.add( new SimpleGrantedAuthority(employee.getRole()));
+                        authorities.add( new SimpleGrantedAuthority(employee.getPosition().getRole().getName()));
                         UserDetails ud  = new com.goit.popov.restaurant.service.authentification.Employee(
                                 employee.getName(), employee.getPassword(),
                                 true, true, true, true, authorities, employee.getId());

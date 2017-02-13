@@ -1,6 +1,6 @@
 package com.goit.popov.restaurant.dao.impl;
 
-import com.goit.popov.restaurant.dao.entity.PositionDAO;
+import com.goit.popov.restaurant.dao.PositionDAO;
 import com.goit.popov.restaurant.model.Position;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;

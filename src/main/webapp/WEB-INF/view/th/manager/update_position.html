@@ -21,6 +21,8 @@
             <label class="control-label" for="name" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Incorrect data</label>
         </div>
 
+        <p class="label label-danger" th:text="${error}"/>
+
         <div class="form-group">
             <div class="btn-group btn-group-justified">
                 <div class="btn-group">

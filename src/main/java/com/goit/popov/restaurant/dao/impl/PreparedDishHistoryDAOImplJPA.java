@@ -1,7 +1,7 @@
 package com.goit.popov.restaurant.dao.impl;
 
 import ch.qos.logback.classic.Logger;
-import com.goit.popov.restaurant.dao.entity.PreparedDishHistoryDAO;
+import com.goit.popov.restaurant.dao.PreparedDishHistoryDAO;
 import com.goit.popov.restaurant.model.*;
 import org.hibernate.SessionFactory;
 import org.slf4j.LoggerFactory;

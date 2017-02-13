@@ -1,7 +1,6 @@
 package com.goit.popov.restaurant.dao;
 
 import ch.qos.logback.classic.Logger;
-import com.goit.popov.restaurant.dao.entity.DishDAO;
 import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Ingredient;
 import com.goit.popov.restaurant.model.Unit;

@@ -3,7 +3,7 @@ package com.goit.popov.restaurant.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.goit.popov.restaurant.dao.entity.DishDAO;
+import com.goit.popov.restaurant.dao.DishDAO;
 import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Ingredient;
 import com.goit.popov.restaurant.service.dataTables.DataTablesInputExtendedDTO;

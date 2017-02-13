@@ -1,6 +1,6 @@
 package com.goit.popov.restaurant.service;
 
-import com.goit.popov.restaurant.dao.entity.IngredientDAO;
+import com.goit.popov.restaurant.dao.IngredientDAO;
 import com.goit.popov.restaurant.model.Ingredient;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;

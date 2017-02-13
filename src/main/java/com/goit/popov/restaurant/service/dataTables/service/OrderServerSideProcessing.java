@@ -1,6 +1,6 @@
 package com.goit.popov.restaurant.service.dataTables.service;
 
-import com.goit.popov.restaurant.dao.entity.OrderDAO;
+import com.goit.popov.restaurant.dao.OrderDAO;
 import com.goit.popov.restaurant.model.Order;
 import com.goit.popov.restaurant.service.dataTables.DataTablesInputExtendedDTO;
 import com.goit.popov.restaurant.service.dataTables.DataTablesServiceServerSideSearch;

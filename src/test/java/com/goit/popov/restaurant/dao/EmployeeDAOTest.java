@@ -1,7 +1,6 @@
 package com.goit.popov.restaurant.dao;
 
 import ch.qos.logback.classic.Logger;
-import com.goit.popov.restaurant.dao.entity.EmployeeDAO;
 import com.goit.popov.restaurant.model.Employee;
 import com.goit.popov.restaurant.model.Position;
 import org.junit.After;

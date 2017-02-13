@@ -1,7 +1,7 @@
 package com.goit.popov.restaurant.dao.impl;
 
-import com.goit.popov.restaurant.dao.entity.IngredientDAO;
-import com.goit.popov.restaurant.dao.entity.StoreHouseDAO;
+import com.goit.popov.restaurant.dao.IngredientDAO;
+import com.goit.popov.restaurant.dao.StoreHouseDAO;
 import com.goit.popov.restaurant.model.Ingredient;
 import com.goit.popov.restaurant.model.StoreHouse;
 import org.hibernate.SessionFactory;

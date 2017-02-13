@@ -1,9 +1,9 @@
 package com.goit.popov.restaurant.service.dataTables.service;
 
-import com.goit.popov.restaurant.dao.entity.OrderDAO;
-import com.goit.popov.restaurant.dao.entity.WaiterDAO;
+import com.goit.popov.restaurant.dao.EmployeeDAO;
+import com.goit.popov.restaurant.dao.OrderDAO;
+import com.goit.popov.restaurant.model.Employee;
 import com.goit.popov.restaurant.model.Order;
-import com.goit.popov.restaurant.model.Waiter;
 import com.goit.popov.restaurant.service.dataTables.DataTablesInputExtendedDTO;
 import com.goit.popov.restaurant.service.dataTables.DataTablesServiceServerSideSearchUniversal;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +19,11 @@ public class OrderByWaiterServerSideProcessing extends DataTablesServiceServerSi
         private OrderDAO orderDAO;
 
         @Autowired
-        private WaiterDAO waiterDAO;
+        private EmployeeDAO waiterDAO;
 
         @Override
         protected long count(String[] params) {
-                Waiter waiter = waiterDAO.getById(Integer.parseInt(params[0]));
+                Employee waiter = waiterDAO.getById(Integer.parseInt(params[0]));
                 return orderDAO.countWaiter(waiter);
         }
 

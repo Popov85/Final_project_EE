@@ -3,7 +3,6 @@ package com.goit.popov.restaurant.controller;
 import ch.qos.logback.classic.Logger;
 import com.goit.popov.restaurant.model.*;
 import com.goit.popov.restaurant.service.EmployeeService;
-import com.goit.popov.restaurant.service.StaffService;
 import com.goit.popov.restaurant.service.PositionService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +41,7 @@ public class EmployeeController {
         private static final String DELETION_FAILURE_MESSAGE = "Failed to delete an employee: id =";
 
         private EmployeeService employeeService;
+
         private PositionService positionService;
 
         @Autowired
@@ -94,15 +94,8 @@ public class EmployeeController {
                         logger.error("# of errors is: "+result.getFieldErrorCount());
                         return "jsp/manager/new_employee";
                 }
-                StaffService staffService;
-                if ((position.equals("Waiter")) || (position.equals("Chef"))
-                        || (position.equals("Manager"))) {
-                        staffService = (StaffService) applicationContext.getBean(position);
-                } else {
-                        staffService = (StaffService) applicationContext.getBean("Employee");
-                }
                 try {
-                        staffService.insert(employee);
+                        employeeService.insert(employee);
                 } catch (DataIntegrityViolationException e) {
                         model.addAttribute("constraintViolationError", NON_UNIQUE_CONSTRAINT_MESSAGE);
                         logger.error("Constraint violation exception inserting employee: "+e.getMessage()+
@@ -124,8 +117,8 @@ public class EmployeeController {
                 logger.info("Editing class: "+employee.getClass()+" employee: "+employee);
                 map.addAttribute("employee", employee);
                 map.addAttribute("positions", populatePositions());
-                // It needs to compare the new and the previous positions
-                session.setAttribute("position",employee.getPosition().getName());
+
+                //session.setAttribute("position",employee.getPosition().getName());
                 session.setAttribute("file",employee.getPhoto());
                 return "jsp/manager/update_employee";
         }
@@ -139,23 +132,10 @@ public class EmployeeController {
                         logger.error("# of errors is: "+result.getFieldErrorCount());
                         return "jsp/manager/update_employee";
                 }
-                String previousPosition = (String) session.getAttribute("position");
-                StaffService staffService;
-                if ((newPosition.equals("Waiter")) || (newPosition.equals("Chef"))
-                        || (newPosition.equals("Manager"))) {
-                        staffService = (StaffService) applicationContext.getBean(newPosition);
-                } else {
-                        staffService = (StaffService) applicationContext.getBean("Employee");
-                }
+                //String previousPosition = (String) session.getAttribute("position");
                 if (photo.isEmpty()) employee.setPhoto((byte[]) session.getAttribute("file"));
                 try {
-                        if (!previousPosition.equals(newPosition)) {
-                                logger.info("Position changed! Previous was: "+previousPosition+
-                                                "/ new position is: "+newPosition);
-                                staffService.updateThroughDelete(employee);
-                        } else {
-                                staffService.update(employee);
-                        }
+                        employeeService.update(employee);
                 } catch (DataIntegrityViolationException e) {
                         model.addAttribute("constraintViolationError", NON_UNIQUE_CONSTRAINT_MESSAGE);
                         logger.error("Constraint violation exception updating employee: "+e.getMessage()+

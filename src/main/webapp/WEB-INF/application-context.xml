@@ -7,11 +7,14 @@
 
     <bean id = "employeeService" class="com.goit.popov.restaurant.service.EmployeeService"/>
     <bean id="employeeDAO" class="com.goit.popov.restaurant.dao.impl.EmployeeDAOImplJPA"/>
-    <bean id="waiterDAO" class="com.goit.popov.restaurant.dao.impl.WaiterDAOImplJPA"/>
-    <bean id="chefDAO" class="com.goit.popov.restaurant.dao.impl.ChefDAOImplJPA"/>
-    <bean id="managerDAO" class="com.goit.popov.restaurant.dao.impl.ManagerDAOImpl"/>
     <bean id = "positionService" class="com.goit.popov.restaurant.service.PositionService"/>
     <bean id="positionDAO" class="com.goit.popov.restaurant.dao.impl.PositionDAOImplJPA"/>
+
+    <bean id="defaultRole" class="com.goit.popov.restaurant.model.Role">
+        <property name="id" value="4"/>
+        <property name="name" value="ROLE_EMPLOYEE"/>
+    </bean>
+
 
     <bean id="menuDAO" class="com.goit.popov.restaurant.dao.impl.MenuDAOImplJPA"/>
     <bean id="menuService" class="com.goit.popov.restaurant.service.MenuService"/>
@@ -35,11 +38,6 @@
     <bean id = "stockService" class="com.goit.popov.restaurant.service.StockServiceImpl"/>
 
     <bean id = "service" class="com.goit.popov.restaurant.service.Service"/>
-
-    <bean id = "Waiter" class = "com.goit.popov.restaurant.service.WaiterService"/>
-    <bean id = "Chef" class = "com.goit.popov.restaurant.service.ChefService"/>
-    <bean id = "Manager" class = "com.goit.popov.restaurant.service.ManagerService"/>
-    <bean id = "Employee" class = "com.goit.popov.restaurant.service.EmployeeService"/>
 
     <bean id = "DishServerSideProcessing" class = "com.goit.popov.restaurant.service.dataTables.service.DishServerSideProcessing"/>
     <bean id = "DishServerSideDAOProcessing" class = "com.goit.popov.restaurant.service.dataTables.dao.DishServerSideDAOProcessing"/>

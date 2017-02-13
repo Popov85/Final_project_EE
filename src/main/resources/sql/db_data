@@ -1,7 +1,15 @@
+INSERT INTO emp_role VALUES
+  (1, 'ROLE_ADMIN'),
+  (2, 'ROLE_WAITER'),
+  (3, 'ROLE_CHEF'),
+  (4, 'ROLE_EMPLOYEE');
+
 INSERT INTO emp_position VALUES
-  (1, 'Manager'),
-  (2, 'Chef'),
-  (3, 'Waiter');
+  (1, 'Manager', 1),
+  (2, 'Chef', 3),
+  (3, 'Waiter', 2),
+  (4, 'Cleaner', 4),
+  (5, 'Bouncer', 4);
 
 INSERT INTO employee VALUES
 (1, 'stivens','pT9k14Yf', 'Mr. Stivens', '1985-08-11', '+380661111111', 12000, null, 2, 'Chef'),

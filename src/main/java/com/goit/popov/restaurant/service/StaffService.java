@@ -10,7 +10,6 @@ import java.util.List;
 public interface StaffService<T extends Employee> {
         long insert(Employee employee);
         void update(Employee employee);
-        void updateThroughDelete(Employee employee) throws PersistenceException;
         void delete(T employee);
         void deleteById(int id);
         T getById(int id);

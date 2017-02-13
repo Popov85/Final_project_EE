@@ -4,7 +4,7 @@ import ch.qos.logback.classic.Logger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.goit.popov.restaurant.dao.entity.OrderDAO;
+import com.goit.popov.restaurant.dao.OrderDAO;
 import com.goit.popov.restaurant.model.*;
 import com.goit.popov.restaurant.service.dataTables.DataTablesInputExtendedDTO;
 import com.goit.popov.restaurant.service.dataTables.DataTablesOutputDTOUniversal;
@@ -124,7 +124,7 @@ public class OrderServiceImplFast implements OrderService {
         }
 
         @Override
-        public long countWaiter(Waiter waiter) {
+        public long countWaiter(Employee waiter) {
                 return orderDAO.countWaiter(waiter);
         }
 

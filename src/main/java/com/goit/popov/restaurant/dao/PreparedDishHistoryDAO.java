@@ -1,10 +1,8 @@
-package com.goit.popov.restaurant.dao.entity;
+package com.goit.popov.restaurant.dao;
 
 import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Order;
 import com.goit.popov.restaurant.model.PreparedDish;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Andrey on 10/14/2016.

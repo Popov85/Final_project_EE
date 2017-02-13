@@ -1,12 +1,11 @@
 package com.goit.popov.restaurant.service;
 
 import ch.qos.logback.classic.Logger;
-import com.goit.popov.restaurant.dao.entity.EmployeeDAO;
+import com.goit.popov.restaurant.dao.EmployeeDAO;
 import com.goit.popov.restaurant.model.Employee;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import javax.persistence.PersistenceException;
 import java.util.List;
 
 /**
@@ -33,20 +32,6 @@ public class EmployeeService implements StaffService<Employee> {
                 employee.setPassword(employee.getPassword().length()>=60 ? employee.getPassword() :
                         encoder.encode(employee.getPassword()));
                 employeeDAO.update(employee);
-        }
-
-        @Override
-        public void updateThroughDelete(Employee employee) throws PersistenceException {
-                try {
-                        delete(employee);
-                } catch (PersistenceException e) {
-                        throw new PersistenceException("Cannot change the position to employee," +
-                                " the employee has references!");
-                }
-                employee.setPassword(employee.getPassword().length()>=60 ? employee.getPassword() :
-                        encoder.encode(employee.getPassword()));
-                employeeDAO.insert(employee);
-                logger.info("Updated employee: "+employee);
         }
 
         @Override
