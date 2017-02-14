@@ -3,7 +3,6 @@ package com.goit.popov.restaurant.model;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
-
 import javax.persistence.*;
 
 /**
@@ -16,18 +15,18 @@ public class Unit {
         @GeneratedValue(generator = "increment")
         @GenericGenerator(name = "increment", strategy = "increment")
         @Column(name = "U_ID")
-        protected int id;
+        protected Long id;
 
         @NotEmpty(message = "Please, provide name for a unit")
         @Length(min = 1, max = 15)
         @Column(name = "U_NAME")
         protected String name;
 
-        public int getId() {
+        public Long getId() {
                 return id;
         }
 
-        public void setId(int id) {
+        public void setId(Long id) {
                 this.id = id;
         }
 

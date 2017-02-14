@@ -26,7 +26,7 @@ public class Dish {
         @GeneratedValue(generator = "increment")
         @GenericGenerator(name = "increment", strategy = "increment")
         @Column(name = "D_ID")
-        private int id;
+        private Long id;
 
         @NotEmpty(message = "Dish must have a name!")
         @Size(min=2, max=30)
@@ -61,7 +61,7 @@ public class Dish {
         @Column(name = "quantity")
         Map<Ingredient, Double> ingredients;
 
-        public int getId() {
+        public Long getId() {
                 return id;
         }
 
@@ -81,7 +81,7 @@ public class Dish {
                 return weight;
         }
 
-        public void setId(int id) {
+        public void setId(Long id) {
                 this.id = id;
         }
 

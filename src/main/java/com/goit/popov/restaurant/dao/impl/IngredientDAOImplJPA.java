@@ -22,8 +22,8 @@ public class IngredientDAOImplJPA implements IngredientDAO {
         private StoreHouseDAO storeHouseDAO;
 
         @Override
-        public int insert(Ingredient ingredient) {
-                int key = (int) sessionFactory.getCurrentSession().save(ingredient);
+        public Long insert(Ingredient ingredient) {
+                Long key = (Long) sessionFactory.getCurrentSession().save(ingredient);
                 // Insert a new StoreHouse entry as well
                 StoreHouse stock = new StoreHouse();
                 stock.setIngredient(ingredient);
@@ -43,7 +43,7 @@ public class IngredientDAOImplJPA implements IngredientDAO {
         }
 
         @Override
-        public Ingredient getById(int id) {
+        public Ingredient getById(Long id) {
                 return sessionFactory.getCurrentSession().get(Ingredient.class, id);
         }
 

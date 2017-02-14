@@ -10,10 +10,7 @@ import java.util.List;
  * @version 1.0
  */
 public interface DishDAO extends GenericDAO<Dish> {
-
-        long count();
-
+        Long count();
         List<Dish> getAllItems(DataTablesInputExtendedDTO dt);
-
-        void deleteById(int id);
+        void deleteById(Long id);
 }

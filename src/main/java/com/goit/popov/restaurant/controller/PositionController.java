@@ -65,7 +65,7 @@ public class PositionController {
         }
 
         @GetMapping(value = "/admin/edit_position/{id}")
-        public String showPositionEditForm(@PathVariable("id") int id, ModelMap map, RedirectAttributes ra){
+        public String showPositionEditForm(@PathVariable("id") Long id, ModelMap map, RedirectAttributes ra){
                 try {
                         if (!positionService.isPossibleOperation(id))
                                 throw new UnsupportedOperationException("You cannot change privileges of this position");
@@ -101,10 +101,10 @@ public class PositionController {
         }
 
         @RequestMapping(value="/admin/delete_position/{id}",method = RequestMethod.GET)
-        public String delete(@PathVariable int id, RedirectAttributes ra){
+        public String delete(@PathVariable Long id, RedirectAttributes ra){
                 try {
                         if (!positionService.isPossibleOperation(id))
-                                throw new UnsupportedOperationException("You cannot delete this position!");
+                                throw new UnsupportedOperationException("You cannot deleteById this position!");
                         positionService.deleteById(id);
                 } catch (UnsupportedOperationException e) {
                         ra.addFlashAttribute("error", e.getMessage());

@@ -11,6 +11,6 @@ import com.goit.popov.restaurant.service.dataTables.DataTablesObjectToJSONConver
 public interface PreparedDishService extends PreparedDishHistoryDAO,
         DataTablesListToJSONConvertible<Order>, DataTablesObjectToJSONConvertible<Order> {
 
-        void confirmDishesPrepared(int dishId, int quantity, int orderId, int chefId);
-        void confirmDishesCancelled(int dishId, int quantity, int orderId, int chefId);
+        void confirmDishesPrepared(Long dishId, Integer quantity, Long orderId, Long chefId);
+        void confirmDishesCancelled(Long dishId, Integer quantity, Long orderId, Long chefId);
 }

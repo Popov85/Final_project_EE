@@ -49,7 +49,7 @@ public class MenuController {
         }
 
         @GetMapping(value = "/admin/edit_menu")
-        public String showMenuEditForm(@RequestParam("menuId") int menuId, ModelMap map) {
+        public String showMenuEditForm(@RequestParam("menuId") Long menuId, ModelMap map) {
                 Menu menu = menuService.getById(menuId);
                 map.addAttribute("menu", menu);
                 return "th/manager/edit_menu";
@@ -69,7 +69,7 @@ public class MenuController {
         }
 
         @GetMapping("/all/show_dishes")
-        public ModelAndView getDishes(@RequestParam int id, ModelAndView modelAndView) {
+        public ModelAndView getDishes(@RequestParam Long id, ModelAndView modelAndView) {
                 modelAndView.addObject("id", menuService.getById(id).getId());
                 modelAndView.addObject("menu", menuService.getById(id).getName());
                 modelAndView.setViewName("th/all/menus_dishes");
@@ -78,7 +78,7 @@ public class MenuController {
 
         @PostMapping("/all/get_menus_dishes")
         @ResponseBody
-        public DataTablesOutputDTOListWrapper<Dish> getMenusDishes(@RequestParam int id) {
+        public DataTablesOutputDTOListWrapper<Dish> getMenusDishes(@RequestParam Long id) {
                 DataTablesOutputDTOListWrapper data = new DataTablesOutputDTOListWrapper<>();
                 Set<Dish> dishes = menuService.getById(id).getDishes();
                 data.setData(dishes);
@@ -134,7 +134,7 @@ public class MenuController {
         }
 
         @GetMapping("/admin/delete_menu")
-        public String delete(@RequestParam int menuId, RedirectAttributes ra){
+        public String delete(@RequestParam Long menuId, RedirectAttributes ra){
                 try {
                         menuService.deleteById(menuId);
                 } catch (PersistenceException e) {
@@ -147,7 +147,7 @@ public class MenuController {
                 } catch (Throwable e) {
                         ra.addFlashAttribute("status", HttpStatus.FORBIDDEN);
                         ra.addFlashAttribute("error", e.getMessage());
-                        ra.addFlashAttribute("message", "Cannot delete menu for some reason!");
+                        ra.addFlashAttribute("message", "Cannot deleteById menu for some reason!");
                         logger.error("Unexpected exception deleting menu: "+e.getMessage()+
                                 "/ exception name is: "+ e.getClass());
                         return "redirect:/error";

@@ -28,8 +28,8 @@ public class DishDAOImplJPA implements DishDAO {
 
 
         @Override
-        public int insert(Dish dish) {
-                return (int) sessionFactory.getCurrentSession().save(dish);
+        public Long insert(Dish dish) {
+                return (Long) sessionFactory.getCurrentSession().save(dish);
         }
 
         @Override
@@ -43,7 +43,7 @@ public class DishDAOImplJPA implements DishDAO {
         }
 
         @Override
-        public Dish getById(int id) {
+        public Dish getById(Long id) {
                 return sessionFactory.getCurrentSession().get(Dish.class, id);
         }
 
@@ -53,13 +53,13 @@ public class DishDAOImplJPA implements DishDAO {
         }
 
         @Override
-        public void deleteById(int id) {
+        public void deleteById(Long id) {
                 delete(getById(id));
         }
 
         @Override
-        public long count() {
-                return (long) sessionFactory.getCurrentSession().createQuery("select count(*) from Dish").uniqueResult();
+        public Long count() {
+                return (Long) sessionFactory.getCurrentSession().createQuery("select count(*) from Dish").uniqueResult();
         }
 
         @Override

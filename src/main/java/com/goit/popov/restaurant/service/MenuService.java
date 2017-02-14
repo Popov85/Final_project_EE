@@ -21,11 +21,11 @@ public class MenuService implements DataTablesListToJSONConvertible<Menu> {
                 return menuDAO.getAll();
         }
 
-        public Menu getById(int id) {
+        public Menu getById(Long id) {
                 return menuDAO.getById(id);
         }
 
-        public int insert(Menu menu) {
+        public Long insert(Menu menu) {
                 return menuDAO.insert(menu);
         }
 
@@ -41,7 +41,7 @@ public class MenuService implements DataTablesListToJSONConvertible<Menu> {
                 menuDAO.update(updatedMenu);
         }
 
-        public void deleteById(int id) {
+        public void deleteById(Long id) {
                 menuDAO.delete(getById(id));
         }
 

@@ -29,7 +29,7 @@ public class Order {
         @GeneratedValue(generator = "increment")
         @GenericGenerator(name = "increment", strategy = "increment")
         @Column(name = "ORD_ID")
-        private int id;
+        private Long id;
 
         @Column(name = "IS_OPENED")
         private boolean isOpened;
@@ -91,7 +91,7 @@ public class Order {
                 return true;
         }
 
-        public int getId() {
+        public Long getId() {
                 return id;
         }
 
@@ -119,7 +119,7 @@ public class Order {
                 return dishes;
         }
 
-        public void setId(int id) {
+        public void setId(Long id) {
                 this.id = id;
         }
 

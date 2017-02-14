@@ -27,7 +27,7 @@ public class StockServiceImpl implements StockService {
         private StockServerSideProcessing stockServerSideProcessing;
 
         @Override
-        public int insert(StoreHouse storeHouse) {
+        public Long insert(StoreHouse storeHouse) {
                 return storeHouseDAO.insert(storeHouse);
         }
 
@@ -42,7 +42,7 @@ public class StockServiceImpl implements StockService {
         }
 
         @Override
-        public StoreHouse getById(int id) {
+        public StoreHouse getById(Long id) {
                 // TODO check if throw UnsupportedOperationException
                 return storeHouseDAO.getById(id);
         }
@@ -68,7 +68,7 @@ public class StockServiceImpl implements StockService {
         }
 
         @Override
-        public long count() {
+        public Long count() {
                 return storeHouseDAO.count();
         }
 

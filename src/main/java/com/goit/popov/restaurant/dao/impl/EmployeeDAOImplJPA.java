@@ -4,9 +4,8 @@ import com.goit.popov.restaurant.dao.EmployeeDAO;
 import com.goit.popov.restaurant.model.Employee;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
-import org.springframework.transaction.annotation.Propagation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 /**
@@ -15,15 +14,12 @@ import java.util.List;
 @Transactional
 public class EmployeeDAOImplJPA implements EmployeeDAO {
 
+        @Autowired
         private SessionFactory sessionFactory;
 
-        public void setSessionFactory(SessionFactory sessionFactory) {
-                this.sessionFactory = sessionFactory;
-        }
-
         @Override
-        public int insert(Employee employee) {
-                return (int) sessionFactory.getCurrentSession().save(employee);
+        public Long insert(Employee employee) {
+                return (Long) sessionFactory.getCurrentSession().save(employee);
         }
 
         @Override
@@ -37,14 +33,6 @@ public class EmployeeDAOImplJPA implements EmployeeDAO {
         }
 
         @Override
-        public Employee getByName(String name) {
-                Query query = sessionFactory.getCurrentSession().createQuery("select e from Employee e " +
-                        "where e.name like :name");
-                query.setParameter("name", name);
-                return (Employee) query.uniqueResult();
-        }
-
-        @Override
         public Employee getByLogin(String login) {
                 Query query = sessionFactory.getCurrentSession().createQuery("select e from Employee e " +
                         "where e.login like :login");
@@ -53,23 +41,12 @@ public class EmployeeDAOImplJPA implements EmployeeDAO {
         }
 
         @Override
-        public Employee getByLoginAndPassword(String login, String password) {
-                Query query = sessionFactory.getCurrentSession().createQuery("select e from Employee e " +
-                        "where e.login =:login and e.password=:password");
-                query.setParameter("login", login);
-                query.setParameter("password", password);
-                return (Employee) query.uniqueResult();
-        }
-
-        @Override
         public void delete(Employee employee) {
                 sessionFactory.getCurrentSession().delete(employee);
-                sessionFactory.getCurrentSession().flush();
         }
 
-        @Transactional(propagation = Propagation.REQUIRED)
         @Override
-        public Employee getById(int id) {
+        public Employee getById(Long id) {
                 return sessionFactory.getCurrentSession().get(Employee.class, id);
         }
 }

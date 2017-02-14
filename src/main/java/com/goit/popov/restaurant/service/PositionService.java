@@ -21,12 +21,12 @@ public class PositionService {
              return positionDAO.getAll();
         }
 
-        public Position getById(int id) {
+        public Position getById(Long id) {
                 return positionDAO.getById(id);
         }
 
         public Position getPositionByName(String name) {
-                return positionDAO.getPositionByName(name);
+                return positionDAO.getByName(name);
         }
 
         public void save(Position position) {
@@ -43,11 +43,11 @@ public class PositionService {
                 positionDAO.delete(position);
         }
 
-        public void deleteById(int id) {
+        public void deleteById(Long id) {
                 delete(getById(id));
         }
 
-        public boolean isPossibleOperation(int id) {
+        public boolean isPossibleOperation(Long id) {
                 return (id!=1 && id!=2 && id!=3);
         }
 }

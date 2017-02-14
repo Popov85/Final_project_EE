@@ -21,8 +21,8 @@ public class PreparedDishHistoryDAOImplJPA implements PreparedDishHistoryDAO {
         private SessionFactory sessionFactory;
 
         @Override
-        public int insert(PreparedDish preparedDish) {
-                return (int) sessionFactory.getCurrentSession().save(preparedDish);
+        public Long insert(PreparedDish preparedDish) {
+                return (Long) sessionFactory.getCurrentSession().save(preparedDish);
         }
 
         @Override
@@ -31,7 +31,7 @@ public class PreparedDishHistoryDAOImplJPA implements PreparedDishHistoryDAO {
         }
 
         @Override
-        public PreparedDish getById(int id) {
+        public PreparedDish getById(Long id) {
                 return sessionFactory.getCurrentSession().get(PreparedDish.class, id);
         }
 
@@ -46,21 +46,21 @@ public class PreparedDishHistoryDAOImplJPA implements PreparedDishHistoryDAO {
         }
 
         @Override
-        public long count() {
-                return (long) sessionFactory.getCurrentSession().createQuery("select count(pd) from PreparedDish pd").uniqueResult();
+        public Long count() {
+                return (Long) sessionFactory.getCurrentSession().createQuery("select count(pd) from PreparedDish pd").uniqueResult();
         }
 
         @Override
-        public long getPreparedDishesQuantity(Order order) {
-                return (long) sessionFactory.getCurrentSession().createQuery("select distinct count(pd) from PreparedDish pd " +
+        public Long getPreparedDishesQuantity(Order order) {
+                return (Long) sessionFactory.getCurrentSession().createQuery("select distinct count(pd) from PreparedDish pd " +
                         "where pd.order=:order")
                         .setParameter("order", order)
                         .getSingleResult();
         }
 
         @Override
-        public long getPreparedDishesQuantity(Dish dish, Order order) {
-                return (long) sessionFactory.getCurrentSession().createQuery("select distinct count(pd) from PreparedDish pd " +
+        public Long getPreparedDishesQuantity(Dish dish, Order order) {
+                return (Long) sessionFactory.getCurrentSession().createQuery("select distinct count(pd) from PreparedDish pd " +
                         "where pd.order=:order and pd.dish=:dish and pd.isCancelled=false")
                         .setParameter("dish", dish)
                         .setParameter("order", order)
@@ -68,27 +68,11 @@ public class PreparedDishHistoryDAOImplJPA implements PreparedDishHistoryDAO {
         }
 
         @Override
-        public long getCancelledDishesQuantity(Dish dish, Order order) {
-                return (long) sessionFactory.getCurrentSession().createQuery("select distinct count(pd) from PreparedDish pd " +
+        public Long getCancelledDishesQuantity(Dish dish, Order order) {
+                return (Long) sessionFactory.getCurrentSession().createQuery("select distinct count(pd) from PreparedDish pd " +
                         "where pd.order=:order and pd.dish=:dish and pd.isCancelled=true")
                         .setParameter("dish", dish)
                         .setParameter("order", order)
                         .getSingleResult();
         }
-
-        /*@Override
-        public List<PreparedDish> getAllChefToday(int chefId) {
-                Chef chef = new Chef();
-                chef.setId(chefId);
-                Calendar today = Calendar.getInstance();
-                today.set(Calendar.HOUR_OF_DAY, 0);
-                today.set(Calendar.MINUTE, 0);
-                today.set(Calendar.SECOND, 0);
-                return sessionFactory.getCurrentSession().createQuery("select pd from PreparedDish pd " +
-                        "where pd.chef = :chef and pd.order.openedTimeStamp >= :today")
-                        .setParameter("chef", chef)
-                        .setParameter("today", today, TemporalType.DATE)
-                        .list();
-        }*/
-
 }

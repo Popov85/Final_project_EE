@@ -15,7 +15,7 @@ public class Position {
         @GeneratedValue(generator = "increment")
         @GenericGenerator(name = "increment", strategy = "increment")
         @Column(name = "POS_ID")
-        private int id;
+        private Long id;
 
         @NotEmpty(message = "Position cannot be empty!")
         @Size(min=2, max=30, message = "Position has from 2 to 30 characters")
@@ -26,11 +26,11 @@ public class Position {
         @JoinColumn(name="R_ID", unique=false, nullable=false, updatable=false)
         private Role role;
 
-        public int getId() {
+        public Long getId() {
                 return id;
         }
 
-        public void setId(int id) {
+        public void setId(Long id) {
                 this.id = id;
         }
 

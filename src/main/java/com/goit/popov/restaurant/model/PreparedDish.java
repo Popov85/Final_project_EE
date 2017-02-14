@@ -17,7 +17,7 @@ public class PreparedDish {
         @GeneratedValue(generator = "increment")
         @GenericGenerator(name = "increment", strategy = "increment")
         @Column(name = "PD_ID")
-        private int id;
+        private Long id;
 
         @Column(name = "WHEN_PREPARED")
         @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm")
@@ -39,11 +39,11 @@ public class PreparedDish {
         @Column(name = "IS_CANCELLED")
         private boolean isCancelled;
 
-        public int getId() {
+        public Long getId() {
                 return id;
         }
 
-        public void setId(int id) {
+        public void setId(Long id) {
                 this.id = id;
         }
 

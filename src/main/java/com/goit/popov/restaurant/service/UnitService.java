@@ -17,7 +17,7 @@ public class UnitService {
                 return unitDAO.getAll();
         }
 
-        public Unit getById(int id) {
+        public Unit getById(Long id) {
                 return unitDAO.getById(id);
         }
 }

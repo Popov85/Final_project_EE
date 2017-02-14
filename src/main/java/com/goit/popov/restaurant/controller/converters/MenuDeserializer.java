@@ -41,7 +41,7 @@ public class MenuDeserializer extends JsonDeserializer<Menu> {
                 }
                 Menu menu = null;
                 try {
-                        int menuId = (Integer) ((IntNode) node.get("menuId")).numberValue();
+                        Long menuId = (Long) ((IntNode) node.get("menuId")).numberValue();
                         menu = menuService.getById(menuId);
                         ArrayNode ingredients = ((ArrayNode) node.get("dishes"));
                         Set<Dish> dishes = convertJSONToSet(ingredients);
@@ -55,7 +55,7 @@ public class MenuDeserializer extends JsonDeserializer<Menu> {
         private Set<Dish> convertJSONToSet(ArrayNode ingredients) {
                 Set<Dish> dishes = new HashSet<>();
                 for (JsonNode ingredient : ingredients) {
-                       int dishId = (int) ingredient.get("dishId").intValue();
+                        Long dishId = (Long) ingredient.get("dishId").longValue();
                         Dish dish = dishService.getById(dishId);
                         dishes.add(dish);
                 }

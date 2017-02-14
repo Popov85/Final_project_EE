@@ -37,14 +37,11 @@ public class EmployeeController {
         private static final Logger logger = (Logger) LoggerFactory.getLogger(EmployeeController.class);
 
         private static final String NON_UNIQUE_CONSTRAINT_MESSAGE = "Some values on the form are not unique";
-        private static final String DELETION_FAILURE_MESSAGE = "Failed to delete an employee: id =";
+        private static final String DELETION_FAILURE_MESSAGE = "Failed to deleteById an employee: id =";
 
         private EmployeeService employeeService;
 
         private PositionService positionService;
-
-        @Autowired
-        private ApplicationContext applicationContext;
 
         @Autowired
         public void setPositionService(PositionService positionService) {
@@ -106,7 +103,7 @@ public class EmployeeController {
         }
 
         @RequestMapping(value = "/admin/edit_employee/{id}", method = RequestMethod.GET)
-        public String showEmployeeEditForm(@PathVariable("id") int id, ModelMap map, HttpSession session){
+        public String showEmployeeEditForm(@PathVariable("id") Long id, ModelMap map, HttpSession session){
                 Employee employee = employeeService.getById(id);
                 logger.info("Editing class: "+employee.getClass()+" employee: "+employee);
                 map.addAttribute("employee", employee);
@@ -149,7 +146,7 @@ public class EmployeeController {
         }
 
         @RequestMapping(value="/admin/delete_employee/{id}",method = RequestMethod.GET)
-        public String delete(@PathVariable int id, RedirectAttributes ra){
+        public String delete(@PathVariable Long id, RedirectAttributes ra){
                 try {
                         employeeService.deleteById(id);
                 } catch (PersistenceException e) {

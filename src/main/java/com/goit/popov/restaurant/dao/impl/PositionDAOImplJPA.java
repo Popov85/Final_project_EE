@@ -6,7 +6,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 /**
@@ -19,8 +18,8 @@ public class PositionDAOImplJPA implements PositionDAO {
         private SessionFactory sessionFactory;
 
         @Override
-        public int insert(Position position) {
-                return (int) sessionFactory.getCurrentSession().save(position);
+        public Long insert(Position position) {
+                return (Long) sessionFactory.getCurrentSession().save(position);
         }
 
         @Override
@@ -34,7 +33,7 @@ public class PositionDAOImplJPA implements PositionDAO {
         }
 
         @Override
-        public Position getById(int id) {
+        public Position getById(Long id) {
                 return sessionFactory.getCurrentSession().get(Position.class, id);
         }
 
@@ -44,7 +43,7 @@ public class PositionDAOImplJPA implements PositionDAO {
         }
 
         @Override
-        public Position getPositionByName(String name) {
+        public Position getByName(String name) {
                 Query query = sessionFactory.getCurrentSession().createQuery("select p from Position p " +
                         "where p.name like :name");
                 query.setParameter("name", name);

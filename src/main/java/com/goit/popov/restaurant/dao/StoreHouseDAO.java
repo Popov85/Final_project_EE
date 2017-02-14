@@ -13,13 +13,13 @@ import java.util.List;
  */
 public interface StoreHouseDAO extends GenericDAO<StoreHouse> {
 
+        Long count();
+
         List<StoreHouse> getAllRunOut(double threshold);
 
         StoreHouse getByIngredient(Ingredient ingredient);
 
         Double getQuantityByIngredient(Ingredient ingredient);
-
-        long count();
 
         List<StoreHouse> getAllItems(DataTablesInputExtendedDTO dt);
 

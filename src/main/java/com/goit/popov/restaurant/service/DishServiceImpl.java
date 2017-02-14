@@ -25,7 +25,7 @@ public class DishServiceImpl implements DishService {
         private DishServerSideProcessing dishServerSideProcessing;
 
         @Override
-        public int insert(Dish dish) {
+        public Long insert(Dish dish) {
                 return dishDAO.insert(dish);
         }
 
@@ -40,7 +40,7 @@ public class DishServiceImpl implements DishService {
         }
 
         @Override
-        public Dish getById(int id) {
+        public Dish getById(Long id) {
                 return dishDAO.getById(id);
         }
 
@@ -50,12 +50,12 @@ public class DishServiceImpl implements DishService {
         }
 
         @Override
-        public void deleteById(int id) {
+        public void deleteById(Long id) {
                 dishDAO.deleteById(id);
         }
 
         @Override
-        public long count() {
+        public Long count() {
                 return dishDAO.count();
         }
 

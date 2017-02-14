@@ -23,7 +23,7 @@ public class OrderByWaiterServerSideProcessing extends DataTablesServiceServerSi
 
         @Override
         protected long count(String[] params) {
-                Employee waiter = waiterDAO.getById(Integer.parseInt(params[0]));
+                Employee waiter = waiterDAO.getById(Long.parseLong(params[0]));
                 return orderDAO.countWaiter(waiter);
         }
 

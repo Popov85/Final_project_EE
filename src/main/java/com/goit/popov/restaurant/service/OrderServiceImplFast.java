@@ -47,7 +47,7 @@ public class OrderServiceImplFast implements OrderService {
         }
 
         @Override
-        public int insert(Order order) {
+        public Long insert(Order order) {
                 return orderDAO.insert(order);
         }
 
@@ -57,7 +57,7 @@ public class OrderServiceImplFast implements OrderService {
         }
 
         @Override
-        public Order getById(int id) {
+        public Order getById(Long id) {
                 return orderDAO.getById(id);
         }
 
@@ -67,27 +67,12 @@ public class OrderServiceImplFast implements OrderService {
         }
 
         @Override
-        public void delete(int orderId) {
-                orderDAO.delete(orderId);
+        public void deleteById(Long orderId) {
+                orderDAO.delete(getById(orderId));
         }
 
         @Override
-        public void close(Order order) {
-                orderDAO.close(order);
-        }
-
-        @Override
-        public List<Order> getAllClosed() {
-                return orderDAO.getAllClosed();
-        }
-
-        @Override
-        public List<Order> getAllOpened() {
-                return orderDAO.getAllOpened();
-        }
-
-        @Override
-        public List<Order> getAllWaiterToday(int waiterId) {
+        public List<Order> getAllWaiterToday(Long waiterId) {
                 return orderDAO.getAllWaiterToday(waiterId);
         }
 
@@ -102,34 +87,29 @@ public class OrderServiceImplFast implements OrderService {
         }
 
         @Override
-        public List<PreparedDish> getAllWithPreparedDishes() {
-                return orderDAO.getAllWithPreparedDishes();
-        }
-
-        @Override
         public Integer[] getTables() {
                 return Order.TABLE_SET;
         }
 
         @Override
-        public void cancelOrder(int id) {
+        public void cancelOrder(Long id) {
                 Order order = getById(id);
                 order.setCancelled(true);
                 update(order);
         }
 
         @Override
-        public long count() {
+        public Long count() {
                 return orderDAO.count();
         }
 
         @Override
-        public long countWaiter(Employee waiter) {
+        public Long countWaiter(Employee waiter) {
                 return orderDAO.countWaiter(waiter);
         }
 
         @Override
-        public void closeOrder(int orderId) {
+        public void closeOrder(Long orderId) {
                 Order order = getById(orderId);
                 if (order.isCancelled()) throw
                         new UnsupportedOperationException("You cannot close a cancelled order!");
@@ -154,7 +134,7 @@ public class OrderServiceImplFast implements OrderService {
         public void processOrder(Order order) throws NotEnoughIngredientsException {
                 if (!order.isOpened() || order.hasPreparedDishes())
                         throw new UnsupportedOperationException();
-                final int orderId = order.getId();
+                final Long orderId = order.getId();
                 if (orderId != 0) returnIngredients(order);
                 Map<Dish, Integer> orderedDishes = order.getDishes();
                 Map<Ingredient, Double> requiredIngredients = service.getIngredients(orderedDishes);
@@ -208,7 +188,7 @@ public class OrderServiceImplFast implements OrderService {
         }
 
         @Override
-        public DataTablesOutputDTOUniversal<Order> getAllOrdersByWaiter(DataTablesInputExtendedDTO dt, int waiterId) {
+        public DataTablesOutputDTOUniversal<Order> getAllOrdersByWaiter(DataTablesInputExtendedDTO dt, Long waiterId) {
                 String[] params = new String[1];
                 params[0] = waiterId+"";
                 return orderByWaiterServerSideProcessing.getAll(dt, params);

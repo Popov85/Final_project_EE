@@ -54,7 +54,7 @@ public class OrderController {
         // Auxiliary data source for fetching Order's existing dishes
         @PostMapping("/waiter/get_orders_dishes")
         @ResponseBody
-        public DataTablesOutputDTOCollectionWrapper getOrdersDishes(@RequestParam Integer orderId) {
+        public DataTablesOutputDTOCollectionWrapper getOrdersDishes(@RequestParam Long orderId) {
                 DataTablesOutputDTOCollectionWrapper data = new DataTablesOutputDTOCollectionWrapper();
                 data.setData(orderService.toJSON(orderService.getById(orderId).getDishes()));
                 return data;
@@ -70,7 +70,7 @@ public class OrderController {
         // Auxiliary data source for fetching the Order's table
         @PostMapping("/waiter/get_orders_table")
         @ResponseBody
-        public String getOrdersTable(@RequestParam Integer orderId) {
+        public String getOrdersTable(@RequestParam Long orderId) {
                 String table = orderService.getById(orderId).getTable();
                 return table;
         }
@@ -104,14 +104,14 @@ public class OrderController {
 
         @PostMapping(value = "/waiter/get_order")
         @ResponseBody
-        public Order getOrder(@RequestParam int orderId) {
+        public Order getOrder(@RequestParam Long orderId) {
                 logger.info("Order: "+orderService.getById(orderId));
                 return orderService.getById(orderId);
         }
 
         @PostMapping(value = "/waiter/get_orders")
         @ResponseBody
-        public DataTablesOutputDTOListWrapper<Order> getWaiterOrders(@RequestParam int waiterId) {
+        public DataTablesOutputDTOListWrapper<Order> getWaiterOrders(@RequestParam Long waiterId) {
                 DataTablesOutputDTOListWrapper<Order> data = new DataTablesOutputDTOListWrapper<>();
                         data.setData(orderService.getAllWaiterToday(waiterId));
                 return data;
@@ -119,7 +119,7 @@ public class OrderController {
 
         @PostMapping(value = "/waiter/get_archive")
         @ResponseBody
-        public DataTablesOutputDTOUniversal<Order> getWaiterOrdersArchive(@RequestParam int waiterId,
+        public DataTablesOutputDTOUniversal<Order> getWaiterOrdersArchive(@RequestParam Long waiterId,
                                                                           DataTablesInputExtendedDTO input) throws JsonProcessingException {
                 DataTablesOutputDTOUniversal<Order> data = orderService.getAllOrdersByWaiter(input, waiterId);
                 return data;
@@ -127,14 +127,14 @@ public class OrderController {
 
         // Update (Page)
         @GetMapping("/waiter/edit_order")
-        public ModelAndView editOrder(@RequestParam int id) {
+        public ModelAndView editOrder(@RequestParam Long id) {
                 ModelAndView modelAndView = new ModelAndView("th/waiter/edit_order");
                 modelAndView.addObject("id", id);
                 return modelAndView;
         }
 
         @PostMapping("/waiter/check_order")
-        public ResponseEntity checkOrder(@RequestParam int orderId) {
+        public ResponseEntity checkOrder(@RequestParam Long orderId) {
                 Order order = orderService.getById(orderId);
                 ObjectMapper mapper = new ObjectMapper();
                 ObjectNode node = mapper.createObjectNode();
@@ -177,24 +177,24 @@ public class OrderController {
         }
 
         @GetMapping("/waiter/delete_order")
-        public String deleteOrder(@RequestParam int id, HttpServletRequest request, RedirectAttributes ra) {
+        public String deleteOrder(@RequestParam Long id, HttpServletRequest request, RedirectAttributes ra) {
                 URL url;
                 try {
                         url = new URL(request.getHeader("referer"));
-                        orderService.delete(id);
+                        orderService.deleteById(id);
                         logger.info("Deleted Order #: "+id);
                 } catch (Exception e) {
                         setErrorMessages(id, ra,
                                 HttpStatus.FORBIDDEN.toString(),
                                 e.getMessage(),
-                                "Error: Failed to delete the Order #: " +id);
+                                "Error: Failed to deleteById the Order #: " +id);
                         return "redirect:/error";
                 }
                 return "redirect:"+url.getPath();
         }
 
         @GetMapping("/waiter/close_order")
-        public String closeOrder(@RequestParam int id, HttpServletRequest request, RedirectAttributes ra) {
+        public String closeOrder(@RequestParam Long id, HttpServletRequest request, RedirectAttributes ra) {
                 URL url=null;
                 try {
                         url = new URL(request.getHeader("referer"));
@@ -211,7 +211,7 @@ public class OrderController {
         }
 
         @GetMapping("/waiter/cancel_order")
-        public String cancelOrder(@RequestParam int id, HttpServletRequest request, RedirectAttributes ra) {
+        public String cancelOrder(@RequestParam Long id, HttpServletRequest request, RedirectAttributes ra) {
                 URL url=null;
                 try {
                         url = new URL(request.getHeader("referer"));
@@ -227,7 +227,7 @@ public class OrderController {
                 return "redirect:"+url.getPath();
         }
 
-        private void setErrorMessages(int id, RedirectAttributes ra, String... messages) {
+        private void setErrorMessages(Long id, RedirectAttributes ra, String... messages) {
                 logger.error("ERROR: status: "+messages[0]+" / error: "+messages[1]+"/ message: "+messages[2]);
                 ra.addFlashAttribute("status", messages[0]);
                 ra.addFlashAttribute("error", messages[1]);

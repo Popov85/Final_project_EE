@@ -8,9 +8,9 @@ import java.util.List;
  * @version 1.0
  */
 public interface GenericDAO<T> {
-        int insert(T t);
+        Long insert(T t);
         void update(T t);
         List<T> getAll();
-        T getById(int id);
+        T getById(Long id);
         void delete(T t);
 }

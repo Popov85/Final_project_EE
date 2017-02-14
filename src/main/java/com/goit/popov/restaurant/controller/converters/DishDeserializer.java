@@ -42,7 +42,7 @@ public class DishDeserializer extends JsonDeserializer<Dish> {
                 }
                 Dish dish = null;
                 try {
-                        int dishId = (Integer) ((IntNode) node.get("dishId")).numberValue();
+                        Long dishId = (Long) ((IntNode) node.get("dishId")).numberValue();
                         dish = dishService.getById(dishId);
                         ArrayNode ingredients = ((ArrayNode) node.get("ingredients"));
                         Map<Ingredient, Double> ingredientsInMap = convertJSONToMap(ingredients);
@@ -59,7 +59,7 @@ public class DishDeserializer extends JsonDeserializer<Dish> {
                 Map<Ingredient, Double> ingredientsInMap = new HashMap<>();
                 try {
                         for (JsonNode jsonNode : ingredients) {
-                                Ingredient ingredient = ingredientService.getById((Integer) jsonNode.get("ingId").numberValue()); ;
+                                Ingredient ingredient = ingredientService.getById((Long) jsonNode.get("ingId").numberValue()); ;
                                 Double quantity = (Double) jsonNode.get("quantity").doubleValue();
                                 if (quantity <= 0) throw new RuntimeException("Quantity cannot be negative!");
                                 ingredientsInMap.put(ingredient, quantity);

@@ -9,8 +9,8 @@ import com.goit.popov.restaurant.model.PreparedDish;
  */
 public interface PreparedDishHistoryDAO extends GenericDAO<PreparedDish>  {
 
-        long getPreparedDishesQuantity(Order order);
-        long getPreparedDishesQuantity(Dish dish, Order order);
-        long getCancelledDishesQuantity(Dish dish, Order order);
-        long count();
+        Long getPreparedDishesQuantity(Order order);
+        Long getPreparedDishesQuantity(Dish dish, Order order);
+        Long getCancelledDishesQuantity(Dish dish, Order order);
+        Long count();
 }

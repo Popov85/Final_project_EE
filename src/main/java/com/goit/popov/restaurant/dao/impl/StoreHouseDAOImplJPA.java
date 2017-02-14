@@ -11,8 +11,6 @@ import org.hibernate.query.Query;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
 
 /**
@@ -29,12 +27,9 @@ public class StoreHouseDAOImplJPA implements StoreHouseDAO {
         @Autowired
         private StockServerSideDAOProcessing stockServerSideDAOProcessing;
 
-        @PersistenceContext(unitName = "entityManagerFactory")
-        private EntityManager em;
-
         @Override
-        public int insert(StoreHouse sh) {
-                return (int) sessionFactory.getCurrentSession().save(sh);
+        public Long insert(StoreHouse sh) {
+                return (Long) sessionFactory.getCurrentSession().save(sh);
         }
 
         @Override
@@ -48,7 +43,7 @@ public class StoreHouseDAOImplJPA implements StoreHouseDAO {
         }
 
         @Override
-        public StoreHouse getById(int id) {
+        public StoreHouse getById(Long id) {
                 return sessionFactory.getCurrentSession().get(StoreHouse.class, id);
         }
 
@@ -83,8 +78,8 @@ public class StoreHouseDAOImplJPA implements StoreHouseDAO {
         }
 
         @Override
-        public long count() {
-                return (long) sessionFactory.getCurrentSession().createQuery("select count(*) from StoreHouse").uniqueResult();
+        public Long count() {
+                return (Long) sessionFactory.getCurrentSession().createQuery("select count(*) from StoreHouse").uniqueResult();
         }
 
         @Override

@@ -15,18 +15,18 @@ public class Role {
         @GeneratedValue(generator = "increment")
         @GenericGenerator(name = "increment", strategy = "increment")
         @Column(name = "R_ID")
-        private int id;
+        private Long id;
 
         @NotEmpty(message = "Role cannot be empty!")
         @Size(min=2, max=30, message = "Role has from 2 to 30 characters")
         @Column(name = "R_NAME")
         private String name;
 
-        public int getId() {
+        public Long getId() {
                 return id;
         }
 
-        public void setId(int id) {
+        public void setId(Long id) {
                 this.id = id;
         }
 

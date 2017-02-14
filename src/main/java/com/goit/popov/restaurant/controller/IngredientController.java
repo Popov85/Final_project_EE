@@ -2,7 +2,6 @@ package com.goit.popov.restaurant.controller;
 
 import ch.qos.logback.classic.Logger;
 import com.goit.popov.restaurant.model.Ingredient;
-import com.goit.popov.restaurant.model.Position;
 import com.goit.popov.restaurant.model.Unit;
 import com.goit.popov.restaurant.service.IngredientService;
 import com.goit.popov.restaurant.service.UnitService;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -79,7 +77,7 @@ public class IngredientController {
         }
 
         @RequestMapping(value = "/admin/edit_ingredient/{id}", method = RequestMethod.GET)
-        public ModelAndView edit(@PathVariable int id) {
+        public ModelAndView edit(@PathVariable Long id) {
                 Ingredient ing = ingredientService.getById(id);
                 return new ModelAndView("th/manager/edit_ingredient", "ingredient", ing);
         }
@@ -101,13 +99,13 @@ public class IngredientController {
         }
 
         @RequestMapping(value = "/admin/delete_ingredient/{id}", method = RequestMethod.GET)
-        public String delete(@PathVariable int id, RedirectAttributes ra) {
+        public String delete(@PathVariable Long id, RedirectAttributes ra) {
                 try {
                         ingredientService.deleteById(id);
                 } catch (Exception e) {
                         ra.addFlashAttribute("status", HttpStatus.FORBIDDEN);
                         ra.addFlashAttribute("error", CONSTRAINT_VIOLATION_MESSAGE);
-                        ra.addFlashAttribute("message", "Error: failed to delete the ingredient #" + id);
+                        ra.addFlashAttribute("message", "Error: failed to deleteById the ingredient #" + id);
                         return "redirect:/error";
                 }
                 return "redirect:/admin/ingredients";

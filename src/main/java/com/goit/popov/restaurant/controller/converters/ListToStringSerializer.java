@@ -26,7 +26,7 @@ public class ListToStringSerializer extends JsonSerializer<List<Object>> {
                                 if (value.size()>3) {gen.writeString("Many"); return;}
                                 StringBuilder sb = new StringBuilder();
                                 for (Object o : value) {
-                                        int id = ((Menu) o).getId();
+                                        Long id = ((Menu) o).getId();
                                         String name = ((Menu) o).getName();
                                         String url = "<a href='/all/show_dishes?id=" + id + "'>" + name + "</a>";
                                         sb.append(url);

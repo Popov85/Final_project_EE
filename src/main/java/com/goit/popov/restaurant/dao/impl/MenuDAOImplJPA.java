@@ -17,8 +17,8 @@ public class MenuDAOImplJPA implements MenuDAO {
         private SessionFactory sessionFactory;
 
         @Override
-        public int insert(Menu menu) {
-                return (int) sessionFactory.getCurrentSession().save(menu);
+        public Long insert(Menu menu) {
+                return (Long) sessionFactory.getCurrentSession().save(menu);
         }
 
         @Override
@@ -32,15 +32,9 @@ public class MenuDAOImplJPA implements MenuDAO {
         }
 
         @Override
-        public Menu getById(int id) {
+        public Menu getById(Long id) {
                 return sessionFactory.getCurrentSession().get(Menu.class, id);
         }
-
-        /*@Override
-        public Menu getById(int id) {
-                return (Menu) sessionFactory.getCurrentSession().
-                        createQuery("select m from Menu m join m.dishes where m.id="+id).getSingleResult();
-        }*/
 
         @Override
         public void delete(Menu menu) {

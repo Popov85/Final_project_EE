@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by Andrey on 11/13/2016.
  */
-public class EmployeeService implements StaffService<Employee> {
+public class EmployeeService {
 
         private static final Logger logger = (Logger) LoggerFactory.getLogger(EmployeeService.class);
 
@@ -21,35 +21,29 @@ public class EmployeeService implements StaffService<Employee> {
         @Autowired
         protected EmployeeDAO employeeDAO;
 
-        @Override
-        public long insert(Employee employee) {
+        public Long insert(Employee employee) {
                 employee.setPassword(encoder.encode(employee.getPassword()));
                 return employeeDAO.insert(employee);
         }
 
-        @Override
         public void update(Employee employee) {
                 employee.setPassword(employee.getPassword().length()>=60 ? employee.getPassword() :
                         encoder.encode(employee.getPassword()));
                 employeeDAO.update(employee);
         }
 
-        @Override
         public void delete(Employee employee) {
                 employeeDAO.delete(employee);
         }
 
-        @Override
-        public void deleteById(int id) {
+        public void deleteById(Long id) {
                 employeeDAO.delete(getById(id));
         }
 
-        @Override
-        public Employee getById(int id) {
+        public Employee getById(Long id) {
                 return employeeDAO.getById(id);
         }
 
-        @Override
         public List<Employee> getAll() {
                 return employeeDAO.getAll();
         }

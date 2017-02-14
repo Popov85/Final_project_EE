@@ -45,7 +45,7 @@ public class DishController {
 
         @PostMapping("/admin/get_dish")
         @ResponseBody
-        public Dish getDish(@RequestParam int dishId) {
+        public Dish getDish(@RequestParam Long dishId) {
                 return dishService.getById(dishId);
         }
 
@@ -58,7 +58,7 @@ public class DishController {
 
         @GetMapping("/all/show_ingredients")
         @ResponseBody
-        public ModelAndView getDishes(@RequestParam int id, ModelAndView modelAndView) {
+        public ModelAndView getDishes(@RequestParam Long id, ModelAndView modelAndView) {
                 modelAndView.addObject("id", dishService.getById(id).getId());
                 modelAndView.addObject("dish", dishService.getById(id).getName());
                 modelAndView.setViewName("th/all/dishs_ingredients");
@@ -67,7 +67,7 @@ public class DishController {
 
         @PostMapping("/all/get_dishs_ingredients")
         @ResponseBody
-        public DataTablesOutputDTOCollectionWrapper getDishIngredients(@RequestParam int dishId) {
+        public DataTablesOutputDTOCollectionWrapper getDishIngredients(@RequestParam Long dishId) {
                 DataTablesOutputDTOCollectionWrapper data = new DataTablesOutputDTOCollectionWrapper();
                 data.setData(dishService.toJSON(dishService.getById(dishId).getIngredients()));
                 return data;
@@ -92,7 +92,7 @@ public class DishController {
         }
 
         @GetMapping(value = "/admin/edit_dish")
-        public String showDishEditForm(@RequestParam("dishId") int dishId, ModelMap map) {
+        public String showDishEditForm(@RequestParam("dishId") Long dishId, ModelMap map) {
                 Dish dish = dishService.getById(dishId);
                 map.addAttribute("dish", dish);
                 return "th/manager/edit_dish";
@@ -134,13 +134,13 @@ public class DishController {
         }
 
         @RequestMapping(value = "/admin/delete_dish/{id}", method = RequestMethod.GET)
-        public String deleteDish(@PathVariable int id, RedirectAttributes ra) {
+        public String deleteDish(@PathVariable Long id, RedirectAttributes ra) {
                 try {
                         dishService.deleteById(id);
                 } catch (Exception e) {
                         ra.addFlashAttribute("status", HttpStatus.FORBIDDEN);
                         ra.addFlashAttribute("error", CONSTRAINT_VIOLATION_MESSAGE);
-                        ra.addFlashAttribute("message", "Error: failed to delete the dish #" + id);
+                        ra.addFlashAttribute("message", "Error: failed to deleteById the dish #" + id);
                         return "redirect:/error";
                 }
                 return "redirect:/admin/dishes";

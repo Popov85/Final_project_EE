@@ -18,7 +18,7 @@ public class Ingredient {
         @GeneratedValue(generator = "increment")
         @GenericGenerator(name = "increment", strategy = "increment")
         @Column(name = "ING_ID")
-        private int id;
+        private Long id;
 
         @NotEmpty(message = "Ingredient must have a name!")
         @Column(name = "ING_NAME")
@@ -29,11 +29,11 @@ public class Ingredient {
         @JoinColumn(name = "UNIT_ID")
         private Unit unit;
 
-        public int getId() {
+        public Long getId() {
                 return id;
         }
 
-        public void setId(int id) {
+        public void setId(Long id) {
                 this.id = id;
         }
 

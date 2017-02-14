@@ -35,7 +35,7 @@ public class StockController {
         }
 
         @GetMapping(value = "/admin/update_stock")
-        public String updateStock(@RequestParam int ingId, @RequestParam double quantity) {
+        public String updateStock(@RequestParam Long ingId, @RequestParam double quantity) {
                 Ingredient ingredient = ingredientService.getById(ingId);
                 stockService.increaseIngredient(ingredient, quantity);
                 return "redirect:/admin/stock_state";

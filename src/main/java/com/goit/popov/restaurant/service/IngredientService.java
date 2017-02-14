@@ -19,7 +19,7 @@ public class IngredientService implements IngredientDAO {
         }
 
         @Override
-        public Ingredient getById(int id) {
+        public Ingredient getById(Long id) {
                 return ingredientDAO.getById(id);
         }
 
@@ -29,7 +29,7 @@ public class IngredientService implements IngredientDAO {
         }
 
         @Override
-        public int insert(Ingredient ingredient) {
+        public Long insert(Ingredient ingredient) {
                 return ingredientDAO.insert(ingredient);
         }
 
@@ -38,7 +38,7 @@ public class IngredientService implements IngredientDAO {
                 ingredientDAO.update(ingredient);
         }
 
-        public void deleteById(int id) {
+        public void deleteById(Long id) {
                 ingredientDAO.delete(getById(id));
         }
 }

@@ -23,7 +23,7 @@ public class Employee {
         @GeneratedValue(generator = "increment")
         @GenericGenerator(name = "increment", strategy = "increment")
         @Column(name = "EMP_ID")
-        private int id;
+        private Long id;
 
         @NotEmpty(message = "Login is a required field")
         @Size(min=4, max=25, message = "Login must have from 4 to 25 characters!")
@@ -65,11 +65,11 @@ public class Employee {
         @Column(name = "PHOTO")
         private byte[] photo;
 
-        public int getId() {
-                return id;
+        public Long getId() {
+                return this.id;
         }
 
-        public void setId(int id) {
+        public void setId(Long id) {
                 this.id = id;
         }
 

@@ -38,7 +38,7 @@ public class PreparedDishServiceImpl implements PreparedDishService {
         private StockService stockService;
 
         @Override
-        public int insert(PreparedDish preparedDish) {
+        public Long insert(PreparedDish preparedDish) {
                 return preparedDishDAO.insert(preparedDish);
         }
 
@@ -52,7 +52,7 @@ public class PreparedDishServiceImpl implements PreparedDishService {
         }
 
         @Override
-        public PreparedDish getById(int id) {
+        public PreparedDish getById(Long id) {
                 return preparedDishDAO.getById(id);
         }
 
@@ -62,35 +62,35 @@ public class PreparedDishServiceImpl implements PreparedDishService {
         }
 
         @Override
-        public long count() {
+        public Long count() {
                 return preparedDishDAO.count();
         }
 
         @Override
-        public long getPreparedDishesQuantity(Dish dish, Order order) {
+        public Long getPreparedDishesQuantity(Dish dish, Order order) {
                 return preparedDishDAO.getPreparedDishesQuantity(dish, order);
         }
 
         @Override
-        public long getCancelledDishesQuantity(Dish dish, Order order) {
+        public Long getCancelledDishesQuantity(Dish dish, Order order) {
                 return preparedDishDAO.getCancelledDishesQuantity(dish, order);
         }
 
         @Override
-        public long getPreparedDishesQuantity(Order order) {
+        public Long getPreparedDishesQuantity(Order order) {
                 return preparedDishDAO.getPreparedDishesQuantity(order);
         }
 
         @Transactional
         @Override
-        public void confirmDishesPrepared(int dishId, int quantity, int orderId, int chefId) {
+        public void confirmDishesPrepared(Long dishId, Integer quantity, Long orderId, Long chefId) {
                 Set<PreparedDish> preparedDishes = createPreparedDishes(dishId, quantity, orderId, chefId, false);
                 savePreparedDishes(preparedDishes);
         }
 
         @Transactional
         @Override
-        public void confirmDishesCancelled(int dishId, int quantity, int orderId, int chefId) {
+        public void confirmDishesCancelled(Long dishId, Integer quantity, Long orderId, Long chefId) {
                 Set<PreparedDish> preparedDishes = createPreparedDishes(dishId, quantity, orderId, chefId, true);
                 savePreparedDishes(preparedDishes);
                 returnIngredients(dishId, quantity);
@@ -102,19 +102,19 @@ public class PreparedDishServiceImpl implements PreparedDishService {
                 }
         }
 
-        private void returnIngredients(int dishId, int quantity) {
+        private void returnIngredients(Long dishId, Integer quantity) {
                 Dish dish = dishService.getById(dishId);
                 Map<Dish, Integer> dishes = new HashMap<>();
                 dishes.put(dish, quantity);
                 stockService.increaseIngredients(service.getIngredients(dishes));
         }
 
-        private Set<PreparedDish> createPreparedDishes(int dishId, int quantity, int orderId, int chefId, boolean isCancelled) {
+        private Set<PreparedDish> createPreparedDishes(Long dishId, Integer quantity, Long orderId, Long chefId, boolean isCancelled) {
                 Dish dish = dishService.getById(dishId);
                 Order order = orderService.getById(orderId);
                 Employee chef = chefService.getById(chefId);
                 Set<PreparedDish> preparedDishes = new HashSet<>();
-                for (int i=0; i<quantity; i++) {
+                for (int i=0; i < quantity; i++) {
                         PreparedDish preparedDish = new PreparedDish();
                         preparedDish.setChef(chef);
                         preparedDish.setDish(dish);

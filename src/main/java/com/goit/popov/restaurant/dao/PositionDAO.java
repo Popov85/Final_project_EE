@@ -7,5 +7,5 @@ import com.goit.popov.restaurant.model.Position;
  */
 public interface PositionDAO extends GenericDAO<Position> {
 
-        Position getPositionByName(String name);
+        Position getByName(String name);
 }

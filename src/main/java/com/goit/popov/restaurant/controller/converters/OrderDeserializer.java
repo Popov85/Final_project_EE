@@ -42,25 +42,25 @@ public class OrderDeserializer extends JsonDeserializer<Order> {
                 } catch (IOException e) {
                         logger.info("Error while obtaining the node tree: "+e.getMessage());
                 }
-                int id = 0;
+                Long id;
                 boolean isOpened = false;
                 String openedTS;
                 Date openedTimeStamp = null;
                 String closedTS;
                 Date closedTimeStamp = null;
-                int waiterId = 0;
+                Long waiterId;
                 String tableInString;
                 String table = "";
                 ArrayNode dishes;
                 Map<Dish, Integer> dishesInMap = null;
                 Order order = null;
                 try {
-                        id = (Integer) ((IntNode) node.get("id")).numberValue();
+                        id = (Long) ((IntNode) node.get("id")).numberValue();
                         table = node.get("table").asText();
                         dishes = ((ArrayNode) node.get("dishes"));
                         dishesInMap = convertJSONToMap(dishes);
                         if (id==0 ) {
-                                waiterId = (Integer) ((IntNode) node.get("waiter")).numberValue();
+                                waiterId = (Long) ((IntNode) node.get("waiter")).numberValue();
                                 isOpened = true;
                                 openedTimeStamp = convertStringToData(node.get("openedTimeStamp").asText());
                                 order = createOrder(id, isOpened, openedTimeStamp, closedTimeStamp,
@@ -78,7 +78,7 @@ public class OrderDeserializer extends JsonDeserializer<Order> {
                 return order;
         }
 
-        private Order updateOrder(int orderId, String table, Map<Dish, Integer> dishes) {
+        private Order updateOrder(Long orderId, String table, Map<Dish, Integer> dishes) {
                 Order order = orderService.getById(orderId);
                 order.setTable(table);
                 order.setPreviousDishes(order.getDishes());
@@ -86,8 +86,8 @@ public class OrderDeserializer extends JsonDeserializer<Order> {
                 return order;
         }
 
-        private Order createOrder(int id, boolean isOpened, Date openedTimeStamp, Date closedTimeStamp,
-                                  int waiterId, String table, Map<Dish, Integer> dishesInMap) {
+        private Order createOrder(Long id, boolean isOpened, Date openedTimeStamp, Date closedTimeStamp,
+                                  Long waiterId, String table, Map<Dish, Integer> dishesInMap) {
                 Order order = new Order();
                 order.setId(id);
                 order.setOpened(isOpened);
@@ -120,7 +120,7 @@ public class OrderDeserializer extends JsonDeserializer<Order> {
                 Map<Dish, Integer> map = new HashMap<>();
                 try {
                         for (JsonNode jsonNode : arrayNode) {
-                                Dish dish = dishService.getById((Integer) jsonNode.get("dishId").numberValue()); ;
+                                Dish dish = dishService.getById((Long) jsonNode.get("dishId").numberValue()); ;
                                 Integer quantity = (Integer) jsonNode.get("quantity").numberValue();
                                 if (quantity <= 0) throw new RuntimeException("Quantity cannot be negative!");
                                 map.put(dish, quantity);

@@ -23,7 +23,7 @@ public class Menu {
         @GeneratedValue(generator = "increment")
         @GenericGenerator(name = "increment", strategy = "increment")
         @Column(name = "M_ID")
-        private int id;
+        private Long id;
 
         @NotEmpty(message = "Menu name is a required field")
         @Size(min=2, max=25, message = "Menu must have from 2 to 25 characters!")
@@ -37,7 +37,7 @@ public class Menu {
         )
         private Set<Dish> dishes;
 
-        public int getId() {
+        public Long getId() {
                 return id;
         }
 
@@ -49,7 +49,7 @@ public class Menu {
                 return dishes;
         }
 
-        public void setId(int id) {
+        public void setId(Long id) {
                 this.id = id;
         }
 
