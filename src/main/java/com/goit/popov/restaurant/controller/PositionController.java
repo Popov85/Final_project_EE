@@ -75,7 +75,7 @@ public class PositionController {
                 }
                 Position position = positionService.getById(id);
                 map.addAttribute("position", position);
-                return "th/manager/update_position";
+                return "th/manager/edit_position";
         }
 
         @PostMapping(value="/admin/update_position")
@@ -83,18 +83,18 @@ public class PositionController {
                 if (result.hasErrors()) {
                         logger.error("Errors number while updating position: "+
                                 result.getFieldErrorCount());
-                        return "th/manager/update_position";
+                        return "th/manager/edit_position";
                 } else {
                         try {
                                 positionService.update(position);
                         } catch (DataIntegrityViolationException e) {
                                 logger.error("ERROR: "+e.getMessage()+" cause: "+e.getClass());
                                 model.addAttribute("error", UNIQUE_CONSTRAINT_MESSAGE);
-                                return "th/manager/update_position";
+                                return "th/manager/edit_position";
                         } catch (Exception e) {
                                 logger.error("ERROR: "+e.getMessage()+" cause: "+e.getClass());
                                 model.addAttribute("error", ANY_CONSTRAINT_MESSAGE);
-                                return "th/manager/update_position";
+                                return "th/manager/edit_position";
                         }
                         return "redirect:/admin/positions";
                 }

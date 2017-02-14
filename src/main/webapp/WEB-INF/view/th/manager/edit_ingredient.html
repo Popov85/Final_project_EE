@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Edit Ingredient</title>
+    <link rel="stylesheet" type="text/css" href="/css/lib/bootstrap-3.3.7.min.css"/>
+</head>
+<body>
+<div class="container">
+    <form action="#" th:action="@{/admin/update_ingredient}" th:object="${ingredient}" method="post"
+          style="max-width: 220px; margin: 0 auto; font-size: larger;">
+
+        <h3 class="form-signin-heading" align="center">Edit Ingredient</h3>
+
+        <div class="form-group">
+            <input type="hidden" name="id" id="id" th:field="*{id}"/>
+        </div>
+
+        <div th:class="${#fields.hasErrors('name') ? 'form-group has-error has-feedback' : 'form-group has success'}">
+            <label for="name">Name</label>
+            <input type="text" name="name" id="name" th:field="*{name}" style="width: 220px;" class="form-control"/>
+            <label class="control-label" for="name" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Incorrect
+                data</label>
+        </div>
+
+        <div th:class="${#fields.hasErrors('unit') ? 'form-group has-error has-feedback' : 'form-group has success'}">
+            <label for="name">Unit</label>
+            <select name="unit" id="unit" style="width: 150px" class="form-control">
+                <option th:each="unit : ${units}"
+                        th:value="${unit.id}"
+                        th:selected="(${unit.id} == *{unit.id})"
+                        th:text="${unit.name}">Unit
+                </option>
+            </select>
+            <label class="control-label" for="unit" th:if="${#fields.hasErrors('unit')}"
+                   th:errors="*{unit}">Incorrect data</label>
+        </div>
+
+        <label class="label label-danger" th:text="${constraintViolationError}"/>
+        <label class="label label-danger" th:text="${unexpectedError}"/>
+
+        <div class="form-group">
+            <div class="btn-group btn-group-justified">
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+                <div class="btn-group">
+                    <a th:href="@{/admin/}">
+                        <input type="button" class="btn btn-default" value="Cancel"/>
+                    </a>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <a class="hyperlink" href="/admin/ingredients">See all</a>
+                    </div>
+                    <div class="col-md-6" align="right">
+                        <a class="hyperlink" href="/">Home</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

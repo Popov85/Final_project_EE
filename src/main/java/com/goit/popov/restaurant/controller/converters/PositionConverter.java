@@ -13,10 +13,6 @@ public class PositionConverter implements Converter<String, Position> {
         @Autowired
         private PositionService positionService;
 
-        public void setPositionService(PositionService positionService) {
-                this.positionService = positionService;
-        }
-
         @Override
         public Position convert(String name) {
                 return this.positionService.getPositionByName(name);

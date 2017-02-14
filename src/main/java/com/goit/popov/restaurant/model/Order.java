@@ -212,27 +212,6 @@ public class Order {
         }
 
         @Override
-        public boolean equals(Object o) {
-                if (this == o) return true;
-                if (o == null || getClass() != o.getClass()) return false;
-
-                Order order = (Order) o;
-
-                if (isOpened != order.isOpened) return false;
-                if (!openedTimeStamp.equals(order.openedTimeStamp)) return false;
-                return table.equals(order.table);
-
-        }
-
-        @Override
-        public int hashCode() {
-                int result = (isOpened ? 1 : 0);
-                result = 31 * result + openedTimeStamp.hashCode();
-                result = 31 * result + table.hashCode();
-                return result;
-        }
-
-        @Override
         public String toString() {
                 return "\n Order{" +
                         "id=" + id +"\n"+

@@ -65,30 +65,6 @@ public class Employee {
         @Column(name = "PHOTO")
         private byte[] photo;
 
-        /*
-        @OneToMany(fetch = FetchType.LAZY, mappedBy = "waiter")
-        private Set<Order> orders;
-
-        public Optional getOrders() {
-                return Optional.ofNullable(orders);
-        }
-
-        public void setOrders(Set<Order> orders) {
-                this.orders = orders;
-        }
-
-        @OneToMany(fetch = FetchType.LAZY, mappedBy = "chef")
-        private Set<PreparedDish> preparedDishes;
-
-        public Optional getPreparedDishes() {
-                return Optional.ofNullable(preparedDishes);
-        }
-
-        public void setPreparedDishes(Set<PreparedDish> preparedDishes) {
-                this.preparedDishes = preparedDishes;
-        }
-        */
-
         public int getId() {
                 return id;
         }

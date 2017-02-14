@@ -40,19 +40,6 @@ public class Unit {
         }
 
         @Override
-        public boolean equals(Object o) {
-                if (this == o) return true;
-                if (o == null || getClass() != o.getClass()) return false;
-                Unit unit = (Unit) o;
-                return name.equals(unit.name);
-        }
-
-        @Override
-        public int hashCode() {
-                return name.hashCode();
-        }
-
-        @Override
         public String toString() {
                 return "Unit{" +
                         "id=" + id +

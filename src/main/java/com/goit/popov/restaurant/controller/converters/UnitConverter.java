@@ -13,10 +13,6 @@ public class UnitConverter implements Converter<String, Unit> {
         @Autowired
         private UnitService unitService;
 
-        public void setUnitService(UnitService unitService) {
-                this.unitService = unitService;
-        }
-
         @Override
         public Unit convert(String unitId) {
                 return unitService.getById(Integer.valueOf(unitId));

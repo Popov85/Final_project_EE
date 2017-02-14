@@ -25,7 +25,6 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -58,14 +57,9 @@ public class EmployeeController {
         }
 
         @ModelAttribute("positions")
-        public Map<String, String> populatePositions() {
+        public List<Position> populatePositions() {
                 List<Position> positions = positionService.getAll();
-                Map<String, String> positionsList = new HashMap<>();
-                positionsList.put("0", "--Select--");
-                for (Position position : positions) {
-                        positionsList.put(position.getName(), position.getName());
-                }
-                return positionsList;
+                return positions;
         }
 
         @InitBinder
@@ -84,7 +78,7 @@ public class EmployeeController {
 
         @RequestMapping("/admin/new_employee")
         public ModelAndView showEmployeeForm(){
-                return new ModelAndView("jsp/manager/new_employee","employee",new Employee());
+                return new ModelAndView("th/manager/new_employee","employee",new Employee());
         }
 
         @RequestMapping(value="/admin/save_employee",method = RequestMethod.POST)
@@ -92,7 +86,7 @@ public class EmployeeController {
                                    @RequestParam("position") String position, @RequestParam("photo") MultipartFile photo){
                 if (result.hasErrors()) {
                         logger.error("# of errors is: "+result.getFieldErrorCount());
-                        return "jsp/manager/new_employee";
+                        return "th/manager/new_employee";
                 }
                 try {
                         employeeService.insert(employee);
@@ -100,12 +94,12 @@ public class EmployeeController {
                         model.addAttribute("constraintViolationError", NON_UNIQUE_CONSTRAINT_MESSAGE);
                         logger.error("Constraint violation exception inserting employee: "+e.getMessage()+
                                 " exception name is: "+ e.getClass());
-                        return "jsp/manager/new_employee";
+                        return "th/manager/new_employee";
                 } catch (Throwable e) {
                         model.addAttribute("unexpectedError", e.getMessage());
                         logger.error("Another error inserting employee: "+e.getMessage()+
                                 "/ exception name is: "+ e.getClass());
-                        return "jsp/manager/new_employee";
+                        return "th/manager/new_employee";
                 }
                 //logger.info("Successfully added employee: "+employee);
                 return "redirect:/admin/employees";
@@ -117,10 +111,8 @@ public class EmployeeController {
                 logger.info("Editing class: "+employee.getClass()+" employee: "+employee);
                 map.addAttribute("employee", employee);
                 map.addAttribute("positions", populatePositions());
-
-                //session.setAttribute("position",employee.getPosition().getName());
                 session.setAttribute("file",employee.getPhoto());
-                return "jsp/manager/update_employee";
+                return "th/manager/edit_employee";
         }
 
         @RequestMapping(value="/admin/update_employee", method = RequestMethod.POST)
@@ -129,10 +121,10 @@ public class EmployeeController {
                                      @RequestParam("photo") MultipartFile photo){
                 logger.info("Updating class: "+employee.getClass()+" employee: "+employee);
                 if (result.hasErrors()) {
-                        logger.error("# of errors is: "+result.getFieldErrorCount());
-                        return "jsp/manager/update_employee";
+                        logger.error("# of errors is: "+result.getFieldErrorCount()+" cause: "+result.getFieldError("position"));
+
+                        return "th/manager/edit_employee";
                 }
-                //String previousPosition = (String) session.getAttribute("position");
                 if (photo.isEmpty()) employee.setPhoto((byte[]) session.getAttribute("file"));
                 try {
                         employeeService.update(employee);
@@ -140,19 +132,19 @@ public class EmployeeController {
                         model.addAttribute("constraintViolationError", NON_UNIQUE_CONSTRAINT_MESSAGE);
                         logger.error("Constraint violation exception updating employee: "+e.getMessage()+
                                 "/ exception name is: "+ e.getClass());
-                        return "jsp/manager/update_employee";
+                        return "th/manager/edit_employee";
                 } catch (PersistenceException e) {
                         model.addAttribute("integrityViolationError", e.getMessage());
                         logger.error("Data integrity exception updating employee: "+e.getMessage()+
                                 "/ exception name is: "+ e.getClass());
-                        return "jsp/manager/update_employee";
+                        return "th/manager/edit_employee";
                 } catch (Throwable e) {
                         model.addAttribute("unexpectedError", e.getMessage());
                         logger.error("Another error updating employee: "+e.getMessage()+
                                 "/ exception name is: "+ e.getClass());
-                        return "jsp/manager/update_employee";
+                        return "th/manager/edit_employee";
                 }
-                logger.info("Successfully updated employee: "+employee);
+                //logger.info("Successfully updated employee: "+employee);
                 return "redirect:/admin/employees";
         }
 

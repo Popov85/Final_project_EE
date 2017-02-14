@@ -2,6 +2,7 @@ package com.goit.popov.restaurant.controller;
 
 import ch.qos.logback.classic.Logger;
 import com.goit.popov.restaurant.model.Ingredient;
+import com.goit.popov.restaurant.model.Position;
 import com.goit.popov.restaurant.model.Unit;
 import com.goit.popov.restaurant.service.IngredientService;
 import com.goit.popov.restaurant.service.UnitService;
@@ -36,21 +37,15 @@ public class IngredientController {
         @Autowired
         private UnitService unitService;
 
-        // Populate units
         @ModelAttribute("units")
-        public Map<String, String> populatePositions() {
+        public List<Unit> populatePositions() {
                 List<Unit> units = unitService.getAll();
-                Map<String, String> unitsList = new HashMap<>();
-                unitsList.put("0", "--Select--");
-                for (Unit unit : units) {
-                        unitsList.put(Integer.toString(unit.getId()), unit.getName());
-                }
-                return unitsList;
+                return units;
         }
 
         @GetMapping("/admin/new_ingredient")
         public ModelAndView showIngredientForm() {
-                return new ModelAndView("jsp/manager/new_ingredient", "ingredient", new Ingredient());
+                return new ModelAndView("th/manager/new_ingredient", "ingredient", new Ingredient());
         }
 
         @RequestMapping(value = "/admin/ingredients", method = RequestMethod.GET)
@@ -71,14 +66,14 @@ public class IngredientController {
         public String saveIngredient(@Valid @ModelAttribute("ingredient") Ingredient ingredient, BindingResult result, Model model) {
                 if (result.hasErrors()) {
                         logger.error("Errors(" + result.getErrorCount() + "): during creating!");
-                        return "jsp/manager/new_ingredient";
+                        return "th/manager/new_ingredient";
                 }
                 try {
                         ingredientService.insert(ingredient);
                 } catch (Exception e) {
                         logger.error("ERROR: "+e.getCause());
                         model.addAttribute("constraintViolationError",CONSTRAINT_VIOLATION_MESSAGE);
-                        return "jsp/manager/new_ingredient";
+                        return "th/manager/new_ingredient";
                 }
                 return "redirect:/admin/ingredients";
         }
@@ -86,21 +81,21 @@ public class IngredientController {
         @RequestMapping(value = "/admin/edit_ingredient/{id}", method = RequestMethod.GET)
         public ModelAndView edit(@PathVariable int id) {
                 Ingredient ing = ingredientService.getById(id);
-                return new ModelAndView("jsp/manager/update_ingredient", "ingredient", ing);
+                return new ModelAndView("th/manager/edit_ingredient", "ingredient", ing);
         }
 
         @RequestMapping(value = "/admin/update_ingredient", method = RequestMethod.POST)
         public String editSave(@Valid @ModelAttribute Ingredient ingredient, BindingResult result, Model model) {
                 if (result.hasErrors()) {
                         logger.error("Errors(" + result.getErrorCount() + "): during updating!");
-                        return "jsp/manager/update_ingredient";
+                        return "th/manager/edit_ingredient";
                 }
                 try {
                         ingredientService.update(ingredient);
                 } catch (Exception e) {
                         logger.error("ERROR: "+e.getCause());
                         model.addAttribute("constraintViolationError", CONSTRAINT_VIOLATION_MESSAGE);
-                        return "jsp/update_ingredient";
+                        return "th/admin/edit_ingredient";
                 }
                 return "redirect:/admin/ingredients";
         }
