@@ -64,9 +64,8 @@ $(document).ready(function () {
 $(document).ready(function () {
     $('#editIngredientsForm').submit(function (event) {
         var updatedDish = new Object();
-        updatedDish.dishId = parseInt($.url().param("dishId"));
+        updatedDish.dishId = $.url().param("dishId");
         updatedDish.ingredients = getIngredients();
-        // updatedDish.menus = $('#menus').val();
         $.ajax({
             url: "/admin/update_dishs_ingredients",
             dataType: 'json',

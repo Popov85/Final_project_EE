@@ -4,7 +4,6 @@ import ch.qos.logback.classic.Logger;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.IntNode;
 import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Order;
 import com.goit.popov.restaurant.service.DishServiceImpl;
@@ -26,7 +25,7 @@ public class OrderDeserializer extends JsonDeserializer<Order> {
         private static Logger logger = (Logger) LoggerFactory.getLogger(OrderDeserializer.class);
 
         @Autowired
-        private EmployeeService Waiter;
+        private EmployeeService waiterService;
 
         @Autowired
         private DishServiceImpl dishService;
@@ -55,12 +54,15 @@ public class OrderDeserializer extends JsonDeserializer<Order> {
                 Map<Dish, Integer> dishesInMap = null;
                 Order order = null;
                 try {
-                        id = (Long) ((IntNode) node.get("id")).numberValue();
+                        id = Long.parseLong(node.get("id").asText());
+                        logger.info("OK. id= "+id);
                         table = node.get("table").asText();
                         dishes = ((ArrayNode) node.get("dishes"));
                         dishesInMap = convertJSONToMap(dishes);
+                        logger.info("OK. map= "+dishesInMap.size());
                         if (id==0 ) {
-                                waiterId = (Long) ((IntNode) node.get("waiter")).numberValue();
+                                String wid = node.get("waiter").asText();
+                                waiterId = Long.parseLong(wid);
                                 isOpened = true;
                                 openedTimeStamp = convertStringToData(node.get("openedTimeStamp").asText());
                                 order = createOrder(id, isOpened, openedTimeStamp, closedTimeStamp,
@@ -94,7 +96,7 @@ public class OrderDeserializer extends JsonDeserializer<Order> {
                 order.setOpenedTimeStamp(openedTimeStamp);
                 order.setClosedTimeStamp(closedTimeStamp);
                 order.setTable(table);
-                order.setWaiter(Waiter.getById(waiterId));
+                order.setWaiter(waiterService.getById(waiterId));
                 order.setDishes(dishesInMap);
                 return order;
         }
@@ -120,7 +122,7 @@ public class OrderDeserializer extends JsonDeserializer<Order> {
                 Map<Dish, Integer> map = new HashMap<>();
                 try {
                         for (JsonNode jsonNode : arrayNode) {
-                                Dish dish = dishService.getById((Long) jsonNode.get("dishId").numberValue()); ;
+                                Dish dish = dishService.getById(Long.parseLong(jsonNode.get("dishId").asText()));
                                 Integer quantity = (Integer) jsonNode.get("quantity").numberValue();
                                 if (quantity <= 0) throw new RuntimeException("Quantity cannot be negative!");
                                 map.put(dish, quantity);

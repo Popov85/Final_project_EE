@@ -73,7 +73,7 @@ $(document).ready(function () {
         order.id = 0;
         order.openedTimeStamp = new Date();
         order.table = $('#table').val();
-        order.waiter = parseInt($('#waiterId').val());
+        order.waiter = $('#waiterId').val();
         order.dishes = getDishes();
         $.ajax({
             url: "/waiter/edit_order",

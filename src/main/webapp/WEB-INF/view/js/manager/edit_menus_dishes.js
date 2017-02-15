@@ -67,7 +67,7 @@ $(document).ready(function () {
 $(document).ready(function () {
     $('#editDishesForm').submit(function (event) {
         var updatedMenu = new Object();
-        updatedMenu.menuId = parseInt($.url().param("menuId"));
+        updatedMenu.menuId = $.url().param("menuId");
         updatedMenu.dishes = getDishes();
         $.ajax({
             url: "/admin/update_menus_dishes",
