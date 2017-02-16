@@ -52,7 +52,7 @@ public class DishController {
                 return dishService.getById(dishId);
         }
 
-        @PostMapping(value = "/all/get_all_dishes")
+        @PostMapping(value = { "/all/get_all_dishes", "/waiter/get_dishes" })
         @ResponseBody
         public DataTablesOutputDTOUniversal<Dish> getDishes(DataTablesInputExtendedDTO input) {
                 DataTablesOutputDTOUniversal<Dish> data = dishService.getAll(input);
@@ -104,7 +104,6 @@ public class DishController {
 
         @GetMapping(value = "/admin/edit_dishs_ingredients")
         public String showDishsIngredientsEditForm(@RequestParam("dishId") int dishId) {
-                // TODO
                 return "th/manager/edit_dishs_ingredients";
         }
 

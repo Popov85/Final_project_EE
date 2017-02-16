@@ -18,7 +18,7 @@ import java.util.List;
 @Transactional
 public class DishDAOImplJPA implements DishDAO {
 
-        private static final Logger logger = (Logger) LoggerFactory.getLogger(DishDAOImplJPA.class);
+        private static final Logger lOGGER = (Logger) LoggerFactory.getLogger(DishDAOImplJPA.class);
 
         @Autowired
         private SessionFactory sessionFactory;

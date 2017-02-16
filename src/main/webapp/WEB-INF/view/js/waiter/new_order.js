@@ -40,14 +40,22 @@ $(document).ready(function () {
             "type": "POST",
             "dataType": "json"
         },
-        // TODO
-        serverSide: false,
+        serverSide: true,
+        columnDefs: [
+            { "width": "5%", "targets": 0 },
+            { "width": "30%", "targets": 1 },
+            { "width": "30%", "targets": 2 },
+            { "width": "10%", "targets": 3 },
+            { "width": "10%", "targets": 4 },
+            { "width": "15%", "targets": 5 }
+        ],
         columns: [
-            {"data": "id", "visible": false, "searchable": false},
-            {"data": "name"},
-            {"data": "category"},
-            {"data": "price"},
-            {"data": "weight"},
+            { "data": "id", "name": "id",  "title": "id", "visible": false},
+            { "data": "name", "name": "name", "title": "Dish"},
+            { "data": "category", "name": "category", "title": "Category"},
+            { "data": "weight", "name": "weight", "title": "Weight, g"},
+            { "data": "price", "name": "price", "title": "Price, $"},
+
             {"data": null, "defaultContent": "<button>Add</button>"}
         ]
     });
@@ -59,7 +67,7 @@ $(document).ready(function () {
         t.row.add([
             data.id,
             data.name,
-            '<input type="text" value = "1" size = "2" name="input" onchange="alert(\'' + data.price + '\')"/>',
+            '<input type="text" value = "1" size = "2" name="input"/>',
             data.price,
             '<button type="button" class="btn btn-default" id="delRow" name ="delRow">Del</button>'
         ]).draw(true);

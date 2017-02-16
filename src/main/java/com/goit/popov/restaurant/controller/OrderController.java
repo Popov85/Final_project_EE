@@ -42,15 +42,6 @@ public class OrderController {
         @Autowired
         private OrderService orderService;
 
-        // Auxiliary data source for creating Orders
-        @PostMapping("/waiter/get_dishes")
-        @ResponseBody
-        public DataTablesOutputDTOListWrapper<Dish> getDishes() {
-                DataTablesOutputDTOListWrapper<Dish> data = new DataTablesOutputDTOListWrapper<>();
-                data.setData(dishService.getAll());
-                return data;
-        }
-
         // Auxiliary data source for fetching Order's existing dishes
         @PostMapping("/waiter/get_orders_dishes")
         @ResponseBody
