@@ -1,7 +1,7 @@
 package com.goit.popov.restaurant.controller;
 
 import com.goit.popov.restaurant.model.Menu;
-import com.goit.popov.restaurant.service.MenuService;
+import com.goit.popov.restaurant.service.MenuServiceImpl;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +17,7 @@ import java.util.List;
 public class RESTController {
 
         @Autowired
-        MenuService menuService;
+        MenuServiceImpl menuService;
 
         @RequestMapping("/menus")
         public String getJSONMenus() throws IOException {

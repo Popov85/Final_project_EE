@@ -1,10 +1,8 @@
 package com.goit.popov.restaurant.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.goit.popov.restaurant.controller.converters.DishDeserializer;
-import com.goit.popov.restaurant.controller.converters.ListToStringSerializer;
+import com.goit.popov.restaurant.controller.converters.MenuListSerializer;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
@@ -20,7 +18,6 @@ import java.util.Map;
  */
 @Entity
 @Table(name = "dish")
-@JsonDeserialize(using = DishDeserializer.class)
 public class Dish {
         @Id
         @GeneratedValue(generator = "increment")
@@ -49,7 +46,7 @@ public class Dish {
         @Column(name = "WEIGHT")
         private Double weight;
 
-        @JsonSerialize(using = ListToStringSerializer.class)
+        @JsonSerialize(using = MenuListSerializer.class)
         @ManyToMany(fetch = FetchType.EAGER, mappedBy="dishes")
         private List<Menu> menus;
 
@@ -126,6 +123,7 @@ public class Dish {
                         ", price=" + price +
                         ", weight=" + weight +
                         ", menus=" + (menus!=null ? menus.size():"no menus") +
+                        ", ingredients=" + (ingredients!=null ? ingredients.size():"no ingredients") +
                         '}';
         }
 

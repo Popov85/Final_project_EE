@@ -6,9 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Order;
+import com.goit.popov.restaurant.service.DishService;
 import com.goit.popov.restaurant.service.OrderService;
 import com.goit.popov.restaurant.service.dataTables.*;
-import com.goit.popov.restaurant.service.DishServiceImpl;
 import com.goit.popov.restaurant.service.exceptions.NotEnoughIngredientsException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ import java.util.List;
 @Controller
 public class OrderController {
 
-        private static final Logger logger = (Logger) LoggerFactory.getLogger(OrderController.class);
+        private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(OrderController.class);
 
         private static final String NO_DISHES_MESSAGE = "Order must contain dishes!";
         private static final String INGREDIENTS_SHORTAGE_MESSAGE = "Not enough ingredients to fulfill the order!";
@@ -37,7 +37,7 @@ public class OrderController {
         private static final String UNEXPECTED_ERROR_MESSAGE ="Unexpected error happened";
 
         @Autowired
-        private DishServiceImpl dishService;
+        private DishService dishService;
 
         @Autowired
         private OrderService orderService;
@@ -105,7 +105,7 @@ public class OrderController {
         @PostMapping(value = "/waiter/get_order")
         @ResponseBody
         public Order getOrder(@RequestParam Long orderId) {
-                logger.info("Order: "+orderService.getById(orderId));
+                LOGGER.info("Order: "+orderService.getById(orderId));
                 return orderService.getById(orderId);
         }
 
@@ -148,9 +148,9 @@ public class OrderController {
 
         @PostMapping(value="/waiter/edit_order")
         public ResponseEntity createOrUpdateOrder(@RequestBody Order order) {
-                logger.info("Create/Edit order #: "+order.getId());
+                LOGGER.info("Create/Edit order #: "+order.getId());
                 if (order.getDishes().isEmpty()) {
-                        logger.error("Error: "+NO_DISHES_MESSAGE);
+                        LOGGER.error("Error: "+NO_DISHES_MESSAGE);
                         return new ResponseEntity(NO_DISHES_MESSAGE,
                                 HttpStatus.FORBIDDEN);
                 }
@@ -158,21 +158,21 @@ public class OrderController {
                 try {
                         orderService.processOrder(order);
                 } catch (UnsupportedOperationException e) {
-                        logger.error("Error: "+ FORBIDDEN_ACTION_MESSAGE);
+                        LOGGER.error("Error: "+ FORBIDDEN_ACTION_MESSAGE);
                         return new ResponseEntity(FORBIDDEN_ACTION_MESSAGE,
                                 HttpStatus.FORBIDDEN);
                 } catch (NotEnoughIngredientsException e) {
-                        logger.error("Error: "+INGREDIENTS_SHORTAGE_MESSAGE);
+                        LOGGER.error("Error: "+INGREDIENTS_SHORTAGE_MESSAGE);
                         return new ResponseEntity(INGREDIENTS_SHORTAGE_MESSAGE,
                                 HttpStatus.FORBIDDEN);
                 } catch (Exception e) {
-                        logger.error("Error: "+e.getMessage()+
+                        LOGGER.error("Error: "+e.getMessage()+
                                      "Cause: "+e.getCause()+ "Class: "+e.getClass());
                         return new ResponseEntity("Error: "+UNEXPECTED_ERROR_MESSAGE,
                                 HttpStatus.FORBIDDEN);
                 }
                 long endTime   = System.currentTimeMillis();
-                logger.info("VALIDATION RUNTIME: "+(endTime - startTime)+" ms");
+                LOGGER.info("VALIDATION RUNTIME: "+(endTime - startTime)+" ms");
                 return new ResponseEntity("{\"Result\": \"Success\"}", HttpStatus.OK);
         }
 
@@ -182,7 +182,7 @@ public class OrderController {
                 try {
                         url = new URL(request.getHeader("referer"));
                         orderService.deleteById(id);
-                        logger.info("Deleted Order #: "+id);
+                        LOGGER.info("Deleted Order #: "+id);
                 } catch (Exception e) {
                         setErrorMessages(id, ra,
                                 HttpStatus.FORBIDDEN.toString(),
@@ -199,7 +199,7 @@ public class OrderController {
                 try {
                         url = new URL(request.getHeader("referer"));
                         orderService.closeOrder(id);
-                        logger.info("Closed Order #: "+id);
+                        LOGGER.info("Closed Order #: "+id);
                 } catch (Exception e) {
                         setErrorMessages(id, ra,
                                 HttpStatus.FORBIDDEN.toString(),
@@ -216,7 +216,7 @@ public class OrderController {
                 try {
                         url = new URL(request.getHeader("referer"));
                         orderService.cancelOrder(id);
-                        logger.info("Cancelled Order #: "+id);
+                        LOGGER.info("Cancelled Order #: "+id);
                 } catch (Exception e) {
                         setErrorMessages(id, ra,
                                 HttpStatus.FORBIDDEN.toString(),
@@ -228,7 +228,7 @@ public class OrderController {
         }
 
         private void setErrorMessages(Long id, RedirectAttributes ra, String... messages) {
-                logger.error("ERROR: status: "+messages[0]+" / error: "+messages[1]+"/ message: "+messages[2]);
+                LOGGER.error("ERROR: status: "+messages[0]+" / error: "+messages[1]+"/ message: "+messages[2]);
                 ra.addFlashAttribute("status", messages[0]);
                 ra.addFlashAttribute("error", messages[1]);
                 ra.addFlashAttribute("message", messages[2]);

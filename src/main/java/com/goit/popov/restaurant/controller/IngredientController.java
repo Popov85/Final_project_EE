@@ -25,7 +25,7 @@ import java.util.Map;
 @Controller
 public class IngredientController {
 
-        static Logger logger = (Logger) LoggerFactory.getLogger(IngredientController.class);
+        private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(IngredientController.class);
 
         private static final String CONSTRAINT_VIOLATION_MESSAGE = "Constraint violation error!";
 
@@ -63,13 +63,13 @@ public class IngredientController {
         @RequestMapping(value = "/admin/save_ingredient", method = RequestMethod.POST)
         public String saveIngredient(@Valid @ModelAttribute("ingredient") Ingredient ingredient, BindingResult result, Model model) {
                 if (result.hasErrors()) {
-                        logger.error("Errors(" + result.getErrorCount() + "): during creating!");
+                        LOGGER.error("Errors(" + result.getErrorCount() + "): during creating!");
                         return "th/manager/new_ingredient";
                 }
                 try {
                         ingredientService.insert(ingredient);
                 } catch (Exception e) {
-                        logger.error("ERROR: "+e.getCause());
+                        LOGGER.error("ERROR: "+e.getCause());
                         model.addAttribute("constraintViolationError",CONSTRAINT_VIOLATION_MESSAGE);
                         return "th/manager/new_ingredient";
                 }
@@ -85,13 +85,13 @@ public class IngredientController {
         @RequestMapping(value = "/admin/update_ingredient", method = RequestMethod.POST)
         public String editSave(@Valid @ModelAttribute Ingredient ingredient, BindingResult result, Model model) {
                 if (result.hasErrors()) {
-                        logger.error("Errors(" + result.getErrorCount() + "): during updating!");
+                        LOGGER.error("Errors(" + result.getErrorCount() + "): during updating!");
                         return "th/manager/edit_ingredient";
                 }
                 try {
                         ingredientService.update(ingredient);
                 } catch (Exception e) {
-                        logger.error("ERROR: "+e.getCause());
+                        LOGGER.error("ERROR: "+e.getCause());
                         model.addAttribute("constraintViolationError", CONSTRAINT_VIOLATION_MESSAGE);
                         return "th/admin/edit_ingredient";
                 }

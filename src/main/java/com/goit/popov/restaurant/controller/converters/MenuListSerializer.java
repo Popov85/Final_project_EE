@@ -14,12 +14,12 @@ import java.util.List;
 /**
  * Created by Andrey on 01.02.2017.
  */
-public class ListToStringSerializer extends JsonSerializer<List<Object>> {
+public class MenuListSerializer extends JsonSerializer<List<Menu>> {
 
-        private static final Logger logger = (Logger) LoggerFactory.getLogger(ListToStringSerializer.class);
+        private static final Logger logger = (Logger) LoggerFactory.getLogger(MenuListSerializer.class);
 
         @Override
-        public void serialize(List<Object> value, JsonGenerator gen, SerializerProvider serializers) throws IOException, JsonProcessingException {
+        public void serialize(List<Menu> value, JsonGenerator gen, SerializerProvider serializers) throws IOException, JsonProcessingException {
                 try {
                         if (!value.isEmpty()) {
                                 // TODO {insert a link to a list of menus}

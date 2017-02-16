@@ -8,53 +8,35 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.IntNode;
-import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Ingredient;
-import com.goit.popov.restaurant.service.DishService;
+import com.goit.popov.restaurant.model.json.DishWrapper;
 import com.goit.popov.restaurant.service.IngredientService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Andrey on 03.02.2017.
+ * Created by Andrey on 16.02.2017.
  */
-public class DishDeserializer extends JsonDeserializer<Dish> {
+public class DishWrapperDeserializer extends JsonDeserializer<DishWrapper> {
 
-        private static Logger logger = (Logger) LoggerFactory.getLogger(DishDeserializer.class);
-
-        @Autowired
-        private DishService dishService;
+        private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(DishWrapperDeserializer.class);
 
         @Autowired
         private IngredientService ingredientService;
 
         @Override
-        public Dish deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+        public DishWrapper deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
                 JsonNode node = null;
                 try {
                         node = p.getCodec().readTree(p);
                 } catch (IOException e) {
-                        logger.info("Error while obtaining the node tree: "+e.getMessage());
+                        LOGGER.info("Error while obtaining the node tree: "+e.getMessage());
                 }
-                Dish dish = null;
-                try {
-                        Long dishId = Long.parseLong(node.get("dishId").asText());
-                        dish = dishService.getById(dishId);
-                        ArrayNode ingredients = ((ArrayNode) node.get("ingredients"));
-                        Map<Ingredient, Double> ingredientsInMap = convertJSONToMap(ingredients);
-                        dish.setIngredients(ingredientsInMap);
-                } catch (Exception e) {
-                        logger.error("Error: "+e.getMessage());
-                }
-
-                return dish;
-        }
-
-        private Map<Ingredient,Double> convertJSONToMap(ArrayNode ingredients) {
+                ArrayNode ingredients = ((ArrayNode) node.get("ingredients"));
                 ObjectMapper mapper = new ObjectMapper();
                 Map<Ingredient, Double> ingredientsInMap = new HashMap<>();
                 try {
@@ -65,8 +47,10 @@ public class DishDeserializer extends JsonDeserializer<Dish> {
                                 ingredientsInMap.put(ingredient, quantity);
                         }
                 } catch (Exception e) {
-                        logger.error("Error: "+e.getMessage());
+                        LOGGER.error("Error: "+e.getMessage());
                 }
-                return ingredientsInMap;
+                DishWrapper dw = new DishWrapper();
+                dw.setIngredients(ingredientsInMap);
+                return dw;
         }
 }

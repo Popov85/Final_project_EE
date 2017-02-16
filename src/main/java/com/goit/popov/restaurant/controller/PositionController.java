@@ -23,7 +23,7 @@ import java.util.Map;
 @Controller
 public class PositionController {
 
-        static Logger logger = (Logger) LoggerFactory.getLogger(PositionController.class);
+        private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(PositionController.class);
 
         private static final String FORBIDDEN_ACTION_MESSAGE = "You cannot perform this operation!";
         private static final String UNIQUE_CONSTRAINT_MESSAGE = "The value entered is not unique!";
@@ -46,18 +46,18 @@ public class PositionController {
         @PostMapping(value="/admin/save_position")
         public String savePosition(@Valid @ModelAttribute("position") Position position, BindingResult result, Model model){
                 if (result.hasErrors()) {
-                        logger.error("Errors number while saving new position: "+
+                        LOGGER.error("Errors number while saving new position: "+
                                 result.getFieldErrorCount());
                         return "th/manager/new_position";
                 }
                 try {
                         positionService.save(position);
                 } catch (DataIntegrityViolationException e) {
-                        logger.error("ERROR: "+e.getMessage()+" cause: "+e.getClass());
+                        LOGGER.error("ERROR: "+e.getMessage()+" cause: "+e.getClass());
                         model.addAttribute("error", UNIQUE_CONSTRAINT_MESSAGE);
                         return "th/manager/new_position";
                 } catch (Exception e) {
-                        logger.error("ERROR: "+e.getMessage()+" cause: "+e.getClass());
+                        LOGGER.error("ERROR: "+e.getMessage()+" cause: "+e.getClass());
                         model.addAttribute("error", FORBIDDEN_ACTION_MESSAGE);
                         return "th/manager/new_position";
                 }
@@ -81,18 +81,18 @@ public class PositionController {
         @PostMapping(value="/admin/update_position")
         public String updatePosition(@Valid @ModelAttribute("position") Position position, BindingResult result, Model model){
                 if (result.hasErrors()) {
-                        logger.error("Errors number while updating position: "+
+                        LOGGER.error("Errors number while updating position: "+
                                 result.getFieldErrorCount());
                         return "th/manager/edit_position";
                 } else {
                         try {
                                 positionService.update(position);
                         } catch (DataIntegrityViolationException e) {
-                                logger.error("ERROR: "+e.getMessage()+" cause: "+e.getClass());
+                                LOGGER.error("ERROR: "+e.getMessage()+" cause: "+e.getClass());
                                 model.addAttribute("error", UNIQUE_CONSTRAINT_MESSAGE);
                                 return "th/manager/edit_position";
                         } catch (Exception e) {
-                                logger.error("ERROR: "+e.getMessage()+" cause: "+e.getClass());
+                                LOGGER.error("ERROR: "+e.getMessage()+" cause: "+e.getClass());
                                 model.addAttribute("error", ANY_CONSTRAINT_MESSAGE);
                                 return "th/manager/edit_position";
                         }
@@ -108,14 +108,14 @@ public class PositionController {
                         positionService.deleteById(id);
                 } catch (UnsupportedOperationException e) {
                         ra.addFlashAttribute("error", e.getMessage());
-                        logger.error(FORBIDDEN_ACTION_MESSAGE +e.getMessage()+
+                        LOGGER.error(FORBIDDEN_ACTION_MESSAGE +e.getMessage()+
                                 "/ exception name is: "+ e.getClass());
                         return "redirect:/error";
                 } catch (Exception e) {
                         ra.addFlashAttribute("status", HttpStatus.FORBIDDEN);
                         ra.addFlashAttribute("error", "This position seemingly has references!");
                         ra.addFlashAttribute("message", ANY_CONSTRAINT_MESSAGE);
-                        logger.error("ERROR: " +e.getMessage()+
+                        LOGGER.error("ERROR: " +e.getMessage()+
                                 "/ exception name is: "+ e.getClass());
                         return "redirect:/error";
                 }

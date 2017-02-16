@@ -7,7 +7,6 @@ import com.goit.popov.restaurant.service.PositionService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -34,7 +33,7 @@ import java.util.Map;
 @Controller
 public class EmployeeController {
 
-        private static final Logger logger = (Logger) LoggerFactory.getLogger(EmployeeController.class);
+        private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(EmployeeController.class);
 
         private static final String NON_UNIQUE_CONSTRAINT_MESSAGE = "Some values on the form are not unique";
         private static final String DELETION_FAILURE_MESSAGE = "Failed to deleteById an employee: id =";
@@ -68,7 +67,7 @@ public class EmployeeController {
         }
 
         @GetMapping(value = "/admin/employees")
-        public String employeesTh(Map<String, Object> model) {
+        public String getEmployees(Map<String, Object> model) {
                 model.put("employees", employeeService.getAll());
                 return "th/manager/employees";
         }
@@ -82,30 +81,30 @@ public class EmployeeController {
         public String saveEmployee(@Valid @ModelAttribute("employee") Employee employee, BindingResult result, Model model,
                                    @RequestParam("position") String position, @RequestParam("photo") MultipartFile photo){
                 if (result.hasErrors()) {
-                        logger.error("# of errors is: "+result.getFieldErrorCount());
+                        LOGGER.error("# of errors is: "+result.getFieldErrorCount());
                         return "th/manager/new_employee";
                 }
                 try {
                         employeeService.insert(employee);
                 } catch (DataIntegrityViolationException e) {
                         model.addAttribute("constraintViolationError", NON_UNIQUE_CONSTRAINT_MESSAGE);
-                        logger.error("Constraint violation exception inserting employee: "+e.getMessage()+
+                        LOGGER.error("Constraint violation exception inserting employee: "+e.getMessage()+
                                 " exception name is: "+ e.getClass());
                         return "th/manager/new_employee";
                 } catch (Throwable e) {
                         model.addAttribute("unexpectedError", e.getMessage());
-                        logger.error("Another error inserting employee: "+e.getMessage()+
+                        LOGGER.error("Another error inserting employee: "+e.getMessage()+
                                 "/ exception name is: "+ e.getClass());
                         return "th/manager/new_employee";
                 }
-                //logger.info("Successfully added employee: "+employee);
+                LOGGER.info("Successfully added employee: "+employee);
                 return "redirect:/admin/employees";
         }
 
         @RequestMapping(value = "/admin/edit_employee/{id}", method = RequestMethod.GET)
         public String showEmployeeEditForm(@PathVariable("id") Long id, ModelMap map, HttpSession session){
                 Employee employee = employeeService.getById(id);
-                logger.info("Editing class: "+employee.getClass()+" employee: "+employee);
+                LOGGER.info("Editing class: "+employee.getClass()+" employee: "+employee);
                 map.addAttribute("employee", employee);
                 map.addAttribute("positions", populatePositions());
                 session.setAttribute("file",employee.getPhoto());
@@ -116,9 +115,8 @@ public class EmployeeController {
         public String updateEmployee(@Valid @ModelAttribute("employee") Employee employee, BindingResult result,
                                      @RequestParam("position") String newPosition, HttpSession session, Model model,
                                      @RequestParam("photo") MultipartFile photo){
-                logger.info("Updating class: "+employee.getClass()+" employee: "+employee);
                 if (result.hasErrors()) {
-                        logger.error("# of errors is: "+result.getFieldErrorCount()+" cause: "+result.getFieldError("position"));
+                        LOGGER.error("# of errors is: "+result.getFieldErrorCount()+" cause: "+result.getFieldError("position"));
 
                         return "th/manager/edit_employee";
                 }
@@ -127,21 +125,21 @@ public class EmployeeController {
                         employeeService.update(employee);
                 } catch (DataIntegrityViolationException e) {
                         model.addAttribute("constraintViolationError", NON_UNIQUE_CONSTRAINT_MESSAGE);
-                        logger.error("Constraint violation exception updating employee: "+e.getMessage()+
+                        LOGGER.error("Constraint violation exception updating employee: "+e.getMessage()+
                                 "/ exception name is: "+ e.getClass());
                         return "th/manager/edit_employee";
                 } catch (PersistenceException e) {
                         model.addAttribute("integrityViolationError", e.getMessage());
-                        logger.error("Data integrity exception updating employee: "+e.getMessage()+
+                        LOGGER.error("Data integrity exception updating employee: "+e.getMessage()+
                                 "/ exception name is: "+ e.getClass());
                         return "th/manager/edit_employee";
                 } catch (Throwable e) {
                         model.addAttribute("unexpectedError", e.getMessage());
-                        logger.error("Another error updating employee: "+e.getMessage()+
+                        LOGGER.error("Another error updating employee: "+e.getMessage()+
                                 "/ exception name is: "+ e.getClass());
                         return "th/manager/edit_employee";
                 }
-                //logger.info("Successfully updated employee: "+employee);
+                LOGGER.info("Successfully updated employee: "+employee);
                 return "redirect:/admin/employees";
         }
 
@@ -153,14 +151,14 @@ public class EmployeeController {
                         ra.addFlashAttribute("status", HttpStatus.FORBIDDEN);
                         ra.addFlashAttribute("error", "Constraint violation exception deleting employee!");
                         ra.addFlashAttribute("message", DELETION_FAILURE_MESSAGE +id);
-                        logger.error("Constraint violation exception deleting employee: "+e.getMessage()+
+                        LOGGER.error("Constraint violation exception deleting employee: "+e.getMessage()+
                                 "/ exception name is: "+ e.getClass());
                         return "redirect:/error";
                 } catch (Throwable e) {
                         ra.addFlashAttribute("status", HttpStatus.FORBIDDEN);
                         ra.addFlashAttribute("error", e.getMessage());
                         ra.addFlashAttribute("message", DELETION_FAILURE_MESSAGE +id);
-                        logger.error("Unexpected exception deleting employee: "+e.getMessage()+
+                        LOGGER.error("Unexpected exception deleting employee: "+e.getMessage()+
                                 "/ exception name is: "+ e.getClass());
                         return "redirect:/error";
                 }

@@ -65,19 +65,9 @@ public class DishServiceImpl implements DishService {
         }
 
         @Override
-        public void updateDishWithoutIngredients(Dish dish) {
-                Dish updatedDish = getById(dish.getId());
-                updatedDish.setName(dish.getName());
-                updatedDish.setCategory(dish.getCategory());
-                updatedDish.setWeight(dish.getWeight());
-                updatedDish.setPrice(dish.getPrice());
-                update(updatedDish);
-        }
-
-        @Override
-        public void updateDishsIngredients(Dish dish) {
-                Dish updatedDish = getById(dish.getId());
-                updatedDish.setIngredients(dish.getIngredients());
+        public void updateDishsIngredients(Long dishId, Map<Ingredient, Double> ingredients) {
+                Dish updatedDish = getById(dishId);
+                updatedDish.setIngredients(ingredients);
                 update(updatedDish);
         }
 

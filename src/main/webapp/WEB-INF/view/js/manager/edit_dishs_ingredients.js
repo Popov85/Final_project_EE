@@ -60,14 +60,15 @@ $(document).ready(function () {
     });
 });
 
-
+/**
+ * Update a Dish's ingredients
+ */
 $(document).ready(function () {
     $('#editIngredientsForm').submit(function (event) {
         var updatedDish = new Object();
-        updatedDish.dishId = $.url().param("dishId");
         updatedDish.ingredients = getIngredients();
         $.ajax({
-            url: "/admin/update_dishs_ingredients",
+            url: "/admin/update_dishs_ingredients?dishId="+$.url().param("dishId"),
             dataType: 'json',
             type: "POST",
             contentType: "application/json",

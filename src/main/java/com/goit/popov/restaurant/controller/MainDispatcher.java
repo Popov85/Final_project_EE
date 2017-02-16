@@ -21,7 +21,7 @@ import java.util.Collection;
  */
 public class MainDispatcher implements AuthenticationSuccessHandler {
 
-        private static final Logger logger = (Logger) LoggerFactory.getLogger(MainDispatcher.class);
+        private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(MainDispatcher.class);
     
         private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
@@ -36,7 +36,7 @@ public class MainDispatcher implements AuthenticationSuccessHandler {
                                 Authentication authentication) throws IOException {
                 String targetUrl = determineTargetUrl(authentication);
                 if (response.isCommitted()) {
-                        logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
+                        LOGGER.debug("Response has already been committed. Unable to redirect to " + targetUrl);
                         return;
                 }
                 redirectStrategy.sendRedirect(request, response, targetUrl);
@@ -64,19 +64,19 @@ public class MainDispatcher implements AuthenticationSuccessHandler {
                         } else throw new RuntimeException("Undefined role!");
                 }
                 if (isWaiter) {
-                        logger.info("ROLE_WAITER identified!");
+                        LOGGER.info("ROLE_WAITER identified!");
                         return "/waiter/orders/today";
                 } else if (isChef) {
-                        logger.info("ROLE_CHEF identified!");
+                        LOGGER.info("ROLE_CHEF identified!");
                         return "/chef/prepared_dishes";
                 } else if (isManager) {
-                        logger.info("ROLE_ADMIN identified!");
+                        LOGGER.info("ROLE_ADMIN identified!");
                         return "/admin";
                 } else if (isEmployee) {
-                        logger.info("ROLE_EMPLOYEE identified!");
+                        LOGGER.info("ROLE_EMPLOYEE identified!");
                         return "/";
                 } else {
-                        logger.error("No ROLE identified!");
+                        LOGGER.error("No ROLE identified!");
                         throw new IllegalStateException();
                 }
         }

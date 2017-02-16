@@ -2,6 +2,8 @@ package com.goit.popov.restaurant.controller;
 
 import ch.qos.logback.classic.Logger;
 import com.goit.popov.restaurant.model.Dish;
+import com.goit.popov.restaurant.model.Ingredient;
+import com.goit.popov.restaurant.model.json.DishWrapper;
 import com.goit.popov.restaurant.service.DishService;
 import com.goit.popov.restaurant.service.dataTables.DataTablesInputExtendedDTO;
 import com.goit.popov.restaurant.service.dataTables.DataTablesOutputDTOCollectionWrapper;
@@ -16,8 +18,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.Map;
 
 /**
  * Created by Andrey on 1/4/2017.
@@ -25,7 +28,7 @@ import javax.validation.Valid;
 @Controller
 public class DishController {
 
-        private static final Logger logger = (Logger) LoggerFactory.getLogger(DishController.class);
+        private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(DishController.class);
 
         private static final String CONSTRAINT_VIOLATION_MESSAGE = "Constraint violation error!";
 
@@ -76,7 +79,7 @@ public class DishController {
         @PostMapping(value = "/admin/save_dish")
         public String saveDish(@Valid @ModelAttribute("dish") Dish dish, BindingResult result, RedirectAttributes ra) {
                 if (result.hasErrors()) {
-                        logger.info("Errors number while saving new dish: " +
+                        LOGGER.info("Errors number while saving new dish: " +
                                 result.getFieldErrorCount());
                         return "th/manager/new_dish";
                 }
@@ -92,26 +95,33 @@ public class DishController {
         }
 
         @GetMapping(value = "/admin/edit_dish")
-        public String showDishEditForm(@RequestParam("dishId") Long dishId, ModelMap map) {
+        public String showDishEditForm(@RequestParam("dishId") Long dishId, ModelMap map, HttpSession session) {
                 Dish dish = dishService.getById(dishId);
                 map.addAttribute("dish", dish);
+                session.setAttribute("ingredients", dish.getIngredients());
                 return "th/manager/edit_dish";
         }
 
         @GetMapping(value = "/admin/edit_dishs_ingredients")
         public String showDishsIngredientsEditForm(@RequestParam("dishId") int dishId) {
+                // TODO
                 return "th/manager/edit_dishs_ingredients";
         }
 
         @PostMapping(value = "/admin/update_dish")
-        public String updateDish(@Valid @ModelAttribute("dish") Dish dish, BindingResult result, RedirectAttributes ra) {
+        public String updateDish(@Valid @ModelAttribute("dish") Dish dish, BindingResult result,
+                                 RedirectAttributes ra, HttpSession session) {
                 if (result.hasErrors()) {
-                        logger.info("Errors number while updating dish: " +
+                        LOGGER.info("Errors number while updating dish: " +
                                 result.getFieldErrorCount());
                         return "th/manager/edit_dish";
                 }
                 try {
-                        dishService.updateDishWithoutIngredients(dish);
+                        Map<Ingredient, Double> ingredients = (Map<Ingredient, Double>)
+                                session.getAttribute("ingredients");
+                        dish.setIngredients(ingredients);
+                        dishService.update(dish);
+                        LOGGER.info("Dish updated: "+dish);
                 } catch (Exception e) {
                         ra.addFlashAttribute("status", HttpStatus.FORBIDDEN);
                         ra.addFlashAttribute("error", CONSTRAINT_VIOLATION_MESSAGE);
@@ -122,11 +132,11 @@ public class DishController {
         }
 
         @PostMapping(value = "/admin/update_dishs_ingredients")
-        public ResponseEntity updateDishsIngredients(@RequestBody Dish dish) {
+        public ResponseEntity updateDishsIngredients(@RequestBody DishWrapper dishWrapper, @RequestParam("dishId") Long dishId) {
                 try {
-                        dishService.updateDishsIngredients(dish);
+                        dishService.updateDishsIngredients(dishId, dishWrapper.getIngredients());
                 } catch (Exception e) {
-                        logger.error("Error: failure updating Dish!");
+                        LOGGER.error("Error: failure updating Dish!");
                         return new ResponseEntity("Failure updating Dish!",
                                 HttpStatus.FORBIDDEN);
                 }

@@ -25,7 +25,7 @@ import java.util.List;
 @Controller
 public class PreparedDishController {
 
-        private static final Logger logger = (Logger) LoggerFactory.getLogger(PreparedDishController.class);
+        private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(PreparedDishController.class);
 
         @Autowired
         private PreparedDishService preparedDishService;

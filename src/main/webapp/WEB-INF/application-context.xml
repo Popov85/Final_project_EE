@@ -17,7 +17,7 @@
 
 
     <bean id="menuDAO" class="com.goit.popov.restaurant.dao.impl.MenuDAOImplJPA"/>
-    <bean id="menuService" class="com.goit.popov.restaurant.service.MenuService"/>
+    <bean id="menuService" class="com.goit.popov.restaurant.service.MenuServiceImpl"/>
 
     <bean id="orderDAO" class="com.goit.popov.restaurant.dao.impl.OrderDAOImplJPA"/>
     <bean id="orderService" class="com.goit.popov.restaurant.service.OrderServiceImplFast"/>

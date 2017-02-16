@@ -1,7 +1,5 @@
 package com.goit.popov.restaurant.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.goit.popov.restaurant.controller.converters.MenuDeserializer;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
@@ -16,7 +14,6 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "menu")
-@JsonDeserialize(using = MenuDeserializer.class)
 public class Menu {
 
         @Id

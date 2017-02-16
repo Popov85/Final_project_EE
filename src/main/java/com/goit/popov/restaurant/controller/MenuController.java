@@ -3,6 +3,7 @@ package com.goit.popov.restaurant.controller;
 import ch.qos.logback.classic.Logger;
 import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Menu;
+import com.goit.popov.restaurant.model.json.MenuWrapper;
 import com.goit.popov.restaurant.service.MenuService;
 import com.goit.popov.restaurant.service.dataTables.DataTablesOutputDTOCollectionWrapper;
 import com.goit.popov.restaurant.service.dataTables.DataTablesOutputDTOListWrapper;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.Set;
 
@@ -27,7 +29,7 @@ import java.util.Set;
 @Controller
 public class MenuController {
 
-        private static final Logger logger = (Logger) LoggerFactory.getLogger(MenuController.class);
+        private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(MenuController.class);
 
         @Autowired
         private MenuService menuService;
@@ -49,9 +51,11 @@ public class MenuController {
         }
 
         @GetMapping(value = "/admin/edit_menu")
-        public String showMenuEditForm(@RequestParam("menuId") Long menuId, ModelMap map) {
+        public String showMenuEditForm(@RequestParam("menuId") Long menuId, ModelMap map, HttpSession session) {
                 Menu menu = menuService.getById(menuId);
                 map.addAttribute("menu", menu);
+                //if (menu.getDishes()!=null)
+                        session.setAttribute("dishes", menu.getDishes());
                 return "th/manager/edit_menu";
         }
 
@@ -88,7 +92,7 @@ public class MenuController {
         @PostMapping(value = "/admin/save_menu")
         public String saveMenu(@Valid @ModelAttribute("menu") Menu menu, BindingResult result, RedirectAttributes ra) {
                 if (result.hasErrors()) {
-                        logger.info("Errors number while saving a new menu: " +
+                        LOGGER.info("Errors number while saving a new menu: " +
                                 result.getFieldErrorCount());
                         return "th/manager/new_menu";
                 }
@@ -104,14 +108,16 @@ public class MenuController {
         }
 
         @PostMapping(value = "/admin/update_menu")
-        public String updateMenu(@Valid @ModelAttribute("menu") Menu menu, BindingResult result, RedirectAttributes ra) {
+        public String updateMenu(@Valid @ModelAttribute("menu") Menu menu, BindingResult result, RedirectAttributes ra, HttpSession session) {
                 if (result.hasErrors()) {
-                        logger.info("Errors number while updating menu: " +
+                        LOGGER.info("Errors number while updating menu: " +
                                 result.getFieldErrorCount());
                         return "th/manager/edit_menu";
                 }
                 try {
-                        menuService.updateMenuWithoutDishes(menu);
+                        Set<Dish> dishes = (Set<Dish>) session.getAttribute("dishes");
+                        menu.setDishes(dishes);
+                        menuService.update(menu);
                 } catch (Exception e) {
                         ra.addFlashAttribute("status", HttpStatus.FORBIDDEN);
                         ra.addFlashAttribute("error", "Forbidden action!");
@@ -122,11 +128,11 @@ public class MenuController {
         }
 
         @PostMapping(value = "/admin/update_menus_dishes")
-        public ResponseEntity updateMenusDishes(@RequestBody Menu menu) {
+        public ResponseEntity updateMenusDishes(@RequestBody MenuWrapper menuWrapper, @RequestParam("menuId") Long menuId) {
                 try {
-                        menuService.updateMenusDishes(menu);
+                        menuService.updateMenusDishes(menuId, menuWrapper.getDishes());
                 } catch (Exception e) {
-                        logger.error("Error: failure updating Menu!");
+                        LOGGER.error("Error: failure updating Menu!");
                         return new ResponseEntity("Failure updating Menu!",
                                 HttpStatus.FORBIDDEN);
                 }
@@ -141,14 +147,14 @@ public class MenuController {
                         ra.addFlashAttribute("status", HttpStatus.FORBIDDEN);
                         ra.addFlashAttribute("error", "Constraint violation exception deleting menu!");
                         ra.addFlashAttribute("message", "Constraint violation error!");
-                        logger.error("Constraint violation exception deleting employee: "+e.getMessage()+
+                        LOGGER.error("Constraint violation exception deleting employee: "+e.getMessage()+
                                 "/ exception name is: "+ e.getClass());
                         return "redirect:/error";
                 } catch (Throwable e) {
                         ra.addFlashAttribute("status", HttpStatus.FORBIDDEN);
                         ra.addFlashAttribute("error", e.getMessage());
                         ra.addFlashAttribute("message", "Cannot deleteById menu for some reason!");
-                        logger.error("Unexpected exception deleting menu: "+e.getMessage()+
+                        LOGGER.error("Unexpected exception deleting menu: "+e.getMessage()+
                                 "/ exception name is: "+ e.getClass());
                         return "redirect:/error";
                 }

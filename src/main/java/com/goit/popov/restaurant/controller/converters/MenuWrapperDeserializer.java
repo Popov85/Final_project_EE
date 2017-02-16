@@ -7,11 +7,9 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.IntNode;
 import com.goit.popov.restaurant.model.Dish;
-import com.goit.popov.restaurant.model.Menu;
+import com.goit.popov.restaurant.model.json.MenuWrapper;
 import com.goit.popov.restaurant.service.DishService;
-import com.goit.popov.restaurant.service.MenuService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
@@ -21,40 +19,35 @@ import java.util.Set;
 /**
  * Created by Andrey on 07.02.2017.
  */
-public class MenuDeserializer extends JsonDeserializer<Menu> {
+public class MenuWrapperDeserializer extends JsonDeserializer<MenuWrapper> {
 
-        private static Logger logger = (Logger) LoggerFactory.getLogger(MenuDeserializer.class);
-
-        @Autowired
-        private MenuService menuService;
+        private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(MenuWrapperDeserializer.class);
 
         @Autowired
         private DishService dishService;
 
         @Override
-        public Menu deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+        public MenuWrapper deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
                 JsonNode node = null;
                 try {
                         node = p.getCodec().readTree(p);
                 } catch (IOException e) {
-                        logger.info("Error while obtaining the node tree: "+e.getMessage());
+                        LOGGER.info("Error while obtaining the node tree: "+e.getMessage());
                 }
-                Menu menu = null;
+                MenuWrapper mw = new MenuWrapper();
                 try {
-                        Long menuId = Long.parseLong(node.get("menuId").asText());
-                        menu = menuService.getById(menuId);
-                        ArrayNode ingredients = ((ArrayNode) node.get("dishes"));
-                        Set<Dish> dishes = convertJSONToSet(ingredients);
-                        menu.setDishes(dishes);
+                        ArrayNode d = ((ArrayNode) node.get("dishes"));
+                        Set<Dish> dishes = convertJSONToSet(d);
+                        mw.setDishes(dishes);
                 } catch (Exception e) {
-                        logger.error("Error: "+e.getMessage());
+                        LOGGER.error("Error: "+e.getMessage());
                 }
-                return menu;
+                return mw;
         }
 
-        private Set<Dish> convertJSONToSet(ArrayNode ingredients) {
+        private Set<Dish> convertJSONToSet(ArrayNode d) {
                 Set<Dish> dishes = new HashSet<>();
-                for (JsonNode ingredient : ingredients) {
+                for (JsonNode ingredient : d) {
                         Long dishId = Long.parseLong(ingredient.get("dishId").asText());
                         Dish dish = dishService.getById(dishId);
                         dishes.add(dish);
