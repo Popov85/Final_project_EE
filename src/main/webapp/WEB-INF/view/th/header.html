@@ -6,12 +6,18 @@
 </head>
 <body>
 <div th:fragment="header">
-    <div th:if="${#authorization.expression('isAuthenticated()')}">
-        <p>
-            <p><input type="hidden" id="waiterId" name="waiterId" th:value="${#authentication.principal.id}"/></p>
-            <p align="right">Welcome, <b><span th:text="${#authentication.principal.username}"/></b></p>
-            <p align="right"><a href="/perform_logout">Logout</a></p>
-        </p>
+    <div th:if="${#authorization.expression('isAuthenticated()')}" style="background-color: #6F4A2F;  color: #ffffff;">
+        <input type="hidden" id="waiterId" name="waiterId" th:value="${#authentication.principal.id}"/>
+        <div class="text-right">Welcome,
+            <strong>
+                <th:block th:text="${#authentication.principal.username}"/>
+            </strong>
+        </div>
+    </div>
+    <div th:fragment="header">
+        <div th:if="${#authorization.expression('isAuthenticated()')}">
+            <div class="text-right"><a href="/perform_logout">Logout</a></div>
+        </div>
     </div>
 </div>
 </body>

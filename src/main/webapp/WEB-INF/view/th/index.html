@@ -13,7 +13,7 @@
 <body>
 <div class="container-fluid">
     <div class="row" style="background-color:#b5dcb3;">
-        <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div th:switch="${#authorization.expression('isAuthenticated()')}">
                 <div th:case="true">
                     <div id="header1">Welcome, <strong><span th:text="${#authentication.principal.username}"/></strong></div>
@@ -29,18 +29,18 @@
 
     <div class="row">
         <div class="center">
-            <div class="col-lg-4 col-md-4 col-sm-4"/>
-            <div class="col-lg-4 col-md-4 col-sm-4">
-                <img src="/img/ovol.gif" alt="badge" height="174px" width="300px"/>
+            <div class="col-lg-4 col-md-3 col-sm-3 col-xs-1"/>
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-10">
+                <img src="/img/ovol.gif" alt="badge"/>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-4"/>
+            <div class="col-lg-4 col-md-3 col-sm-3 col-xs-1"/>
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-3 col-md-3 col-sm-3"></div>
-        <div class="col-lg-6 col-md-6 col-sm-6">
+        <div class="col-lg-3 col-md-2 col-sm-1 col-xs-0"/>
+        <div class="col-lg-6 col-md-8 col-sm-10 col-xs-12">
             <h4 style="text-align: left;">Dishes</h4>
-            <table id="dish" name="dish" class="display" align="center" width="100%" border="0">
+            <table id="dish" name="dish" class="display" cellspacing="0" width="100%">
                 <thead>
                 <tr>
                     <th>Id</th>
@@ -65,7 +65,7 @@
                 </tfoot>
             </table>
         </div>
-        <div class="col-lg-3 col-md-3 col-sm-3"></div>
+        <div class="col-lg-3 col-md-2 col-sm-1 col-xs-0"/>
     </div>
     <div class="row">
         <div class="footer2">

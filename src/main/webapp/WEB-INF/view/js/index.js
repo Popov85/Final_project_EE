@@ -3,23 +3,14 @@
  */
 $(document).ready(function () {
     var table = $('#dish').DataTable({
-        "bFilter":true,
         "bLengthChange": false,
         "bAutoWidth": false,
+        //"autoWidth": true,
         "ajax" : {
             "url": "/all/get_all_dishes",
             "type": "POST"
         },
         serverSide:true,
-        "columnDefs": [
-            { "width": "0%", "targets": 0 },
-            { "width": "25%", "targets": 1 },
-            { "width": "25%", "targets": 2 },
-            { "width": "10%", "targets": 3 },
-            { "width": "10%", "targets": 4 },
-            { "width": "20%", "targets": 5 },
-            { "width": "10%", "targets": 6 }
-        ],
         columns: [
             { "data": "id", "name": "id",  "title": "id", "visible": false},
             { "data": "name", "name": "name", "title": "Dish"},

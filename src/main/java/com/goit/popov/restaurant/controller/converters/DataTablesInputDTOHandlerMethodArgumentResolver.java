@@ -14,30 +14,30 @@ import org.springframework.web.method.support.ModelAndViewContainer;
  */
 public class DataTablesInputDTOHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private static final Logger logger = (Logger) LoggerFactory.getLogger(DataTablesInputDTOHandlerMethodArgumentResolver.class);
+        private static final Logger lOGGER = (Logger) LoggerFactory.getLogger(DataTablesInputDTOHandlerMethodArgumentResolver.class);
 
-    @Override
-    public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().equals(DataTablesInputDTO.class);
-    }
+        @Override
+        public boolean supportsParameter(MethodParameter parameter) {
+                return parameter.getParameterType().equals(DataTablesInputDTO.class);
+        }
 
-    @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        int draw = Integer.parseInt(webRequest.getParameter("draw"));
-        int start= Integer.parseInt(webRequest.getParameter("start"));
-        int length = Integer.parseInt(webRequest.getParameter("length"));
-        int column = Integer.parseInt(webRequest.getParameter("order[0][column]"));
-        String columnName = webRequest.getParameter("columns["+column+"][name]");
-        String dir = webRequest.getParameter("order[0][dir]");
-        String search = webRequest.getParameter("search[value]");
-        return new DataTablesInputDTO()
-                .setDraw(draw)
-                .setStart(start)
-                .setLength(length)
-                .setColumn(column)
-                .setColumnName(columnName)
-                .setDir(dir)
-                .setSearch(search);
-    }
+        @Override
+        public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+                                      NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+                int draw = Integer.parseInt(webRequest.getParameter("draw"));
+                int start = Integer.parseInt(webRequest.getParameter("start"));
+                int length = Integer.parseInt(webRequest.getParameter("length"));
+                int column = Integer.parseInt(webRequest.getParameter("order[0][column]"));
+                String columnName = webRequest.getParameter("columns[" + column + "][name]");
+                String dir = webRequest.getParameter("order[0][dir]");
+                String search = webRequest.getParameter("search[value]");
+                return new DataTablesInputDTO()
+                        .setDraw(draw)
+                        .setStart(start)
+                        .setLength(length)
+                        .setColumn(column)
+                        .setColumnName(columnName)
+                        .setDir(dir)
+                        .setSearch(search);
+        }
 }
