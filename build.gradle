@@ -43,5 +43,9 @@ dependencies {
     compile group: 'org.springframework.security', name: 'spring-security-web', version: '4.2.0.RELEASE'
     compile group: 'org.springframework.security', name: 'spring-security-config', version: '4.2.0.RELEASE'
 
+    compile group: 'org.springframework', name: 'spring-websocket', version: '4.3.6.RELEASE'
+    compile group: 'org.springframework', name: 'spring-messaging', version: '4.3.6.RELEASE'
+
+
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }

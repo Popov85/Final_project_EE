@@ -5,6 +5,9 @@
        http://www.springframework.org/schema/beans/spring-beans.xsd"
        default-autowire="byName">
 
+
+    <bean class="com.goit.popov.restaurant.config.WebSocketConfig"/>
+
     <bean id = "employeeService" class="com.goit.popov.restaurant.service.EmployeeService"/>
     <bean id="employeeDAO" class="com.goit.popov.restaurant.dao.impl.EmployeeDAOImplJPA"/>
     <bean id = "positionService" class="com.goit.popov.restaurant.service.PositionService"/>
