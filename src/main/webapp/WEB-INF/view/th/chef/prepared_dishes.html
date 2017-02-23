@@ -10,7 +10,9 @@
     <script src ="/js/lib/bootstrap-3.3.7.min.js"/>
     <script src ="/js/lib/jquery.dataTables-1.10.12.min.js"/>
     <script src="/js/lib/sockjs.min.js"></script>
+    <script src="/js/lib/stomp.js"></script>
     <script src ="/js/chef/prepared_dishes.js"/>
+    <script src ="/js/chef/prepared_dishes_messaging.js"/>
 </head>
 <body>
 <h3 class="form-signin-heading" align="center">Prepared dishes</h3>
@@ -36,6 +38,17 @@
                 </tr>
                 </thead>
             </table>
+        </div>
+        <div class="col-md-3"/>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3"/>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="messages">Messages</label>
+                <textarea class="form-control" rows="5" id="messages" name="messages"></textarea>
+            </div>
         </div>
         <div class="col-md-3"/>
     </div>

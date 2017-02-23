@@ -10,6 +10,7 @@
         <intercept-url pattern="/chef/**" access="hasRole('ROLE_ADMIN') or hasRole('ROLE_CHEF')"/>
         <intercept-url pattern="/waiter/**" access="hasRole('ROLE_ADMIN') or hasRole('ROLE_WAITER')"/>
         <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="/messaging/**" access="hasRole('ROLE_WAITER') or hasRole('ROLE_CHEF')"/>
         <form-login login-page="/login"
                     username-parameter="username"
                     password-parameter="password"

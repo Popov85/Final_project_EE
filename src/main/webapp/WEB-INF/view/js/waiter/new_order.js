@@ -91,7 +91,9 @@ $(document).ready(function () {
             data: JSON.stringify(order),
             success: function (data) {
                 console.log("Success");
-                location.href = '/waiter/orders/today';
+                // TODO send message to chef!!!
+                sendMessage();
+                //location.href = '/waiter/orders/today';
             },
             error: function (e) {
                 console.log("ERROR: ", e);
@@ -103,6 +105,20 @@ $(document).ready(function () {
         });
         event.preventDefault();
     });
+
+    function sendMessage(data) {
+        var stompClient = null;
+        var socket = new SockJS('/messaging/chef');
+        stompClient = Stomp.over(socket);
+        console.log('Stomp');
+        stompClient.connect({}, function (frame) {
+            console.log('Connected: ' + frame);
+            stompClient.send("/app/messaging/chef", {},"Order json made!");
+                //JSON.stringify({'message': 'Order was made', 'text': 'current date!'}));
+            console.log('Sent message..');
+            stompClient.disconnect();
+        });
+    }
 
     // Prepares a dish array object as a part of data to be sent to the server
     function getDishes() {
