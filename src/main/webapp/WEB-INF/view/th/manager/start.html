@@ -7,89 +7,93 @@
     <script src ="/js/lib/bootstrap-3.3.7.min.js"/>
 </head>
 <body>
+
 <div class="container">
-    <h2 align="center">Admin panel</h2>
     <div class="row">
-        <div class="col-md-2"/>
-        <div class="col-md-8">
-            <p><strong>Note:</strong> This is an admin panel. Managers can do every manager's stuff.</p>
-            <div th:replace="/th/header :: header"/>
-            <div class="panel-group" id="accordion">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Staff</a>
-                        </h4>
-                    </div>
-                    <div id="collapse1" class="panel-collapse collapse in">
-                        <div class="panel-body">
-                            <p><a th:href="@{/admin/employees/}" title="Here you can manage employees">Employees</a></p>
-                            <p><a th:href="@{/admin/new_employee/}" title="Here you can add a new employee">New member</a></p>
-                            <p><a th:href="@{/admin/positions/}" title="Here you can manager positions">Positions</a></p>
-                            <p><a th:href="@{/admin/new_position/}" title="Here you can add a new position">New position</a></p>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Admin panel</h3>
+            </div>
+            <div class="panel-body">
+                <p><strong>Note:</strong> This is an admin panel. Managers can do every manager's stuff.</p>
+                <div th:replace="/th/header :: header"/>
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Staff</a>
+                            </h4>
+                        </div>
+                        <div id="collapse1" class="panel-collapse collapse in">
+                            <div class="panel-body">
+                                <p><a th:href="@{/admin/employees/}" title="Here you can manage employees">Employees</a></p>
+                                <p><a th:href="@{/admin/new_employee/}" title="Here you can add a new employee">New member</a></p>
+                                <p><a th:href="@{/admin/positions/}" title="Here you can manager positions">Positions</a></p>
+                                <p><a th:href="@{/admin/new_position/}" title="Here you can add a new position">New position</a></p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Orders</a>
-                        </h4>
-                    </div>
-                    <div id="collapse2" class="panel-collapse collapse">
-                        <div class="panel-body">
-                           <p> <a th:href="@{/admin/orders/}" title="Here you can manage orders">Orders</a></p>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Orders</a>
+                            </h4>
+                        </div>
+                        <div id="collapse2" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <p> <a th:href="@{/admin/orders/}" title="Here you can manage orders">Orders</a></p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Dishes and Menus</a>
-                        </h4>
-                    </div>
-                    <div id="collapse3" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <p> <a th:href="@{/admin/dishes/}" title="Here you can manage dishes">Dishes</a></p>
-                            <p> <a th:href="@{/admin/new_dish/}" title="Here you can add a new dish">New Dish</a></p>
-                            <p> <a th:href="@{/admin/menus/}" title="Here you can manage menus">Menus</a></p>
-                            <p> <a th:href="@{/admin/new_menu/}" title="Here you can add a new menu">New Menu</a></p>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Dishes and Menus</a>
+                            </h4>
+                        </div>
+                        <div id="collapse3" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <p> <a th:href="@{/admin/dishes/}" title="Here you can manage dishes">Dishes</a></p>
+                                <p> <a th:href="@{/admin/new_dish/}" title="Here you can add a new dish">New Dish</a></p>
+                                <p> <a th:href="@{/admin/menus/}" title="Here you can manage menus">Menus</a></p>
+                                <p> <a th:href="@{/admin/new_menu/}" title="Here you can add a new menu">New Menu</a></p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">Stock</a>
-                        </h4>
-                    </div>
-                    <div id="collapse4" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <p><a th:href="@{/admin/stock_state/}" title="Here you can manage stock">Stock</a></p>
-                            <p><a th:href="@{/admin/ingredients/}" title="Here you can manage ingredients">Ingredients</a></p>
-                            <p><a th:href="@{/admin/new_ingredient/}" title="Here you can add a new ingredient">New ingredient</a></p>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">Stock</a>
+                            </h4>
+                        </div>
+                        <div id="collapse4" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <p><a th:href="@{/admin/stock_state/}" title="Here you can manage stock">Stock</a></p>
+                                <p><a th:href="@{/admin/ingredients/}" title="Here you can manage ingredients">Ingredients</a></p>
+                                <p><a th:href="@{/admin/new_ingredient/}" title="Here you can add a new ingredient">New ingredient</a></p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">More...</a>
-                        </h4>
-                    </div>
-                    <div id="collapse5" class="panel-collapse collapse">
-                        <div class="panel-body">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">More...</a>
+                            </h4>
+                        </div>
+                        <div id="collapse5" class="panel-collapse collapse">
+                            <div class="panel-body">
 
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-2"/>
         </div>
     </div>
 </div>
+
 </body>
 </html>

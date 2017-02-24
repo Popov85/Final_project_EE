@@ -164,6 +164,7 @@ public class OrderController {
                 }
                 long endTime   = System.currentTimeMillis();
                 LOGGER.info("VALIDATION RUNTIME: "+(endTime - startTime)+" ms");
+                // TODO return OrderMessage object
                 return new ResponseEntity("{\"Result\": \"Success\"}", HttpStatus.OK);
         }
 

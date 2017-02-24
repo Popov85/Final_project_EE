@@ -9,14 +9,79 @@
     <script src ="/js/lib/jquery-1.12.1.js"/>
     <script src ="/js/lib/bootstrap-3.3.7.min.js"/>
     <script src ="/js/lib/jquery.dataTables-1.10.12.min.js"/>
+    <script src ="/js/lib/moment.js"/>
     <script src="/js/lib/sockjs.min.js"></script>
     <script src="/js/lib/stomp.js"></script>
     <script src ="/js/chef/prepared_dishes.js"/>
     <script src ="/js/chef/prepared_dishes_messaging.js"/>
 </head>
 <body>
-<h3 class="form-signin-heading" align="center">Prepared dishes</h3>
 <div class="container">
+    <div class="page-header text-center">
+        <h1>Cook view: <small> prepared dish management</small></h1>
+    </div>
+    <div class="row">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Prepared dishes on: <span id="date" name="date"></span></h3>
+            </div>
+
+            <div class="panel-body">
+                <div th:replace="/th/header :: header"/>
+                <label for="messages">Messages</label>
+                <textarea class="form-control" rows="5" id="messages" name="messages" disabled="true"></textarea>
+            </div>
+
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table id="dishesTable" name="dishesTable" class="display table table-hover" cellspacing="0" width="110%" style="overflow-x:auto">
+                        <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Dish</th>
+                            <th>Quantity</th>
+                            <th>IsPrepared</th>
+                            <th>IsReturned</th>
+
+                            <th>Confirm</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table id="ordsTable" name="ordsTable" class="display" cellspacing="0" width="100%" style="overflow-x:auto">
+                        <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Waiter</th>
+                            <th>OpenedTime</th>
+                            <th>Dishes</th>
+                            <th>isFulfilled</th>
+                            <th>IsCancelled</th>
+
+                            <th>Details</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<!--<h3 class="form-signin-heading" align="center">Prepared dishes</h3>
+<div class="container">
+
+
     <div class="row">
         <div class="col-md-3"/>
         <div class="col-md-6">
@@ -74,6 +139,6 @@
         </div>
         <div class="col-md-3"/>
     </div>
-</div>
+</div>-->
 </body>
 </html>

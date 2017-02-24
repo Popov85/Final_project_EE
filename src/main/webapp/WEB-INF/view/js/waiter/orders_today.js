@@ -1,4 +1,8 @@
 $(document).ready(function () {
+
+    // Set up today's date in header
+    $('#date').text(moment().format('MMM Do YY'));
+
     var table = $('#ordsTable').DataTable({
         "ajax" : {
             "url": "/waiter/get_orders?waiterId="+parseInt($('#waiterId').val()),

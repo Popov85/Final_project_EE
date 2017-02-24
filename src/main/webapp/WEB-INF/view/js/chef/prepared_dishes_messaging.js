@@ -10,14 +10,14 @@ $(document).ready(function () {
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
         stompClient.subscribe('/topic/waiter', function (messageOutput) {
-            console.log("Accept from subscription!");
-            //showMessageOutput(JSON.parse(messageOutput.body));
-            showMessageOutput(messageOutput);
+            console.log("Accepted from subscription!"+JSON.stringify(messageOutput));
+            showMessageOutput(JSON.parse(messageOutput.body));
+            //showMessageOutput(messageOutput);
         });
     });
 
     function showMessageOutput(messageOutput) {
-        alert("Happened!");
-        $('#messages').append(messageOutput + '&#xA;');
+        console.log("Accepted from subscription!"+JSON.stringify(messageOutput));
+        $('#messages').append(messageOutput.body.time +' '+messageOutput.body.order+' '+messageOutput.body.action+' '+messageOutput.body.waiter+ '&#xA;');
     }
 });

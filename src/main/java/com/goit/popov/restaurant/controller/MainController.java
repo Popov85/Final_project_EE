@@ -16,6 +16,11 @@ public class MainController {
         return "th/index";
     }
 
+    @RequestMapping(value = "/2", method = RequestMethod.GET)
+    public String index2() {
+        return "th/index2";
+    }
+
     @GetMapping(value = "/admin")
     public String startManager() {
         return "th/manager/start";

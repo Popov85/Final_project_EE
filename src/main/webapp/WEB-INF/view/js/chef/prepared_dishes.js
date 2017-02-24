@@ -2,6 +2,10 @@
  * Created by Andrey on 1/16/2017.
  */
 $(document).ready(function () {
+    // Set up today's date in header
+    $('#date').text(moment().format('MMM Do YY'));
+
+
     var table = $('#ordsTable').DataTable({
         "ajax": {
             "url": "/chef/get_orders_today",

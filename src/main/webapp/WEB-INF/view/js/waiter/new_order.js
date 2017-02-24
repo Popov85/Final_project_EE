@@ -113,8 +113,11 @@ $(document).ready(function () {
         console.log('Stomp');
         stompClient.connect({}, function (frame) {
             console.log('Connected: ' + frame);
-            stompClient.send("/app/messaging/chef", {},"Order json made!");
-                //JSON.stringify({'message': 'Order was made', 'text': 'current date!'}));
+            //stompClient.send("/app/messaging/chef", {},"Order json made!");
+            stompClient.send("/app/messaging/chef", {}, JSON.stringify(
+                {'time': new Date(), 'order': '#2356', "action":"created/updated", "waiter": "Get name"}
+                )
+            );
             console.log('Sent message..');
             stompClient.disconnect();
         });

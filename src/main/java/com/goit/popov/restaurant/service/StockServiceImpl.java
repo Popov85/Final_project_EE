@@ -18,7 +18,7 @@ import java.util.Map;
  */
 public class StockServiceImpl implements StockService {
 
-        private static final Logger logger = (Logger) LoggerFactory.getLogger(StockServiceImpl.class);
+        private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(StockServiceImpl.class);
 
         @Autowired
         private StoreHouseDAO storeHouseDAO;
