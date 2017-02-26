@@ -11,19 +11,30 @@
     <script src ="/js/lib/jquery-1.12.1.js"/>
     <script src ="/js/lib/bootstrap-3.3.7.min.js"/>
     <script src ="/js/lib/jquery.dataTables-1.10.12.min.js"/>
+    <script src="/js/lib/stomp.js"></script>
     <script src="/js/lib/sockjs.min.js"></script>
     <script src ="/js/waiter/orders_today.js"/>
+    <script src ="/js/waiter/orders_today_messaging.js"/>
+
 </head>
 <body>
 <div class="container">
-    <div class="row">
+    <div class="row" style="margin-top:20px;">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h3 class="panel-title">Orders on: <span id="date" name="date"></span></h3>
             </div>
+
+            <div class="panel-body">
+                <div th:replace="/th/header :: header"/>
+                <details>
+                    <summary>Messages</summary>
+                    <textarea class="form-control" rows="5" id="messages" name="messages" disabled="true"/>
+                </details>
+            </div>
+
             <div class="panel-body">
                 <div class="table-responsive">
-                    <div th:replace="/th/header :: header"/>
                     <table id="ordsTable" name="ordsTable"
                            class="display table table-hover" cellspacing="0" width="100%"
                            style="overflow-x:auto">
@@ -50,10 +61,10 @@
         </div>
         <div class="form-group">
             <br/>
-            <a href="/waiter/new_order">
+            <a target="_blank" href="/waiter/new_order">
                 <input type="button" class="btn btn-primary" value="New Order"/>
             </a>
-            <a href="/waiter/orders/archive">
+            <a target="_blank" href="/waiter/orders/archive">
                 <input type="button" class="btn btn-default" value="Archive"/>
             </a>
         </div>

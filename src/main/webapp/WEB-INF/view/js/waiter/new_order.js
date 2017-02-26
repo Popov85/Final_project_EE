@@ -110,10 +110,10 @@ $(document).ready(function () {
         console.log("d: "+d);
         console.log("d.id: "+d.id);
         var stompClient = null;
-        var socket = new SockJS('/messaging/chef');
+        var socket = new SockJS('/messaging/waiter');
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
-            stompClient.send("/app/messaging/chef", {}, JSON.stringify(
+            stompClient.send("/app/messaging/waiter", {}, JSON.stringify(
                     {'time': d.openedTimeStamp, "action":"created", 'order': ' Order# '+d.id,  "waiter": ' by '+d.waiterName}
                 )
             );

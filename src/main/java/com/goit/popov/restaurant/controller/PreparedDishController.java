@@ -83,7 +83,8 @@ public class PreparedDishController {
                 Employee userDetails = (Employee) auth.getPrincipal();
                 Long chefId = userDetails.getId();
                 preparedDishService.confirmDishesPrepared(dishId, quantity, orderId, chefId);
-                return new ResponseEntity("{\"orderId\":" +orderId+"}", HttpStatus.OK);
+                // TODO return probably PreparedDish object
+                return new ResponseEntity("{\"orderId\":" +orderId+",\"dish\":" +dishId+",\"quantity\":" +quantity+"}", HttpStatus.OK);
         }
 
         @GetMapping("/chef/confirm_dishes_cancelled")

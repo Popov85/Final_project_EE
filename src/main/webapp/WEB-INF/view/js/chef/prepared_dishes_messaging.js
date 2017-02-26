@@ -5,11 +5,11 @@ $(document).ready(function () {
 
     var stompClient = null;
 
-    var socket = new SockJS('/messaging/chef');
+    var socket = new SockJS('/messaging/waiter');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/waiter', function (messageOutput) {
+        stompClient.subscribe('/topic/chef', function (messageOutput) {
             showMessageOutput(JSON.parse(messageOutput.body));
         });
     });

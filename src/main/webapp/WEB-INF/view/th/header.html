@@ -8,6 +8,7 @@
 <div th:fragment="header">
     <div th:if="${#authorization.expression('isAuthenticated()')}" style="background-color: #6F4A2F;  color: #ffffff;">
         <input type="hidden" id="waiterId" name="waiterId" th:value="${#authentication.principal.id}"/>
+        <input type="hidden" id="username" name="username" th:value="${#authentication.principal.username}"/>
         <div class="text-right">Welcome,
             <strong>
                 <th:block th:text="${#authentication.principal.username}"/>

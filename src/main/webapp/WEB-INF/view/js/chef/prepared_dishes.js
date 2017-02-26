@@ -50,6 +50,7 @@ $(document).ready(function () {
     $('#ordsTable tbody').on('click', 'button', function () {
         var data = table.row($(this).parents('tr')).data();
         $('#orderId').text(data.id);
+        $('#waiter').text(data.waiter);
         var table2 = $('#dishesTable').DataTable()
             .ajax.url(
                 "/chef/get_orders_prepared_dishes?orderId="
@@ -141,7 +142,10 @@ function reloadDishesTable(data) {
         .ajax.url(
         "/chef/get_orders_prepared_dishes?orderId="
         + encodeURIComponent(data.orderId)
-    ).load()
+    ).load();
+    // TODO send message to waiter
+    console.log("I am sending message to a waiter...");
+    sendMessage(data);
 }
 
 function reloadOrdersTable(data) {
@@ -149,4 +153,22 @@ function reloadOrdersTable(data) {
         .ajax.url(
         "/chef/get_orders_today"
     ).load()
+}
+
+function sendMessage(data) {
+    var stompClient = null;
+    var socket = new SockJS('/messaging/chef');
+    stompClient = Stomp.over(socket);
+    stompClient.connect({}, function (frame) {
+        var message = new Object();
+        message.time = new Date();
+        message.order = data.orderId;
+        message.dish = data.dish;
+        message.quantity = data.quantity;
+        message.action = "prepared";
+        message.byChef = "-";
+        message.toWaiter = $('#waiter').text();
+        stompClient.send("/app/messaging/chef", {}, JSON.stringify(message));
+        stompClient.disconnect();
+    });
 }
