@@ -12,11 +12,13 @@ INSERT INTO emp_position VALUES
   (5, 'Bouncer', 4);
 
 INSERT INTO employee VALUES
-(1, 'stivens','pT9k14Yf', 'Mr. Stivens', '1985-08-11', '+380661111111', 12000, null, 2, 'Chef'),
-(2, 'black','jT9k84Y7','Mr. Black', '1995-01-02', '+380932222222', 8000, null, 3, 'Waiter'),
-(3, 'morgan','pU6k14c0','Ms. Morgan', '1999-06-03', '+380503333333', 7500, null, 3, 'Waiter'),
-(4, 'white','wP9k1445','Ms. White', '1991-04-11', '+380324444444', 12500, null, 2, 'Chef'),
-(5, 'grant','pL9t14Rq','Mr. Grant', '2001-09-08', '+380635555555', 20000, null, 1, 'Manager');
+(1, 'stivens','$2a$10$B4okhRPmjwE3fFMlcXMGX.F.q5Xb9WreCFZ/LzrwfmVFfamH9R7li', 'Mr. Stivens', '1985-08-11', '+380661111111', 12000, null, 2, 'Chef'), /*pT9k14Yf*/
+(2, 'black','$2a$10$v.IPZqCFCEh10CWK87/SgOLNn7SZ.THvQCEXLe/HbN/TDr.OChcM6','Mr. Black', '1995-01-02', '+380932222222', 8000, null, 3, 'Waiter'), /*jT9k84Y7*/
+(3, 'morgan','$2a$10$OzCYdt2CpfeNXU7vPrkw4OsufHvdPzJT5.gcBnzt/ktanUDoCYQz.','Ms. Morgan', '1999-06-03', '+380503333333', 7500, null, 3, 'Waiter'), /*pU6k14c0*/
+(4, 'white','$2a$10$STVFtkmjg9EbHKS/ejVWZOAUGGKlqXd43Qe1XkrMkhMpKFKH9Ivcq','Ms. White', '1991-04-11', '+380324444444', 12500, null, 2, 'Chef'), /*wP9k1445*/
+(5, 'grant','$2a$10$/qfAoPrfHsEZxpnK.xMUUOq1UNym/k.i1dHj2LQN58TCGiV.y7nx6','Mr. Grant', '2001-09-08', '+380635555555', 20000, null, 1, 'Manager'), /*pL9t14Rq*/
+(6, 'root','$2a$10$t6vGdelVAzmHb6JulQK7SejRQ7n3mX4GSjMrya7G4TuxsWA3eRY8.','Mr. Admin', '1985-09-08', '+380635555666', 28000, null, 1, 'Manager'), /*root*/
+;
 
 INSERT INTO unit VALUES
   (1,'L'),

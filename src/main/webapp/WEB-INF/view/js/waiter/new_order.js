@@ -90,10 +90,8 @@ $(document).ready(function () {
             contentType: "application/json",
             data: JSON.stringify(order),
             success: function (data) {
-                console.log("Success");
-                // TODO send message to chef!!!
-                sendMessage();
-                //location.href = '/waiter/orders/today';
+                console.log("Successfully created/updated order!");
+                sendMessage(data);
             },
             error: function (e) {
                 console.log("ERROR: ", e);
@@ -107,19 +105,20 @@ $(document).ready(function () {
     });
 
     function sendMessage(data) {
+        console.log("data: "+JSON.stringify(data));
+        var d = data;
+        console.log("d: "+d);
+        console.log("d.id: "+d.id);
         var stompClient = null;
         var socket = new SockJS('/messaging/chef');
         stompClient = Stomp.over(socket);
-        console.log('Stomp');
         stompClient.connect({}, function (frame) {
-            console.log('Connected: ' + frame);
-            //stompClient.send("/app/messaging/chef", {},"Order json made!");
             stompClient.send("/app/messaging/chef", {}, JSON.stringify(
-                {'time': new Date(), 'order': '#2356', "action":"created/updated", "waiter": "Get name"}
+                    {'time': d.openedTimeStamp, "action":"created", 'order': ' Order# '+d.id,  "waiter": ' by '+d.waiterName}
                 )
             );
-            console.log('Sent message..');
             stompClient.disconnect();
+            location.href = '/waiter/orders/today';
         });
     }
 

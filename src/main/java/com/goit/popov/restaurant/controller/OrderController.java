@@ -138,7 +138,7 @@ public class OrderController {
         }
 
         @PostMapping(value="/waiter/edit_order")
-        public ResponseEntity createOrUpdateOrder(@RequestBody Order order) {
+        public ResponseEntity<Order> createOrUpdateOrder(@RequestBody Order order) {
                 LOGGER.info("Create/Edit order #: "+order.getId());
                 if (order.getDishes().isEmpty()) {
                         LOGGER.error("Error: "+NO_DISHES_MESSAGE);
@@ -164,8 +164,7 @@ public class OrderController {
                 }
                 long endTime   = System.currentTimeMillis();
                 LOGGER.info("VALIDATION RUNTIME: "+(endTime - startTime)+" ms");
-                // TODO return OrderMessage object
-                return new ResponseEntity("{\"Result\": \"Success\"}", HttpStatus.OK);
+                return new ResponseEntity(order, HttpStatus.OK);
         }
 
         @GetMapping("/waiter/delete_order")

@@ -187,6 +187,7 @@ public class Order {
         }
 
         public int getDishesQuantity(Dish dish) {
+                if (dishes==null || dishes.isEmpty()) return 0;
                 int total = 0;
                 for (Map.Entry<Dish, Integer> entry : dishes.entrySet()){
                         if (entry.getKey().equals(dish)) total+=entry.getValue();
@@ -195,6 +196,7 @@ public class Order {
         }
 
         public int getPreparedDishesQuantity() {
+                if (preparedDishes==null || preparedDishes.isEmpty()) return 0;
                 int total = 0;
                 for (PreparedDish preparedDish : preparedDishes) {
                         if (!preparedDish.isCancelled()) total++;

@@ -10,9 +10,7 @@ $(document).ready(function () {
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
         stompClient.subscribe('/topic/waiter', function (messageOutput) {
-            console.log("Accepted from subscription!"+JSON.stringify(messageOutput));
             showMessageOutput(JSON.parse(messageOutput.body));
-            //showMessageOutput(messageOutput);
         });
     });
 

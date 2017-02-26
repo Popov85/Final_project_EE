@@ -5,8 +5,8 @@ $(document).ready(function () {
     // Set up today's date in header
     $('#date').text(moment().format('MMM Do YY'));
 
-
     var table = $('#ordsTable').DataTable({
+        "lengthMenu": [[5, 10, 15, 30], [5, 10, 15, 30]],
         "ajax": {
             "url": "/chef/get_orders_today",
             "type": "POST",
@@ -19,7 +19,7 @@ $(document).ready(function () {
             {"width": "10%", "targets": 5}
         ],
         columns: [
-            {"data": "id", "name": "id", "title": "id", "visible": true},
+            {"data": "id", "name": "id", "title": "#", "visible": true},
             {"data": "waiter", "name": "waiter", "title": "waiter"},
             {"data": "openedTimeStamp", "name": "openedTimeStamp", "title": "opened time"},
             {"data": "dishes", "name": "dishes quantity", "title": "dishes quantity"},
@@ -66,7 +66,7 @@ $(document).ready(function () {
             {"width": "10%", "targets": 4}
         ],
         columns: [
-            {"data": "id", "name": "id", "title": "id", "visible": true},
+            {"data": "id", "name": "id", "title": "#", "visible": true},
             {"data": "dish", "name": "dish", "title": "dish"},
             {"data": "quantity", "name": "quantity", "title": "quantity"},
             {"data": null, "name": "isPrepared", "title": "isPrepared", "render": function(data){
@@ -141,5 +141,12 @@ function reloadDishesTable(data) {
         .ajax.url(
         "/chef/get_orders_prepared_dishes?orderId="
         + encodeURIComponent(data.orderId)
+    ).load()
+}
+
+function reloadOrdersTable(data) {
+    $('#ordsTable').DataTable()
+        .ajax.url(
+        "/chef/get_orders_today"
     ).load()
 }

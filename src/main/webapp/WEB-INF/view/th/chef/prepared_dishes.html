@@ -17,128 +17,70 @@
 </head>
 <body>
 <div class="container">
-    <div class="page-header text-center">
-        <h1>Cook view: <small> prepared dish management</small></h1>
-    </div>
+    <div class="row" style="margin-top:20px;"/>
     <div class="row">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title">Prepared dishes on: <span id="date" name="date"></span></h3>
-            </div>
+        <div class="col-lg-2 col-md-2 col-sm-1 col-0"/>
+        <div class="col-lg-8 col-md-8 col-sm-10 col-12">
+            <div class="panel panel-primary">
 
-            <div class="panel-body">
-                <div th:replace="/th/header :: header"/>
-                <label for="messages">Messages</label>
-                <textarea class="form-control" rows="5" id="messages" name="messages" disabled="true"></textarea>
-            </div>
-
-            <div class="panel-body">
-                <div class="table-responsive">
-                    <table id="dishesTable" name="dishesTable" class="display table table-hover" cellspacing="0" width="110%" style="overflow-x:auto">
-                        <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Dish</th>
-                            <th>Quantity</th>
-                            <th>IsPrepared</th>
-                            <th>IsReturned</th>
-
-                            <th>Confirm</th>
-                        </tr>
-                        </thead>
-                    </table>
+                <div class="panel-heading">
+                    <h3 class="panel-title">Prepared dishes on: <span id="date" name="date"></span></h3>
                 </div>
-            </div>
 
-            <div class="panel-body">
-                <div class="table-responsive">
-                    <table id="ordsTable" name="ordsTable" class="display" cellspacing="0" width="100%" style="overflow-x:auto">
-                        <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Waiter</th>
-                            <th>OpenedTime</th>
-                            <th>Dishes</th>
-                            <th>isFulfilled</th>
-                            <th>IsCancelled</th>
-
-                            <th>Details</th>
-                        </tr>
-                        </thead>
-                    </table>
+                <div class="panel-body">
+                    <div th:replace="/th/header :: header"/>
+                    <details>
+                        <summary>Messages</summary>
+                        <textarea class="form-control" rows="5" id="messages" name="messages" disabled="true"/>
+                    </details>
                 </div>
-            </div>
 
+                <div class="panel-body">
+                    <h4 class="text-center">Dishes</h4>
+                    <h5 class="text-center">of Order #<span id="orderId" name="orderId"></span></h5>
+                    <div class="table-responsive">
+                        <table id="dishesTable" name="dishesTable" class="display table table-hover" cellspacing="0"
+                               width="110%" style="overflow-x:auto">
+                            <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Dish</th>
+                                <th>Quantity</th>
+                                <th>IsPrepared</th>
+                                <th>IsReturned</th>
+
+                                <th>Confirm</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table id="ordsTable" name="ordsTable" class="display" cellspacing="0" width="100%"
+                               style="overflow-x:auto">
+                            <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Waiter</th>
+                                <th>OpenedTime</th>
+                                <th>Dishes</th>
+                                <th>isFulfilled</th>
+                                <th>IsCancelled</th>
+
+                                <th>Details</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <button onclick="reloadOrdersTable()">Update</button>
+                </div>
+
+            </div>
         </div>
+        <div class="col-lg-2 col-md-2 col-sm-1 col-0"/>
     </div>
 </div>
-
-
-
-
-
-
-<!--<h3 class="form-signin-heading" align="center">Prepared dishes</h3>
-<div class="container">
-
-
-    <div class="row">
-        <div class="col-md-3"/>
-        <div class="col-md-6">
-            <div th:replace="/th/header :: header"/>
-            <h3 class="form-signin-heading" align="center">Dishes</h3>
-            <h5 class="form-signin-heading" align="center">of Order #
-                <div id="orderId" name="orderId"></div>
-            </h5>
-            <table id="dishesTable" name="dishesTable" class="display" cellspacing="0" width="110%" style="overflow-x:auto">
-                <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Dish</th>
-                    <th>Quantity</th>
-                    <th>IsPrepared</th>
-                    <th>IsReturned</th>
-
-                    <th>Confirm</th>
-                </tr>
-                </thead>
-            </table>
-        </div>
-        <div class="col-md-3"/>
-    </div>
-
-    <div class="row">
-        <div class="col-md-3"/>
-        <div class="col-md-6">
-            <div class="form-group">
-                <label for="messages">Messages</label>
-                <textarea class="form-control" rows="5" id="messages" name="messages"></textarea>
-            </div>
-        </div>
-        <div class="col-md-3"/>
-    </div>
-
-    <div class="row">
-        <div class="col-md-3"/>
-        <div class="col-md-6">
-            <h3 class="form-signin-heading" align="center">Orders</h3>
-            <table id="ordsTable" name="ordsTable" class="display" cellspacing="0" width="100%" style="overflow-x:auto">
-                <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Waiter</th>
-                    <th>OpenedTime</th>
-                    <th>Dishes</th>
-                    <th>isFulfilled</th>
-                    <th>IsCancelled</th>
-
-                    <th>Details</th>
-                </tr>
-                </thead>
-            </table>
-        </div>
-        <div class="col-md-3"/>
-    </div>
-</div>-->
 </body>
 </html>

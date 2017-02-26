@@ -9,6 +9,8 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -23,11 +25,16 @@ public class WebSocketController {
         @MessageMapping("/messaging/chef")
         @SendTo("/topic/waiter")
         public ResponseEntity orderNotify(OrderMessage message) throws Exception {
+                message.setTime(extractTime(message.getTime()));
                 LOGGER.info("message: "+message);
-                String time = new SimpleDateFormat("HH:mm").format(new Date());
-                message.setTime(time);
-                LOGGER.info("message updated: "+message);
                 return new ResponseEntity(message, HttpStatus.OK);
+        }
+
+        private String extractTime (String dateTime) throws ParseException {
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+                Date date = dateFormat.parse(dateTime);
+                String time = new SimpleDateFormat("HH:mm").format(date);
+                return time;
         }
 
 }
