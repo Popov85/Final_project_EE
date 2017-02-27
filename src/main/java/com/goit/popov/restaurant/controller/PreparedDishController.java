@@ -62,10 +62,11 @@ public class PreparedDishController {
         }
 
         @PostMapping("/chef/check_order")
-        public ResponseEntity checkOrder(@RequestParam Long dishId, @RequestParam int quantity, @RequestParam Long orderId) {
+        public ResponseEntity checkOrder(@RequestParam String dish, @RequestParam Long dishId, @RequestParam int quantity, @RequestParam Long orderId) {
                 Order order = orderService.getById(orderId);
                 ObjectMapper mapper = new ObjectMapper();
                 ObjectNode node = mapper.createObjectNode();
+                node.put("dish", dish);
                 node.put("dishId", dishId);
                 node.put("quantity", quantity);
                 node.put("orderId", orderId);
@@ -78,17 +79,22 @@ public class PreparedDishController {
         }
 
         @GetMapping("/chef/confirm_dishes_prepared")
-        public ResponseEntity confirmDishPrepared(@RequestParam Long dishId, @RequestParam int quantity, @RequestParam Long orderId) {
+        public ResponseEntity confirmDishPrepared(@RequestParam String dish, @RequestParam Long dishId, @RequestParam int quantity, @RequestParam Long orderId) {
                 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
                 Employee userDetails = (Employee) auth.getPrincipal();
                 Long chefId = userDetails.getId();
                 preparedDishService.confirmDishesPrepared(dishId, quantity, orderId, chefId);
-                // TODO return probably PreparedDish object
-                return new ResponseEntity("{\"orderId\":" +orderId+",\"dish\":" +dishId+",\"quantity\":" +quantity+"}", HttpStatus.OK);
+                ObjectMapper mapper = new ObjectMapper();
+                ObjectNode node = mapper.createObjectNode();
+                node.put("dish", dish);
+                node.put("dishId", dishId);
+                node.put("quantity", quantity);
+                node.put("orderId", orderId);
+                return new ResponseEntity(node, HttpStatus.OK);
         }
 
         @GetMapping("/chef/confirm_dishes_cancelled")
-        public ResponseEntity confirmDishCancelled(@RequestParam Long dishId, @RequestParam int quantity, @RequestParam Long orderId) {
+        public ResponseEntity confirmDishCancelled(@RequestParam String dish, @RequestParam Long dishId, @RequestParam int quantity, @RequestParam Long orderId) {
                 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
                 Employee userDetails = (Employee) auth.getPrincipal();
                 Long chefId = userDetails.getId();

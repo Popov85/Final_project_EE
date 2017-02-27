@@ -84,13 +84,12 @@ $(document).ready(function () {
                     return '<p hidden="true">false</p><input type="checkbox" disabled="true"/>';
                 }
             }},
-
             {
                 "data": null, "sortable": false, "render": function (data) {
                 if (data.isPrepared || data.isReturned) {
                     return '<input type="button" class="btn btn-default" disabled="true" value="Confirm"/>';
                 } else {
-                    var params = 'dishId=' + data.id+'&quantity='+data.quantity +'&orderId='+$('#orderId').text();
+                    var params = 'dish=' + data.dish+ '&dishId=' + data.id+'&quantity='+data.quantity +'&orderId='+$('#orderId').text();
                     return '<a href="javascript:prepare(\'' + params + '\')">' +
                                 '<input type="button" class="btn btn-default" value="Confirm"/>' +
                             '</a>';
@@ -103,6 +102,7 @@ $(document).ready(function () {
 
 function prepare(params) {
     var url = "/chef/check_order?"+params;
+    console.log("url: "+url);
     $.ajax({
         type: 'POST',
         url: url,
@@ -110,14 +110,15 @@ function prepare(params) {
         dataType: 'json',
         success: checkOrder,
         error: function(xhr, textStatus, errorThrown) {
-            console.log('error');
+            console.log('error at prepare');
         }
     });
 }
 
 function checkOrder(data) {
+    console.log(JSON.stringify(data));
     // Reload Dishes table
-    var params = 'dishId=' + data.dishId + '&quantity=' + data.quantity + '&orderId=' + data.orderId;
+    var params = 'dish=' + data.dish+ '&dishId=' + data.dishId + '&quantity=' + data.quantity + '&orderId=' + data.orderId;
     var url = "/chef/confirm_dishes_prepared?"+params;
     if (data.isCancelled) {
         // Order was cancelled
@@ -125,6 +126,7 @@ function checkOrder(data) {
             url = '/chef/confirm_dishes_cancelled?'+params;
         }
     }
+    console.log("url: "+url);
     $.ajax({
         type: 'GET',
         url: url,
@@ -132,7 +134,7 @@ function checkOrder(data) {
         dataType: 'json',
         success: reloadDishesTable,
         error: function(xhr, textStatus, errorThrown) {
-            console.log('error');
+            console.log('error at checkOrder, status: '+textStatus+' error name: '+errorThrown);
         }
     });
 }
@@ -143,8 +145,7 @@ function reloadDishesTable(data) {
         "/chef/get_orders_prepared_dishes?orderId="
         + encodeURIComponent(data.orderId)
     ).load();
-    // TODO send message to waiter
-    console.log("I am sending message to a waiter...");
+    // Send a message to waiter
     sendMessage(data);
 }
 
@@ -166,11 +167,9 @@ function sendMessage(data) {
         message.dish = data.dish;
         message.quantity = data.quantity;
         message.action = "prepared";
-        message.byChef = "-";
-        message.toWaiter = $('#waiter').text();
-        stompClient.send("/app/messaging/chef", {}, JSON.stringify(message));
-        // /user/{username}/queue/position-updates - pattern
-        //stompClient.send("/user/"+$('#waiter').text()+"/queue/waiter", {}, JSON.stringify(message));
+        message.chef = $('#username').val();
+        var url = "/user/"+$('#waiter').text()+"/queue/waiter";
+        stompClient.send(url, {}, JSON.stringify(message));
         stompClient.disconnect();
     });
 }

@@ -10,23 +10,23 @@ $(document).ready(function () {
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
 
-
         stompClient.subscribe('/user/queue/waiter', function (messageOutput) {
-            console.log("No name Waiter has received the message!");
             showMessageOutput(JSON.parse(messageOutput.body));
         });
-
-        /*stompClient.subscribe('/queue/waiter'+$('#username').val(), function (messageOutput) {
-            console.log("Waiter by name has received the message!");
-            showMessageOutput(JSON.parse(messageOutput.body));
-        });*/
-
     });
 
     function showMessageOutput(messageOutput) {
         console.log("Accepted from subscription!"+JSON.stringify(messageOutput));
         $('#messages').append(messageOutput.time +' Order# '+messageOutput.order+' '+messageOutput.action+
-            ' '+messageOutput.dish+' ('+messageOutput.quantity+') '+' by '+messageOutput.byChef +'&#xA;');
-        // TODO reload table
+            ' '+messageOutput.dish+' ('+messageOutput.quantity+') '+' by '+messageOutput.chef +'&#xA;');
+        // Reload Orders table
+        reloadOrdersTable();
     }
 });
+
+function reloadOrdersTable() {
+    $('#ordsTable').DataTable()
+        .ajax.url(
+        "/waiter/get_orders?waiterId="+parseInt($('#waiterId').val())
+    ).load()
+}
