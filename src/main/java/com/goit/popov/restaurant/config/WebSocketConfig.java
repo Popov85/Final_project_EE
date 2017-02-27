@@ -17,14 +17,13 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
         public void configureMessageBroker(MessageBrokerRegistry config) {
                 config.enableSimpleBroker("/topic", "/queue");
                 config.setApplicationDestinationPrefixes("/app");
-                // TODO check it
-                //config.setUserDestinationPrefix("/user");
+                // Default
+                // config.setUserDestinationPrefix("/user");
         }
 
         @Override
         public void registerStompEndpoints(StompEndpointRegistry registry) {
                 registry.addEndpoint("/messaging/chef").withSockJS();
                 registry.addEndpoint("/messaging/waiter").withSockJS();
-
         }
 }

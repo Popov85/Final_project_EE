@@ -169,6 +169,8 @@ function sendMessage(data) {
         message.byChef = "-";
         message.toWaiter = $('#waiter').text();
         stompClient.send("/app/messaging/chef", {}, JSON.stringify(message));
+        // /user/{username}/queue/position-updates - pattern
+        //stompClient.send("/user/"+$('#waiter').text()+"/queue/waiter", {}, JSON.stringify(message));
         stompClient.disconnect();
     });
 }

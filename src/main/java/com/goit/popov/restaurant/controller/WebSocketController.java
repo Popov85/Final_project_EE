@@ -47,11 +47,15 @@ public class WebSocketController {
         @MessageMapping("/messaging/chef")
         //@SendToUser("/queue/waiter") // /user/{username} - will be prepended
         public ResponseEntity preparedNotify(PreparedDishMessage message, Principal principal) throws Exception {
-                LOGGER.info(" user: "+principal.getName());
+                LOGGER.info("message: "+message);
+                LOGGER.info("user: "+principal.getName());
                 message.setByChef(principal.getName());
+                LOGGER.info("enriched message: "+message);
                 //message.setTime(extractTime(message.getTime()));
-                //simpMessagingTemplate.convertAndSendToUser(principal.getName(), "/queue/waiter", message);
-                simpMessagingTemplate.convertAndSend("/queue/waiter"+message.getToWaiter(), message);
+                simpMessagingTemplate.convertAndSendToUser(principal.getName(), "/queue/waiter", message);
+                LOGGER.info("message sent: ");
+
+                //simpMessagingTemplate.convertAndSend("/queue/waiter"+message.getToWaiter(), message);
                 return new ResponseEntity(message, HttpStatus.OK);
         }
 

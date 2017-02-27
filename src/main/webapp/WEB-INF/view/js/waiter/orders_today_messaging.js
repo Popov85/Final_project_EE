@@ -11,20 +11,16 @@ $(document).ready(function () {
         console.log('Connected: ' + frame);
 
 
-        /*stompClient.subscribe('/user/queue/waiter', function (messageOutput) {
-            console.log("Waiter has received the message!");
-            showMessageOutput(JSON.parse(messageOutput.body));
-        });*/
-
-        stompClient.subscribe('/queue/waiter'+$('#username').val(), function (messageOutput) {
-            console.log("Waiter by name has received the message!");
+        stompClient.subscribe('/user/queue/waiter', function (messageOutput) {
+            console.log("No name Waiter has received the message!");
             showMessageOutput(JSON.parse(messageOutput.body));
         });
 
-        /*stompClient.subscribe('/queue/waiter'+$('#waiterId').val(), function (messageOutput) {
-            console.log("Waiter by id has received the message!");
+        /*stompClient.subscribe('/queue/waiter'+$('#username').val(), function (messageOutput) {
+            console.log("Waiter by name has received the message!");
             showMessageOutput(JSON.parse(messageOutput.body));
         });*/
+
     });
 
     function showMessageOutput(messageOutput) {

@@ -8,7 +8,11 @@
         </layout>
     </appender>
 
-    <logger name="org.springframework" level="DEBUG"/>
+    <logger name="org.springframework" level="ERROR"/>
+
+    <logger name="org.springframework.web.socket">
+        <level value="trace" />
+    </logger>
 
     <!--<logger name="org.springframework.web.client.RestTemplate" level="OFF" />
     <logger name="org.springframework.web.servlet" level="OFF" />
@@ -21,7 +25,7 @@
     <logger name="org.springframework.cache" level="OFF" />
     <logger name="org.springframework.jndi" level="OFF" />-->
 
-    <logger name = "org.hibernate.SQL" level="INFO"/>
+    <logger name = "org.hibernate.SQL" level="ERROR"/>
 
     <!--<statusListener class="ch.qos.logback.core.status.NopStatusListener" />-->
 
