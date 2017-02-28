@@ -126,7 +126,9 @@ $(document).ready(function () {
             data: JSON.stringify(updatedOrder),
             success: function (data) {
                 console.log("Success");
-                location.href='/waiter/orders/today';
+                sendMessage(data);
+                // TODO close tab and reload ordersTable
+                // location.href='/waiter/orders/today';
             },
             error: function (e) {
                 console.log("ERROR: ", e);
@@ -182,3 +184,17 @@ $(document).ready(function () {
         handle: ".modal-header"
     })
 });
+
+function sendMessage(data) {
+    var stompClient = null;
+    var socket = new SockJS('/messaging/waiter');
+    stompClient = Stomp.over(socket);
+    stompClient.connect({}, function (frame) {
+        stompClient.send("/app/messaging/waiter", {}, JSON.stringify(
+            {'time': 'set on server', "action": "edited", 'order': ' Order# '+data.id,  "waiter": ' by '+data.waiterName}
+            )
+        );
+        stompClient.disconnect();
+        location.href = '/waiter/orders/today';
+    });
+}

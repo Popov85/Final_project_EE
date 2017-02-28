@@ -12,6 +12,7 @@ $(document).ready(function () {
             "type": "POST",
             "dataType": "json"
         },
+        order: [[ 1, "desc" ]],
         columnDefs: [
             {"width": "5%", "targets": 0},
             {"width": "30%", "targets": 1},
@@ -37,9 +38,7 @@ $(document).ready(function () {
                     return '<p hidden="true">false</p><input type="checkbox" disabled="true"/>';
                 }
             }},
-
-            {
-                "data": null, "sortable": false, "render": function () {
+            {"data": null, "sortable": false, "render": function () {
                 return '<button class="btn btn-default">Details</button>';
             }
             }
@@ -90,7 +89,7 @@ $(document).ready(function () {
                     return '<input type="button" class="btn btn-default" disabled="true" value="Confirm"/>';
                 } else {
                     var params = 'dish=' + data.dish+ '&dishId=' + data.id+'&quantity='+data.quantity +'&orderId='+$('#orderId').text();
-                    return '<a href="javascript:prepare(\'' + params + '\')">' +
+                    return '<a href="javascript:checkOrder(\'' + params + '\')">' +
                                 '<input type="button" class="btn btn-default" value="Confirm"/>' +
                             '</a>';
                 }
@@ -100,33 +99,30 @@ $(document).ready(function () {
     });
 });
 
-function prepare(params) {
+function checkOrder(params) {
     var url = "/chef/check_order?"+params;
     console.log("url: "+url);
     $.ajax({
-        type: 'POST',
+        type: 'GET',
         url: url,
         contentType: 'application/json;',
         dataType: 'json',
-        success: checkOrder,
+        success: prepare,
         error: function(xhr, textStatus, errorThrown) {
-            console.log('error at prepare');
+            console.log('error at checkOrder status: '+textStatus+' error name: '+errorThrown);
         }
     });
 }
 
-function checkOrder(data) {
-    console.log(JSON.stringify(data));
+function prepare(data) {
     // Reload Dishes table
     var params = 'dish=' + data.dish+ '&dishId=' + data.dishId + '&quantity=' + data.quantity + '&orderId=' + data.orderId;
     var url = "/chef/confirm_dishes_prepared?"+params;
     if (data.isCancelled) {
-        // Order was cancelled
         if (confirm('The Order was cancelled! Do you want to return ingredients?')) {
             url = '/chef/confirm_dishes_cancelled?'+params;
         }
     }
-    console.log("url: "+url);
     $.ajax({
         type: 'GET',
         url: url,
@@ -134,7 +130,7 @@ function checkOrder(data) {
         dataType: 'json',
         success: reloadDishesTable,
         error: function(xhr, textStatus, errorThrown) {
-            console.log('error at checkOrder, status: '+textStatus+' error name: '+errorThrown);
+            console.log('error at prepare, status: '+textStatus+' error name: '+errorThrown);
         }
     });
 }
@@ -145,7 +141,6 @@ function reloadDishesTable(data) {
         "/chef/get_orders_prepared_dishes?orderId="
         + encodeURIComponent(data.orderId)
     ).load();
-    // Send a message to waiter
     sendMessage(data);
 }
 
@@ -162,7 +157,7 @@ function sendMessage(data) {
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         var message = new Object();
-        message.time = new Date();
+        message.time = moment(new Date()).format('HH:mm');
         message.order = data.orderId;
         message.dish = data.dish;
         message.quantity = data.quantity;

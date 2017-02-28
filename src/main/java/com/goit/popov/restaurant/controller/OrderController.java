@@ -37,9 +37,6 @@ public class OrderController {
         private static final String UNEXPECTED_ERROR_MESSAGE ="Unexpected error happened";
 
         @Autowired
-        private DishService dishService;
-
-        @Autowired
         private OrderService orderService;
 
         // Auxiliary data source for fetching Order's existing dishes
@@ -128,13 +125,13 @@ public class OrderController {
         public ResponseEntity checkOrder(@RequestParam Long orderId) {
                 Order order = orderService.getById(orderId);
                 ObjectMapper mapper = new ObjectMapper();
-                ObjectNode node = mapper.createObjectNode();
-                node.put("orderId", orderId);
-                node.put("hasPrepared", order.hasPreparedDishes());
-                node.put("isCancelled", order.isCancelled());
-                node.put("isClosed", !order.isOpened());
-                node.put("isFulfilled", order.isFulfilled());
-                return new ResponseEntity(node, HttpStatus.OK);
+                ObjectNode params = mapper.createObjectNode();
+                params.put("orderId", orderId);
+                params.put("hasPrepared", order.hasPreparedDishes());
+                params.put("isCancelled", order.isCancelled());
+                params.put("isClosed", !order.isOpened());
+                params.put("isFulfilled", order.isFulfilled());
+                return new ResponseEntity(params, HttpStatus.OK);
         }
 
         @PostMapping(value="/waiter/edit_order")
@@ -185,37 +182,27 @@ public class OrderController {
         }
 
         @GetMapping("/waiter/close_order")
-        public String closeOrder(@RequestParam Long id, HttpServletRequest request, RedirectAttributes ra) {
-                URL url=null;
+        public ResponseEntity closeOrder(@RequestParam Long id) {
                 try {
-                        url = new URL(request.getHeader("referer"));
                         orderService.closeOrder(id);
-                        LOGGER.info("Closed Order #: "+id);
                 } catch (Exception e) {
-                        setErrorMessages(id, ra,
-                                HttpStatus.FORBIDDEN.toString(),
-                                FORBIDDEN_ACTION_MESSAGE,
-                                "Error: Failed to close the Order #: "+id);
-                        return "redirect:/error";
+                        LOGGER.error("Failed to close Order# "+id);
+                        return new ResponseEntity(HttpStatus.EXPECTATION_FAILED);
                 }
-                return "redirect:"+url.getPath();
+                LOGGER.info("Closed Order #: "+id);
+                return new ResponseEntity(HttpStatus.OK);
         }
 
         @GetMapping("/waiter/cancel_order")
-        public String cancelOrder(@RequestParam Long id, HttpServletRequest request, RedirectAttributes ra) {
-                URL url=null;
+        public ResponseEntity cancelOrder(@RequestParam Long id) {
                 try {
-                        url = new URL(request.getHeader("referer"));
                         orderService.cancelOrder(id);
-                        LOGGER.info("Cancelled Order #: "+id);
                 } catch (Exception e) {
-                        setErrorMessages(id, ra,
-                                HttpStatus.FORBIDDEN.toString(),
-                                FORBIDDEN_ACTION_MESSAGE,
-                                "Error: Failed to cancel the Order #: "+id);
-                        return "redirect:/error";
+                        LOGGER.error("Error: Failed to cancel the Order #: "+id);
+                        return new ResponseEntity(HttpStatus.EXPECTATION_FAILED);
                 }
-                return "redirect:"+url.getPath();
+                LOGGER.info("Cancelled Order #: "+id);
+                return new ResponseEntity("{\"orderId\":" +id+"}", HttpStatus.OK);
         }
 
         private void setErrorMessages(Long id, RedirectAttributes ra, String... messages) {

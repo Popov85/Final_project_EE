@@ -90,7 +90,7 @@ $(document).ready(function () {
             contentType: "application/json",
             data: JSON.stringify(order),
             success: function (data) {
-                console.log("Successfully created/updated order!");
+                console.log("Successfully created order!");
                 sendMessage(data);
             },
             error: function (e) {
@@ -105,16 +105,12 @@ $(document).ready(function () {
     });
 
     function sendMessage(data) {
-        console.log("data: "+JSON.stringify(data));
-        var d = data;
-        console.log("d: "+d);
-        console.log("d.id: "+d.id);
         var stompClient = null;
         var socket = new SockJS('/messaging/waiter');
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
             stompClient.send("/app/messaging/waiter", {}, JSON.stringify(
-                    {'time': d.openedTimeStamp, "action":"created", 'order': ' Order# '+d.id,  "waiter": ' by '+d.waiterName}
+                    {'time': 'set on server', "action":"created", 'order': ' Order# '+data.id,  "waiter": ' by '+data.waiterName}
                 )
             );
             stompClient.disconnect();

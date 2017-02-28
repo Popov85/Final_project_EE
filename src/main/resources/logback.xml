@@ -11,7 +11,7 @@
     <logger name="org.springframework" level="ERROR"/>
 
     <logger name="org.springframework.web.socket">
-        <level value="trace" />
+        <level value="debug" />
     </logger>
 
     <!--<logger name="org.springframework.web.client.RestTemplate" level="OFF" />

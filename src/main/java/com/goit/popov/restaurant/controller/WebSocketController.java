@@ -31,7 +31,8 @@ public class WebSocketController {
         @MessageMapping("/messaging/waiter")
         @SendTo("/topic/chef")
         public ResponseEntity orderNotify(OrderMessage message) throws Exception {
-                message.setTime(extractTime(message.getTime()));
+                message.setTime(new SimpleDateFormat("HH:mm").format(new Date()));
+                //message.setTime(extractTime(message.getTime()));
                 LOGGER.info("message: "+message);
                 return new ResponseEntity(message, HttpStatus.OK);
         }

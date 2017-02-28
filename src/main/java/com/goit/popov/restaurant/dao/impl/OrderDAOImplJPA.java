@@ -79,7 +79,7 @@ public class OrderDAOImplJPA implements OrderDAO {
                 today.set(Calendar.MINUTE, 0);
                 today.set(Calendar.SECOND, 0);
                 return sessionFactory.getCurrentSession().createQuery("select o from Order o where o.waiter = :waiter"+
-                        " and o.openedTimeStamp >= :today")
+                        " and o.openedTimeStamp >= :today order by o.id desc")
                         .setParameter("waiter", waiter)
                         .setParameter("today", today, TemporalType.DATE)
                         .list();
@@ -92,7 +92,7 @@ public class OrderDAOImplJPA implements OrderDAO {
                 today.set(Calendar.MINUTE, 0);
                 today.set(Calendar.SECOND, 0);
                 return sessionFactory.getCurrentSession().createQuery("select o from Order o where "+
-                        "o.openedTimeStamp >= :today")
+                        "o.openedTimeStamp >= :today order by o.id desc")
                         .setParameter("today", today, TemporalType.DATE)
                         .list();
         }
