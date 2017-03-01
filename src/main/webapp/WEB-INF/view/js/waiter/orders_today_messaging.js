@@ -16,10 +16,11 @@ $(document).ready(function () {
     });
 
     function showMessage(message) {
-        console.log("Accepted from subscription!"+JSON.stringify(message));
-        $('#messages').append(message.time +' Order# '+message.order+' '+message.action+
+        console.log("Accepted from chef!"+JSON.stringify(message));
+        var messageBar = $('#messages');
+        messageBar.append(message.time +' Order# '+message.order+' '+message.action+
             ' '+message.dish+' ('+message.quantity+') '+' by '+message.chef +'&#xA;');
-        // Reload Orders table
+        if(messageBar.length) messageBar.scrollTop(messageBar[0].scrollHeight - messageBar.height());
         reloadOrdersTable();
     }
 });

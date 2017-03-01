@@ -32,7 +32,6 @@ public class WebSocketController {
         @SendTo("/topic/chef")
         public ResponseEntity orderNotify(OrderMessage message) throws Exception {
                 message.setTime(new SimpleDateFormat("HH:mm").format(new Date()));
-                //message.setTime(extractTime(message.getTime()));
                 LOGGER.info("message: "+message);
                 return new ResponseEntity(message, HttpStatus.OK);
         }
@@ -45,11 +44,11 @@ public class WebSocketController {
                 return new ResponseEntity(message, HttpStatus.OK);
         }*/
 
-        private String extractTime (String dateTime) throws ParseException {
+        /*private String extractTime (String dateTime) throws ParseException {
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
                 Date date = dateFormat.parse(dateTime);
                 String time = new SimpleDateFormat("HH:mm").format(date);
                 return time;
-        }
+        }*/
 
 }

@@ -8,6 +8,7 @@ import com.goit.popov.restaurant.dao.PreparedDishHistoryDAO;
 import com.goit.popov.restaurant.model.*;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -17,7 +18,7 @@ import java.util.*;
  */
 public class PreparedDishServiceImpl implements PreparedDishService {
 
-        private static final Logger logger = (Logger) LoggerFactory.getLogger(PreparedDishServiceImpl.class);
+        private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(PreparedDishServiceImpl.class);
 
         @Autowired
         private PreparedDishHistoryDAO preparedDishDAO;

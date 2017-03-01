@@ -22,7 +22,6 @@ $(document).ready(function () {
         url: '/waiter/get_orders_table',
         dataType: 'json',
         success: function(json) {
-            //var $el = $("#table");
             $("#table").val(json);
         }
     });

@@ -4,9 +4,7 @@ import ch.qos.logback.classic.Logger;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Order;
-import com.goit.popov.restaurant.service.DishService;
 import com.goit.popov.restaurant.service.OrderService;
 import com.goit.popov.restaurant.service.dataTables.*;
 import com.goit.popov.restaurant.service.exceptions.NotEnoughIngredientsException;
@@ -75,7 +73,7 @@ public class OrderController {
 
         @GetMapping(value = "/waiter/orders/today")
         public String showOrdersTableWaiter() {
-                return "th/waiter/orders_today";
+                return "th/waiter/orders_today2";
         }
 
         @GetMapping(value = "/waiter/orders/archive")
@@ -136,7 +134,6 @@ public class OrderController {
 
         @PostMapping(value="/waiter/edit_order")
         public ResponseEntity<Order> createOrUpdateOrder(@RequestBody Order order) {
-                LOGGER.info("Create/Edit order #: "+order.getId());
                 if (order.getDishes().isEmpty()) {
                         LOGGER.error("Error: "+NO_DISHES_MESSAGE);
                         return new ResponseEntity(NO_DISHES_MESSAGE,
@@ -161,6 +158,7 @@ public class OrderController {
                 }
                 long endTime   = System.currentTimeMillis();
                 LOGGER.info("VALIDATION RUNTIME: "+(endTime - startTime)+" ms");
+                LOGGER.info("Created/Edited order: "+order);
                 return new ResponseEntity(order, HttpStatus.OK);
         }
 

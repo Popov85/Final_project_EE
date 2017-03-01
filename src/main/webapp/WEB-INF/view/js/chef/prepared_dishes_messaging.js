@@ -15,8 +15,10 @@ $(document).ready(function () {
 
     function showMessage(message) {
         console.log("Accepted from a waiter!"+JSON.stringify(message));
-        $('#messages').append(message.body.time +' '+message.body.order+' '+message.body.action+' '
+        var messageBar = $('#messages');
+        messageBar.append(message.body.time +' '+message.body.order+' '+message.body.action+' '
             +(message.body.waiter!=null ? message.body.waiter : "")+ '&#xA;');
+        if(messageBar.length) messageBar.scrollTop(messageBar[0].scrollHeight - messageBar.height());
         reloadOrdersTable();
     }
 });

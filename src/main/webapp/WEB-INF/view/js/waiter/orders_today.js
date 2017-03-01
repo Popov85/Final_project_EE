@@ -74,18 +74,6 @@ $(document).ready(function () {
     });
 });
 
-function editOrder(data) {
-    var param = 'id=' + data.orderId;
-    var url = "/waiter/edit_order?"+param;
-    if (data.hasPrepared) {
-        alert("This Order is already partially fulfilled! Further editing is limited in this version of software!");
-        // Reload only table
-        reloadOrdersTable();
-    } else {
-        window.location.replace(url);
-    }
-}
-
 function cancelOrder(param) {
     var url = "/waiter/cancel_order?id="+param;
     $.ajax({
@@ -115,7 +103,6 @@ function sendMessage(data) {
             )
         );
         stompClient.disconnect();
-        location.href = '/waiter/orders/today';
     });
 }
 
@@ -126,7 +113,7 @@ function checkOrderStatus(param, callBackFunction) {
         url: url,
         contentType: 'application/json',
         dataType: 'json',
-        success: window[callBackFunction], // closeOrder
+        success: window[callBackFunction], // closeOrder Or editOrder
         error: function(xhr, textStatus, errorThrown) {
             // TODO redirect to error page with params
             console.log('Error checking Order status');
@@ -155,6 +142,19 @@ function closeOrder(data) {
                 window.location.replace("/error");
             }
         });
+    }
+}
+
+function editOrder(data) {
+    var param = 'id=' + data.orderId;
+    var url = "/waiter/edit_order?"+param;
+    if (data.hasPrepared) {
+        alert("This Order is already partially fulfilled! Further editing is limited in this version of software!");
+        // Reload only table
+        reloadOrdersTable();
+    } else {
+        // TODO launch modal, set orderId, get Order's dishes and specific info.
+        window.location.replace(url);
     }
 }
 
