@@ -1,10 +1,18 @@
+/**
+ * Created by Andrey on 02.03.2017.
+ */
 // Set up an empty Order table
 $(document).ready(function () {
     var t = $('#odTable').DataTable({
         bLengthChange: false,
         columnDefs: [
-            {targets: [0], visible: false},
-            {targets: '_all', visible: true}
+            { "targets": 0, "data": "id", "name": "id", "visible": false, "searchable": false},
+            { "targets": 1, "data": "name", "name": "name", "visible": true, "searchable": true},
+            { "targets": 2, "data": "quantity", "name": "quantity", "visible": true, "searchable": true, "render": function(data) {
+                return '<input type="text" value = "' + data+ '" size = "2" name="input"/>'
+            }},
+            { "targets": 3, "data": "price", "name": "price", "visible": true, "searchable": true},
+            { "targets": 4, "data": null, "name": "quantity", "visible": true, "searchable": true, "defaultContent": '<button type="button" class="btn btn-default" id="delRow" name ="delRow">Del</button>'},
         ]
     });
 
@@ -64,13 +72,13 @@ $(document).ready(function () {
     $('#dTable tbody').on('click', 'button', function () {
         var data = table.row($(this).parents('tr')).data();
         var t = $('#odTable').DataTable();
-        t.row.add([
-            data.id,
-            data.name,
-            '<input type="text" value = "1" size = "2" name="input"/>',
-            data.price,
-            '<button type="button" class="btn btn-default" id="delRow" name ="delRow">Del</button>'
-        ]).draw(true);
+        t.row.add(
+            {"id":data.id,
+            "name":data.name,
+            "quantity": 1,
+            "price":data.price,
+            "defaultContent": '<button type="button" class="btn btn-default" id="delRow" name ="delRow">Del</button>'}
+            ).draw(true);
     });
 });
 
@@ -94,6 +102,7 @@ $(document).ready(function () {
             data: JSON.stringify(order),
             success: function (data) {
                 console.log("Successfully created order!");
+                reloadOrdersTable();
                 sendMessage(data);
             },
             error: function (e) {
@@ -113,7 +122,7 @@ $(document).ready(function () {
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
             stompClient.send("/app/messaging/waiter", {}, JSON.stringify(
-                    {'time': 'set on server', "action": "created", 'order': ' Order# '+data.id,  "waiter": ' by '+data.waiterName}
+                {'time': 'set on server', "action": "created", 'order': ' Order# '+data.id,  "waiter": ' by '+data.waiterName}
                 )
             );
             stompClient.disconnect();

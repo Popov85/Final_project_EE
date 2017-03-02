@@ -14,9 +14,8 @@
     <script src ="/js/lib/jquery-ui-1.12.1.js"/>
     <script src="/js/lib/stomp.js"></script>
     <script src="/js/lib/sockjs.min.js"></script>
-    <script src ="/js/waiter/orders_today.js"/>
-    <script src ="/js/waiter/new_order.js"/>
-    <!--<script src ="/js/waiter/edit_order.js"/>-->
+    <script src ="/js/waiter/new_or_edit_order.js"/>
+    <script src ="/js/waiter/orders_today2.js"/>
     <script src ="/js/waiter/orders_today_messaging.js"/>
 
 </head>
@@ -83,10 +82,15 @@
                 <h3 class="text-center">New Order</h3>
             </div>
             <div class="modal-body">
-                <form id="newOrderForm" action="/waiter/edit_order" method="post" onsubmit="return false;">
+                <form id="orderForm" action="/waiter/edit_order" method="post" onsubmit="return false;">
+
+                    <div class="form-group">
+                        <input type="hidden" id="id" name="id" value="0"/>
+                    </div>
+
                     <div class="form-group">
                         <label for="table">Table #</label>
-                        <select id="table" class="list-group" title="Select a table number">
+                            <select id="table" class="list-group" title="Select a table number">
                         </select>
                     </div>
 
@@ -117,6 +121,7 @@
 
             </div>
             <div class="modal-footer">
+                <!--TODO call table destroy method before/after closing-->
                 <a href="#" data-dismiss="modal" class="btn">Close</a>
             </div>
         </div>

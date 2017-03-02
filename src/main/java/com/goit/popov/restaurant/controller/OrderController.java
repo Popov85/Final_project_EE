@@ -4,6 +4,7 @@ import ch.qos.logback.classic.Logger;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.goit.popov.restaurant.model.Dish;
 import com.goit.popov.restaurant.model.Order;
 import com.goit.popov.restaurant.service.OrderService;
 import com.goit.popov.restaurant.service.dataTables.*;
@@ -19,7 +20,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Andrey on 02.12.2016.
@@ -38,11 +41,19 @@ public class OrderController {
         private OrderService orderService;
 
         // Auxiliary data source for fetching Order's existing dishes
-        @PostMapping("/waiter/get_orders_dishes")
+        @GetMapping("/waiter/get_orders_dishes")
         @ResponseBody
         public DataTablesOutputDTOCollectionWrapper getOrdersDishes(@RequestParam Long orderId) {
                 DataTablesOutputDTOCollectionWrapper data = new DataTablesOutputDTOCollectionWrapper();
-                data.setData(orderService.toJSON(orderService.getById(orderId).getDishes()));
+                try {
+                        Order order = orderService.getById(orderId);
+                        Map<Dish, Integer> dishes = new HashMap<>();
+                        if (order!=null) dishes = order.getDishes();
+                        data.setData(orderService.toJSON(dishes));
+                } catch (Exception e) {
+                        LOGGER.error("ERROR: "+e.getMessage()+" cause: "+e.getClass());
+                }
+                LOGGER.info("data: "+data);
                 return data;
         }
 
