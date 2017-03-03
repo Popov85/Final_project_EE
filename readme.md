@@ -51,7 +51,10 @@ You can test a fully working live demo at https://Popov85.github.io/restaurant/
  Managers can edit staff information, see all prepared dishes and orders (analyse effectiveness of chefs), see the stock state
 (ingredients running out), analyse the most and last popular dishes.
 
-<img width="800" alt="admin panel" src="https://drive.google.com/file/d/0B32rkhYCEyjueFVkT2dBQmZnNVk">
+<img width="800" alt="admin panel" src="https://dochub.com/andreypopov1bc7760d/13xBNP/admin">
+<img width="800"  src="https://drive.google.com/uc?export=view&id=0B32rkhYCEyjueFVkT2dBQmZnNVk"/>
+
+<iframe src="https://drive.google.com/file/d/0B32rkhYCEyjueFVkT2dBQmZnNVk/preview" width="640" height="480"></iframe>
 
 ### Waiter view
 
