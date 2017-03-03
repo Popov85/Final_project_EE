@@ -102,12 +102,15 @@ $(document).ready(function () {
             data: JSON.stringify(order),
             success: function (data) {
                 console.log("Successfully created order!");
+                cleanFeedback();
+                displaySuccess(data);
                 reloadOrdersTable();
                 sendMessage(data);
             },
             error: function (e) {
                 console.log("ERROR: ", e);
-                display(e);
+                cleanFeedback();
+                displayError(e);
             },
             done: function (e) {
                 console.log("DONE");
@@ -159,10 +162,23 @@ $(document).ready(function () {
         return dishes;
     }
 
+   function cleanFeedback() {
+        $('#feedback').empty();
+    }
+
     // Displays the server's feedback on the page
-    function display(data) {
+    function displayError(data) {
+        $("#feedback").addClass("alert alert-danger");
         var json = "<h4>Error</h4><pre>"
             + data.responseText + "</pre>";
+        $('#feedback').html(json);
+    }
+
+    function displaySuccess(data) {
+        console.log("Success:"+JSON.stringify(data));
+        $("#feedback").addClass("alert alert-success");
+        var json = "<h4>Success</h4><pre>"
+            + JSON.stringify(data) + "</pre>";
         $('#feedback').html(json);
     }
 });
@@ -170,6 +186,12 @@ $(document).ready(function () {
 // Makes the modal window draggable
 $(document).ready(function () {
     $("#myModal").draggable({
+        handle: ".modal-header"
+    })
+});
+
+$(document).ready(function () {
+    $("#modal").draggable({
         handle: ".modal-header"
     })
 });

@@ -45,15 +45,10 @@ public class OrderController {
         @ResponseBody
         public DataTablesOutputDTOCollectionWrapper getOrdersDishes(@RequestParam Long orderId) {
                 DataTablesOutputDTOCollectionWrapper data = new DataTablesOutputDTOCollectionWrapper();
-                try {
-                        Order order = orderService.getById(orderId);
-                        Map<Dish, Integer> dishes = new HashMap<>();
-                        if (order!=null) dishes = order.getDishes();
-                        data.setData(orderService.toJSON(dishes));
-                } catch (Exception e) {
-                        LOGGER.error("ERROR: "+e.getMessage()+" cause: "+e.getClass());
-                }
-                LOGGER.info("data: "+data);
+                Order order = orderService.getById(orderId);
+                Map<Dish, Integer> dishes = new HashMap<>();
+                if (order!=null) dishes = order.getDishes();
+                data.setData(orderService.toJSON(dishes));
                 return data;
         }
 
@@ -84,7 +79,7 @@ public class OrderController {
 
         @GetMapping(value = "/waiter/orders/today")
         public String showOrdersTableWaiter() {
-                return "th/waiter/orders_today2";
+                return "th/waiter/orders_today";
         }
 
         @GetMapping(value = "/waiter/orders/archive")

@@ -1,3 +1,6 @@
+/**
+ * Created by Andrey on 02.03.2017.
+ */
 $(document).ready(function () {
 
     // Set up today's date in header
@@ -16,16 +19,14 @@ $(document).ready(function () {
             { "data": "opened", "name": "isOpened", "title": "isOpened", "visible":false},
             { "data": null, "name": "openedTimeStamp", "title": "opened time", "render": function(data){
                 return moment(data.openedTimeStamp).format('HH:mm');
-            }
-            },
+            }},
             { "data": null, "name": "closedTimeStamp", "title": "closed time", "render": function(data){
                 if (data.closedTimeStamp==null) {
                     return "-";
                 } else {
                     return moment(data.closedTimeStamp).format('HH:mm');
                 }
-            }
-            },
+            }},
             { "data": "table", "name": "table", "title": "table"},
             { "data": "dishesQuantity", "title": "dishes", "sortable": false},
             { "data": "totalSum", "title": "total, $", "sortable": false},
@@ -44,29 +45,27 @@ $(document).ready(function () {
                 } else {
                     var param = 'orderId='+data.id;
                     return '<a href="javascript:checkOrderStatus(\'' + param + '\',\'' + 'editOrder' + '\')">' +
-                                '<input type="button" class="btn btn-default" value="Edit"/>' +
-                            '</a>';
+                        '<input type="button" class="btn btn-default" value="Edit"/>' +
+                        '</a>';
                 }
-            }
-            },
+            }},
             { "data": null, "sortable": false, "render": function(data){
                 if (data.cancelled || !data.opened) {
                     return '<input type="button" class="btn btn-default" disabled="true" title="Operation is forbidden!" value="Cancel"/>';
                 } else {
                     return '<a href="javascript:cancelOrder(\'' + data.id+ '\')">' +
-                                '<input type="button" class="btn btn-default" value="Cancel"/>' +
-                            '</a>';
+                        '<input type="button" class="btn btn-default" value="Cancel"/>' +
+                        '</a>';
                 }
-            }
-            },
+            }},
             { "data": null, "sortable": false, "render": function(data){
                 if (data.cancelled || !data.opened) {
                     return '<input type="button" class="btn btn-default" disabled="true" title="Operation is forbidden!" value="Close"/>';
                 } else {
                     var param = 'orderId='+data.id;
                     return '<a href="javascript:checkOrderStatus(\'' + param + '\',\'' + 'closeOrder' + '\')">' +
-                                '<input type="button" class="btn btn-default" value="Close"/>' +
-                            '</a>';
+                        '<input type="button" class="btn btn-default" value="Close"/>' +
+                        '</a>';
                 }
             }
             }
@@ -86,7 +85,7 @@ function cancelOrder(param) {
             sendMessage(data);
         },
         error: function(xhr, textStatus, errorThrown) {
-            // TODO redirect to error page
+            // TODO redirect to error page with params
             console.log('Error cancelling Order');
             window.location.replace("/error");
         }
@@ -131,7 +130,6 @@ function closeOrder(data) {
     } else if (data.isCancelled) {
         alert("Cancelled Orders cannot be closed!");
     } else {
-        // AJAX to close Order and reload table ONLY!
         $.ajax({
             type: 'GET',
             url: url,
@@ -146,16 +144,37 @@ function closeOrder(data) {
 }
 
 function editOrder(data) {
-    var param = 'id=' + data.orderId;
-    var url = "/waiter/edit_order?"+param;
     if (data.hasPrepared) {
         alert("This Order is already partially fulfilled! Further editing is limited in this version of software!");
-        // Reload only table
         reloadOrdersTable();
     } else {
-        // TODO launch modal, set orderId, get Order's dishes and specific info.
-        window.location.replace(url);
+        $('#modal').modal('show');
+        var id = data.orderId;
+        $('#id').val(id);
+        setTable(id);
+        setDishes(id);
     }
+}
+
+// Make selected the Order's table
+function setTable(id) {
+    $.ajax({
+        type: "POST",
+        data: {"orderId": id},
+        url: '/waiter/get_orders_table',
+        dataType: 'json',
+        success: function (json) {
+            $("#table").val(json);
+        }
+    });
+}
+
+// Set up Order's dishes
+function setDishes (id) {
+    $('#odTable').DataTable()
+        .ajax
+        .url("/waiter/get_orders_dishes?orderId="+id)
+        .load()
 }
 
 function reloadOrdersTable() {
@@ -163,4 +182,18 @@ function reloadOrdersTable() {
         .ajax.url(
         "/waiter/get_orders?waiterId="+parseInt($('#waiterId').val())
     ).load()
+}
+
+// Triggers every time modal window is about to pop up
+$(document).ready(function () {
+    $('#modal').on('show.bs.modal', function () {
+        clearForm();
+        setDishes(0);
+    })
+});
+
+function clearForm() {
+    var id = $('#id').val(0);
+    var table = $('#table').val(0);
+    var feedback = $('#feedback').empty().removeClass();
 }

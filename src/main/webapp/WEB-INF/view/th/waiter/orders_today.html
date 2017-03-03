@@ -11,8 +11,10 @@
     <script src ="/js/lib/jquery-1.12.1.js"/>
     <script src ="/js/lib/bootstrap-3.3.7.min.js"/>
     <script src ="/js/lib/jquery.dataTables-1.10.12.min.js"/>
+    <script src ="/js/lib/jquery-ui-1.12.1.js"/>
     <script src="/js/lib/stomp.js"></script>
     <script src="/js/lib/sockjs.min.js"></script>
+    <script src ="/js/waiter/new_or_edit_order.js"/>
     <script src ="/js/waiter/orders_today.js"/>
     <script src ="/js/waiter/orders_today_messaging.js"/>
 
@@ -61,15 +63,96 @@
         </div>
         <div class="form-group">
             <br/>
-            <button onclick="reloadOrdersTable()">Update</button>
-            <a target="_blank" href="/waiter/new_order">
-                <input type="button" class="btn btn-primary" value="New Order"/>
-            </a>
+            <!--<button onclick="reloadOrdersTable()" class="btn">Update</button>-->
+            <button type="button" data-toggle="modal" data-target="#modal" class="btn btn-primary">New Order</button>
             <a target="_blank" href="/waiter/orders/archive">
                 <input type="button" class="btn btn-default" value="Archive"/>
             </a>
         </div>
     </div>
 </div>
+
+<!-- Modal Order -->
+<div class="modal" id="modal">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">*</button>
+                <h3 class="text-center">New Order</h3>
+            </div>
+            <div class="modal-body">
+                <form id="orderForm" action="/waiter/edit_order" method="post" onsubmit="return false;">
+
+                    <div class="form-group">
+                        <input type="hidden" id="id" name="id" value="0"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="table">Table #</label>
+                            <select id="table" class="list-group" title="Select a table number">
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <table id="odTable" class="display" cellspacing="0" width="100%" style="overflow-x:auto">
+                            <thead>
+                            <tr>
+                                <th hidden="true">Id</th>
+                                <th>Dish</th>
+                                <th>Quantity</th>
+                                <th>Price, $</th>
+                                <th>Del</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="form-group">
+                        <br/>
+                        <button class="btn btn-default" type="button" data-toggle="modal" data-target="#myModal">Add
+                            Dish
+                        </button>
+                        <button class="btn btn-primary" type="submit">Confirm</button>
+                    </div>
+
+                    <div id="feedback"></div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <a href="#" data-dismiss="modal" class="btn">Close</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Second modal Dish -->
+<div class="modal" id="myModal" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">*</button>
+                <h4 class="modal-title">Dishes</h4>
+            </div>
+            <div class="modal-body">
+                <table id="dTable" class="display" cellspacing="0" width="100%" style="overflow-x:auto">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Dish</th>
+                        <th>Category</th>
+                        <th>Price, $</th>
+                        <th>Weight, g</th>
+                        <th>Add</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

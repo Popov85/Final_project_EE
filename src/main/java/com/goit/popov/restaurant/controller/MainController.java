@@ -13,18 +13,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class MainController {
 
-    //@Autowired
-    //private PasswordEncoder encoder;
-
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index() {
-        //System.out.println("password: "+encoder.encode("root"));
         return "th/index";
-    }
-
-    @RequestMapping(value = "/2", method = RequestMethod.GET)
-    public String index2() {
-        return "th/index2";
     }
 
     @GetMapping(value = "/admin")
