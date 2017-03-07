@@ -1,15 +1,14 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head lang="en">
     <meta charset="UTF-8"/>
-    <title th:text="${status}">404</title>
+    <title>403</title>
     <link rel="stylesheet" type="text/css" href="/css/lib/bootstrap-3.3.7.min.css" />
 </head>
 <body>
 <div class="row" align="center">
-    <h1 th:text="${message}">Not found</h1>
-    <h1 th:text="${explanation}">Explanation</h1>
-    <p th:text="${error}">This page is not available</p>
+    <h1>Your credentials are restricted</h1>
+    <p>You cannot visit this page</p>
     <img src="/img/error.png" alt="NO image" height="500" width="900"/>
     <br/>
     <a href="/">

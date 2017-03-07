@@ -147,7 +147,7 @@ public class EmployeeController {
         public String delete(@PathVariable Long id, RedirectAttributes ra){
                 try {
                         employeeService.deleteById(id);
-                } catch (PersistenceException e) {
+                } catch (DataIntegrityViolationException e) {
                         ra.addFlashAttribute("status", HttpStatus.FORBIDDEN);
                         ra.addFlashAttribute("error", "Constraint violation exception deleting employee!");
                         ra.addFlashAttribute("message", DELETION_FAILURE_MESSAGE +id);

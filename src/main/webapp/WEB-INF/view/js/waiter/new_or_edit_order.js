@@ -163,7 +163,7 @@ $(document).ready(function () {
     }
 
    function cleanFeedback() {
-        $('#feedback').empty();
+        $('#feedback').empty().removeClass();
     }
 
     // Displays the server's feedback on the page
