@@ -6,8 +6,11 @@ import com.goit.popov.restaurant.model.Ingredient;
 import com.goit.popov.restaurant.model.Unit;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.runner.RunWith;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -20,8 +23,11 @@ import static org.junit.Assert.assertNull;
  * Created by Andrey on 18.11.2016.
  */
 @Transactional
-public class DishDAOTest extends AbstractDAOTest {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={"/test-context.xml", "/test-data.xml"})
+public class DishDAOTest {
 
+        /*
         private static final Logger logger = (Logger) LoggerFactory.getLogger(DishDAOTest.class);
 
         private static final String DISH_NAME_UPD = "UpdatedName";
@@ -117,4 +123,5 @@ public class DishDAOTest extends AbstractDAOTest {
                 assertNull(actualDish);
                 logger.info("Delete: OK");
         }
+        */
 }

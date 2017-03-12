@@ -2,10 +2,20 @@ package com.goit.popov.restaurant.dao;
 
 import ch.qos.logback.classic.Logger;
 import com.goit.popov.restaurant.model.Position;
+import com.goit.popov.restaurant.model.Role;
+import org.hibernate.SessionFactory;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.PersistenceException;
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -15,63 +25,89 @@ import static org.junit.Assert.assertNull;
  * Created by Andrey on 27.10.2016.
  */
 @Transactional
-public class PositionDAOTest extends AbstractDAOTest {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={"/test-context.xml", "/test-data.xml"})
+public class PositionDAOTest {
 
         private static final Logger logger = (Logger) LoggerFactory.getLogger(PositionDAOTest.class);
 
-        private static final String POSITION_UPD = "Janitor";
+        private static final String POSITION_UPD = "UpdatedPosition";
 
         @Autowired
-        private Position expectedPosition;
+        private SessionFactory sessionFactory;
 
         @Autowired
         private PositionDAO positionDAO;
 
         @Autowired
-        private Helper helper;
+        private RoleDAO roleDAO;
+
+        @Autowired
+        private Role expectedRole;
+
+        @Autowired
+        private Position expectedPosition;
 
         private Position actualPosition;
 
-        private int generatedId;
+        private Long generatedId;
 
-        @Override
-        protected void init() {
-
+        @Before
+        public void setUp() throws Exception {
+                roleDAO.insert(expectedRole);
         }
 
-        @Override
-        public void insert() {
+        @After
+        public void tearDown() throws Exception {
+                roleDAO.delete(expectedRole);
+        }
+
+        @Test
+        public void testCRUD() {
+                // CREATE
                 generatedId = positionDAO.insert(expectedPosition);
                 assertNotNull(generatedId);
-                actualPosition = helper.getByIdPosition(generatedId);
-                assertEquals(expectedPosition, actualPosition);
-                logger.info("Insert: OK");
-        }
-        @Override
-        public void read() {
-                expectedPosition = positionDAO.getById(generatedId);
-                assertEquals(actualPosition, expectedPosition);
-                logger.info("Read: OK");
-        }
-        @Override
-        public void update() {
+                // READ
+                actualPosition = positionDAO.getById(generatedId);
+                assertEquals(actualPosition.getId(), expectedPosition.getId());
+                assertEquals(actualPosition.getName(), expectedPosition.getName());
+                // UPDATE
                 expectedPosition.setName(POSITION_UPD);
                 positionDAO.update(expectedPosition);
-                Position updatedPosition = helper.getByIdPosition(generatedId);
-                assertEquals(expectedPosition, updatedPosition);
-                logger.info("Update: OK");
-        }
-        @Override
-        public void readAll() {
+                Position updatedPosition = positionDAO.getById(generatedId);
+                assertEquals(expectedPosition.getId(), updatedPosition.getId());
+                assertEquals(expectedPosition.getName(), updatedPosition.getName());
+                // READ ALL
                 List<Position> positionList = positionDAO.getAll();
                 assertNotNull(positionList.size());
-                logger.info("ReadAll: OK");
+                // DELETE
+                positionDAO.delete(updatedPosition);
+                Position emptyPosition = positionDAO.getById(generatedId);
+                assertNull(emptyPosition);
         }
-        @Override
-        public void delete() {
-                positionDAO.delete(this.actualPosition);
-                Position actualPosition = helper.getByIdPosition(generatedId);
-                assertNull(actualPosition);
-                logger.info("Delete: OK");
+
+        // Position with null Role
+        @Test(expected=PersistenceException.class)
+        public void testException() {
+                Position position = new Position();
+                position.setName("SamplePosition");
+                position.setRole(null);
+                Long generatedId = positionDAO.insert(position);
+                sessionFactory.getCurrentSession().flush();
+        }
+
+        // Two positions with equal names
+        @Test(expected=ConstraintViolationException.class)
+        public void testExceptionTwo() {
+                Position position = new Position();
+                position.setName("SamplePosition");
+                position.setRole(expectedRole);
+                positionDAO.insert(position);
+                sessionFactory.getCurrentSession().flush();
+                Position anotherPosition = new Position();
+                position.setName("SamplePosition");
+                position.setRole(expectedRole);
+                positionDAO.insert(anotherPosition);
+                sessionFactory.getCurrentSession().flush();
         }
 }
