@@ -12,4 +12,5 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"/test-context.xml", "/test-data.xml"})
 public class IngredientDAOTest {
+
 }

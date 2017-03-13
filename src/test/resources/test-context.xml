@@ -42,8 +42,8 @@
     <bean id="roleDAO" class="com.goit.popov.restaurant.dao.impl.RoleDAOImplJPA"/>
     <bean id="positionDAO" class="com.goit.popov.restaurant.dao.impl.PositionDAOImplJPA"/>
 
-    <!--<bean id="employeeDAO" class="com.goit.popov.restaurant.dao.impl.EmployeeDAOImplJPA"/>
-    <bean id="dishDAO" class = "com.goit.popov.restaurant.dao.impl.DishDAOImplJPA"/>
+    <bean id="employeeDAO" class="com.goit.popov.restaurant.dao.impl.EmployeeDAOImplJPA"/>
+    <!--<bean id="dishDAO" class = "com.goit.popov.restaurant.dao.impl.DishDAOImplJPA"/>
     <bean id="ingredientDAO" class="com.goit.popov.restaurant.dao.impl.IngredientDAOImplJPA"/>
     <bean id="orderDAO" class = "com.goit.popov.restaurant.dao.impl.OrderDAOImplJPA"/>-->
 

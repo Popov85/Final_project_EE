@@ -13,17 +13,6 @@
         <property name="role" ref="expectedRole"/>
     </bean>
 
-    <!--
-    <bean id="dateFormat" class="java.text.SimpleDateFormat">
-        <constructor-arg value="yyyy-MM-dd"/>
-    </bean>
-
-    <bean id="timeFormat" class="java.text.SimpleDateFormat">
-        <constructor-arg value="yyyy-MM-dd HH:mm:ss"/>
-    </bean>
-
-    <bean id="helper" class="com.goit.popov.restaurant.dao.Helper"/>
-
     <bean id="expectedEmployee" class="com.goit.popov.restaurant.model.Employee">
         <property name="login" value="TestLogin"/>
         <property name="password" value="TestPassword"/>
@@ -37,6 +26,19 @@
         <property name="position" ref="expectedPosition"/>
         <property name="salary" value="1000"/>
     </bean>
+
+    <bean id="dateFormat" class="java.text.SimpleDateFormat">
+        <constructor-arg value="yyyy-MM-dd"/>
+    </bean>
+
+    <!--
+
+
+    <bean id="timeFormat" class="java.text.SimpleDateFormat">
+        <constructor-arg value="yyyy-MM-dd HH:mm:ss"/>
+    </bean>
+
+
 
     <bean id="expectedWaiter" class="com.goit.popov.restaurant.model.Employee">
         <property name="login" value="TestLogin"/>
