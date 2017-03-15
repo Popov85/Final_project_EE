@@ -12,6 +12,14 @@ import java.io.Serializable;
 @Table(name = "store_house")
 public class StoreHouse implements Serializable {
 
+        public StoreHouse() {
+        }
+
+        public StoreHouse(Ingredient ingredient, double quantity) {
+                this.ingredient = ingredient;
+                this.quantity = quantity;
+        }
+
         @Id
         @OneToOne(fetch = FetchType.EAGER)
         @JoinColumn(name="ING_ID", unique=true, nullable=false, updatable=false)
@@ -40,7 +48,7 @@ public class StoreHouse implements Serializable {
         public String toString() {
                 return "\n StoreHouse{" +
                         "ingredient=" + ingredient.getName() +"\n" +
-                        "quantity='" + quantity + "\n" +
+                        "quantity=" + quantity + "\n" +
                         '}';
         }
 }

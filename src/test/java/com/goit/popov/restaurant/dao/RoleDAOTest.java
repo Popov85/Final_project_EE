@@ -36,7 +36,7 @@ public class RoleDAOTest {
         private RoleDAO roleDAO;
 
         @Test
-        public void testCRUD() {
+        public void itShouldPerformCRUDSmoothly() {
                 // CREATE
                 Long generatedId = roleDAO.insert(expectedRole);
                 assertNotNull(generatedId);
@@ -59,9 +59,8 @@ public class RoleDAOTest {
                 assertNull(emptyRole);
         }
 
-        // Role with null name
         @Test(expected=ConstraintViolationException.class)
-        public void testException() {
+        public void itShouldNotInsertEmptyRole() {
                 Role role = new Role();
                 Long generatedId = roleDAO.insert(role);
                 sessionFactory.getCurrentSession().flush();

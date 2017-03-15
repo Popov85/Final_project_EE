@@ -19,7 +19,7 @@ import java.util.List;
 @Transactional
 public class StoreHouseDAOImplJPA implements StoreHouseDAO {
 
-        private static final Logger logger = (Logger) LoggerFactory.getLogger(StoreHouseDAOImplJPA.class);
+        private static final Logger LOG = (Logger) LoggerFactory.getLogger(StoreHouseDAOImplJPA.class);
 
         @Autowired
         private SessionFactory sessionFactory;
@@ -29,7 +29,10 @@ public class StoreHouseDAOImplJPA implements StoreHouseDAO {
 
         @Override
         public Long insert(StoreHouse sh) {
-                return (Long) sessionFactory.getCurrentSession().save(sh);
+                Object r = sessionFactory.getCurrentSession().save(sh);
+                // Warning: returns exactly the same object
+                LOG.info("r = "+r);
+                return 1L;
         }
 
         @Override

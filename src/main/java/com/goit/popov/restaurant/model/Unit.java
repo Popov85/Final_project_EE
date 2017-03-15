@@ -18,7 +18,7 @@ public class Unit {
         protected Long id;
 
         @NotEmpty(message = "Please, provide name for a unit")
-        @Length(min = 1, max = 15)
+        @Length(min = 1, max = 10)
         @Column(name = "U_NAME")
         protected String name;
 

@@ -31,6 +31,17 @@
         <constructor-arg value="yyyy-MM-dd"/>
     </bean>
 
+
+    <bean id="expectedUnit" class="com.goit.popov.restaurant.model.Unit">
+        <property name="name" value="TestLitre"/>
+    </bean>
+
+    <bean id="expectedIngredient" class="com.goit.popov.restaurant.model.Ingredient">
+        <property name="name" value="TestIngredient"/>
+        <property name="unit" ref="expectedUnit"/>
+    </bean>
+
+
     <!--
 
 

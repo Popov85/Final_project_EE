@@ -63,7 +63,7 @@ public class PositionDAOTest {
         }
 
         @Test
-        public void testCRUD() {
+        public void itShouldPerformCRUDSmoothly() {
                 // CREATE
                 generatedId = positionDAO.insert(expectedPosition);
                 assertNotNull(generatedId);
@@ -86,19 +86,17 @@ public class PositionDAOTest {
                 assertNull(emptyPosition);
         }
 
-        // Position with null Role
         @Test(expected=PersistenceException.class)
-        public void testException() {
+        public void itShouldNotInsertPositionWithEmptyRole() {
                 Position position = new Position();
                 position.setName("SamplePosition");
                 position.setRole(null);
-                Long generatedId = positionDAO.insert(position);
+                positionDAO.insert(position);
                 sessionFactory.getCurrentSession().flush();
         }
 
-        // Two positions with equal names
         @Test(expected=ConstraintViolationException.class)
-        public void testExceptionTwo() {
+        public void itShouldNotInsertSecondPositionWithNotUniqueName() {
                 Position position = new Position();
                 position.setName("SamplePosition");
                 position.setRole(expectedRole);

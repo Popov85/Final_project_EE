@@ -6,8 +6,5 @@ import java.util.List;
 /**
  * Created by Andrey on 11/28/2016.
  */
-public interface UnitDAO {
-
-        List<Unit> getAll();
-        Unit getById(Long id);
+public interface UnitDAO extends GenericDAO<Unit> {
 }

@@ -1,8 +1,12 @@
 package com.goit.popov.restaurant.service;
 
 import com.goit.popov.restaurant.dao.IngredientDAO;
+import com.goit.popov.restaurant.dao.StoreHouseDAO;
 import com.goit.popov.restaurant.model.Ingredient;
+import com.goit.popov.restaurant.model.StoreHouse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 /**
@@ -12,6 +16,9 @@ public class IngredientService implements IngredientDAO {
 
         @Autowired
         IngredientDAO ingredientDAO;
+
+        @Autowired
+        private StoreHouseDAO storeHouseDAO;
 
         @Override
         public List<Ingredient> getAll() {
@@ -28,9 +35,20 @@ public class IngredientService implements IngredientDAO {
                 ingredientDAO.delete(ingredient);
         }
 
+        // TODO to finish
+        @Transactional
         @Override
         public Long insert(Ingredient ingredient) {
-                return ingredientDAO.insert(ingredient);
+                Long newIngredientId = 1L;
+                try {
+                        newIngredientId = ingredientDAO.insert(ingredient);
+                        StoreHouse sh = new StoreHouse(ingredient, 0);
+                        System.out.println("sh = "+sh);
+                        storeHouseDAO.insert(sh);
+                } catch (Exception e) {
+                        System.out.println("ERROR: "+e.getMessage()+" cause: "+e.getClass());
+                }
+                return newIngredientId;
         }
 
         @Override
@@ -38,7 +56,11 @@ public class IngredientService implements IngredientDAO {
                 ingredientDAO.update(ingredient);
         }
 
+        // TODO to check
+        @Transactional
         public void deleteById(Long id) {
-                ingredientDAO.delete(getById(id));
+                StoreHouse storeHouse = storeHouseDAO.getByIngredient(getById(id));
+                storeHouseDAO.delete(storeHouse);
+                delete(getById(id));
         }
 }

@@ -17,12 +17,27 @@ public class UnitDAOImplJPA implements UnitDAO {
         private SessionFactory sessionFactory;
 
         @Override
+        public Long insert(Unit unit) {
+                return (Long) sessionFactory.getCurrentSession().save(unit);
+        }
+
+        @Override
+        public void update(Unit unit) {
+                sessionFactory.getCurrentSession().update(unit);
+        }
+
+        @Override
         public List<Unit> getAll() {
-                return sessionFactory.getCurrentSession().createQuery("select i from Unit i").list();
+                return sessionFactory.getCurrentSession().createQuery("select u from Unit u").list();
         }
 
         @Override
         public Unit getById(Long id) {
                 return sessionFactory.getCurrentSession().get(Unit.class, id);
+        }
+
+        @Override
+        public void delete(Unit unit) {
+                sessionFactory.getCurrentSession().delete(unit);
         }
 }

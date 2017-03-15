@@ -52,6 +52,7 @@ public class DishDAOTest {
 
         private int generatedId;
 
+
         @Before
         public void setUp() throws Exception {
                 createDependencies();
@@ -63,7 +64,21 @@ public class DishDAOTest {
                 deleteDependencies();
                 logger.info("References deleted: OK");
         }
+        */
 
+
+
+
+
+
+
+
+
+
+
+
+
+        /*
         private void createDependencies() {
                 helper.insertUnit(expectedUnit);
                 helper.insertIngredient(expectedIngredient1);
