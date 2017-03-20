@@ -41,6 +41,11 @@
         <property name="unit" ref="expectedUnit"/>
     </bean>
 
+    <bean id="expectedStoreHouse" class="com.goit.popov.restaurant.model.StoreHouse">
+        <property name="ingredient" ref="expectedIngredient"/>
+        <property name="quantity" value="10"/>
+    </bean>
+
 
     <!--
 

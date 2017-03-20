@@ -27,7 +27,12 @@
 
     <bean id = "sessionFactory" class = "org.springframework.orm.hibernate5.LocalSessionFactoryBean" autowire="byName">
         <property name="dataSource" ref="dataSource"/>
-        <property name="packagesToScan" value ="com.goit.popov.restaurant.model"/>
+        <property name="packagesToScan">
+            <array>
+                <value>com.goit.popov.restaurant.model</value>
+                <value>test</value>
+            </array>
+        </property>
         <property name="hibernateProperties">
             <value>
                 hibernate.dialect = org.hibernate.dialect.PostgreSQL9Dialect
@@ -45,7 +50,9 @@
 
     <bean id="unitDAO" class="com.goit.popov.restaurant.dao.impl.UnitDAOImplJPA"/>
     <bean id="ingredientDAO" class="com.goit.popov.restaurant.dao.impl.IngredientDAOImplJPA"/>
-    <!--<bean id="storeHouseDAO" class="com.goit.popov.restaurant.dao.impl.StoreHouseDAOImplJPA"/>-->
+    <bean id="storeHouseDAO" class="com.goit.popov.restaurant.dao.impl.StoreHouseDAOImplJPA"/>
+    <bean id="studentDAO" class="test.StudentDAO"/>
+    <!--<bean id = "stockServerSideDAOProcessing" class = "com.goit.popov.restaurant.service.dataTables.dao.StockServerSideDAOProcessing"/>-->
 
     <!--<bean id="dishDAO" class = "com.goit.popov.restaurant.dao.impl.DishDAOImplJPA"/>
     <bean id="ingredientDAO" class="com.goit.popov.restaurant.dao.impl.IngredientDAOImplJPA"/>

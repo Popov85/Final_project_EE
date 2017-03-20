@@ -39,16 +39,15 @@ public class IngredientService implements IngredientDAO {
         @Transactional
         @Override
         public Long insert(Ingredient ingredient) {
-                Long newIngredientId = 1L;
                 try {
-                        newIngredientId = ingredientDAO.insert(ingredient);
+                        //newIngredientId = ingredientDAO.insert(ingredient);
                         StoreHouse sh = new StoreHouse(ingredient, 0);
-                        System.out.println("sh = "+sh);
+                        //System.out.println("ingredient="+ingredient+" /sh = "+sh);
                         storeHouseDAO.insert(sh);
                 } catch (Exception e) {
                         System.out.println("ERROR: "+e.getMessage()+" cause: "+e.getClass());
                 }
-                return newIngredientId;
+                return 1L;
         }
 
         @Override

@@ -1,7 +1,15 @@
 package com.goit.popov.restaurant.model;
 
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.Parameter;
+
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
+
+import static javax.persistence.CascadeType.*;
 
 /**
  * StoreHouse class keeps info about ingredients in stock and their quantity
@@ -22,6 +30,11 @@ public class StoreHouse implements Serializable {
 
         @Id
         @OneToOne(fetch = FetchType.EAGER)
+        /*@Cascade({org.hibernate.annotations.CascadeType.ALL})
+        @JoinColumn(name="ING_ID", unique=true, nullable=false, updatable=false)*/
+        /*@Cascade({org.hibernate.annotations.CascadeType.MERGE, org.hibernate.annotations.CascadeType.SAVE_UPDATE})
+        @JoinColumn(name="ING_ID")*/
+        @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
         @JoinColumn(name="ING_ID", unique=true, nullable=false, updatable=false)
         private Ingredient ingredient;
 

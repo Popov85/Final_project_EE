@@ -6,11 +6,14 @@ import com.goit.popov.restaurant.model.Ingredient;
 import com.goit.popov.restaurant.model.StoreHouse;
 import com.goit.popov.restaurant.service.dataTables.DataTablesInputExtendedDTO;
 import com.goit.popov.restaurant.service.dataTables.dao.StockServerSideDAOProcessing;
+import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,14 +27,20 @@ public class StoreHouseDAOImplJPA implements StoreHouseDAO {
         @Autowired
         private SessionFactory sessionFactory;
 
-        @Autowired
-        private StockServerSideDAOProcessing stockServerSideDAOProcessing;
+        /*@Autowired
+        private StockServerSideDAOProcessing stockServerSideDAOProcessing;*/
 
         @Override
         public Long insert(StoreHouse sh) {
-                Object r = sessionFactory.getCurrentSession().save(sh);
+                //Object r = null;
+                try {
+                        sessionFactory.getCurrentSession().save(sh);
+                        //r = sessionFactory.getCurrentSession().save(sh);
+                } catch (Exception e) {
+                        LOG.error("ERROR (sh) "+e.getMessage()+" cause (sh): "+e.getClass());
+                }
                 // Warning: returns exactly the same object
-                LOG.info("r = "+r);
+                // LOG.info("r = "+r);
                 return 1L;
         }
 
@@ -47,7 +56,8 @@ public class StoreHouseDAOImplJPA implements StoreHouseDAO {
 
         @Override
         public StoreHouse getById(Long id) {
-                return sessionFactory.getCurrentSession().get(StoreHouse.class, id);
+                throw new UnsupportedOperationException();
+                //return sessionFactory.getCurrentSession().get(StoreHouse.class, id);
         }
 
         @Override
@@ -87,6 +97,6 @@ public class StoreHouseDAOImplJPA implements StoreHouseDAO {
 
         @Override
         public List<StoreHouse> getAllItems(DataTablesInputExtendedDTO dt) {
-                return stockServerSideDAOProcessing.getAllItems(dt);
+                return new ArrayList<>();//stockServerSideDAOProcessing.getAllItems(dt);
         }
 }
